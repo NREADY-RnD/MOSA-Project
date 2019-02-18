@@ -10,9 +10,9 @@ namespace Mosa.Compiler.Framework.RegisterAllocator
 {
 	public class RedBlackRangeTree<T> where T : BaseRange
 	{
-		internal enum Color { Red = 0, Black = 1 };
+		public enum Color { Red = 0, Black = 1 };
 
-		private class RedBlackNode<N>
+		public class RedBlackNode<N>
 		{
 			public RedBlackNode<N> Parent { get; set; }
 
@@ -59,62 +59,48 @@ namespace Mosa.Compiler.Framework.RegisterAllocator
 			if (key == null)
 				throw new InvalidOperationException();
 
-			// traverse tree - find where node belongs
-			int result = 0;
-
 			// create new node
-			var node = new RedBlackNode<T>();
-			var temp = tree;
+			var newNode = new RedBlackNode<T>
+			{
+				Data = key
+			};
 
-			while (temp != null)
+			var workNode = tree;
+
+			while (workNode != null)
 			{
 				// find Parent
-				node.Parent = temp;
-
-				result = key.CompareTo(temp.Data);
+				newNode.Parent = workNode;
+				int result = key.CompareTo(workNode.Data);
 
 				if (result == 0)
 				{
 					throw new InvalidOperationException();
 				}
 
-				if (result > 0)
-				{
-					temp = temp.Lower;
-				}
-				else
-				{
-					temp = temp.Higher;
-				}
+				workNode = result > 0 ? workNode.Higher : workNode.Lower;
 			}
 
-			// setup node
-			node.Data = key;
-			node.Higher = null;
-			node.Lower = null;
-
 			// insert node into tree starting at parent's location
-			if (node.Parent != null)
+			if (newNode.Parent != null)
 			{
-				result = node.Data.CompareTo(node.Parent.Data);
-
-				if (result > 0)
+				if (newNode.Data.CompareTo(newNode.Parent.Data) > 0)
 				{
-					node.Parent.Lower = node;
+					newNode.Parent.Higher = newNode;
 				}
 				else
 				{
-					node.Parent.Higher = node;
+					newNode.Parent.Lower = newNode;
 				}
 			}
 			else
-			{
-				// first node added
-				tree = node;
+			{   // first node added
+				tree = newNode;
 			}
 
 			// restore red-black properties
-			RestoreAfterInsert(node);
+			BalanceTreeAfterInsert(newNode);
+
 			Size++;
 		}
 
@@ -137,14 +123,7 @@ namespace Mosa.Compiler.Framework.RegisterAllocator
 
 				int result = range.CompareTo(node.Data);
 
-				if (result < 0)
-				{
-					node = node.Higher;
-				}
-				else
-				{
-					node = node.Lower;
-				}
+				node = result > 0 ? node.Higher : node.Lower;
 			}
 
 			return false;
@@ -191,14 +170,7 @@ namespace Mosa.Compiler.Framework.RegisterAllocator
 					return node.Data;
 				}
 
-				if (result < 0)
-				{
-					node = node.Higher;
-				}
-				else
-				{
-					node = node.Lower;
-				}
+				node = result < 0 ? node.Lower : node.Higher;
 			}
 
 			throw new InvalidOperationException();
@@ -245,7 +217,7 @@ namespace Mosa.Compiler.Framework.RegisterAllocator
 				{
 					int result = range.CompareTo(node.Data);
 
-					if (result < 0)
+					if (result > 0)
 					{
 						if (node.Higher != null)
 						{
@@ -280,9 +252,9 @@ namespace Mosa.Compiler.Framework.RegisterAllocator
 				throw new InvalidOperationException();
 
 			// traverse to the extreme right to find the largest key
-			while (node.Lower != null)
+			while (node.Higher != null)
 			{
-				node = node.Lower;
+				node = node.Higher;
 			}
 
 			return node.Data.End;
@@ -296,9 +268,9 @@ namespace Mosa.Compiler.Framework.RegisterAllocator
 				throw new InvalidOperationException();
 
 			// traverse to the extreme left to find the smallest key
-			while (node.Higher != null)
+			while (node.Lower != null)
 			{
-				node = node.Higher;
+				node = node.Lower;
 			}
 
 			return node.Data.Start;
@@ -331,14 +303,7 @@ namespace Mosa.Compiler.Framework.RegisterAllocator
 					break;
 				}
 
-				if (result < 0)
-				{
-					node = node.Higher;
-				}
-				else
-				{
-					node = node.Lower;
-				}
+				node = result > 0 ? node.Higher : node.Lower;
 			}
 
 			if (node == null)
@@ -355,37 +320,6 @@ namespace Mosa.Compiler.Framework.RegisterAllocator
 		#endregion Public Methods
 
 		#region Internal Methods
-
-		private RedBlackNode<T> First(RedBlackNode<T> root)
-		{
-			while (root?.Lower != null)
-			{
-				root = root.Lower;
-			}
-
-			return root;
-		}
-
-		private RedBlackNode<T> Next(RedBlackNode<T> p)
-		{
-			if (p.Lower != null)
-			{
-				return First(p.Lower);
-			}
-			while (p.Parent != null)
-			{
-				//if (!p.Parent.Right || p.Parent.Right != p)
-				if (p.Parent.Higher == null || p.Parent.Higher != p)
-				{
-					return p.Parent;
-				}
-				else
-				{
-					p = p.Parent;
-				}
-			}
-			return null;
-		}
 
 		private RedBlackNode<T> GetNode(int at)
 		{
@@ -411,7 +345,7 @@ namespace Mosa.Compiler.Framework.RegisterAllocator
 			return null;
 		}
 
-		private RedBlackNode<T> GetNodeAtOrBefore(int at)
+		public RedBlackNode<T> GetNodeAtOrBefore(int at)
 		{
 			// begin at root
 			var node = tree;
@@ -447,7 +381,7 @@ namespace Mosa.Compiler.Framework.RegisterAllocator
 			return null;
 		}
 
-		private RedBlackNode<T> GetNodeAtOrAfter(int at)
+		public RedBlackNode<T> GetNodeAtOrAfter(int at)
 		{
 			// begin at root
 			var node = tree;
@@ -486,119 +420,118 @@ namespace Mosa.Compiler.Framework.RegisterAllocator
 		///<summary>
 		/// Rebalance the tree by rotating the nodes to the left.
 		///</summary>
-		private void RotateLeft(RedBlackNode<T> x)
+		private void RotateLeft(RedBlackNode<T> rotateNode)
 		{
-			// pushing node x down and to the Left to balance the tree. x's Right child (y)
-			// replaces x (since y > x), and y's Left child becomes x's Right child
-			// (since it's < y but > x).
+			// pushing node rotateNode down and to the Left to balance the tree. rotateNode's Right child (_workNode)
+			// replaces rotateNode (since _workNode > rotateNode), and _workNode's Left child becomes rotateNode's Right child
+			// (since it's < _workNode but > rotateNode).
 
-			// get x's Right node, this becomes y
-			var y = x.Lower;
+			// get rotateNode's Right node, this becomes _workNode
+			var workNode = rotateNode.Higher;
 
-			// set x's Right link
-			// y's Left child's becomes x's Right child
-			x.Lower = y.Higher;
+			// set rotateNode's Right link
+			// _workNode's Left child's becomes rotateNode's Right child
+			rotateNode.Higher = workNode.Lower;
 
 			// modify parents
-			if (y.Higher != null)
+			if (workNode.Lower != null)
 			{
-				// sets y's Left Parent to x
-				y.Higher.Parent = x;
+				// sets _workNode's Left Parent to rotateNode
+				workNode.Lower.Parent = rotateNode;
 			}
 
-			if (y != null)
-			{
-				// set y's Parent to x's Parent
-				y.Parent = x.Parent;
+			if (workNode != null)
+			{  // set _workNode's Parent to rotateNode's Parent
+				workNode.Parent = rotateNode.Parent;
 			}
 
-			if (x.Parent != null)
+			if (rotateNode.Parent != null)
 			{
-				// determine which side of it's Parent x was on
-				if (x == x.Parent.Higher)
+				// determine which side of it's Parent rotateNode was on
+				if (rotateNode == rotateNode.Parent.Lower)
 				{
-					// set Left Parent to y
-					x.Parent.Higher = y;
+					// set Left Parent to _workNode
+					rotateNode.Parent.Lower = workNode;
 				}
 				else
 				{
-					// set Right Parent to y
-					x.Parent.Lower = y;
+					// set Right Parent to _workNode
+					rotateNode.Parent.Higher = workNode;
 				}
 			}
 			else
 			{
-				// at rbTree, set it to y
-				tree = y;
+				// at rbTree, set it to _workNode
+				tree = workNode;
 			}
 
-			// link x and y
-			// put x on y's Left
-			y.Higher = x;
-			if (x != null)
+			// link rotateNode and _workNode
+			// put rotateNode on _workNode's Left
+			workNode.Lower = rotateNode;
+
+			// set _workNode as rotateNode's Parent
+			if (rotateNode != null)
 			{
-				// set y as x's Parent
-				x.Parent = y;
+				rotateNode.Parent = workNode;
 			}
 		}
 
 		///<summary>
 		/// Rebalance the tree by rotating the nodes to the right.
 		///</summary>
-		private void RotateRight(RedBlackNode<T> x)
+		private void RotateRight(RedBlackNode<T> rotateNode)
 		{
-			// pushing node x down and to the Right to balance the tree. x's Left child (y)
-			// replaces x (since x < y), and y's Right child becomes x's Left child
-			// (since it's < x but > y).
+			// pushing node rotateNode down and to the Right to balance the tree. rotateNode's Left child (_workNode)
+			// replaces rotateNode (since rotateNode < _workNode), and _workNode's Right child becomes rotateNode's Left child
+			// (since it's < rotateNode but > _workNode).
 
-			// get x's Left node, this becomes y
-			var y = x.Higher;
+			// get rotateNode's Left node, this becomes _workNode
+			var workNode = rotateNode.Lower;
 
-			// set x's Right link
-			// y's Right child becomes x's Left child
-			x.Higher = y.Lower;
+			// set rotateNode's Right link
+			// _workNode's Right child becomes rotateNode's Left child
+			rotateNode.Lower = workNode.Higher;
 
 			// modify parents
-			if (y.Lower != null)
+			if (workNode.Higher != null)
 			{
-				// sets y's Right Parent to x
-				y.Lower.Parent = x;
+				// sets _workNode's Right Parent to rotateNode
+				workNode.Higher.Parent = rotateNode;
 			}
 
-			if (y != null)
+			if (workNode != null)
 			{
-				// set y's Parent to x's Parent
-				y.Parent = x.Parent;
+				// set _workNode's Parent to rotateNode's Parent
+				workNode.Parent = rotateNode.Parent;
 			}
 
 			// null=rbTree, could also have used rbTree
-			if (x.Parent != null)
+			if (rotateNode.Parent != null)
 			{
-				// determine which side of it's Parent x was on
-				if (x == x.Parent.Lower)
+				// determine which side of it's Parent rotateNode was on
+				if (rotateNode == rotateNode.Parent.Higher)
 				{
-					// set Right Parent to y
-					x.Parent.Lower = y;
+					// set Right Parent to _workNode
+					rotateNode.Parent.Higher = workNode;
 				}
 				else
-				{
-					// set Left Parent to y
-					x.Parent.Higher = y;
+				{       // set Left Parent to _workNode
+					rotateNode.Parent.Lower = workNode;
 				}
 			}
 			else
-			{
-				// at rbTree, set it to y
-				tree = y;
+			{  // at rbTree, set it to _workNode
+				tree = workNode;
 			}
 
-			// link x and y
-			// put x on y's Right
-			y.Lower = x;
-			if (x != null)
+			// link rotateNode and _workNode
+			// put rotateNode on _workNode's Right
+			workNode.Higher = rotateNode;
+
+			// set _workNode as rotateNode's Parent
+			if (rotateNode != null)
 			{
-				// set y as x's Parent
-				x.Parent = y;
+				rotateNode.Parent = workNode;
 			}
 		}
 
@@ -606,7 +539,7 @@ namespace Mosa.Compiler.Framework.RegisterAllocator
 		/// Deletes a node from the tree and restores red black properties.
 		/// </summary>
 		/// <param name="node"></param>
-		private void Delete(RedBlackNode<T> node)
+		private void Delete(RedBlackNode<T> deleteNode)
 		{
 			// A node to be deleted will be:
 			//		1. a leaf with no children
@@ -615,31 +548,27 @@ namespace Mosa.Compiler.Framework.RegisterAllocator
 			// If the deleted node is red, the red black properties still hold.
 			// If the deleted node is black, the tree needs rebalancing
 
-			// work node to contain the replacement node
-			var x = new RedBlackNode<T>();
-
 			// work node
-			RedBlackNode<T> y;
+			RedBlackNode<T> workNode;
 
 			// find the replacement node (the successor to x) - the node one with
 			// at *most* one child.
-			if (node.Higher == null || node.Lower == null)
+			if (deleteNode.Lower == null || deleteNode.Higher == null)
 			{
-				// node has null as a child
-				y = node;
+				// node has sentinel as a child
+				workNode = deleteNode;
 			}
 			else
 			{
-				// node to be deleted has two children, find replacement node which will
-				// be the leftmost node greater than node to be deleted
-
+				// z has two children, find replacement node which will
+				// be the leftmost node greater than z
 				// traverse right subtree
-				y = node.Lower;
+				workNode = deleteNode.Higher;
 
 				// to find next node in sequence
-				while (y.Higher != null)
+				while (workNode.Lower != null)
 				{
-					y = y.Higher;
+					workNode = workNode.Lower;
 				}
 			}
 
@@ -647,214 +576,203 @@ namespace Mosa.Compiler.Framework.RegisterAllocator
 			// to the values in the node to be deleted
 
 			// x (y's only child) is the node that will be linked to y's old parent.
-			if (y.Higher != null)
-			{
-				x = y.Higher;
-			}
-			else
-			{
-				x = y.Lower;
-			}
+			var linkedNode = workNode.Lower != null ? workNode.Lower : workNode.Higher;
 
 			// replace x's parent with y's parent and
 			// link x to proper subtree in parent
 			// this removes y from the chain
-			x.Parent = y.Parent;
-			if (y.Parent != null)
+			linkedNode.Parent = workNode.Parent;
+
+			if (workNode.Parent != null)
 			{
-				if (y == y.Parent.Higher)
+				if (workNode == workNode.Parent.Lower)
 				{
-					y.Parent.Higher = x;
+					workNode.Parent.Lower = linkedNode;
 				}
 				else
 				{
-					y.Parent.Lower = x;
+					workNode.Parent.Higher = linkedNode;
 				}
 			}
 			else
 			{
 				// make x the root node
-				tree = x;
+				tree = linkedNode;
 			}
 
 			// copy the values from y (the replacement node) to the node being deleted.
 			// note: this effectively deletes the node.
-			if (y != node)
+			if (workNode != deleteNode)
 			{
-				node.Data = y.Data;
+				deleteNode.Data = workNode.Data;
 			}
 
-			if (y.Color == Color.Black)
+			if (workNode.Color == Color.Black)
 			{
-				RestoreAfterDelete(x);
+				BalanceTreeAfterDelete(linkedNode);
 			}
 		}
 
-		private void RestoreAfterDelete(RedBlackNode<T> x)
+		private void BalanceTreeAfterDelete(RedBlackNode<T> linkedNode)
 		{
 			// maintain Red-Black tree balance after deleting node
-
-			RedBlackNode<T> y;
-
-			while (x != tree && x.Color == Color.Black)
+			while (linkedNode != tree && linkedNode.Color == Color.Black)
 			{
+				RedBlackNode<T> workNode;
+
 				// determine sub tree from parent
-				if (x == x.Parent.Higher)
+				if (linkedNode == linkedNode.Parent.Lower)
 				{
 					// y is x's sibling
-					y = x.Parent.Lower;
-					if (y.Color == Color.Red)
+					workNode = linkedNode.Parent.Higher;
+
+					if (workNode.Color == Color.Red)
 					{
 						// x is black, y is red - make both black and rotate
-						y.Color = Color.Black;
-						x.Parent.Color = Color.Red;
-						RotateLeft(x.Parent);
-						y = x.Parent.Lower;
+						linkedNode.Parent.Color = Color.Red;
+						workNode.Color = Color.Black;
+						RotateLeft(linkedNode.Parent);
+						workNode = linkedNode.Parent.Higher;
 					}
-					if ((y.Higher.Color == Color.Black) && (y.Lower.Color == Color.Black))
+
+					if (workNode.Lower.Color == Color.Black && workNode.Higher.Color == Color.Black)
 					{
 						// children are both black
-
 						// change parent to red
-						y.Color = Color.Red;
+						workNode.Color = Color.Red;
 
 						// move up the tree
-						x = x.Parent;
+						linkedNode = linkedNode.Parent;
 					}
 					else
 					{
-						if (y.Lower.Color == Color.Black)
+						if (workNode.Higher.Color == Color.Black)
 						{
-							y.Higher.Color = Color.Black;
-							y.Color = Color.Red;
-							RotateRight(y);
-							y = x.Parent.Lower;
+							workNode.Lower.Color = Color.Black;
+							workNode.Color = Color.Red;
+							RotateRight(workNode);
+							workNode = linkedNode.Parent.Higher;
 						}
 
-						y.Color = x.Parent.Color;
-						x.Parent.Color = Color.Black;
-						y.Lower.Color = Color.Black;
-						RotateLeft(x.Parent);
-						x = tree;
+						linkedNode.Parent.Color = Color.Black;
+						workNode.Color = linkedNode.Parent.Color;
+						workNode.Higher.Color = Color.Black;
+						RotateLeft(linkedNode.Parent);
+						linkedNode = tree;
 					}
 				}
 				else
-				{
-					// right subtree - same as code above with right and left swapped
-					y = x.Parent.Higher;
-					if (y.Color == Color.Red)
+				{   // right subtree - same as code above with right and left swapped
+					workNode = linkedNode.Parent.Lower;
+
+					if (workNode.Color == Color.Red)
 					{
-						y.Color = Color.Black;
-						x.Parent.Color = Color.Red;
-						RotateRight(x.Parent);
-						y = x.Parent.Higher;
+						linkedNode.Parent.Color = Color.Red;
+						workNode.Color = Color.Black;
+						RotateRight(linkedNode.Parent);
+						workNode = linkedNode.Parent.Lower;
 					}
 
-					if ((y.Lower.Color == Color.Black) && (y.Higher.Color == Color.Black))
+					if (workNode.Higher.Color == Color.Black && workNode.Lower.Color == Color.Black)
 					{
-						y.Color = Color.Red;
-						x = x.Parent;
+						workNode.Color = Color.Red;
+						linkedNode = linkedNode.Parent;
 					}
 					else
 					{
-						if (y.Higher.Color == Color.Black)
+						if (workNode.Lower.Color == Color.Black)
 						{
-							y.Lower.Color = Color.Black;
-							y.Color = Color.Red;
-							RotateLeft(y);
-							y = x.Parent.Higher;
+							workNode.Higher.Color = Color.Black;
+							workNode.Color = Color.Red;
+							RotateLeft(workNode);
+							workNode = linkedNode.Parent.Lower;
 						}
 
-						y.Color = x.Parent.Color;
-						x.Parent.Color = Color.Black;
-						y.Higher.Color = Color.Black;
-						RotateRight(x.Parent);
-						x = tree;
+						workNode.Color = linkedNode.Parent.Color;
+						linkedNode.Parent.Color = Color.Black;
+						workNode.Lower.Color = Color.Black;
+						RotateRight(linkedNode.Parent);
+						linkedNode = tree;
 					}
 				}
 			}
 
-			x.Color = Color.Black;
+			linkedNode.Color = Color.Black;
 		}
 
-		private void RestoreAfterInsert(RedBlackNode<T> x)
+		private void BalanceTreeAfterInsert(RedBlackNode<T> insertedNode)
 		{
 			// x and y are used as variable names for brevity, in a more formal
 			// implementation, you should probably change the names
 
-			RedBlackNode<T> y;
-
-			// maintain red-black tree properties after adding x
-			while (x != tree && x.Parent.Color == Color.Red)
+			// maintain red-black tree properties after adding newNode
+			while (insertedNode != tree && insertedNode.Parent.Color == Color.Red)
 			{
-				// determine traversal path
-				// is it on the Left or Right subtree?
-				if (x.Parent == x.Parent.Parent.Higher)
+				// Parent node is .Colored red;
+				RedBlackNode<T> workNode;
+
+				if (insertedNode.Parent == insertedNode.Parent.Parent.Lower)    // determine traversal path
 				{
-					// get uncle
-					y = x.Parent.Parent.Lower;
-					if (y?.Color == Color.Red)
+					// is it on the Left or Right subtree?
+					workNode = insertedNode.Parent.Parent.Higher;            // get uncle
+
+					if (workNode != null && workNode.Color == Color.Red)
 					{
 						// uncle is red; change x's Parent and uncle to black
-						x.Parent.Color = Color.Black;
-						y.Color = Color.Black;
+						insertedNode.Parent.Color = Color.Black;
+						workNode.Color = Color.Black;
 
 						// grandparent must be red. Why? Every red node that is not
 						// a leaf has only black children
-						x.Parent.Parent.Color = Color.Red;
-
-						// continue loop with grandparent
-						x = x.Parent.Parent;
+						insertedNode.Parent.Parent.Color = Color.Red;
+						insertedNode = insertedNode.Parent.Parent;  // continue loop with grandparent
 					}
 					else
 					{
-						// uncle is black; determine if x is greater than Parent
-						if (x == x.Parent.Lower)
+						// uncle is black; determine if newNode is greater than Parent
+						if (insertedNode == insertedNode.Parent.Higher)
 						{
-							// yes, x is greater than Parent; rotate Left
-							// make x a Left child
-							x = x.Parent;
-							RotateLeft(x);
+							// yes, newNode is greater than Parent; rotate Left
+							// make newNode a Left child
+							insertedNode = insertedNode.Parent;
+							RotateLeft(insertedNode);
 						}
 
-						// no, x is less than Parent:
-						// make Parent black
-						// make grandparent black
-						// rotate right
-						x.Parent.Color = Color.Black;
-						x.Parent.Parent.Color = Color.Red;
-						RotateRight(x.Parent.Parent);
+						// no, newNode is less than Parent
+						insertedNode.Parent.Color = Color.Black;    // make Parent black
+						insertedNode.Parent.Parent.Color = Color.Red;       // make grandparent black
+						RotateRight(insertedNode.Parent.Parent);                    // rotate right
 					}
 				}
 				else
 				{
-					// x's Parent is on the Right subtree
+					// newNode's Parent is on the Right subtree
 					// this code is the same as above with "Left" and "Right" swapped
-					y = x.Parent.Parent.Higher;
-					if (y?.Color == Color.Red)
+					workNode = insertedNode.Parent.Parent.Lower;
+
+					if (workNode != null && workNode.Color == Color.Red)
 					{
-						x.Parent.Color = Color.Black;
-						y.Color = Color.Black;
-						x.Parent.Parent.Color = Color.Red;
-						x = x.Parent.Parent;
+						insertedNode.Parent.Color = Color.Black;
+						workNode.Color = Color.Black;
+						insertedNode.Parent.Parent.Color = Color.Red;
+						insertedNode = insertedNode.Parent.Parent;
 					}
 					else
 					{
-						if (x == x.Parent.Higher)
+						if (insertedNode == insertedNode.Parent.Lower)
 						{
-							x = x.Parent;
-							RotateRight(x);
+							insertedNode = insertedNode.Parent;
+							RotateRight(insertedNode);
 						}
 
-						x.Parent.Color = Color.Black;
-						x.Parent.Parent.Color = Color.Red;
-						RotateLeft(x.Parent.Parent);
+						insertedNode.Parent.Color = Color.Black;
+						insertedNode.Parent.Parent.Color = Color.Red;
+						RotateLeft(insertedNode.Parent.Parent);
 					}
 				}
 			}
 
-			// tree should always be black
-			tree.Color = Color.Black;
+			tree.Color = Color.Black;       // rbTree should always be black
 		}
 
 		#endregion Internal Methods

@@ -56,11 +56,11 @@ namespace Mosa.Compiler.Framework.RegisterAllocator
 
 			if (IsLessThan(range))
 			{
-				return 1;
+				return -1;
 			}
 			else
 			{
-				return -1;
+				return 1;
 			}
 		}
 
