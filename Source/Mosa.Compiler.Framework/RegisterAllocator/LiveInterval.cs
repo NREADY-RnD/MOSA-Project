@@ -5,7 +5,7 @@ using System.Diagnostics;
 
 namespace Mosa.Compiler.Framework.RegisterAllocator
 {
-	public sealed class LiveInterval
+	public sealed class LiveInterval : BaseRange
 	{
 		public enum AllocationStage
 		{
@@ -16,6 +16,9 @@ namespace Mosa.Compiler.Framework.RegisterAllocator
 			SplitFinal = 4,
 			Max = 5,
 		}
+
+		public override int Start { get { return LiveRange.Start.SlotNumber; } }
+		public override int End { get { return LiveRange.End.SlotNumber; } }
 
 		public LiveRange LiveRange { get; }
 
@@ -45,15 +48,15 @@ namespace Mosa.Compiler.Framework.RegisterAllocator
 
 		#region Short Cuts
 
-		public SlotIndex Start { get { return LiveRange.Start; } }
+		public SlotIndex StartSlot { get { return LiveRange.Start; } }
 
-		public SlotIndex End { get { return LiveRange.End; } }
+		public SlotIndex EndSlot { get { return LiveRange.End; } }
 
 		public IList<SlotIndex> UsePositions { get { return LiveRange.UsePositions; } }
 
 		public IList<SlotIndex> DefPositions { get { return LiveRange.DefPositions; } }
 
-		public int Length { get { return LiveRange.Length; } }
+		//public int Length { get { return LiveRange.Length; } }
 
 		public bool IsEmpty { get { return LiveRange.IsEmpty; } }
 
@@ -120,16 +123,16 @@ namespace Mosa.Compiler.Framework.RegisterAllocator
 		{
 			Debug.Assert(VirtualRegister == interval.VirtualRegister);
 
-			var start = Start < interval.Start ? Start : interval.Start;
-			var end = End > interval.End ? End : interval.End;
+			var start = StartSlot < interval.StartSlot ? StartSlot : interval.StartSlot;
+			var end = EndSlot > interval.EndSlot ? EndSlot : interval.EndSlot;
 
 			return new LiveInterval(VirtualRegister, start, end);
 		}
 
 		public LiveInterval CreateExpandedLiveRange(SlotIndex start, SlotIndex end)
 		{
-			var mergedStart = Start < start ? Start : start;
-			var mergedEnd = End > end ? End : end;
+			var mergedStart = StartSlot < start ? StartSlot : start;
+			var mergedEnd = EndSlot > end ? EndSlot : end;
 
 			return new LiveInterval(VirtualRegister, mergedStart, mergedEnd);
 		}
@@ -142,7 +145,7 @@ namespace Mosa.Compiler.Framework.RegisterAllocator
 
 				Debug.Assert(firstUse != null);
 
-				if (firstUse.HalfStepBack == Start && firstUse.HalfStepForward == End)
+				if (firstUse.HalfStepBack == StartSlot && firstUse.HalfStepForward == EndSlot)
 					return true;
 			}
 
