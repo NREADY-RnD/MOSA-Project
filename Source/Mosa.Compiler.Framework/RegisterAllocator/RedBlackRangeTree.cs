@@ -578,6 +578,12 @@ namespace Mosa.Compiler.Framework.RegisterAllocator
 			// x (y's only child) is the node that will be linked to y's old parent.
 			var linkedNode = workNode.Lower != null ? workNode.Lower : workNode.Higher;
 
+			//HACK!
+			if (linkedNode == null)
+			{
+				linkedNode = new RedBlackNode<T>();
+			}
+
 			// replace x's parent with y's parent and
 			// link x to proper subtree in parent
 			// this removes y from the chain
