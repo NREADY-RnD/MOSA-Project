@@ -307,9 +307,9 @@ namespace Mosa.Compiler.Framework.RegisterAllocator
 
 			if (Trace.Active) Trace.Log($"  Partial free up destination: {furthest}");
 
-			if (liveInterval.UsePositions.Contains(furthest) && liveInterval.Contains(furthest.HalfStepBack))
+			if (liveInterval.UsePositions.Contains(furthest) && liveInterval.Contains(furthest.GetSlotBefore()))
 			{
-				furthest = furthest.HalfStepBack;
+				furthest = furthest.GetSlotBefore();
 			}
 
 			return PreferBlockBoundaryIntervalSplit(liveInterval, furthest, true);
@@ -390,17 +390,17 @@ namespace Mosa.Compiler.Framework.RegisterAllocator
 			if (Trace.Active) Trace.Log($"   Block Start : {(b != null ? b.ToString() : "null")}");
 
 			var c = liveInterval.LiveRange.GetPreviousUsePosition(at);
-			if (c != null && c.HalfStepForward <= at)
+			if (c != null && c.GetSlotAfter() <= at)
 			{
-				c = c.HalfStepForward;
+				c = c.GetSlotAfter();
 			}
 
 			if (Trace.Active) Trace.Log($"  Previous Use : {(c != null ? c.ToString() : "null")}");
 
 			var d = liveInterval.LiveRange.GetPreviousDefPosition(at);
-			if (d != null && d.HalfStepForward <= at)
+			if (d != null && d.GetSlotAfter() <= at)
 			{
-				d = d.HalfStepForward;
+				d = d.GetSlotAfter();
 			}
 
 			if (Trace.Active) Trace.Log($"  Previous Def : {(d != null ? d.ToString() : "null")}");
@@ -424,9 +424,9 @@ namespace Mosa.Compiler.Framework.RegisterAllocator
 			if (Trace.Active) Trace.Log($"     Block End : {(b != null ? b.ToString() : "null")}");
 
 			var c = liveInterval.LiveRange.GetNextUsePosition(at);
-			if (c != null && c.HalfStepBack > at)
+			if (c != null && c.GetSlotBefore() > at)
 			{
-				c = c.HalfStepBack;
+				c = c.GetSlotBefore();
 			}
 
 			if (Trace.Active) Trace.Log($"      Next Use : {(c != null ? c.ToString() : "null")}");

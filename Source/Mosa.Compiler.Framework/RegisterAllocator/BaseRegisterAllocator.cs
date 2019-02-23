@@ -311,7 +311,7 @@ namespace Mosa.Compiler.Framework.RegisterAllocator
 			{
 				var start = new SlotIndex(block.First);
 				var end = new SlotIndex(block.Last);
-				ExtendedBlocks[block.Sequence].Interval = new Interval(start, end);
+				ExtendedBlocks[block.Sequence].Interval = new SlotInterval(start, end);
 			}
 		}
 
@@ -442,7 +442,7 @@ namespace Mosa.Compiler.Framework.RegisterAllocator
 						var slot = slotIndex;
 
 						if (step == 0)
-							slot = slot.HalfStepBack;
+							slot = slot.GetSlotBefore();
 
 						//else if (step == 2)
 						//	slot = slot.HalfStepForward;
@@ -455,7 +455,7 @@ namespace Mosa.Compiler.Framework.RegisterAllocator
 
 						slots.Add(slot.SlotNumber);
 
-						if (!slot.IsOnHalfStep)
+						if (!slot.IsOnSlot)
 						{
 							var visitor = new OperandVisitor(node);
 
@@ -776,9 +776,9 @@ namespace Mosa.Compiler.Framework.RegisterAllocator
 						for (int s = 0; s < PhysicalRegisterCount; s++)
 						{
 							var register = VirtualRegisters[s];
-							if (intervalTrace.Active) intervalTrace.Log($"Add (Call) {register} : {slotIndex} destination {slotIndex.HalfStepForward}");
+							if (intervalTrace.Active) intervalTrace.Log($"Add (Call) {register} : {slotIndex} destination {slotIndex.GetSlotAfter()}");
 							if (intervalTrace.Active) intervalTrace.Log($"   Before: {LiveIntervalsToString(register.LiveIntervals)}");
-							register.AddLiveInterval(slotIndex, slotIndex.HalfStepForward);
+							register.AddLiveInterval(slotIndex, slotIndex.GetSlotAfter());
 							if (intervalTrace.Active) intervalTrace.Log($"    After: {LiveIntervalsToString(register.LiveIntervals)}");
 						}
 
@@ -794,9 +794,9 @@ namespace Mosa.Compiler.Framework.RegisterAllocator
 								continue;
 
 							var register = VirtualRegisters[s];
-							if (intervalTrace.Active) intervalTrace.Log($"Add (Call) {register} : {slotIndex} destination {slotIndex.HalfStepForward}");
+							if (intervalTrace.Active) intervalTrace.Log($"Add (Call) {register} : {slotIndex} destination {slotIndex.GetSlotAfter()}");
 							if (intervalTrace.Active) intervalTrace.Log($"   Before: {LiveIntervalsToString(register.LiveIntervals)}");
-							register.AddLiveInterval(slotIndex, slotIndex.HalfStepForward);
+							register.AddLiveInterval(slotIndex, slotIndex.GetSlotAfter());
 							if (intervalTrace.Active) intervalTrace.Log($"    After: {LiveIntervalsToString(register.LiveIntervals)}");
 						}
 					}
@@ -833,7 +833,7 @@ namespace Mosa.Compiler.Framework.RegisterAllocator
 							// This is common with instructions with more than one result.
 							if (intervalTrace.Active) intervalTrace.Log($"Add (Unused) {register} : {slotIndex} destination {slotIndex}");
 							if (intervalTrace.Active) intervalTrace.Log($"   Before: {LiveIntervalsToString(register.LiveIntervals)}");
-							register.AddLiveInterval(slotIndex, slotIndex.HalfStepForward);
+							register.AddLiveInterval(slotIndex, slotIndex.GetSlotAfter());
 							if (intervalTrace.Active) intervalTrace.Log($"    After: {LiveIntervalsToString(register.LiveIntervals)}");
 						}
 					}
@@ -1235,12 +1235,12 @@ namespace Mosa.Compiler.Framework.RegisterAllocator
 				if (liveRange.FirstDef == liveRange.Start)
 				{
 					// must split after def
-					splitAt = liveRange.FirstDef.HalfStepForward;
+					splitAt = liveRange.FirstDef.GetSlotAfter();
 				}
 				else
 				{
 					// split after def
-					splitAt = liveRange.FirstDef.HalfStepBack;
+					splitAt = liveRange.FirstDef.GetSlotBefore();
 				}
 			}
 			else
@@ -1250,15 +1250,15 @@ namespace Mosa.Compiler.Framework.RegisterAllocator
 				if (liveRange.FirstUse == liveRange.End)
 				{
 					// must split before use
-					splitAt = liveRange.FirstUse.HalfStepBack;
+					splitAt = liveRange.FirstUse.GetSlotBefore();
 				}
-				else if (liveRange.FirstUse.HalfStepBack == liveRange.Start)
+				else if (liveRange.FirstUse.GetSlotBefore() == liveRange.Start)
 				{
-					splitAt = liveRange.FirstUse.HalfStepForward;
+					splitAt = liveRange.FirstUse.GetSlotAfter();
 				}
 				else
 				{
-					splitAt = liveRange.FirstUse.HalfStepBack;
+					splitAt = liveRange.FirstUse.GetSlotBefore();
 				}
 			}
 
@@ -1495,7 +1495,7 @@ namespace Mosa.Compiler.Framework.RegisterAllocator
 
 			foreach (var key in moves.Keys)
 			{
-				var moveResolver = new MoveResolver(key.Node, !key.IsOnHalfStepForward, moves[key]);
+				var moveResolver = new MoveResolver(key.Node, !key.IsAfterSlot, moves[key]);
 
 				moveResolver.InsertResolvingMoves(Architecture, StackFrame);
 

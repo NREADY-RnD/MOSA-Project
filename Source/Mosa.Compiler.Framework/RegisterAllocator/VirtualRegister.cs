@@ -80,7 +80,7 @@ namespace Mosa.Compiler.Framework.RegisterAllocator
 			LiveIntervals.Remove(liveInterval);
 		}
 
-		public void AddLiveInterval(Interval interval)
+		public void AddLiveInterval(SlotInterval interval)
 		{
 			AddLiveInterval(interval.Start, interval.End);
 		}

@@ -74,12 +74,12 @@ namespace Mosa.Compiler.Framework.RegisterAllocator
 			return LiveRange.Intersects(start, end);
 		}
 
-		public bool IsAdjacent(Interval other)
+		public bool IsAdjacent(SlotInterval other)
 		{
 			return LiveRange.IsAdjacent(other);
 		}
 
-		public bool Intersects(Interval other)
+		public bool Intersects(SlotInterval other)
 		{
 			return LiveRange.Intersects(other);
 		}
@@ -145,7 +145,7 @@ namespace Mosa.Compiler.Framework.RegisterAllocator
 
 				Debug.Assert(firstUse != null);
 
-				if (firstUse.HalfStepBack == StartSlot && firstUse.HalfStepForward == EndSlot)
+				if (firstUse.GetSlotBefore() == StartSlot && firstUse.GetSlotAfter() == EndSlot)
 					return true;
 			}
 
