@@ -87,14 +87,13 @@ namespace Mosa.Compiler.Framework.RegisterAllocator.RedBlackTree
             return node;
         }
 
-        public int CompareTo(IntervalNode<T> other)
-        {
-            return Interval.CompareTo(other.Interval);
-        }
+        //public int CompareTo(IntervalNode<T> other)
+        //{
+        //    return Interval.CompareTo(other.Interval);
+        //}
 
         /// <summary>
         /// Refreshes the MaxEnd value after node manipulation
-        ///
         /// This is a local operation only
         /// </summary>
         public void RecalculateMaxEnd()

@@ -1,6 +1,8 @@
 ﻿// Copyright (c) MOSA Project. Licensed under the New BSD License.
 
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Text;
 
 namespace Mosa.Compiler.Framework.RegisterAllocator.RedBlackTree
 {
@@ -68,7 +70,7 @@ namespace Mosa.Compiler.Framework.RegisterAllocator.RedBlackTree
 
             while (node != Sentinel && !node.Interval.Overlaps(i))
             {
-                if (node.Left != Sentinel && node.Left.MaxEnd.CompareTo(i.Start) >= 0)   // NOTE: might need to change to >=
+                if (node.Left != Sentinel && node.Left.MaxEnd.CompareTo(i.Start) > 0)
                 {
                     node = node.Left;
                 }
@@ -92,7 +94,7 @@ namespace Mosa.Compiler.Framework.RegisterAllocator.RedBlackTree
 
             while (node != Sentinel && !node.Interval.Overlaps(val))
             {
-                if (node.Left != Sentinel && node.Left.MaxEnd.CompareTo(val) >= 0)   // NOTE: might need to change to >=
+                if (node.Left != Sentinel && node.Left.MaxEnd.CompareTo(val) > 0)
                 {
                     node = node.Left;
                 }
@@ -128,7 +130,7 @@ namespace Mosa.Compiler.Framework.RegisterAllocator.RedBlackTree
             }
 
             // Interval start is greater than largest endpoint in this subtree
-            if (node.Right != Sentinel && i.Start.CompareTo(node.MaxEnd) <= 0) // NOTE: might need to change to <
+            if (node.Right != Sentinel && i.Start.CompareTo(node.MaxEnd) < 0)
             {
                 SearchSubtree(node.Right, i, result);
             }
@@ -152,7 +154,7 @@ namespace Mosa.Compiler.Framework.RegisterAllocator.RedBlackTree
             }
 
             // Interval start is greater than largest endpoint in this subtree
-            if (node.Right != Sentinel && val.CompareTo(node.MaxEnd) <= 0) // NOTE: might need to change to <
+            if (node.Right != Sentinel && val.CompareTo(node.MaxEnd) < 0)
             {
                 SearchSubtree(node.Right, val, result);
             }
@@ -177,7 +179,7 @@ namespace Mosa.Compiler.Framework.RegisterAllocator.RedBlackTree
             }
 
             // Interval start is greater than largest endpoint in this subtree
-            if (node.Right != Sentinel && i.Start.CompareTo(node.MaxEnd) <= 0) // NOTE: might need to change to <
+            if (node.Right != Sentinel && i.Start.CompareTo(node.MaxEnd) < 0)
             {
                 return SearchSubtree(node.Right, i);
             }
@@ -204,7 +206,7 @@ namespace Mosa.Compiler.Framework.RegisterAllocator.RedBlackTree
             }
 
             // Interval start is greater than largest endpoint in this subtree
-            if (node.Right != Sentinel && val.CompareTo(node.MaxEnd) <= 0)  // NOTE: might need to change to <
+            if (node.Right != Sentinel && val.CompareTo(node.MaxEnd) < 0)
             {
                 return SearchSubtree(node.Right, val);
             }
@@ -245,7 +247,10 @@ namespace Mosa.Compiler.Framework.RegisterAllocator.RedBlackTree
         /// <param name="interval">interval to add</param>
         public void Add(T interval)
         {
+            Debug.Assert(!Contains(interval));
+
             var node = new IntervalNode<T>(interval);
+
             if (Root == Sentinel)
             {
                 node.Color = NodeColor.BLACK;
@@ -267,13 +272,18 @@ namespace Mosa.Compiler.Framework.RegisterAllocator.RedBlackTree
         /// <param name="currentNode">subtree accessed in recursion</param>
         private void InsertInterval(T interval, IntervalNode<T> currentNode)
         {
-            IntervalNode<T> addedNode = Sentinel;
-            if (interval.CompareTo(currentNode.Interval) < 0)
+            var addedNode = Sentinel;
+
+            var compare = interval.CompareTo(currentNode.Interval);
+
+            if (compare < 0)
             {
                 if (currentNode.Left == Sentinel)
                 {
-                    addedNode = new IntervalNode<T>(interval);
-                    addedNode.Color = NodeColor.RED;
+                    addedNode = new IntervalNode<T>(interval)
+                    {
+                        Color = NodeColor.RED
+                    };
                     currentNode.Left = addedNode;
                     addedNode.Parent = currentNode;
                 }
@@ -283,12 +293,14 @@ namespace Mosa.Compiler.Framework.RegisterAllocator.RedBlackTree
                     return;
                 }
             }
-            else if (interval.CompareTo(currentNode.Interval) > 0)
+            else if (compare > 0)
             {
                 if (currentNode.Right == Sentinel)
                 {
-                    addedNode = new IntervalNode<T>(interval);
-                    addedNode.Color = NodeColor.RED;
+                    addedNode = new IntervalNode<T>(interval)
+                    {
+                        Color = NodeColor.RED
+                    };
                     currentNode.Right = addedNode;
                     addedNode.Parent = currentNode;
                 }
@@ -426,7 +438,7 @@ namespace Mosa.Compiler.Framework.RegisterAllocator.RedBlackTree
                     node.Parent.Right = temp;
                 }
 
-                IntervalNode<T> maxAux = node.Parent;
+                var maxAux = node.Parent;
                 maxAux.RecalculateMaxEnd();
                 while (maxAux.Parent != Sentinel)
                 {
@@ -443,10 +455,9 @@ namespace Mosa.Compiler.Framework.RegisterAllocator.RedBlackTree
 
         /// <summary>
         /// Ensures constraints still apply after node deletion
-        ///
-        ///  - made with the help of algorithm from Cormen et Al. Introduction to Algorithms 2nd ed.
+        /// - made with the help of algorithm from Cormen et Al. Introduction to Algorithms 2nd ed.
         /// </summary>
-        /// <param name="node"></param>
+        /// <param name="node">The node.</param>
         private void RenewConstraintsAfterDelete(IntervalNode<T> node)
         {
             // Need to bubble up and fix
@@ -454,7 +465,7 @@ namespace Mosa.Compiler.Framework.RegisterAllocator.RedBlackTree
             {
                 if (node.ParentDirection == NodeDirection.RIGHT)
                 {
-                    IntervalNode<T> aux = node.Parent.Right;
+                    var aux = node.Parent.Right;
                     if (aux.Color == NodeColor.RED)
                     {
                         aux.Color = NodeColor.BLACK;
@@ -487,7 +498,7 @@ namespace Mosa.Compiler.Framework.RegisterAllocator.RedBlackTree
                 }
                 else
                 {
-                    IntervalNode<T> aux = node.Parent.Left;
+                    var aux = node.Parent.Left;
                     if (aux.Color == NodeColor.RED)
                     {
                         aux.Color = NodeColor.BLACK;
@@ -530,12 +541,14 @@ namespace Mosa.Compiler.Framework.RegisterAllocator.RedBlackTree
         private void RotateRight(IntervalNode<T> node)
         {
             var pivot = node.Left;
-            NodeDirection dir = node.ParentDirection;
+            var dir = node.ParentDirection;
             var parent = node.Parent;
             var tempTree = pivot.Right;
+
             pivot.Right = node;
             node.Parent = pivot;
             node.Left = tempTree;
+
             if (tempTree != Sentinel)
             {
                 tempTree.Parent = node;
@@ -567,12 +580,14 @@ namespace Mosa.Compiler.Framework.RegisterAllocator.RedBlackTree
         private void RotateLeft(IntervalNode<T> node)
         {
             var pivot = node.Right;
-            NodeDirection dir = node.ParentDirection;
+            var dir = node.ParentDirection;
             var parent = node.Parent;
             var tempTree = pivot.Left;
+
             pivot.Left = node;
             node.Parent = pivot;
             node.Right = tempTree;
+
             if (tempTree != Sentinel)
             {
                 tempTree.Parent = node;
@@ -599,11 +614,11 @@ namespace Mosa.Compiler.Framework.RegisterAllocator.RedBlackTree
 
         #region Enumerators
 
-        private IEnumerable<Interval> InOrderWalk(IntervalNode<T> node)
+        private IEnumerable<T> InOrderWalk(IntervalNode<T> node)
         {
             if (node.Left != Sentinel)
             {
-                foreach (Interval val in InOrderWalk(node.Left))
+                foreach (T val in InOrderWalk(node.Left))
                 {
                     yield return val;
                 }
@@ -616,21 +631,35 @@ namespace Mosa.Compiler.Framework.RegisterAllocator.RedBlackTree
 
             if (node.Right != Sentinel)
             {
-                foreach (Interval val in InOrderWalk(node.Right))
+                foreach (T val in InOrderWalk(node.Right))
                 {
                     yield return val;
                 }
             }
         }
 
-        public IEnumerator<Interval> GetEnumerator()
+        public IEnumerator<T> GetEnumerator()
         {
-            foreach (Interval val in InOrderWalk(Root))
+            foreach (var val in InOrderWalk(Root))
             {
                 yield return val;
             }
         }
 
         #endregion Enumerators
+
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+
+            foreach (var node in InOrderWalk(Root))
+            {
+                sb.Append("[").Append(node.Start).Append("-").Append(node.End).Append("],");
+            }
+
+            sb.Length--;
+
+            return sb.ToString();
+        }
     }
 }

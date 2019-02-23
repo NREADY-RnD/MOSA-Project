@@ -52,22 +52,15 @@ namespace Mosa.Compiler.Framework.RegisterAllocator.RedBlackTree
 
         public bool Contains(int val)
         {
-            return val <= Start && val < End;
+            return val >= Start && val < End;
         }
 
         public int CompareTo(Interval interval)
         {
-            if (IsSame(interval))
+            if (Overlaps(interval))
                 return 0;
 
-            if (IsLessThan(interval))
-            {
-                return -1;
-            }
-            else
-            {
-                return 1;
-            }
+            return Start.CompareTo(interval.Start);
         }
 
         public int CompareTo(int val)
@@ -75,34 +68,7 @@ namespace Mosa.Compiler.Framework.RegisterAllocator.RedBlackTree
             if (Contains(val))
                 return 0;
 
-            if (IsLessThan(val))
-            {
-                return -1;
-            }
-            else
-            {
-                return 1;
-            }
-        }
-
-        public bool IsLessThan(Interval range)
-        {
-            return End < range.Start;
-        }
-
-        public bool IsLessThan(int at)
-        {
-            return End < at;
-        }
-
-        public bool IsGreaterThan(Interval range)
-        {
-            return Start > range.End;
-        }
-
-        public bool IsGreaterThan(int at)
-        {
-            return Start > at;
+            return Start.CompareTo(val);
         }
 
         public bool IsAdjacent(int start, int end)
@@ -110,9 +76,9 @@ namespace Mosa.Compiler.Framework.RegisterAllocator.RedBlackTree
             return start == End || end == Start;
         }
 
-        public bool IsAdjacent(Interval range)
+        public bool IsAdjacent(Interval interval)
         {
-            return IsAdjacent(range.Start, range.End);
+            return IsAdjacent(interval.Start, interval.End);
         }
 
         public override string ToString()
