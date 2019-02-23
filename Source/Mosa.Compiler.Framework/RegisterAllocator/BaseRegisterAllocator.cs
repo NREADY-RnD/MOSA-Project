@@ -864,17 +864,18 @@ namespace Mosa.Compiler.Framework.RegisterAllocator
 
 		private ExtendedBlock GetContainingBlock(SlotIndex slotIndex)
 		{
-			// FUTURE: Cache results
-			foreach (var block in ExtendedBlocks)
-			{
-				if (block.Contains(slotIndex))
-				{
-					return block;
-				}
-			}
+			return ExtendedBlocks[slotIndex.Node.Block.Sequence];
+			//// FUTURE: Cache results
+			//foreach (var block in ExtendedBlocks)
+			//{
+			//	if (block.Contains(slotIndex))
+			//	{
+			//		return block;
+			//	}
+			//}
 
-			Debug.Fail("GetContainingBlock");
-			return null;
+			//Debug.Fail("GetContainingBlock");
+			//return null;
 		}
 
 		protected int GetLoopDepth(SlotIndex slotIndex)
