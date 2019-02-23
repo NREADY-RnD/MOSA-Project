@@ -6,7 +6,7 @@ using System.Diagnostics;
 
 namespace Mosa.Compiler.Framework.RegisterAllocator
 {
-	public sealed class SlotIndex// : IComparable
+	public sealed class SlotIndex : IComparable
 	{
 		public const int Increment = 2;
 
@@ -116,12 +116,12 @@ namespace Mosa.Compiler.Framework.RegisterAllocator
 			return SlotNumber;
 		}
 
-		//int IComparable.CompareTo(Object obj)
-		//{
-		//	var slotIndex = obj as SlotIndex;
+		int IComparable.CompareTo(Object obj)
+		{
+			var slotIndex = obj as SlotIndex;
 
-		//	return SlotNumber - slotIndex.SlotNumber;
-		//}
+			return SlotNumber - slotIndex.SlotNumber;
+		}
 
 		public override string ToString()
 		{

@@ -1,5 +1,6 @@
 ﻿// Copyright (c) MOSA Project. Licensed under the New BSD License.
 
+using Mosa.Compiler.Framework.RegisterAllocator.RedBlackTree;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
@@ -9,7 +10,7 @@ namespace Mosa.Compiler.Framework.RegisterAllocator
 	// TODO: Use data structures which are faster at finding intersections, and add & evicting intervals.
 	public class LiveIntervalTrack
 	{
-		private readonly RedBlackRangeTree<LiveInterval> intervals = new RedBlackRangeTree<LiveInterval>();
+		private readonly IntervalTree<LiveInterval> intervals = new IntervalTree<LiveInterval>();
 
 		public readonly bool IsReserved;
 
@@ -61,7 +62,7 @@ namespace Mosa.Compiler.Framework.RegisterAllocator
 
 		public LiveInterval GetLiveIntervalAt(SlotIndex slotIndex)
 		{
-			return intervals.Get(slotIndex.SlotNumber);
+			return intervals.SearchFirstOverlapping(slotIndex.SlotNumber);
 		}
 
 		/// <summary>
@@ -71,24 +72,7 @@ namespace Mosa.Compiler.Framework.RegisterAllocator
 		/// <returns></returns>
 		public List<LiveInterval> GetIntersections(LiveInterval liveInterval)
 		{
-			return intervals.GetAll(liveInterval);
-		}
-
-		/// <summary>
-		/// Gets the next live range.
-		/// </summary>
-		/// <param name="after">Index of the slot.</param>
-		/// <returns></returns>
-		public SlotIndex ___GetNextLiveRange(SlotIndex after)
-		{
-			var interval = intervals.GetNextAfter(after.SlotNumber);
-
-			if (interval == null)
-				return null;
-
-			Debug.Assert(interval.EndSlot >= after);
-
-			return interval.StartSlot;
+			return intervals.Search(liveInterval);
 		}
 
 		public override string ToString()

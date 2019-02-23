@@ -1,11 +1,12 @@
 ﻿// Copyright (c) MOSA Project. Licensed under the New BSD License.
 
+using Mosa.Compiler.Framework.RegisterAllocator.RedBlackTree;
 using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace Mosa.Compiler.Framework.RegisterAllocator
 {
-	public sealed class LiveInterval : BaseRange
+	public sealed class LiveInterval : Interval
 	{
 		public enum AllocationStage
 		{
