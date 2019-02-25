@@ -433,18 +433,18 @@ namespace Mosa.Compiler.Framework.RegisterAllocator.RedBlackTree
 
 		private IntervalNode<T> GetUncle(IntervalNode<T> node)
 		{
-			var gparent = GetGrandParent(node);
-			if (gparent == Sentinel)
+			var grandparent = GetGrandParent(node);
+			if (grandparent == Sentinel)
 			{
 				return Sentinel;
 			}
 
-			if (node.Parent == gparent.Left)
+			if (node.Parent == grandparent.Left)
 			{
-				return gparent.Right;
+				return grandparent.Right;
 			}
 
-			return gparent.Left;
+			return grandparent.Left;
 		}
 
 		/// <summary>
@@ -469,21 +469,24 @@ namespace Mosa.Compiler.Framework.RegisterAllocator.RedBlackTree
 			{
 				node.Parent.Color = uncle.Color = NodeColor.BLACK;
 
-				var gparent = GetGrandParent(node);
-				if (gparent != Sentinel && gparent.Parent != Sentinel)
+				var grandparent = GetGrandParent(node);
+				if (grandparent != Sentinel && grandparent.Parent != Sentinel)
 				{
-					gparent.Color = NodeColor.RED;
-					RenewConstraintsAfterInsert(gparent);
+					grandparent.Color = NodeColor.RED;
+					RenewConstraintsAfterInsert(grandparent);
 				}
 			}
 			else
 			{
-				if (GetParentDirection(node) == NodeDirection.LEFT && GetParentDirection(node.Parent) == NodeDirection.RIGHT)
+				var parentDirection = GetParentDirection(node);
+				var parentParentDirection = GetParentDirection(node.Parent);
+
+				if (parentDirection == NodeDirection.LEFT && parentParentDirection == NodeDirection.RIGHT)
 				{
 					RotateLeft(node.Parent);
 					node = node.Left;
 				}
-				else if (GetParentDirection(node) == NodeDirection.RIGHT && GetParentDirection(node.Parent) == NodeDirection.LEFT)
+				else if (parentDirection == NodeDirection.RIGHT && parentParentDirection == NodeDirection.LEFT)
 				{
 					RotateRight(node.Parent);
 					node = node.Right;
@@ -491,19 +494,21 @@ namespace Mosa.Compiler.Framework.RegisterAllocator.RedBlackTree
 
 				node.Parent.Color = NodeColor.BLACK;
 
-				if (GetGrandParent(node) == Sentinel)
+				var grandparent = GetGrandParent(node);
+
+				if (grandparent == Sentinel)
 				{
 					return;
 				}
-				GetGrandParent(node).Color = NodeColor.RED;
+				grandparent.Color = NodeColor.RED;
 
 				if (GetParentDirection(node) == NodeDirection.RIGHT)
 				{
-					RotateRight(GetGrandParent(node));
+					RotateRight(grandparent);
 				}
 				else
 				{
-					RotateLeft(GetGrandParent(node));
+					RotateLeft(grandparent);
 				}
 			}
 		}
