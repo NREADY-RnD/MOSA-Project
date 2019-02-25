@@ -101,15 +101,15 @@ namespace Mosa.Compiler.Framework.RegisterAllocator
 			return s1.SlotNumber != s2.SlotNumber;
 		}
 
-		//public override bool Equals(object obj)
-		//{
-		//	var o = obj as SlotIndex;
+		public override bool Equals(object obj)
+		{
+			var o = obj as SlotIndex;
 
-		//	if (o == null)
-		//		return false;
+			if (o == null)
+				return false;
 
-		//	return o.Node == Node;
-		//}
+			return o.Node == Node;
+		}
 
 		public override int GetHashCode()
 		{
