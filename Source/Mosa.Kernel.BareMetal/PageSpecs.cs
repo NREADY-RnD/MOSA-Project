@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿// Copyright (c) MOSA Project. Licensed under the New BSD License.
 
 namespace Mosa.Kernel.BareMetal
 {
-	class PageSpecs
+	internal class PageSpecs
 	{
 		public static uint PageShift = Platform.GetPageShift();
 

@@ -1,4 +1,6 @@
-﻿using Mosa.Runtime.Plug;
+﻿// Copyright (c) MOSA Project. Licensed under the New BSD License.
+
+using Mosa.Runtime.Plug;
 
 namespace Mosa.Kernel.Plug.BareMetal.x64
 {
