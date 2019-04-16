@@ -66,8 +66,8 @@
     <LangVersion>7.2</LangVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Plug\BootMemoryMapPlug.cs" />
-    <Compile Include="Plug\PlatformPlug.cs" />
+    <Compile Include="PlatformPlug.cs" />
+    <Compile Include="SSE.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Mosa.Kernel.BareMetal\Mosa.Kernel.BareMetal.csproj">

@@ -9,14 +9,9 @@ namespace Mosa.Kernel.BareMetal
 	{
 		private static IntPtr Map;
 
-		public static IntPtr GetInitializeMemoryMapLocation()
-		{
-			return IntPtr.Zero;
-		}
-
 		public static void Initialize()
 		{
-			Map = GetInitializeMemoryMapLocation();
+			Map = Platform.GetMemoryMapLocation();
 			Intrinsic.Store64(Map, 0);
 		}
 
@@ -26,7 +21,7 @@ namespace Mosa.Kernel.BareMetal
 			return Map + (int)offset;
 		}
 
-		public static void SetMemoryMap(IntPtr address, ulong size, uint type)
+		public static void SetMemoryMap(IntPtr address, ulong size, BootMemoryMapType type)
 		{
 			var count = GetMemoryMapIndexCount();
 			var entryPtr = GetEntryAddress(count);

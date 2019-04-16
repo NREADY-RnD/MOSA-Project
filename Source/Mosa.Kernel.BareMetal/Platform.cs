@@ -1,10 +1,25 @@
 ﻿// Copyright (c) MOSA Project. Licensed under the New BSD License.
 
+using System;
+
 namespace Mosa.Kernel.BareMetal
 {
 	public static class Platform
 	{
-		// GetPageShift method will be plugged elsewhere
-		public static uint GetPageShift() { return 0; }
+		// These methods will be plugged and implemented elsewhere
+
+		public static uint GetPageShift()
+		{
+			return 0;
+		}
+
+		public static void EntryPoint()
+		{
+		}
+
+		public static IntPtr GetMemoryMapLocation()
+		{
+			return IntPtr.Zero;
+		}
 	}
 }

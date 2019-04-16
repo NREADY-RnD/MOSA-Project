@@ -7,7 +7,7 @@ namespace Mosa.Kernel.BareMetal
 {
 	public struct BootMemoryMapEntry
 	{
-		private IntPtr Entry;
+		private readonly IntPtr Entry;
 
 		public BootMemoryMapEntry(IntPtr entry)
 		{
@@ -28,15 +28,10 @@ namespace Mosa.Kernel.BareMetal
 			set { Intrinsic.Store64(Entry, IntPtr.Size, value); }
 		}
 
-		public uint Type
+		public BootMemoryMapType Type
 		{
-			get { return Intrinsic.Load32(Entry, IntPtr.Size + sizeof(ulong)); }
-			set { Intrinsic.Store64(Entry, IntPtr.Size, value); }
-		}
-
-		public void SetType(uint type)
-		{
-			Intrinsic.Store32(Entry, IntPtr.Size + sizeof(long), type);
+			get { return (BootMemoryMapType)Intrinsic.Load32(Entry, IntPtr.Size + sizeof(ulong)); }
+			set { Intrinsic.Store32(Entry, IntPtr.Size, (int)value); }
 		}
 
 		public static uint EntrySize = (uint)IntPtr.Size + sizeof(ulong) + sizeof(int);

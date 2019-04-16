@@ -66,10 +66,16 @@
     <LangVersion>7.2</LangVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="BootMemoryMapType.cs" />
+    <Compile Include="MultibootV1.cs" />
+    <Compile Include="Multiboot.cs" />
+    <Compile Include="Boot.cs" />
     <Compile Include="BootMemoryMapEntry.cs" />
+    <Compile Include="MultibootV1MemoryMapEntry.cs" />
     <Compile Include="PageSpecs.cs" />
     <Compile Include="BootMemoryMap.cs" />
     <Compile Include="Platform.cs" />
+    <Compile Include="MultibootV1VBEEntry.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Mosa.Runtime\Mosa.Runtime.csproj">
