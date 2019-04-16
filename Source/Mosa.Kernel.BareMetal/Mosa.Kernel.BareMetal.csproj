@@ -67,6 +67,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="BootMemoryMapType.cs" />
+    <Compile Include="Extension\IntPtrExtension.cs" />
     <Compile Include="MultibootV1.cs" />
     <Compile Include="Multiboot.cs" />
     <Compile Include="Boot.cs" />

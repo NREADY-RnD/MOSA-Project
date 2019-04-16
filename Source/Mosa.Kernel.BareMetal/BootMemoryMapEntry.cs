@@ -1,6 +1,6 @@
 ﻿// Copyright (c) MOSA Project. Licensed under the New BSD License.
 
-using Mosa.Runtime;
+using Mosa.Kernel.BareMetal.Extension;
 using System;
 
 namespace Mosa.Kernel.BareMetal
@@ -18,20 +18,20 @@ namespace Mosa.Kernel.BareMetal
 
 		public IntPtr Address
 		{
-			get { return Intrinsic.LoadPointer(Entry); }
-			set { Intrinsic.Store(Entry, 0, value); }
+			get { return Entry.LoadPointer(); }
+			set { Entry.StorePointer(value); }
 		}
 
 		public ulong Size
 		{
-			get { return Intrinsic.Load32(Entry, IntPtr.Size); }
-			set { Intrinsic.Store64(Entry, IntPtr.Size, value); }
+			get { return Entry.Load64(IntPtr.Size); }
+			set { Entry.Store64(IntPtr.Size, value); }
 		}
 
 		public BootMemoryMapType Type
 		{
-			get { return (BootMemoryMapType)Intrinsic.Load32(Entry, IntPtr.Size + sizeof(ulong)); }
-			set { Intrinsic.Store32(Entry, IntPtr.Size, (int)value); }
+			get { return (BootMemoryMapType)Entry.Load32(IntPtr.Size + sizeof(ulong)); }
+			set { Entry.Store32(IntPtr.Size, (int)value); }
 		}
 
 		public static uint EntrySize = (uint)IntPtr.Size + sizeof(ulong) + sizeof(int);

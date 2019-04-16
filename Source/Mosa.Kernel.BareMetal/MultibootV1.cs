@@ -1,6 +1,6 @@
 ﻿// Copyright (c) MOSA Project. Licensed under the New BSD License.
 
-using Mosa.Runtime;
+using Mosa.Kernel.BareMetal.Extension;
 using Mosa.Runtime.Extension;
 using System;
 
@@ -60,101 +60,101 @@ namespace Mosa.Kernel.BareMetal
 		/// <summary>
 		/// Gets the flags.
 		/// </summary>
-		public uint Flags { get { return Intrinsic.Load32(Entry, MultiBootInfoOffset.Flags); } }
+		public uint Flags { get { return Entry.Load32(MultiBootInfoOffset.Flags); } }
 
 		/// <summary>
 		/// Gets the memory lower.
 		/// </summary>
-		public IntPtr MemoryLower { get { return Intrinsic.LoadPointer(Entry, MultiBootInfoOffset.MemLower); } }
+		public IntPtr MemoryLower { get { return Entry.LoadPointer(MultiBootInfoOffset.MemLower); } }
 
 		/// <summary>
 		/// Gets the memory upper.
 		/// </summary>
-		public IntPtr MemoryUpper { get { return Intrinsic.LoadPointer(Entry, MultiBootInfoOffset.MemUpper); } }
+		public IntPtr MemoryUpper { get { return Entry.LoadPointer(MultiBootInfoOffset.MemUpper); } }
 
 		/// <summary>
 		/// Gets the boot device.
 		/// </summary>
-		public uint BootDevice { get { return Intrinsic.Load32(Entry, MultiBootInfoOffset.BootDevice); } }
+		public uint BootDevice { get { return Entry.Load32(MultiBootInfoOffset.BootDevice); } }
 
 		/// <summary>
 		/// Gets the command line address.
 		/// </summary>
-		public IntPtr CommandLineAddress { get { return Intrinsic.LoadPointer(Entry, MultiBootInfoOffset.CommandLine); } }
+		public IntPtr CommandLineAddress { get { return Entry.LoadPointer(MultiBootInfoOffset.CommandLine); } }
 
 		/// <summary>
 		/// Gets the module count.
 		/// </summary>
-		public uint ModuleCount { get { return Intrinsic.Load32(Entry, MultiBootInfoOffset.ModuleCount); } }
+		public uint ModuleCount { get { return Entry.Load32(MultiBootInfoOffset.ModuleCount); } }
 
 		/// <summary>
 		/// Gets the module start.
 		/// </summary>
-		public IntPtr ModuleStart { get { return Intrinsic.LoadPointer(Entry, MultiBootInfoOffset.ModuleAddress); } }
+		public IntPtr ModuleStart { get { return Entry.LoadPointer(MultiBootInfoOffset.ModuleAddress); } }
 
 		/// <summary>
 		/// Gets the length of the memory map.
 		/// </summary>
-		public uint MemoryMapLength { get { return Intrinsic.Load32(Entry, MultiBootInfoOffset.MemMapLength); } }
+		public uint MemoryMapLength { get { return Entry.Load32(MultiBootInfoOffset.MemMapLength); } }
 
 		/// <summary>
 		/// Gets the memory map start.
 		/// </summary>
-		public IntPtr MemoryMapStart { get { return Intrinsic.LoadPointer(Entry, MultiBootInfoOffset.MemMapAddress); } }
+		public IntPtr MemoryMapStart { get { return Entry.LoadPointer(MultiBootInfoOffset.MemMapAddress); } }
 
 		/// <summary>
 		/// Gets the length of the drive.
 		/// </summary>
-		public uint DriveLength { get { return Intrinsic.Load32(Entry, MultiBootInfoOffset.DriveLength); } }
+		public uint DriveLength { get { return Entry.Load32(MultiBootInfoOffset.DriveLength); } }
 
 		/// <summary>
 		/// Gets the drive start.
 		/// </summary>
-		public uint DriveStart { get { return Intrinsic.Load32(Entry, MultiBootInfoOffset.DriveAddress); } }
+		public uint DriveStart { get { return Entry.Load32(MultiBootInfoOffset.DriveAddress); } }
 
 		/// <summary>
 		/// Gets the configuration table.
 		/// </summary>
-		public uint ConfigurationTable { get { return Intrinsic.Load32(Entry, MultiBootInfoOffset.ConfigTable); } }
+		public uint ConfigurationTable { get { return Entry.Load32(MultiBootInfoOffset.ConfigTable); } }
 
 		/// <summary>
 		/// Gets the name of the boot loader address.
 		/// </summary>
-		public uint BootLoaderName { get { return Intrinsic.Load32(Entry, MultiBootInfoOffset.BootLoaderName); } }
+		public uint BootLoaderName { get { return Entry.Load32(MultiBootInfoOffset.BootLoaderName); } }
 
 		/// <summary>
 		/// Gets the APM table.
 		/// </summary>
-		public IntPtr APMTable { get { return Intrinsic.LoadPointer(Entry, MultiBootInfoOffset.ApmTable); } }
+		public IntPtr APMTable { get { return Entry.LoadPointer(MultiBootInfoOffset.ApmTable); } }
 
 		/// <summary>
 		/// Gets the VBE control information.
 		/// </summary>
-		public uint VBEControlInformation { get { return Intrinsic.Load32(Entry, MultiBootInfoOffset.VbeControlInfo); } }
+		public uint VBEControlInformation { get { return Entry.Load32(MultiBootInfoOffset.VbeControlInfo); } }
 
 		/// <summary>
 		/// Gets the VBE mode info.
 		/// </summary>
-		public IntPtr VBEModeInfo { get { return Intrinsic.LoadPointer(Entry, MultiBootInfoOffset.VbeModeInfo); } }
+		public IntPtr VBEModeInfo { get { return Entry.LoadPointer(MultiBootInfoOffset.VbeModeInfo); } }
 
 		/// <summary>
 		/// Gets the VBE mode.
 		/// </summary>
-		public uint VBEMode { get { return Intrinsic.Load32(Entry, MultiBootInfoOffset.VbeMode); } }
+		public uint VBEMode { get { return Entry.Load32(MultiBootInfoOffset.VbeMode); } }
 
 		/// <summary>
 		/// Gets the VBE interface seg.
 		/// </summary>
-		public uint VBEInterfaceSeg { get { return Intrinsic.Load32(Entry, MultiBootInfoOffset.VbeInterfaceSeg); } }
+		public uint VBEInterfaceSeg { get { return Entry.Load32(MultiBootInfoOffset.VbeInterfaceSeg); } }
 
 		/// <summary>
 		/// Gets the VBE interface off.
 		/// </summary>
-		public uint VBEInterfaceOff { get { return Intrinsic.Load32(Entry, MultiBootInfoOffset.VbeInterfaceOff); } }
+		public uint VBEInterfaceOff { get { return Entry.Load32(MultiBootInfoOffset.VbeInterfaceOff); } }
 
 		/// <summary>
 		/// Gets the VBE interface len.
 		/// </summary>
-		public uint VBEInterfaceLen { get { return Intrinsic.Load32(Entry, MultiBootInfoOffset.VbeInterfaceLength); } }
+		public uint VBEInterfaceLen { get { return Entry.Load32(MultiBootInfoOffset.VbeInterfaceLength); } }
 	}
 }

@@ -1,6 +1,6 @@
 ﻿// Copyright (c) MOSA Project. Licensed under the New BSD License.
 
-using Mosa.Runtime;
+using Mosa.Kernel.BareMetal.Extension;
 using Mosa.Runtime.Extension;
 using System;
 
@@ -67,68 +67,68 @@ namespace Mosa.Kernel.BareMetal
 			Entry = entry;
 		}
 
-		public ushort Attributes { get { return Intrinsic.Load16(Entry, VBEModeInfoOffset.Attributes); } }
+		public ushort Attributes { get { return Entry.Load16(VBEModeInfoOffset.Attributes); } }
 
-		public byte WindowA { get { return Intrinsic.Load8(Entry, VBEModeInfoOffset.WindowA); } }
+		public byte WindowA { get { return Entry.Load8(VBEModeInfoOffset.WindowA); } }
 
-		public byte WindowB { get { return Intrinsic.Load8(Entry, VBEModeInfoOffset.WindowB); } }
+		public byte WindowB { get { return Entry.Load8(VBEModeInfoOffset.WindowB); } }
 
-		public ushort Granularity { get { return Intrinsic.Load16(Entry, VBEModeInfoOffset.Granularity); } }
+		public ushort Granularity { get { return Entry.Load16(VBEModeInfoOffset.Granularity); } }
 
-		public ushort WindowSize { get { return Intrinsic.Load16(Entry, VBEModeInfoOffset.WindowSize); } }
+		public ushort WindowSize { get { return Entry.Load16(VBEModeInfoOffset.WindowSize); } }
 
-		public ushort SegmentA { get { return Intrinsic.Load16(Entry, VBEModeInfoOffset.SegmentA); } }
+		public ushort SegmentA { get { return Entry.Load16(VBEModeInfoOffset.SegmentA); } }
 
-		public ushort SegmentB { get { return Intrinsic.Load16(Entry, VBEModeInfoOffset.SegmentB); } }
+		public ushort SegmentB { get { return Entry.Load16(VBEModeInfoOffset.SegmentB); } }
 
-		public uint WinFuncPtr { get { return Intrinsic.Load32(Entry, VBEModeInfoOffset.WinFuncPtr); } }
+		public uint WinFuncPtr { get { return Entry.Load32(VBEModeInfoOffset.WinFuncPtr); } }
 
-		public ushort Pitch { get { return Intrinsic.Load16(Entry, VBEModeInfoOffset.Pitch); } }
+		public ushort Pitch { get { return Entry.Load16(VBEModeInfoOffset.Pitch); } }
 
-		public ushort ScreenWidth { get { return Intrinsic.Load16(Entry, VBEModeInfoOffset.ScreenWidth); } }
+		public ushort ScreenWidth { get { return Entry.Load16(VBEModeInfoOffset.ScreenWidth); } }
 
-		public ushort ScreenHeight { get { return Intrinsic.Load16(Entry, VBEModeInfoOffset.ScreenHeight); } }
+		public ushort ScreenHeight { get { return Entry.Load16(VBEModeInfoOffset.ScreenHeight); } }
 
-		public byte WChar { get { return Intrinsic.Load8(Entry, VBEModeInfoOffset.WChar); } }
+		public byte WChar { get { return Entry.Load8(VBEModeInfoOffset.WChar); } }
 
-		public byte YChar { get { return Intrinsic.Load8(Entry, VBEModeInfoOffset.YChar); } }
+		public byte YChar { get { return Entry.Load8(VBEModeInfoOffset.YChar); } }
 
-		public byte Planes { get { return Intrinsic.Load8(Entry, VBEModeInfoOffset.Planes); } }
+		public byte Planes { get { return Entry.Load8(VBEModeInfoOffset.Planes); } }
 
-		public byte BitsPerPixel { get { return Intrinsic.Load8(Entry, VBEModeInfoOffset.BitsPerPixel); } }
+		public byte BitsPerPixel { get { return Entry.Load8(VBEModeInfoOffset.BitsPerPixel); } }
 
-		public byte Banks { get { return Intrinsic.Load8(Entry, VBEModeInfoOffset.Banks); } }
+		public byte Banks { get { return Entry.Load8(VBEModeInfoOffset.Banks); } }
 
-		public byte MemoryModel { get { return Intrinsic.Load8(Entry, VBEModeInfoOffset.MemoryModel); } }
+		public byte MemoryModel { get { return Entry.Load8(VBEModeInfoOffset.MemoryModel); } }
 
-		public byte BankSize { get { return Intrinsic.Load8(Entry, VBEModeInfoOffset.BankSize); } }
+		public byte BankSize { get { return Entry.Load8(VBEModeInfoOffset.BankSize); } }
 
-		public byte ImagePages { get { return Intrinsic.Load8(Entry, VBEModeInfoOffset.ImagePages); } }
+		public byte ImagePages { get { return Entry.Load8(VBEModeInfoOffset.ImagePages); } }
 
-		public byte Reserved0 { get { return Intrinsic.Load8(Entry, VBEModeInfoOffset.Reserved0); } }
+		public byte Reserved0 { get { return Entry.Load8(VBEModeInfoOffset.Reserved0); } }
 
-		public byte RedMask { get { return Intrinsic.Load8(Entry, VBEModeInfoOffset.RedMask); } }
+		public byte RedMask { get { return Entry.Load8(VBEModeInfoOffset.RedMask); } }
 
-		public byte RedPosition { get { return Intrinsic.Load8(Entry, VBEModeInfoOffset.RedPosition); } }
+		public byte RedPosition { get { return Entry.Load8(VBEModeInfoOffset.RedPosition); } }
 
-		public byte GreenMask { get { return Intrinsic.Load8(Entry, VBEModeInfoOffset.GreenMask); } }
+		public byte GreenMask { get { return Entry.Load8(VBEModeInfoOffset.GreenMask); } }
 
-		public byte GreenPosition { get { return Intrinsic.Load8(Entry, VBEModeInfoOffset.GreenPosition); } }
+		public byte GreenPosition { get { return Entry.Load8(VBEModeInfoOffset.GreenPosition); } }
 
-		public byte BlueMask { get { return Intrinsic.Load8(Entry, VBEModeInfoOffset.BlueMask); } }
+		public byte BlueMask { get { return Entry.Load8(VBEModeInfoOffset.BlueMask); } }
 
-		public byte BluePosition { get { return Intrinsic.Load8(Entry, VBEModeInfoOffset.BluePosition); } }
+		public byte BluePosition { get { return Entry.Load8(VBEModeInfoOffset.BluePosition); } }
 
-		public byte ReservedMask { get { return Intrinsic.Load8(Entry, VBEModeInfoOffset.ReservedMask); } }
+		public byte ReservedMask { get { return Entry.Load8(VBEModeInfoOffset.ReservedMask); } }
 
-		public byte ReservedPosition { get { return Intrinsic.Load8(Entry, VBEModeInfoOffset.ReservedPosition); } }
+		public byte ReservedPosition { get { return Entry.Load8(VBEModeInfoOffset.ReservedPosition); } }
 
-		public byte DirectColorAttributes { get { return Intrinsic.Load8(Entry, VBEModeInfoOffset.DirectColorAttributes); } }
+		public byte DirectColorAttributes { get { return Entry.Load8(VBEModeInfoOffset.DirectColorAttributes); } }
 
-		public IntPtr MemoryPhysicalLocation { get { return Intrinsic.LoadPointer(Entry, VBEModeInfoOffset.PhysBase); } }
+		public IntPtr MemoryPhysicalLocation { get { return Entry.LoadPointer(VBEModeInfoOffset.PhysBase); } }
 
-		public uint OffScreenMemoryOff { get { return Intrinsic.Load32(Entry, VBEModeInfoOffset.OffScreenMemoryOff); } }
+		public uint OffScreenMemoryOff { get { return Entry.Load32(VBEModeInfoOffset.OffScreenMemoryOff); } }
 
-		public ushort OffScreenMemorSize { get { return Intrinsic.Load16(Entry, VBEModeInfoOffset.OffScreenMemorSize); } }
+		public ushort OffScreenMemorSize { get { return Entry.Load16(VBEModeInfoOffset.OffScreenMemorSize); } }
 	}
 }

@@ -1,6 +1,6 @@
 ﻿// Copyright (c) MOSA Project. Licensed under the New BSD License.
 
-using Mosa.Runtime;
+using Mosa.Kernel.BareMetal.Extension;
 using Mosa.Runtime.Extension;
 using System;
 
@@ -39,15 +39,15 @@ namespace Mosa.Kernel.BareMetal
 			Entry = entry;
 		}
 
-		public uint Size { get { return Intrinsic.Load32(Entry, MultiBootMemoryMapOffset.Size); } }
+		public uint Size { get { return Entry.Load32(MultiBootMemoryMapOffset.Size); } }
 
-		public IntPtr BaseAddr { get { return Intrinsic.LoadPointer(Entry, MultiBootMemoryMapOffset.BaseAddr); } }
+		public IntPtr BaseAddr { get { return Entry.LoadPointer(MultiBootMemoryMapOffset.BaseAddr); } }
 
-		public uint Length { get { return Intrinsic.Load32(Entry, MultiBootMemoryMapOffset.Length); } }
+		public uint Length { get { return Entry.Load32(MultiBootMemoryMapOffset.Length); } }
 
-		public byte Type { get { return Intrinsic.Load8(Entry, MultiBootMemoryMapOffset.Type); } }
+		public byte Type { get { return Entry.Load8(MultiBootMemoryMapOffset.Type); } }
 
-		public byte Next { get { return Intrinsic.Load8(Entry, MultiBootMemoryMapOffset.Next); } }
+		public byte Next { get { return Entry.Load8(MultiBootMemoryMapOffset.Next); } }
 
 		public MultibootV1MemoryMapEntry GetNext(IntPtr memoryMapEnd)
 		{

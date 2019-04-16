@@ -1,5 +1,6 @@
 ﻿// Copyright (c) MOSA Project. Licensed under the New BSD License.
 
+using Mosa.Kernel.BareMetal.Extension;
 using Mosa.Runtime;
 using System;
 
@@ -12,6 +13,7 @@ namespace Mosa.Kernel.BareMetal
 		public static void Initialize()
 		{
 			Map = Platform.GetMemoryMapLocation();
+
 			Intrinsic.Store64(Map, 0);
 		}
 
@@ -33,12 +35,12 @@ namespace Mosa.Kernel.BareMetal
 				Type = type
 			};
 
-			Intrinsic.Store32(Map, count + 1);
+			Map.Store32(count + 1);
 		}
 
 		public static uint GetMemoryMapIndexCount()
 		{
-			return Intrinsic.Load32(Map, 0);
+			return Map.Load32(0);
 		}
 
 		public static BootMemoryMapEntry GetMemoryMap(uint index)
