@@ -47,6 +47,11 @@ namespace Mosa.Kernel.BareMetal.Extension
 			return Intrinsic.Load8(address, offset);
 		}
 
+		public static byte Load8(this IntPtr address, int offset)
+		{
+			return Intrinsic.Load8(address, offset);
+		}
+
 		public static IntPtr LoadPointer(this IntPtr address)
 		{
 			return Intrinsic.LoadPointer(address);
@@ -109,6 +114,11 @@ namespace Mosa.Kernel.BareMetal.Extension
 		}
 
 		public static void Store8(this IntPtr address, uint offset, byte value)
+		{
+			Intrinsic.Store8(address, offset, value);
+		}
+
+		public static void Store8(this IntPtr address, int offset, byte value)
 		{
 			Intrinsic.Store8(address, offset, value);
 		}

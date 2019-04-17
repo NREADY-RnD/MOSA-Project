@@ -4,12 +4,12 @@ using Mosa.Kernel.BareMetal.Extension;
 using Mosa.Runtime.Extension;
 using System;
 
-namespace Mosa.Kernel.BareMetal
+namespace Mosa.Kernel.BareMetal.MultibootSpecification
 {
 	/// <summary>
 	/// Multiboot V1 VBE Entry
 	/// </summary>
-	public struct MultibootV1VBEEntry
+	public readonly struct MultibootV1VBEEntry
 	{
 		private readonly IntPtr Entry;
 

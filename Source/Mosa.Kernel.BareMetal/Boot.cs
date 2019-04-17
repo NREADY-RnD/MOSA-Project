@@ -1,5 +1,7 @@
 ﻿// Copyright (c) MOSA Project. Licensed under the New BSD License.
 
+using Mosa.Kernel.BareMetal.BootMemory;
+using Mosa.Kernel.BareMetal.MultibootSpecification;
 using Mosa.Runtime.Extension;
 
 namespace Mosa.Kernel.BareMetal
@@ -11,6 +13,8 @@ namespace Mosa.Kernel.BareMetal
 			Platform.EntryPoint();
 
 			BootMemoryMap.Initialize();
+
+			Platform.UpdateBootMemoryMap();
 
 			ImportMultibootMemoryMap();
 		}
@@ -29,15 +33,7 @@ namespace Mosa.Kernel.BareMetal
 
 			while (entry.IsAvailable)
 			{
-				BootMemoryMapType type = BootMemoryMapType.Reserved;
-
-				switch (entry.Type)
-				{
-					case 1: type = BootMemoryMapType.Available; break;
-					default: type = BootMemoryMapType.Reserved; break;
-				}
-
-				BootMemoryMap.SetMemoryMap(entry.BaseAddr, entry.Length, type);
+				BootMemoryMap.SetMemoryMap(entry.BaseAddr, entry.Length, entry.Type == 1 ? BootMemoryMapType.Available : BootMemoryMapType.Reserved);
 
 				entry = entry.GetNext(memoryMapEnd);
 			}

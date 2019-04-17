@@ -4,9 +4,9 @@ using Mosa.Kernel.BareMetal.Extension;
 using Mosa.Runtime.Extension;
 using System;
 
-namespace Mosa.Kernel.BareMetal
+namespace Mosa.Kernel.BareMetal.MultibootSpecification
 {
-	public struct MultibootV1
+	public readonly struct MultibootV1
 	{
 		private static IntPtr Entry;
 

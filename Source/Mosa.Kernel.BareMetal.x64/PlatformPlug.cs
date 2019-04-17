@@ -1,5 +1,6 @@
 ﻿// Copyright (c) MOSA Project. Licensed under the New BSD License.
 
+using Mosa.Kernel.BareMetal.BootMemory;
 using Mosa.Runtime.Plug;
 using System;
 
@@ -26,6 +27,13 @@ namespace Mosa.Kernel.BareMetal.x64
 		public static IntPtr GetMemoryMapLocation()
 		{
 			return new IntPtr(0x00007E00);
+		}
+
+		[Plug("Mosa.Kernel.BareMetal.Platform::UpdateBootMemoryMap")]
+		public static void UpdateBootMemoryMap()
+		{
+			// Reserve the first 1MB
+			BootMemoryMap.SetMemoryMap(new IntPtr(0), 1024 * 1024, BootMemoryMapType.Reserved);
 		}
 	}
 }
