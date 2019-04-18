@@ -67,6 +67,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="GDT\GDTTable.cs" />
+    <Compile Include="PIC.cs" />
     <Compile Include="PlatformPlug.cs" />
     <Compile Include="SSE.cs" />
   </ItemGroup>

@@ -32,24 +32,24 @@ namespace Mosa.Kernel.BareMetal.x86
 
 		#endregion GDT Entry Offsets
 
-		public GDTTable(IntPtr gdt)
+		public GDTTable(IntPtr entry)
 		{
-			Entry = gdt;
+			Entry = entry;
 
 			// FIXME: Temporary
-			if (gdt.IsNull())
+			if (Entry.IsNull())
 			{
-				gdt = new IntPtr(0x00008E00);
+				Entry = new IntPtr(0x00008E00);
 			}
 
-			gdt.Store16(0, (GDTEntryOffset.TotalSize * 3) - 1);
-			gdt.StorePointer(2, gdt + 6);
+			Entry.Store16(0, (GDTEntryOffset.TotalSize * 3) - 1);
+			Entry.StorePointer(2, Entry + 6);
 
 			Set(0, 0, 0, 0, 0);                // Null segment
 			Set(1, 0, 0xFFFFFFFF, 0x9A, 0xCF); // Code segment
 			Set(2, 0, 0xFFFFFFFF, 0x92, 0xCF); // Data segment
 
-			SetLgdt(gdt);
+			SetLgdt(Entry);
 		}
 
 		[MethodImpl(MethodImplOptions.NoInlining)]
