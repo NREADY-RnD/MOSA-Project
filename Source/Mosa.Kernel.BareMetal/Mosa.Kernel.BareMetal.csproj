@@ -74,7 +74,7 @@
     <Compile Include="Boot.cs" />
     <Compile Include="BootMemory\BootMemoryMapEntry.cs" />
     <Compile Include="MultibootSpecification\MultibootV1MemoryMapEntry.cs" />
-    <Compile Include="PageSpecs.cs" />
+    <Compile Include="Page.cs" />
     <Compile Include="BootMemory\BootMemoryMap.cs" />
     <Compile Include="Platform.cs" />
     <Compile Include="MultibootSpecification\MultibootV1VBEEntry.cs" />
