@@ -25,11 +25,14 @@ namespace Mosa.Compiler.Framework.Stages
 
 		private TraceLog trace;
 
+		private Dictionary<Operand, Operand> parentOperand;
+
 		protected override void Initialize()
 		{
 			ssaOperands = new Dictionary<Operand, Operand[]>();
 			blockAnalysis = new Dictionary<BasicBlock, SimpleFastDominance>();
 			assignments = new Dictionary<Operand, List<BasicBlock>>();
+			parentOperand = new Dictionary<Operand, Operand>();
 
 			Register(InstructionCount);
 		}
@@ -66,6 +69,7 @@ namespace Mosa.Compiler.Framework.Stages
 			ssaOperands.Clear();
 			assignments.Clear();
 			blockAnalysis.Clear();
+			parentOperand.Clear();
 		}
 
 		private void EnterSSA()
@@ -132,8 +136,10 @@ namespace Mosa.Compiler.Framework.Stages
 
 			if (ssaOperand == null)
 			{
-				ssaOperand = Operand.CreateSSA(operand, version);
+				ssaOperand = version == 0 ? operand : AllocateVirtualRegister(operand.Type);
 				ssaArray[version] = ssaOperand;
+
+				parentOperand.Add(ssaOperand, operand);
 			}
 
 			return ssaOperand;
@@ -268,7 +274,6 @@ namespace Mosa.Compiler.Framework.Stages
 			// Update PHIs in successor blocks
 			foreach (var s in block.NextBlocks)
 			{
-				// index does not change between this stage and PhiPlacementStage since the block list order does not change
 				var index = WhichPredecessor(s, block);
 
 				for (var node = s.First.Next; !node.IsBlockEndInstruction; node = node.Next)
@@ -303,13 +308,15 @@ namespace Mosa.Compiler.Framework.Stages
 
 				if (node.Result?.IsVirtualRegister == true)
 				{
-					var op = node.Result.SSAParent;
+					//var op = node.Result.SSAParent;
+					var op = parentOperand[node.Result];
 					var index = variables[op].Pop();
 				}
 
 				if (node.Result2?.IsVirtualRegister == true)
 				{
-					var op = node.Result2.SSAParent;
+					//var op = node.Result2.SSAParent;
+					var op = parentOperand[node.Result2];
 					var index = variables[op].Pop();
 				}
 			}

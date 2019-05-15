@@ -158,6 +158,9 @@ namespace Mosa.Compiler.Framework
 				(compilerOptions.EnableIROptimizations) ? new IROptimizationStage() : null,
 				(compilerOptions.EnableIRLongExpansion && compilerOptions.Architecture.NativePointerSize == 4) ? new IRLongDecompositionStage() : null,
 				new LowerIRStage(),
+
+				(compilerOptions.EnableBitEstimator) ? new BitEstimatorStage() : null,
+
 				(compilerOptions.TwoPassOptimizations && compilerOptions.EnableValueNumbering && compilerOptions.EnableSSA) ? new ValueNumberingStage() : null,
 				(compilerOptions.TwoPassOptimizations && compilerOptions.EnableLoopInvariantCodeMotion && compilerOptions.EnableSSA) ? new LoopInvariantCodeMotionStage() : null,
 				(compilerOptions.TwoPassOptimizations && compilerOptions.EnableSparseConditionalConstantPropagation && compilerOptions.EnableSSA) ? new SparseConditionalConstantPropagationStage() : null,
@@ -167,8 +170,9 @@ namespace Mosa.Compiler.Framework
 				new BlockMergeStage(),
 				new IRCleanupStage(),
 
-				//new StopStage(),
 				(compilerOptions.EnableInlinedMethods) ? new InlineEvaluationStage() : null,
+
+				//new StopStage(),
 				new DevirtualizeCallStage(),
 				new CallStage(),
 				new PlatformIntrinsicStage(),

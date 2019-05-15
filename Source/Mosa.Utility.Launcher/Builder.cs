@@ -116,6 +116,7 @@ namespace Mosa.Utility.Launcher
 				compiler.CompilerOptions.EmitAllSymbols = LauncherOptions.EmitAllSymbols;
 				compiler.CompilerOptions.EmitStaticRelocations = LauncherOptions.EmitStaticRelocations;
 				compiler.CompilerOptions.EnableMethodScanner = LauncherOptions.EnableMethodScanner;
+				compiler.CompilerOptions.EnableBitEstimator = true; // FUTURE
 
 				compiler.CompilerOptions.CreateExtraSections = LauncherOptions.CreateExtraSections;
 				compiler.CompilerOptions.CreateExtraProgramHeaders = LauncherOptions.CreateExtraProgramHeaders;

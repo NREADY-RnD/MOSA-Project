@@ -193,6 +193,7 @@ namespace Mosa.Compiler.Framework.Stages
 				return;
 			}
 
+			// FUTURE: Use the compiler option instead
 			if (MethodCompiler.IsInSSAForm)
 			{
 				CompareInteger64x32SSA(context);

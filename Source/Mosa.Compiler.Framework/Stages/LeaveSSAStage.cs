@@ -32,39 +32,39 @@ namespace Mosa.Compiler.Framework.Stages
 
 			foreach (var block in BasicBlocks)
 			{
-				for (var context = new Context(block); !context.IsBlockEndInstruction; context.GotoNext())
+				for (var node = block.First.Next; !node.IsBlockEndInstruction; node = node.Next)
 				{
-					if (context.IsEmpty)
+					if (node.IsEmpty)
 						continue;
 
 					InstructionCount++;
 
-					if (context.Instruction == IRInstruction.Phi)
-					{
-						Debug.Assert(context.OperandCount == context.Block.PreviousBlocks.Count);
+					if (node.Instruction != IRInstruction.Phi)
+						continue;
 
-						ProcessPhiInstruction(context);
-					}
+					Debug.Assert(node.OperandCount == node.Block.PreviousBlocks.Count);
 
-					for (var i = 0; i < context.OperandCount; ++i)
-					{
-						var op = context.GetOperand(i);
+					ProcessPhiInstruction(node);
 
-						if (op?.IsSSA == true)
-						{
-							context.SetOperand(i, GetFinalVirtualRegister(op));
-						}
-					}
+					//for (var i = 0; i < context.OperandCount; ++i)
+					//{
+					//	var op = context.GetOperand(i);
 
-					if (context.Result?.IsSSA == true)
-					{
-						context.Result = GetFinalVirtualRegister(context.Result);
-					}
+					//	if (op?.IsSSA == true)
+					//	{
+					//		context.SetOperand(i, GetFinalVirtualRegister(op));
+					//	}
+					//}
 
-					if (context.Result2?.IsSSA == true)
-					{
-						context.Result2 = GetFinalVirtualRegister(context.Result2);
-					}
+					//if (context.Result?.IsSSA == true)
+					//{
+					//	context.Result = GetFinalVirtualRegister(context.Result);
+					//}
+
+					//if (context.Result2?.IsSSA == true)
+					//{
+					//	context.Result2 = GetFinalVirtualRegister(context.Result2);
+					//}
 				}
 			}
 
@@ -76,38 +76,38 @@ namespace Mosa.Compiler.Framework.Stages
 			finalVirtualRegisters.Clear();
 		}
 
-		private Operand GetFinalVirtualRegister(Operand operand)
-		{
-			if (!finalVirtualRegisters.TryGetValue(operand, out Operand final))
-			{
-				if (operand.SSAVersion == 0)
-					final = operand.SSAParent;
-				else
-					final = AllocateVirtualRegister(operand.Type);
+		//private Operand GetFinalVirtualRegister(Operand operand)
+		//{
+		//	if (!finalVirtualRegisters.TryGetValue(operand, out Operand final))
+		//	{
+		//		if (operand.SSAVersion == 0)
+		//			final = operand.SSAParent;
+		//		else
+		//			final = AllocateVirtualRegister(operand.Type);
 
-				finalVirtualRegisters.Add(operand, final);
-			}
+		//		finalVirtualRegisters.Add(operand, final);
+		//	}
 
-			return final;
-		}
+		//	return final;
+		//}
 
 		/// <summary>
 		/// Processes the phi instruction.
 		/// </summary>
-		/// <param name="context">The context.</param>
-		private void ProcessPhiInstruction(Context context)
+		/// <param name="node">The context.</param>
+		private void ProcessPhiInstruction(InstructionNode node)
 		{
-			var sourceBlocks = context.PhiBlocks;
+			var sourceBlocks = node.PhiBlocks;
 
-			for (var index = 0; index < context.Block.PreviousBlocks.Count; index++)
+			for (var index = 0; index < node.Block.PreviousBlocks.Count; index++)
 			{
-				var operand = context.GetOperand(index);
+				var operand = node.GetOperand(index);
 				var predecessor = sourceBlocks[index];
 
-				InsertCopyStatement(predecessor, context.Result, operand);
+				InsertCopyStatement(predecessor, node.Result, operand);
 			}
 
-			context.Empty();
+			node.Empty();
 		}
 
 		/// <summary>
@@ -131,11 +131,8 @@ namespace Mosa.Compiler.Framework.Stages
 				context.GotoPrevious();
 			}
 
-			var source = operand.IsSSA ? GetFinalVirtualRegister(operand) : operand;
-			var destination = result.IsSSA ? GetFinalVirtualRegister(result) : result;
-
-			Debug.Assert(!source.IsSSA);
-			Debug.Assert(!destination.IsSSA);
+			var source = operand;
+			var destination = result;
 
 			if (destination != source)
 			{
