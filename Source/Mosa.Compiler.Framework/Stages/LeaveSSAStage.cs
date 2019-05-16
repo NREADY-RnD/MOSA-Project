@@ -1,7 +1,6 @@
 ﻿// Copyright (c) MOSA Project. Licensed under the New BSD License.
 
 using Mosa.Compiler.Framework.IR;
-using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace Mosa.Compiler.Framework.Stages
@@ -12,13 +11,10 @@ namespace Mosa.Compiler.Framework.Stages
 	/// <seealso cref="Mosa.Compiler.Framework.BaseMethodCompilerStage" />
 	public class LeaveSSAStage : BaseMethodCompilerStage
 	{
-		private Dictionary<Operand, Operand> finalVirtualRegisters;
-
 		private Counter InstructionCount = new Counter("LeaveSSA.IRInstructions");
 
 		protected override void Initialize()
 		{
-			finalVirtualRegisters = new Dictionary<Operand, Operand>();
 			Register(InstructionCount);
 		}
 
@@ -34,62 +30,22 @@ namespace Mosa.Compiler.Framework.Stages
 			{
 				for (var node = block.First.Next; !node.IsBlockEndInstruction; node = node.Next)
 				{
-					if (node.IsEmpty)
+					if (node.IsEmptyOrNop)
 						continue;
 
 					InstructionCount++;
 
 					if (node.Instruction != IRInstruction.Phi)
-						continue;
+						break;
 
 					Debug.Assert(node.OperandCount == node.Block.PreviousBlocks.Count);
 
 					ProcessPhiInstruction(node);
-
-					//for (var i = 0; i < context.OperandCount; ++i)
-					//{
-					//	var op = context.GetOperand(i);
-
-					//	if (op?.IsSSA == true)
-					//	{
-					//		context.SetOperand(i, GetFinalVirtualRegister(op));
-					//	}
-					//}
-
-					//if (context.Result?.IsSSA == true)
-					//{
-					//	context.Result = GetFinalVirtualRegister(context.Result);
-					//}
-
-					//if (context.Result2?.IsSSA == true)
-					//{
-					//	context.Result2 = GetFinalVirtualRegister(context.Result2);
-					//}
 				}
 			}
 
 			MethodCompiler.IsInSSAForm = false;
 		}
-
-		protected override void Finish()
-		{
-			finalVirtualRegisters.Clear();
-		}
-
-		//private Operand GetFinalVirtualRegister(Operand operand)
-		//{
-		//	if (!finalVirtualRegisters.TryGetValue(operand, out Operand final))
-		//	{
-		//		if (operand.SSAVersion == 0)
-		//			final = operand.SSAParent;
-		//		else
-		//			final = AllocateVirtualRegister(operand.Type);
-
-		//		finalVirtualRegisters.Add(operand, final);
-		//	}
-
-		//	return final;
-		//}
 
 		/// <summary>
 		/// Processes the phi instruction.
@@ -118,7 +74,7 @@ namespace Mosa.Compiler.Framework.Stages
 		/// <param name="operand">The operand.</param>
 		private void InsertCopyStatement(BasicBlock predecessor, Operand result, Operand operand)
 		{
-			// TODO: Generalize XXXX
+			// TODO: Generalize
 			var context = new Context(predecessor.Last);
 
 			context.GotoPrevious();

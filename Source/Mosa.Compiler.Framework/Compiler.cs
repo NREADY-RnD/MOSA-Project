@@ -159,7 +159,7 @@ namespace Mosa.Compiler.Framework
 				(compilerOptions.EnableIRLongExpansion && compilerOptions.Architecture.NativePointerSize == 4) ? new IRLongDecompositionStage() : null,
 				new LowerIRStage(),
 
-				(compilerOptions.EnableBitEstimator) ? new BitEstimatorStage() : null,
+				(compilerOptions.EnableBitTracker) ? new BitTrackerStage() : null,
 
 				(compilerOptions.TwoPassOptimizations && compilerOptions.EnableValueNumbering && compilerOptions.EnableSSA) ? new ValueNumberingStage() : null,
 				(compilerOptions.TwoPassOptimizations && compilerOptions.EnableLoopInvariantCodeMotion && compilerOptions.EnableSSA) ? new LoopInvariantCodeMotionStage() : null,

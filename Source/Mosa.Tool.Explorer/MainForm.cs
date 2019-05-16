@@ -455,7 +455,7 @@ namespace Mosa.Tool.Explorer
 			Compiler.CompilerOptions.EnableMethodScanner = cbEnableMethodScanner.Checked;
 			Compiler.CompilerOptions.TraceLevel = 8;
 			Compiler.CompilerOptions.LinkerFormatType = LinkerFormatType.Elf32;
-			Compiler.CompilerOptions.EnableBitEstimator = true; // FUTURE
+			Compiler.CompilerOptions.EnableBitTracker = true; // FUTURE
 
 			Compiler.CompilerTrace.SetTraceListener(this);
 		}

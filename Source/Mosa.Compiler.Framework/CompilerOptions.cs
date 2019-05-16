@@ -94,7 +94,7 @@ namespace Mosa.Compiler.Framework
 		/// <summary>
 		/// Gets or sets a value indicating whether [enable bit estimator].
 		/// </summary>
-		public bool EnableBitEstimator { get; set; }
+		public bool EnableBitTracker { get; set; }
 
 		/// <summary>
 		/// Gets or sets a value indicating whether [enable platform optimizations].
@@ -333,7 +333,7 @@ namespace Mosa.Compiler.Framework
 			EnableLoopInvariantCodeMotion = true;
 			EnablePlatformOptimizations = true;
 			EnableMethodScanner = false;
-			EnableBitEstimator = true;
+			EnableBitTracker = true;
 		}
 	}
 }

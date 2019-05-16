@@ -295,14 +295,14 @@ namespace Mosa.Platform.x86.Stages
 
 		private void GetHigh64(Context context)
 		{
-			SplitLongOperand(context.Operand1, out Operand op0L, out Operand op0H);
+			SplitLongOperand(context.Operand1, out Operand _, out Operand op0H);
 
 			context.SetInstruction(X86.Mov32, context.Result, op0H);
 		}
 
 		private void GetLow64(Context context)
 		{
-			SplitLongOperand(context.Operand1, out Operand op0L, out Operand op0H);
+			SplitLongOperand(context.Operand1, out Operand op0L, out Operand _);
 
 			context.SetInstruction(X86.Mov32, context.Result, op0L);
 		}
