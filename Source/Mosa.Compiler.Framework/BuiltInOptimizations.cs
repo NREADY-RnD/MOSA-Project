@@ -800,15 +800,15 @@ namespace Mosa.Compiler.Framework
 			return ((value & 0x80000000) == 0) ? value : (value | 0xFFFFFFFF00000000ul);
 		}
 
-		private static bool IsPowerOfTwo(ulong n)
+		public static bool IsPowerOfTwo(ulong n)
 		{
 			return (n & (n - 1)) == 0;
 		}
 
-		private static int GetPowerOfTwo(ulong n)
+		public static int GetPowerOfTwo(ulong n)
 		{
 			int bits = 0;
-			while (n > 0)
+			while (n != 0)
 			{
 				bits++;
 				n >>= 1;

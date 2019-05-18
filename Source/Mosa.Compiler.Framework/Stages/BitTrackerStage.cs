@@ -155,6 +155,9 @@ namespace Mosa.Compiler.Framework.Stages
 			Register(IRInstruction.ShiftLeft64, ShiftLeft64);
 
 			Register(IRInstruction.CompareInt32x32, CompareInt32x32);
+
+			Register(IRInstruction.MulUnsigned32, MulUnsigned32);
+			Register(IRInstruction.MulUnsigned64, MulUnsigned64);
 		}
 
 		private void Register(BaseInstruction instruction, NodeVisitationDelegate method)
@@ -364,7 +367,7 @@ namespace Mosa.Compiler.Framework.Stages
 			node.SetInstruction(instruction, virtualRegsiter, CreateConstant(node.Result.Type, replaceValue));
 			trace?.Log($"AFTER: \t{node}");
 
-			Debug.WriteLine(Method.FullName);
+			//Debug.WriteLine(Method.FullName);
 
 			InstructionUpdateCount++;
 		}
@@ -540,7 +543,7 @@ namespace Mosa.Compiler.Framework.Stages
 
 				if (shift == 0)
 				{
-					Values[index] = Values[operand1.Index];
+					Values[index] = value1;
 					return;
 				}
 
@@ -585,7 +588,7 @@ namespace Mosa.Compiler.Framework.Stages
 
 				if (shift == 0)
 				{
-					Values[index] = Values[operand1.Index];
+					Values[index] = value1;
 					return;
 				}
 
@@ -630,7 +633,7 @@ namespace Mosa.Compiler.Framework.Stages
 
 				if (shift == 0)
 				{
-					Values[index] = Values[operand1.Index];
+					Values[index] = value1;
 					return;
 				}
 
@@ -675,7 +678,7 @@ namespace Mosa.Compiler.Framework.Stages
 
 				if (shift == 0)
 				{
-					Values[index] = Values[operand1.Index];
+					Values[index] = value1;
 					return;
 				}
 
@@ -930,6 +933,106 @@ namespace Mosa.Compiler.Framework.Stages
 			Values[index].IsMinValueIndeterminate = value1.IsMinValueIndeterminate || value2.IsMinValueIndeterminate || !hasResult;
 			Values[index].BitsSet = hasResult ? (result ? 1u : 0u) : 0;
 			Values[index].BitsClear = hasResult ? ~(result ? 1u : 0u) : 0;
+			Values[index].IsEvaluated = true;
+		}
+
+		private void MulUnsigned32(InstructionNode node)
+		{
+			var operand1 = node.Operand1;
+			var value1 = operand1.IsConstant ? new Value(operand1.ConstantUnsignedLongInteger) : Values[operand1.Index];
+			var operand2 = node.Operand2;
+			var value2 = operand2.IsConstant ? new Value(operand2.ConstantUnsignedLongInteger) : Values[operand2.Index];
+
+			var index = node.Result.Index;
+
+			if (value1.AreLower32BitsKnown && value2.AreLower32BitsKnown)
+			{
+				Values[index].SetValue((value1.MaxValue * value2.MaxValue) & uint.MaxValue);
+				return;
+			}
+
+			if (value1.AreLower32BitsKnown && (value1.MaxValue & uint.MaxValue) == 0)
+			{
+				Values[index].SetValue(0);
+				return;
+			}
+
+			if (value2.AreLower32BitsKnown && (value2.MaxValue & uint.MaxValue) == 0)
+			{
+				Values[index].SetValue(0);
+				return;
+			}
+
+			if (value1.AreLower32BitsKnown && (value1.MaxValue & uint.MaxValue) == 1)
+			{
+				Values[index] = value2;
+				return;
+			}
+
+			if (value2.AreLower32BitsKnown && (value2.MaxValue & uint.MaxValue) == 1)
+			{
+				Values[index] = value1;
+				return;
+			}
+
+			// TODO: Special power of two handling for bits, handle similar to shift left
+
+			Values[index].MaxValue = (value1.MaxValue * value2.MaxValue) & uint.MaxValue;
+			Values[index].MinValue = (value1.MinValue * value2.MinValue) & uint.MaxValue;
+			Values[index].IsMaxValueIndeterminate = value1.IsMaxValueIndeterminate || value2.IsMaxValueIndeterminate;
+			Values[index].IsMinValueIndeterminate = value1.IsMinValueIndeterminate || value2.IsMinValueIndeterminate;
+			Values[index].BitsSet = 0;
+			Values[index].BitsClear = 0;    // TODO: use MaxValue to determine how many upper bits are zero'ed
+			Values[index].IsEvaluated = true;
+		}
+
+		private void MulUnsigned64(InstructionNode node)
+		{
+			var operand1 = node.Operand1;
+			var value1 = operand1.IsConstant ? new Value(operand1.ConstantUnsignedLongInteger) : Values[operand1.Index];
+			var operand2 = node.Operand2;
+			var value2 = operand2.IsConstant ? new Value(operand2.ConstantUnsignedLongInteger) : Values[operand2.Index];
+
+			var index = node.Result.Index;
+
+			if (value1.AreLower32BitsKnown && value2.AreLower32BitsKnown)
+			{
+				Values[index].SetValue((value1.MaxValue * value2.MaxValue));
+				return;
+			}
+
+			if (value1.AreLower32BitsKnown && value1.MaxValue == 0)
+			{
+				Values[index].SetValue(0);
+				return;
+			}
+
+			if (value2.AreLower32BitsKnown && value2.MaxValue == 0)
+			{
+				Values[index].SetValue(0);
+				return;
+			}
+
+			if (value1.AreLower32BitsKnown && value1.MaxValue == 1)
+			{
+				Values[index] = value2;
+				return;
+			}
+
+			if (value2.AreLower32BitsKnown && value2.MaxValue == 1)
+			{
+				Values[index] = value1;
+				return;
+			}
+
+			// TODO: Special power of two handling for bits, handle similar to shift left
+
+			Values[index].MaxValue = value1.MaxValue * value2.MaxValue;
+			Values[index].MinValue = value1.MinValue * value2.MinValue;
+			Values[index].IsMaxValueIndeterminate = value1.IsMaxValueIndeterminate || value2.IsMaxValueIndeterminate;
+			Values[index].IsMinValueIndeterminate = value1.IsMinValueIndeterminate || value2.IsMinValueIndeterminate;
+			Values[index].BitsSet = 0;
+			Values[index].BitsClear = 0;    // TODO: use MaxValue to determine how many upper bits are zero'ed
 			Values[index].IsEvaluated = true;
 		}
 	}
