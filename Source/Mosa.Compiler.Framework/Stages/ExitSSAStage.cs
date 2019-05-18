@@ -9,9 +9,9 @@ namespace Mosa.Compiler.Framework.Stages
 	/// Leave SSA Stage
 	/// </summary>
 	/// <seealso cref="Mosa.Compiler.Framework.BaseMethodCompilerStage" />
-	public class LeaveSSAStage : BaseMethodCompilerStage
+	public class ExitSSAStage : BaseMethodCompilerStage
 	{
-		private Counter InstructionCount = new Counter("LeaveSSA.IRInstructions");
+		private Counter InstructionCount = new Counter("ExitSSAStage.IRInstructions");
 
 		protected override void Initialize()
 		{

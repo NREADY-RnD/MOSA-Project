@@ -5,6 +5,7 @@ using Mosa.Compiler.Framework.Trace;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Text;
 
 namespace Mosa.Compiler.Framework.Stages
 {
@@ -13,6 +14,8 @@ namespace Mosa.Compiler.Framework.Stages
 	/// </summary>
 	public sealed class BitTrackerStage : BaseMethodCompilerStage
 	{
+		private const int MaxInstructions = 1024;
+
 		#region Internal Class
 
 		private struct Value
@@ -77,11 +80,31 @@ namespace Mosa.Compiler.Framework.Stages
 
 			public override string ToString()
 			{
-				return IsEvaluated ? "Evaluated" : "Not Evaluated";
+				if (!IsEvaluated)
+					return "Not Evaluated";
+
+				var sb = new StringBuilder();
+
+				if (!IsMaxValueIndeterminate)
+				{
+					sb.Append($" MaxValue: {MaxValue.ToString()}");
+				}
+
+				if (!IsMinValueIndeterminate)
+				{
+					sb.Append($" MinValue: {MinValue.ToString()}");
+				}
+
+				if (BitsKnown != 0)
+				{
+					sb.Append($" BitsSet: {Convert.ToString((long)BitsSet, 2).PadLeft(64, '0')}");
+					sb.Append($" BitsClear: {Convert.ToString((long)BitsClear, 2).PadLeft(64, '0')}");
+					sb.Append($" BitsKnown: {Convert.ToString((long)BitsKnown, 2).PadLeft(64, '0')}");
+				}
+
+				return sb.ToString();
 			}
 		}
-
-		private const ulong V = 1lu;
 
 		#endregion Internal Class
 
@@ -93,10 +116,12 @@ namespace Mosa.Compiler.Framework.Stages
 
 		private delegate void NodeVisitationDelegate(InstructionNode node);
 
-		private Dictionary<BaseInstruction, NodeVisitationDelegate> visitation = new Dictionary<BaseInstruction, NodeVisitationDelegate>();
+		private NodeVisitationDelegate[] visitation = new NodeVisitationDelegate[MaxInstructions];
 
 		protected override void Initialize()
 		{
+			visitation = new NodeVisitationDelegate[MaxInstructions];
+
 			Register(InstructionUpdateCount);
 
 			Register(IRInstruction.Phi, Phi);
@@ -134,7 +159,7 @@ namespace Mosa.Compiler.Framework.Stages
 
 		private void Register(BaseInstruction instruction, NodeVisitationDelegate method)
 		{
-			visitation.Add(instruction, method);
+			visitation[instruction.ID] = method;
 		}
 
 		protected override void Run()
@@ -163,6 +188,9 @@ namespace Mosa.Compiler.Framework.Stages
 		private void DumpValues()
 		{
 			var valueTrace = CreateTraceLog("Values", 5);
+
+			if (valueTrace == null)
+				return;
 
 			int count = MethodCompiler.VirtualRegisters.Count;
 
@@ -201,28 +229,25 @@ namespace Mosa.Compiler.Framework.Stages
 		private void EvaluateVirtualRegisters()
 		{
 			int count = MethodCompiler.VirtualRegisters.Count;
-			bool done = false;
-			bool changed = false;
+			int evaluated = 0;
 
-			while (!done)
+			while (evaluated != count)
 			{
-				done = true;
-				changed = false;
+				int startedAt = evaluated;
 
 				for (int i = 0; i < count; i++)
 				{
 					if (Evaluate(MethodCompiler.VirtualRegisters[i]))
 					{
-						changed = true;
-					}
-					else
-					{
-						done = false;
+						evaluated++;
+
+						if (evaluated == count)
+							return;
 					}
 				}
 
 				// cycle detected - exit
-				if (!changed & !done)
+				if (startedAt == evaluated)
 					return;
 			}
 		}
@@ -264,14 +289,7 @@ namespace Mosa.Compiler.Framework.Stages
 				return true;
 			}
 
-			if (visitation.TryGetValue(node.Instruction, out NodeVisitationDelegate method))
-			{
-				method.Invoke(node);
-			}
-			else
-			{
-				Values[index].SetIndeterminate();
-			}
+			visitation[node.Instruction.ID]?.Invoke(node);
 
 			return true;
 		}

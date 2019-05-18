@@ -20,21 +20,23 @@ namespace Mosa.Compiler.Framework.Stages
 		private Dictionary<Operand, Operand[]> ssaOperands;
 		private Dictionary<BasicBlock, SimpleFastDominance> blockAnalysis;
 		private Dictionary<Operand, List<BasicBlock>> assignments;
+		private Dictionary<Operand, Operand> parentOperand;
 
-		private Counter InstructionCount = new Counter("EnterSSA.IRInstructions");
+		private Counter InstructionCount = new Counter("EnterSSAStage.IRInstructions");
 
 		private TraceLog trace;
 
-		private Dictionary<Operand, Operand> parentOperand;
-
 		protected override void Initialize()
+		{
+			Register(InstructionCount);
+		}
+
+		protected override void Setup()
 		{
 			ssaOperands = new Dictionary<Operand, Operand[]>();
 			blockAnalysis = new Dictionary<BasicBlock, SimpleFastDominance>();
 			assignments = new Dictionary<Operand, List<BasicBlock>>();
 			parentOperand = new Dictionary<Operand, Operand>();
-
-			Register(InstructionCount);
 		}
 
 		protected override void Run()
@@ -46,7 +48,7 @@ namespace Mosa.Compiler.Framework.Stages
 			if (HasProtectedRegions)
 				return;
 
-			trace = CreateTraceLog(6);
+			trace = CreateTraceLog(8);
 
 			foreach (var headBlock in BasicBlocks.HeadBlocks)
 			{
@@ -64,12 +66,13 @@ namespace Mosa.Compiler.Framework.Stages
 		protected override void Finish()
 		{
 			// Clean up
+			trace = null;
 			variables = null;
 			counts = null;
-			ssaOperands.Clear();
-			assignments.Clear();
-			blockAnalysis.Clear();
-			parentOperand.Clear();
+			ssaOperands = null;
+			assignments = null;
+			blockAnalysis = null;
+			parentOperand = null;
 		}
 
 		private void EnterSSA()
