@@ -81,6 +81,8 @@ namespace Mosa.Compiler.Framework.Stages
 			}
 		}
 
+		private const ulong V = 1lu;
+
 		#endregion Internal Class
 
 		private Value[] Values;
@@ -529,7 +531,7 @@ namespace Mosa.Compiler.Framework.Stages
 				Values[index].IsMaxValueIndeterminate = value1.IsMaxValueIndeterminate;
 				Values[index].IsMinValueIndeterminate = value1.IsMinValueIndeterminate;
 				Values[index].BitsSet = value1.BitsSet >> shift;
-				Values[index].BitsClear = value1.BitsClear >> shift;
+				Values[index].BitsClear = value1.BitsClear >> shift | ~(ulong.MaxValue >> shift);
 				Values[index].IsEvaluated = true;
 
 				return;
@@ -574,7 +576,7 @@ namespace Mosa.Compiler.Framework.Stages
 				Values[index].IsMaxValueIndeterminate = value1.IsMaxValueIndeterminate;
 				Values[index].IsMinValueIndeterminate = value1.IsMinValueIndeterminate;
 				Values[index].BitsSet = value1.BitsSet >> shift;
-				Values[index].BitsClear = value1.BitsClear >> shift | ~(ulong)uint.MaxValue;
+				Values[index].BitsClear = (value1.BitsClear >> shift) | (ulong)(~(uint.MaxValue >> shift)) | ~(ulong)uint.MaxValue;
 				Values[index].IsEvaluated = true;
 
 				return;
@@ -619,7 +621,7 @@ namespace Mosa.Compiler.Framework.Stages
 				Values[index].IsMaxValueIndeterminate = value1.IsMaxValueIndeterminate;
 				Values[index].IsMinValueIndeterminate = value1.IsMinValueIndeterminate;
 				Values[index].BitsSet = value1.BitsSet << shift;
-				Values[index].BitsClear = value1.BitsClear << shift;
+				Values[index].BitsClear = (value1.BitsClear << shift) | ~(ulong.MaxValue << shift);
 				Values[index].IsEvaluated = true;
 
 				return;
@@ -664,7 +666,7 @@ namespace Mosa.Compiler.Framework.Stages
 				Values[index].IsMaxValueIndeterminate = value1.IsMaxValueIndeterminate;
 				Values[index].IsMinValueIndeterminate = value1.IsMinValueIndeterminate;
 				Values[index].BitsSet = value1.BitsSet << shift;
-				Values[index].BitsClear = value1.BitsClear << shift | ~(ulong)uint.MaxValue;
+				Values[index].BitsClear = value1.BitsClear << shift | ~(ulong.MaxValue << shift) | ~(ulong)uint.MaxValue;
 				Values[index].IsEvaluated = true;
 
 				return;
@@ -723,7 +725,7 @@ namespace Mosa.Compiler.Framework.Stages
 			Values[index].IsMaxValueIndeterminate = value1.IsMaxValueIndeterminate || value2.IsMaxValueIndeterminate;
 			Values[index].IsMinValueIndeterminate = value1.IsMinValueIndeterminate || value2.IsMinValueIndeterminate;
 			Values[index].BitsSet = (value1.BitsSet & value2.BitsSet) & uint.MaxValue;
-			Values[index].BitsClear = (value2.BitsClear & value1.BitsClear) & uint.MaxValue;
+			Values[index].BitsClear = (value2.BitsClear | value1.BitsClear) & uint.MaxValue;
 			Values[index].IsEvaluated = true;
 		}
 
@@ -741,7 +743,7 @@ namespace Mosa.Compiler.Framework.Stages
 			Values[index].IsMaxValueIndeterminate = value1.IsMaxValueIndeterminate || value2.IsMaxValueIndeterminate;
 			Values[index].IsMinValueIndeterminate = value1.IsMinValueIndeterminate || value2.IsMinValueIndeterminate;
 			Values[index].BitsSet = value1.BitsSet & value2.BitsSet;
-			Values[index].BitsClear = value2.BitsClear & value1.BitsClear;
+			Values[index].BitsClear = value2.BitsClear | value1.BitsClear;
 			Values[index].IsEvaluated = true;
 		}
 
