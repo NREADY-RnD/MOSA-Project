@@ -265,5 +265,19 @@ namespace Mosa.UnitTests
 
 			return 0;
 		}
+
+		[MosaUnitTest(0)]
+		[MosaUnitTest(8)]
+		[MosaUnitTest(16)]
+		[MosaUnitTest(19)]
+		[MosaUnitTest(23)]
+		[MosaUnitTest(111)]
+		public static bool OptimizationTest21(byte a)
+		{
+			short b = a;
+			b <<= 4;
+			b |= 3;
+			return b != 0;
+		}
 	}
 }
