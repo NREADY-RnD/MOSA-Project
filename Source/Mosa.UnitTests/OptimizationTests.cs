@@ -266,12 +266,16 @@ namespace Mosa.UnitTests
 			return 0;
 		}
 
-		[MosaUnitTest(0)]
-		[MosaUnitTest(8)]
-		[MosaUnitTest(16)]
-		[MosaUnitTest(19)]
-		[MosaUnitTest(23)]
-		[MosaUnitTest(111)]
+		[MosaUnitTest((byte)0)]
+		[MosaUnitTest((byte)8)]
+		[MosaUnitTest((byte)16)]
+		[MosaUnitTest((byte)19)]
+		[MosaUnitTest((byte)23)]
+		[MosaUnitTest((byte)111)]
+		[MosaUnitTest((byte)127)]
+		[MosaUnitTest((byte)128)]
+		[MosaUnitTest((byte)254)]
+		[MosaUnitTest((byte)255)]
 		public static bool OptimizationTest21(byte a)
 		{
 			short b = a;
