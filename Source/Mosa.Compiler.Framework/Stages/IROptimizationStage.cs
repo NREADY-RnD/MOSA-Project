@@ -1236,6 +1236,17 @@ namespace Mosa.Compiler.Framework.Stages
 
 			BaseInstruction instruction = null;
 
+			Debug.Assert(node2.Operand1.IsParameter);
+
+			var paramType = MethodCompiler.Parameters[node2.Operand1.Index];
+
+			// Don't mix int and floating point otherwise the inliner will break
+			// Rational - the inliner can not transform the bits between floating point and regular registers without a load and store to memory (at least on Intel Platforms)
+			if ((node.Instruction == IRInstruction.LoadInt32 || node.Instruction == IRInstruction.LoadInt64) && paramType.IsFloatingPoint)
+				return;
+			else if ((node.Instruction == IRInstruction.LoadFloatR4 || node.Instruction == IRInstruction.LoadFloatR8) && paramType.IsInteger)
+				return;
+
 			if (node.Instruction == IRInstruction.LoadInt32)
 				instruction = IRInstruction.LoadParamInt32;
 			else if (node.Instruction == IRInstruction.LoadInt64)

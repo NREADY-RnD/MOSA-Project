@@ -229,6 +229,8 @@ namespace Mosa.Compiler.Framework
 
 		public bool IsR { get { return UnderlyingType.IsR; } }
 
+		public bool IsFloatingPoint { get { return IsR; } }
+
 		public bool IsR4 { get { return UnderlyingType.IsR4; } }
 
 		public bool IsR8 { get { return UnderlyingType.IsR8; } }
