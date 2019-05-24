@@ -39,6 +39,9 @@ namespace Mosa.Compiler.Framework.Stages
 			public ulong BitsClear;
 
 			public bool AreRangeValuesIndeterminate;
+			public bool IsEvaluated64 { set { IsEvaluated = value; } }
+
+			public bool IsEvaluated32 { set { IsEvaluated = value; MaxValue &= uint.MaxValue; MinValue &= uint.MaxValue; BitsSet &= uint.MaxValue; BitsClear &= uint.MaxValue; } }
 
 			public bool AreRangeValuesDeterminate { get { return !AreRangeValuesIndeterminate; } }
 
@@ -1405,15 +1408,43 @@ namespace Mosa.Compiler.Framework.Stages
 			bool signedB = ((value1.BitsClear >> 15) & 1) != 1;
 			bool signed = signedA || signedB;
 
-			return new Value()
+			if (!signed && value1.AreRangeValuesDeterminate)
 			{
-				MaxValue = 0,
-				MinValue = 0,
-				AreRangeValuesIndeterminate = true,
-				BitsSet = value1.BitsSet & ushort.MaxValue | (signed ? Upper48BitsSet : 0),
-				BitsClear = value1.BitsClear & ushort.MaxValue | (signed ? 0 : Upper48BitsSet),
-				IsEvaluated = true
-			};
+				return new Value()
+				{
+					MaxValue = value1.MaxValue,
+					MinValue = value1.MinValue,
+					AreRangeValuesIndeterminate = true,
+					BitsSet = value1.BitsSet & ushort.MaxValue | (signed ? Upper48BitsSet : 0),
+					BitsClear = value1.BitsClear & ushort.MaxValue | (signed ? 0 : Upper48BitsSet),
+					IsEvaluated = true
+				};
+			}
+
+			if (!signed)
+			{
+				return new Value()
+				{
+					MaxValue = (ulong)short.MaxValue,
+					MinValue = unchecked((ulong)short.MinValue),
+					AreRangeValuesIndeterminate = true,
+					BitsSet = value1.BitsSet & ushort.MaxValue | (signed ? Upper48BitsSet : 0),
+					BitsClear = value1.BitsClear & ushort.MaxValue | (signed ? 0 : Upper48BitsSet),
+					IsEvaluated = true
+				};
+			}
+			else
+			{
+				return new Value()
+				{
+					MaxValue = (ulong)short.MaxValue,
+					MinValue = unchecked((ulong)short.MinValue),
+					AreRangeValuesIndeterminate = true,
+					BitsSet = value1.BitsSet & ushort.MaxValue | (signed ? Upper48BitsSet : 0),
+					BitsClear = value1.BitsClear & ushort.MaxValue | (signed ? 0 : Upper48BitsSet),
+					IsEvaluated = true
+				};
+			}
 		}
 
 		private Value SignExtend16x64(InstructionNode node)
@@ -1444,15 +1475,43 @@ namespace Mosa.Compiler.Framework.Stages
 			bool signedB = ((value1.BitsClear >> 15) & 1) != 1;
 			bool signed = signedA || signedB;
 
-			return new Value()
+			if (!signed && value1.AreRangeValuesDeterminate)
 			{
-				MaxValue = 0,
-				MinValue = 0,
-				AreRangeValuesIndeterminate = true,
-				BitsSet = value1.BitsSet & ushort.MaxValue | (signed ? Upper48BitsSet : 0),
-				BitsClear = value1.BitsClear & ushort.MaxValue | (signed ? 0 : Upper48BitsSet),
-				IsEvaluated = true
-			};
+				return new Value()
+				{
+					MaxValue = value1.MaxValue,
+					MinValue = value1.MinValue,
+					AreRangeValuesIndeterminate = true,
+					BitsSet = value1.BitsSet & ushort.MaxValue | (signed ? Upper48BitsSet : 0),
+					BitsClear = value1.BitsClear & ushort.MaxValue | (signed ? 0 : Upper48BitsSet),
+					IsEvaluated = true
+				};
+			}
+
+			if (!signed)
+			{
+				return new Value()
+				{
+					MaxValue = (ulong)short.MaxValue,
+					MinValue = unchecked((ulong)short.MinValue),
+					AreRangeValuesIndeterminate = true,
+					BitsSet = value1.BitsSet & ushort.MaxValue | (signed ? Upper48BitsSet : 0),
+					BitsClear = value1.BitsClear & ushort.MaxValue | (signed ? 0 : Upper48BitsSet),
+					IsEvaluated = true
+				};
+			}
+			else
+			{
+				return new Value()
+				{
+					MaxValue = (ulong)short.MaxValue,
+					MinValue = unchecked((ulong)short.MinValue),
+					AreRangeValuesIndeterminate = true,
+					BitsSet = value1.BitsSet & ushort.MaxValue | (signed ? Upper48BitsSet : 0),
+					BitsClear = value1.BitsClear & ushort.MaxValue | (signed ? 0 : Upper48BitsSet),
+					IsEvaluated = true
+				};
+			}
 		}
 
 		private Value SignExtend8x32(InstructionNode node)
@@ -1483,15 +1542,43 @@ namespace Mosa.Compiler.Framework.Stages
 			bool signedB = ((value1.BitsClear >> 7) & 1) != 1;
 			bool signed = signedA || signedB;
 
-			return new Value()
+			if (!signed && value1.AreRangeValuesDeterminate)
 			{
-				MaxValue = 0,
-				MinValue = 0,
-				AreRangeValuesIndeterminate = true,
-				BitsSet = value1.BitsSet & byte.MaxValue | (signed ? Upper56BitsSet : 0),
-				BitsClear = value1.BitsClear & byte.MaxValue | (signed ? 0 : Upper56BitsSet),
-				IsEvaluated = true
-			};
+				return new Value()
+				{
+					MaxValue = value1.MaxValue,
+					MinValue = value1.MinValue,
+					AreRangeValuesIndeterminate = true,
+					BitsSet = value1.BitsSet & byte.MaxValue | (signed ? Upper56BitsSet : 0),
+					BitsClear = value1.BitsClear & byte.MaxValue | (signed ? 0 : Upper56BitsSet),
+					IsEvaluated = true
+				};
+			}
+
+			if (!signed)
+			{
+				return new Value()
+				{
+					MaxValue = (ulong)byte.MaxValue,
+					MinValue = (ulong)byte.MinValue,
+					AreRangeValuesIndeterminate = true,
+					BitsSet = value1.BitsSet & byte.MaxValue | (signed ? Upper56BitsSet : 0),
+					BitsClear = value1.BitsClear & byte.MaxValue | (signed ? 0 : Upper56BitsSet),
+					IsEvaluated = true
+				};
+			}
+			else
+			{
+				return new Value()
+				{
+					MaxValue = (ulong)byte.MaxValue,
+					MinValue = (ulong)byte.MinValue,
+					AreRangeValuesIndeterminate = true,
+					BitsSet = value1.BitsSet & byte.MaxValue | (signed ? Upper56BitsSet : 0),
+					BitsClear = value1.BitsClear & byte.MaxValue | (signed ? 0 : Upper56BitsSet),
+					IsEvaluated = true
+				};
+			}
 		}
 
 		private Value SignExtend8x64(InstructionNode node)
@@ -1522,57 +1609,43 @@ namespace Mosa.Compiler.Framework.Stages
 			bool signedB = ((value1.BitsClear >> 7) & 1) != 1;
 			bool signed = signedA || signedB;
 
-			//// if sign bit is known to be not set and AreRangeValuesDeterminate, then min/max unchanged
-			//if (!signed && value1.AreRangeValuesDeterminate)
-			//{
-			//	return new Value()
-			//	{
-			//		MaxValue = value1.MaxValue,
-			//		MinValue = value1.MinValue,
-			//		AreRangeValuesIndeterminate = true,
-			//		BitsSet = value1.BitsSet & byte.MaxValue | (signed ? Upper56BitsSet : 0),
-			//		BitsClear = value1.BitsClear & byte.MaxValue | (signed ? 0 : Upper56BitsSet),
-			//		IsEvaluated = true
-			//	};
-			//}
-
-			//// if sign bit is known to be not set, then the max is (ulong)byte.Max and min is (ulong)(byte.Min)
-			//if (!signed)
-			//{
-			//	return new Value()
-			//	{
-			//		MaxValue = (ulong)byte.MaxValue,
-			//		MinValue = (ulong)byte.MinValue,
-			//		AreRangeValuesIndeterminate = true,
-			//		BitsSet = value1.BitsSet & byte.MaxValue | (signed ? Upper56BitsSet : 0),
-			//		BitsClear = value1.BitsClear & byte.MaxValue | (signed ? 0 : Upper56BitsSet),
-			//		IsEvaluated = true
-			//	};
-			//}
-
-			//// If sign bit is known to be set, maxvalue is (ulong)(byte.Max), and minvalue is (ulong)(byte.Min)
-			//if (signed)
-			//{
-			//	return new Value()
-			//	{
-			//		MaxValue = (ulong)byte.MaxValue,
-			//		MinValue = (ulong)byte.MinValue,
-			//		AreRangeValuesIndeterminate = true,
-			//		BitsSet = value1.BitsSet & byte.MaxValue | (signed ? Upper56BitsSet : 0),
-			//		BitsClear = value1.BitsClear & byte.MaxValue | (signed ? 0 : Upper56BitsSet),
-			//		IsEvaluated = true
-			//	};
-			//}
-
-			return new Value()
+			if (!signed && value1.AreRangeValuesDeterminate)
 			{
-				MaxValue = 0,
-				MinValue = 0,
-				AreRangeValuesIndeterminate = true,
-				BitsSet = value1.BitsSet & byte.MaxValue | (signed ? Upper56BitsSet : 0),
-				BitsClear = value1.BitsClear & byte.MaxValue | (signed ? 0 : Upper56BitsSet),
-				IsEvaluated = true
-			};
+				return new Value()
+				{
+					MaxValue = value1.MaxValue,
+					MinValue = value1.MinValue,
+					AreRangeValuesIndeterminate = true,
+					BitsSet = value1.BitsSet & byte.MaxValue | (signed ? Upper56BitsSet : 0),
+					BitsClear = value1.BitsClear & byte.MaxValue | (signed ? 0 : Upper56BitsSet),
+					IsEvaluated = true
+				};
+			}
+
+			if (!signed)
+			{
+				return new Value()
+				{
+					MaxValue = (ulong)sbyte.MaxValue,
+					MinValue = unchecked((ulong)sbyte.MinValue),
+					AreRangeValuesIndeterminate = true,
+					BitsSet = value1.BitsSet & byte.MaxValue | (signed ? Upper56BitsSet : 0),
+					BitsClear = value1.BitsClear & byte.MaxValue | (signed ? 0 : Upper56BitsSet),
+					IsEvaluated = true
+				};
+			}
+			else
+			{
+				return new Value()
+				{
+					MaxValue = (ulong)sbyte.MaxValue,
+					MinValue = unchecked((ulong)sbyte.MinValue),
+					AreRangeValuesIndeterminate = true,
+					BitsSet = value1.BitsSet & byte.MaxValue | (signed ? Upper56BitsSet : 0),
+					BitsClear = value1.BitsClear & byte.MaxValue | (signed ? 0 : Upper56BitsSet),
+					IsEvaluated = true
+				};
+			}
 		}
 
 		private Value SignExtend32x64(InstructionNode node)
@@ -1603,15 +1676,43 @@ namespace Mosa.Compiler.Framework.Stages
 			bool signedB = ((value1.BitsClear >> 31) & 1) != 1;
 			bool signed = signedA || signedB;
 
-			return new Value()
+			if (!signed && value1.AreRangeValuesDeterminate)
 			{
-				MaxValue = 0,
-				MinValue = 0,
-				AreRangeValuesIndeterminate = true,
-				BitsSet = value1.BitsSet & uint.MaxValue | (signed ? Upper32BitsSet : 0),
-				BitsClear = value1.BitsClear & uint.MaxValue | (signed ? 0 : Upper32BitsSet),
-				IsEvaluated = true
-			};
+				return new Value()
+				{
+					MaxValue = value1.MaxValue,
+					MinValue = value1.MinValue,
+					AreRangeValuesIndeterminate = true,
+					BitsSet = value1.BitsSet & uint.MaxValue | (signed ? Upper56BitsSet : 0),
+					BitsClear = value1.BitsClear & uint.MaxValue | (signed ? 0 : Upper56BitsSet),
+					IsEvaluated = true
+				};
+			}
+
+			if (!signed)
+			{
+				return new Value()
+				{
+					MaxValue = (ulong)int.MaxValue,
+					MinValue = unchecked((ulong)int.MinValue),
+					AreRangeValuesIndeterminate = true,
+					BitsSet = value1.BitsSet & uint.MaxValue | (signed ? Upper56BitsSet : 0),
+					BitsClear = value1.BitsClear & uint.MaxValue | (signed ? 0 : Upper56BitsSet),
+					IsEvaluated = true
+				};
+			}
+			else
+			{
+				return new Value()
+				{
+					MaxValue = (ulong)int.MaxValue,
+					MinValue = unchecked((ulong)int.MinValue),
+					AreRangeValuesIndeterminate = true,
+					BitsSet = value1.BitsSet & uint.MaxValue | (signed ? Upper56BitsSet : 0),
+					BitsClear = value1.BitsClear & uint.MaxValue | (signed ? 0 : Upper56BitsSet),
+					IsEvaluated = true
+				};
+			}
 		}
 
 		private Value ZeroExtend16x32(InstructionNode node)
