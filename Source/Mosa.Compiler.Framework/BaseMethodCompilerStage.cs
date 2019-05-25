@@ -968,6 +968,22 @@ namespace Mosa.Compiler.Framework
 				|| instruction == IRInstruction.MoveFloatR4;
 		}
 
+		public static void ReplaceOperand(Operand target, Operand replacement)
+		{
+			foreach (var node in target.Uses.ToArray())
+			{
+				for (int i = 0; i < node.OperandCount; i++)
+				{
+					var operand = node.GetOperand(i);
+
+					if (target == operand)
+					{
+						node.SetOperand(i, replacement);
+					}
+				}
+			}
+		}
+
 		#endregion Helper Methods
 
 		#region Constant Helper Methods
