@@ -77,12 +77,20 @@ namespace Mosa.Compiler.Framework.Stages
 			if (result.Definitions.Count != 1)
 				return false;
 
-			foreach (var operand in node.Operands)
+			for (int i = 0; i < node.OperandCount; i++)
 			{
+				var operand = node.GetOperand(i);
+
+				if (operand.IsConstant)
+					continue;
+
 				if (operand.Definitions.Count != 1)
 					return false;
 
-				if (!(operand.IsVirtualRegister || operand.IsConstant))
+				if (!operand.IsVirtualRegister)
+					return false;
+
+				if (operand.Definitions[0].Block != node.PhiBlocks[i])
 					return false;
 			}
 

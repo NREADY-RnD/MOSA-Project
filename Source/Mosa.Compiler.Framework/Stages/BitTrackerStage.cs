@@ -161,8 +161,15 @@ namespace Mosa.Compiler.Framework.Stages
 			Register(IRInstruction.LoadZeroExtend8x32, LoadZeroExtend8x32);
 			Register(IRInstruction.LoadZeroExtend16x32, LoadZeroExtend16x32);
 
+			Register(IRInstruction.LoadZeroExtend8x64, LoadZeroExtend8x64);
+			Register(IRInstruction.LoadZeroExtend16x64, LoadZeroExtend16x64);
+			Register(IRInstruction.LoadZeroExtend32x64, LoadZeroExtend32x64);
+
 			Register(IRInstruction.LoadParamZeroExtend8x32, LoadParamZeroExtend8x32);
 			Register(IRInstruction.LoadParamZeroExtend16x32, LoadParamZeroExtend16x32);
+			Register(IRInstruction.LoadParamZeroExtend8x64, LoadParamZeroExtend8x64);
+			Register(IRInstruction.LoadParamZeroExtend16x64, LoadParamZeroExtend16x64);
+			Register(IRInstruction.LoadParamZeroExtend32x64, LoadParamZeroExtend32x64);
 
 			Register(IRInstruction.ShiftRight32, ShiftRight32);
 			Register(IRInstruction.ShiftRight64, ShiftRight64);
@@ -198,39 +205,37 @@ namespace Mosa.Compiler.Framework.Stages
 			Register(IRInstruction.ZeroExtend8x64, ZeroExtend8x64);
 			Register(IRInstruction.ZeroExtend32x64, ZeroExtend32x64);
 
+			Register(IRInstruction.RemUnsigned32, RemUnsigned32);
+			Register(IRInstruction.RemUnsigned64, RemUnsigned64);
+
 			// TODO:
+
 			// AddCarryOut32
 			// AddCarryOut64
 			// AddWithCarry32
 			// AddWithCarry64
-			// ArithShiftRight32
-			// ArithShiftRight64 - Shift an integer right (shift in sign)
+
 			// DivUnsigned32
 			// DivUnsigned64
+
 			// IfThenElse32
 			// IfThenElse64
+
 			// LoadParamSignExtend16x32
 			// LoadParamSignExtend16x64
 			// LoadParamSignExtend32x64
 			// LoadParamSignExtend8x32
 			// LoadParamSignExtend8x64
-			// LoadParamZeroExtend16x64
-			// LoadParamZeroExtend32x64
-			// LoadParamZeroExtend8x64
+
 			// LoadSignExtend16x32
 			// LoadSignExtend16x64
 			// LoadSignExtend32x64
 			// LoadSignExtend8x32
 			// LoadSignExtend8x64
-			// LoadZeroExtend16x32
-			// LoadZeroExtend16x64
-			// LoadZeroExtend32x64
-			// LoadZeroExtend8x32
-			// LoadZeroExtend8x64
+
 			// RemSigned32
 			// RemSigned64
-			// RemUnsigned32
-			// RemUnsigned64
+
 			// Sub32
 			// Sub64
 			// SubCarryOut32
@@ -867,6 +872,19 @@ namespace Mosa.Compiler.Framework.Stages
 			};
 		}
 
+		private Value LoadParamZeroExtend16x64(InstructionNode node)
+		{
+			return new Value()
+			{
+				MaxValue = ushort.MaxValue,
+				MinValue = 0,
+				AreRangeValuesDeterminate = true,
+				BitsSet = 0,
+				BitsClear = ~(ulong)(ushort.MaxValue),
+				Is32Bit = false
+			};
+		}
+
 		private Value LoadParamZeroExtend8x32(InstructionNode node)
 		{
 			return new Value()
@@ -877,6 +895,32 @@ namespace Mosa.Compiler.Framework.Stages
 				BitsSet = 0,
 				BitsClear = ~(ulong)(byte.MaxValue),
 				Is32Bit = true
+			};
+		}
+
+		private Value LoadParamZeroExtend8x64(InstructionNode node)
+		{
+			return new Value()
+			{
+				MaxValue = byte.MaxValue,
+				MinValue = 0,
+				AreRangeValuesDeterminate = true,
+				BitsSet = 0,
+				BitsClear = ~(ulong)(byte.MaxValue),
+				Is32Bit = false
+			};
+		}
+
+		private Value LoadParamZeroExtend32x64(InstructionNode node)
+		{
+			return new Value()
+			{
+				MaxValue = uint.MaxValue,
+				MinValue = 0,
+				AreRangeValuesDeterminate = true,
+				BitsSet = 0,
+				BitsClear = ~(ulong)(uint.MaxValue),
+				Is32Bit = false
 			};
 		}
 
@@ -893,6 +937,19 @@ namespace Mosa.Compiler.Framework.Stages
 			};
 		}
 
+		private Value LoadZeroExtend16x64(InstructionNode node)
+		{
+			return new Value()
+			{
+				MaxValue = ushort.MaxValue,
+				MinValue = 0,
+				AreRangeValuesDeterminate = true,
+				BitsSet = 0,
+				BitsClear = ~(ulong)(ushort.MaxValue),
+				Is32Bit = false
+			};
+		}
+
 		private Value LoadZeroExtend8x32(InstructionNode node)
 		{
 			return new Value()
@@ -903,6 +960,32 @@ namespace Mosa.Compiler.Framework.Stages
 				BitsSet = 0,
 				BitsClear = ~(ulong)(byte.MaxValue),
 				Is32Bit = true,
+			};
+		}
+
+		private Value LoadZeroExtend8x64(InstructionNode node)
+		{
+			return new Value()
+			{
+				MaxValue = byte.MaxValue,
+				MinValue = 0,
+				AreRangeValuesDeterminate = true,
+				BitsSet = 0,
+				BitsClear = ~(ulong)(byte.MaxValue),
+				Is32Bit = false,
+			};
+		}
+
+		private Value LoadZeroExtend32x64(InstructionNode node)
+		{
+			return new Value()
+			{
+				MaxValue = uint.MaxValue,
+				MinValue = 0,
+				AreRangeValuesDeterminate = true,
+				BitsSet = 0,
+				BitsClear = ~(ulong)(uint.MaxValue),
+				Is32Bit = false
 			};
 		}
 
@@ -1239,8 +1322,8 @@ namespace Mosa.Compiler.Framework.Stages
 
 			return new Value()
 			{
-				MaxValue = (value1.MaxValue * value2.MaxValue),
-				MinValue = (value1.MinValue * value2.MinValue),
+				MaxValue = value1.MaxValue * value2.MaxValue,
+				MinValue = value1.MinValue * value2.MinValue,
 				AreRangeValuesDeterminate = value1.AreRangeValuesDeterminate && value2.AreRangeValuesDeterminate && !IsMultiplyOverflow((uint)value1.MaxValue, (uint)value2.MaxValue),
 				BitsSet = 0,
 				BitsClear = Upper32BitsSet | ((value1.AreRangeValuesIndeterminate || value2.AreRangeValuesIndeterminate) ? 0 : BitTwiddling.GetClearBits(value1.MaxValue * value2.MaxValue)),
@@ -1320,6 +1403,80 @@ namespace Mosa.Compiler.Framework.Stages
 			}
 
 			return value;
+		}
+
+		private Value RemUnsigned32(InstructionNode node)
+		{
+			var value1 = node.Operand1.IsConstant ? new Value(node.Operand1.ConstantUnsignedLongInteger, true) : Values[node.Operand1.Index];
+			var value2 = node.Operand2.IsConstant ? new Value(node.Operand2.ConstantUnsignedLongInteger, true) : Values[node.Operand2.Index];
+
+			if (value1.AreLower32BitsKnown && value2.AreLower32BitsKnown)
+			{
+				return new Value(value1.BitsSet % value2.BitsSet, true);
+			}
+
+			if (value2.AreLower32BitsKnown && (value2.BitsSet & uint.MaxValue) == 0)
+			{
+				// divide by zero!
+				return Value.Indeterminate;
+			}
+
+			if (value1.AreLower32BitsKnown && (value1.BitsSet & uint.MaxValue) == 0)
+			{
+				return new Value(0, true);
+			}
+
+			if (value2.AreLower32BitsKnown && (value2.BitsSet & uint.MaxValue) != 0)
+			{
+				return new Value()
+				{
+					MaxValue = value2.BitsSet - 1,
+					MinValue = 0,
+					AreRangeValuesDeterminate = true,
+					BitsSet = 0,
+					BitsClear = BitTwiddling.GetClearBits(value2.BitsSet - 1),
+					Is32Bit = true
+				};
+			}
+
+			return Value.Indeterminate;
+		}
+
+		private Value RemUnsigned64(InstructionNode node)
+		{
+			var value1 = node.Operand1.IsConstant ? new Value(node.Operand1.ConstantUnsignedLongInteger, true) : Values[node.Operand1.Index];
+			var value2 = node.Operand2.IsConstant ? new Value(node.Operand2.ConstantUnsignedLongInteger, true) : Values[node.Operand2.Index];
+
+			if (value1.AreAll64BitsKnown && value2.AreAll64BitsKnown)
+			{
+				return new Value(value1.BitsSet % value2.BitsSet, true);
+			}
+
+			if (value2.AreAll64BitsKnown && (value2.BitsSet & uint.MaxValue) == 0)
+			{
+				// divide by zero!
+				return Value.Indeterminate;
+			}
+
+			if (value1.AreAll64BitsKnown && (value1.BitsSet & uint.MaxValue) == 0)
+			{
+				return new Value(0, true);
+			}
+
+			if (value2.AreAll64BitsKnown && (value2.BitsSet & uint.MaxValue) != 0)
+			{
+				return new Value()
+				{
+					MaxValue = value2.BitsSet - 1,
+					MinValue = 0,
+					AreRangeValuesDeterminate = true,
+					BitsSet = 0,
+					BitsClear = BitTwiddling.GetClearBits(value2.BitsSet - 1),
+					Is32Bit = false
+				};
+			}
+
+			return Value.Indeterminate;
 		}
 
 		private Value ShiftLeft32(InstructionNode node)
