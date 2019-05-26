@@ -145,7 +145,8 @@ namespace Mosa.Compiler.Framework
 				new UnboxValueTypeStage(),
 				(compilerOptions.EnableInlinedMethods) ? new InlineStage() : null,
 				(compilerOptions.EnableInlinedMethods) ? new BlockMergeStage() : null,
-				(compilerOptions.EnableInlinedMethods) ? new DeadBlockStage() : null,
+
+				//(compilerOptions.EnableInlinedMethods) ? new DeadBlockStage() : null,
 				new PromoteTemporaryVariables(),
 				(compilerOptions.EnableSSA) ? new EdgeSplitStage() : null,
 				new StaticLoadOptimizationStage(),

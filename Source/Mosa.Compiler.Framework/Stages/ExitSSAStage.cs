@@ -111,37 +111,34 @@ namespace Mosa.Compiler.Framework.Stages
 		/// Inserts the copy statement.
 		/// </summary>
 		/// <param name="predecessor">The predecessor.</param>
-		/// <param name="result">The result.</param>
-		/// <param name="operand">The operand.</param>
-		private void InsertCopyStatement(BasicBlock predecessor, Operand result, Operand operand)
+		/// <param name="destination">The result.</param>
+		/// <param name="source">The operand.</param>
+		private void InsertCopyStatement(BasicBlock predecessor, Operand destination, Operand source)
 		{
-			var context = new Context(predecessor.Last);
+			if (destination == source)
+				return;
 
-			context.GotoPrevious();
+			var node = predecessor.BeforeLast;
 
-			while (context.IsEmpty
-				|| context.Instruction == IRInstruction.CompareIntBranch32
-				|| context.Instruction == IRInstruction.CompareIntBranch64
-				|| context.Instruction == IRInstruction.Jmp)
+			while (node.IsEmptyOrNop
+				|| node.Instruction == IRInstruction.CompareIntBranch32
+				|| node.Instruction == IRInstruction.CompareIntBranch64
+				|| node.Instruction == IRInstruction.Jmp)
 			{
-				context.GotoPrevious();
+				node = node.Previous;
 			}
 
-			var source = operand;
-			var destination = result;
+			var context = new Context(node);
 
-			if (destination != source)
+			if (MosaTypeLayout.IsStoredOnStack(destination.Type))
 			{
-				if (MosaTypeLayout.IsStoredOnStack(destination.Type))
-				{
-					context.AppendInstruction(IRInstruction.MoveCompound, destination, source);
-					context.MosaType = destination.Type;
-				}
-				else
-				{
-					var moveInstruction = GetMoveInstruction(destination.Type);
-					context.AppendInstruction(moveInstruction, destination, source);
-				}
+				context.AppendInstruction(IRInstruction.MoveCompound, destination, source);
+				context.MosaType = destination.Type;
+			}
+			else
+			{
+				var moveInstruction = GetMoveInstruction(destination.Type);
+				context.AppendInstruction(moveInstruction, destination, source);
 			}
 		}
 	}
