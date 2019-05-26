@@ -167,8 +167,8 @@ namespace Mosa.Compiler.Framework.Stages
 			Register(IRInstruction.ShiftRight32, ShiftRight32);
 			Register(IRInstruction.ShiftRight64, ShiftRight64);
 
-			//Register(IRInstruction.ArithShiftRight32, ArithShiftRight32);
-			//Register(IRInstruction.ArithShiftRight64, ArithShiftRight64);
+			Register(IRInstruction.ArithShiftRight32, ArithShiftRight32);
+			Register(IRInstruction.ArithShiftRight64, ArithShiftRight64);
 
 			Register(IRInstruction.ShiftLeft32, ShiftLeft32);
 			Register(IRInstruction.ShiftLeft64, ShiftLeft64);
@@ -723,11 +723,13 @@ namespace Mosa.Compiler.Framework.Stages
 			var value2 = node.Operand2.IsConstant ? new Value(node.Operand2.ConstantUnsignedLongInteger, true) : Values[node.Operand2.Index];
 
 			var shift = (int)(value2.BitsSet & 0b11111);
+			bool knownSignedBit = ((value1.BitsKnown >> 31) & 1) == 1;
+			bool signed = ((value1.BitsSet >> 31) & 1) == 1 || ((value1.BitsClear >> 31) & 1) != 1;
+			ulong highbits = (knownSignedBit && signed) ? ~(~uint.MaxValue >> shift) : 0;
 
 			if (value1.AreLower32BitsKnown && value2.AreLower5BitsKnown)
 			{
-				// TODO: Set the upper bits
-				return new Value((value1.BitsSet & uint.MaxValue) >> shift | ~(~uint.MaxValue >> (int)(value2.BitsSet & 0b11111)), true);
+				return new Value((value1.BitsSet & uint.MaxValue) >> shift | highbits, true);
 			}
 
 			if (value1.AreLower32BitsKnown && (value1.BitsSet & uint.MaxValue) == 0)
@@ -735,21 +737,20 @@ namespace Mosa.Compiler.Framework.Stages
 				return new Value(0);
 			}
 
-			if (value2.AreLower5BitsKnown)
+			if (value2.AreLower5BitsKnown && knownSignedBit && shift == 0)
 			{
-				if (shift == 0)
-				{
-					return value1;
-				}
+				return value1;
+			}
 
+			if (value2.AreLower5BitsKnown && knownSignedBit && shift != 0)
+			{
 				return new Value()
 				{
-					// TODO: Set the upper bits
-					MaxValue = value1.MaxValue >> shift,
-					MinValue = value1.MinValue >> shift,
+					MaxValue = (value1.MaxValue >> shift) | highbits,
+					MinValue = (value1.MinValue >> shift) | highbits,
 					AreRangeValuesDeterminate = value1.AreRangeValuesDeterminate,
-					BitsSet = value1.BitsSet >> shift,
-					BitsClear = (value1.BitsClear >> shift) | ~(uint.MaxValue >> shift) | ~(~uint.MaxValue >> shift) | Upper32BitsSet,
+					BitsSet = value1.BitsSet >> shift | highbits,
+					BitsClear = (value1.BitsClear >> shift) | ~(uint.MaxValue >> shift) | highbits | Upper32BitsSet,
 					Is32Bit = true
 				};
 			}
@@ -759,20 +760,17 @@ namespace Mosa.Compiler.Framework.Stages
 
 		private Value ArithShiftRight64(InstructionNode node)
 		{
-			// TODO:
-
 			var value1 = node.Operand1.IsConstant ? new Value(node.Operand1.ConstantUnsignedLongInteger, false) : Values[node.Operand1.Index];
 			var value2 = node.Operand2.IsConstant ? new Value(node.Operand2.ConstantUnsignedLongInteger, false) : Values[node.Operand2.Index];
 
 			var shift = (int)(value2.BitsSet & 0b111111);
-
-			//bool knownSignedBit = ((value1.BitsKnown >> 31) & 1) == 1;
-			//bool signed = ((value1.BitsSet >> 31) & 1) == 1 || ((value1.BitsClear >> 31) & 1) != 1;
+			bool knownSignedBit = ((value1.BitsKnown >> 63) & 1) == 1;
+			bool signed = ((value1.BitsSet >> 63) & 1) == 1 || ((value1.BitsClear >> 63) & 1) != 1;
+			ulong highbits = (knownSignedBit && signed) ? ~(~ulong.MaxValue >> shift) : 0;
 
 			if (value1.AreAll64BitsKnown && value2.AreLower6BitsKnown)
 			{
-				// TODO: Set the upper bits
-				return new Value(value1.BitsSet >> (int)(value2.BitsSet & 0b111111) | ~(~ulong.MaxValue >> shift), false);
+				return new Value(value1.BitsSet >> shift | highbits, true);
 			}
 
 			if (value1.AreAll64BitsKnown && value1.BitsSet == 0)
@@ -780,22 +778,21 @@ namespace Mosa.Compiler.Framework.Stages
 				return new Value(0);
 			}
 
-			if (value2.AreLower6BitsKnown)
+			if (value2.AreAll64BitsKnown && knownSignedBit && shift == 0)
 			{
-				if (shift == 0)
-				{
-					return value1;
-				}
+				return value1;
+			}
 
+			if (value2.AreLower6BitsKnown && knownSignedBit && shift != 0)
+			{
 				return new Value()
 				{
-					// TODO: Set the upper bits
-					MaxValue = value1.MaxValue >> shift,
-					MinValue = value1.MinValue >> shift,
+					MaxValue = (value1.MaxValue >> shift) | highbits,
+					MinValue = (value1.MinValue >> shift) | highbits,
 					AreRangeValuesDeterminate = value1.AreRangeValuesDeterminate,
-					BitsSet = value1.BitsSet >> shift,
-					BitsClear = value1.BitsClear >> shift | ~(ulong.MaxValue >> shift) | ~(~ulong.MaxValue >> shift),
-					Is64Bit = true
+					BitsSet = value1.BitsSet >> shift | highbits,
+					BitsClear = (value1.BitsClear >> shift) | ~(ulong.MaxValue >> shift) | highbits,
+					Is32Bit = false
 				};
 			}
 
@@ -1342,13 +1339,13 @@ namespace Mosa.Compiler.Framework.Stages
 				return new Value(0, true);
 			}
 
-			if (value2.AreLower5BitsKnown)
+			if (value2.AreLower5BitsKnown && shift == 0)
 			{
-				if (shift == 0)
-				{
-					return value1;
-				}
+				return value1;
+			}
 
+			if (value2.AreLower5BitsKnown && shift != 0)
+			{
 				return new Value()
 				{
 					MaxValue = value1.MaxValue << shift,
@@ -1380,13 +1377,13 @@ namespace Mosa.Compiler.Framework.Stages
 				return new Value(0);
 			}
 
-			if (value2.AreLower6BitsKnown)
+			if (value2.AreLower6BitsKnown && shift == 0)
 			{
-				if (shift == 0)
-				{
-					return value1;
-				}
+				return value1;
+			}
 
+			if (value2.AreLower6BitsKnown && shift != 0)
+			{
 				return new Value()
 				{
 					MaxValue = value1.MaxValue << shift,
@@ -1418,13 +1415,13 @@ namespace Mosa.Compiler.Framework.Stages
 				return new Value(0);
 			}
 
-			if (value2.AreLower5BitsKnown)
+			if (value2.AreLower5BitsKnown && shift == 0)
 			{
-				if (shift == 0)
-				{
-					return value1;
-				}
+				return value1;
+			}
 
+			if (value2.AreLower5BitsKnown && shift != 0)
+			{
 				return new Value()
 				{
 					MaxValue = value1.MaxValue >> shift,
@@ -1456,13 +1453,13 @@ namespace Mosa.Compiler.Framework.Stages
 				return new Value(0);
 			}
 
-			if (value2.AreLower6BitsKnown)
+			if (value2.AreLower6BitsKnown && shift == 0)
 			{
-				if (shift == 0)
-				{
-					return value1;
-				}
+				return value1;
+			}
 
+			if (value2.AreLower6BitsKnown && shift != 0)
+			{
 				return new Value()
 				{
 					MaxValue = value1.MaxValue >> shift,
