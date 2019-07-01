@@ -16,6 +16,8 @@ namespace Mosa.Compiler.MosaTypeSystem
 
 		private readonly List<string> seenModules = new List<string>();
 
+		public static string mscorlibReplacement = "Mosa.Korlib";
+
 		public MosaModuleLoader()
 		{
 			Modules = new List<ModuleDefMD>();
@@ -42,12 +44,23 @@ namespace Mosa.Compiler.MosaTypeSystem
 				// automatically, even if they are in the same directory.
 				// (maybe this has todo with linux / specific mono versions?)
 				// So, try to load them manually recursively first.
+
+				// Re-direct to MOSA's implementation
+				if (assemblyRef.Name == "mscorlib" || assemblyRef.Name == "System")
+				{
+					assemblyRef.Name = mscorlibReplacement;
+				}
+
 				var subModuleFile = Path.Combine(Path.GetDirectoryName(module.Location), assemblyRef.Name + ".dll");
+
 				if (File.Exists(subModuleFile))
 				{
 					var subModule = ModuleDefMD.Load(subModuleFile, Resolver.DefaultModuleContext);
+
 					if (subModule != null)
+					{
 						LoadDependencies(subModule);
+					}
 				}
 
 				var assembly = Resolver.ResolveThrow(assemblyRef, null);

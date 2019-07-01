@@ -17,7 +17,7 @@
 		<tags>MOSA Compiler corlib</tags>
 	</metadata>
 	<files>
-		<file src="..\..\bin\mscorlib.dll" target="lib\net472" />
+		<file src="..\..\bin\Mosa.Korlib.dll" target="lib\net472" />
 		<file src="..\..\bin\Mosa.Plug.Korlib.dll" target="lib\net472" />
 		<file src="..\..\bin\Mosa.Plug.Korlib.x86.dll" target="lib\net472" />
 		<file src="..\..\bin\Mosa.Plug.Korlib.x64.dll" target="lib\net472" />
