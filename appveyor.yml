@@ -85,6 +85,7 @@ for:
           branch: master
 
       - provider: GitHub
+        tag: Stable
         release: MOSA Project - Stable Build
         description: 'Build Version - v$(APPVEYOR_BUILD_VERSION) at $(APPVEYOR_REPO_COMMIT_TIMESTAMP)'
         auth_token:
@@ -94,7 +95,7 @@ for:
         prerelease: false
         force_update: true
         on:
-          branch: stable
+          branch: Stable
 
       - provider: NuGet
         server:                  
@@ -104,7 +105,7 @@ for:
         symbol_server:           
         artifact: /.*\.nupkg/
         on:
-          branch: stable
+          branch: Stable
 
 # Windows Build - Visual Studio 2019:
   -
