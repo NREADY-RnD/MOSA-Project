@@ -50,7 +50,7 @@ for:
       publish_nuget: true
 
     after_build:
-	- cmd: del Mosa.Korlib.1.0.0.nupkg
+    - cmd: del Mosa.Korlib.1.0.0.nupkg
     - cmd: nuget.exe pack Source/Mosa.Korlib/Mosa.Korlib.nuspec -Properties version=%APPVEYOR_BUILD_VERSION%
     - cmd: ISCC.exe Source/Inno-Setup-Script/Mosa-Installer.iss
  #  - ps: ./mosactl.ps1 unittest
@@ -70,7 +70,7 @@ for:
 
     artifacts:
     - path: 'bin/MOSA-Installer.exe'
-	- path: 'Mosa.Korlib.*.nupkg'
+    - path: 'Mosa.Korlib.*.nupkg'
 
     deploy:
       - provider: GitHub
