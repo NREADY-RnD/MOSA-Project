@@ -4,6 +4,7 @@
 #define MyAppName "MOSA-Project"
 #define MyAppPublisher "MOSA-Project"
 #define MyAppURL "http://www.mosa-project.org"
+#define MyAppVersion GetFileVersion('..\..\bin\Mosa.Tool.Bootstrap.exe')
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
@@ -22,7 +23,7 @@ DisableDirPage=yes
 DisableReadyPage=yes
 DefaultGroupName={#MyAppName}
 OutputDir=..\..\bin
-OutputBaseFilename=MOSA-Installer
+OutputBaseFilename=MOSA-Installer-{#MyAppVersion}
 SolidCompression=yes
 MinVersion=0,6.0
 AllowUNCPath=False
