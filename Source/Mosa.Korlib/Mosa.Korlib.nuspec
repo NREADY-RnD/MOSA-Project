@@ -2,7 +2,7 @@
 <package >
 	<metadata>
 		<id>Mosa.Korlib</id>
-		<version>$version$</version>
+		<version>1.0.1.0</version>
 		<title>Mosa.Korlib Library</title>
 		<authors>MOSA Project</authors>
 		<owners>MOSA Project</owners>
