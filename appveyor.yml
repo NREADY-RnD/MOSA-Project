@@ -69,6 +69,7 @@ for:
     artifacts:
     - path: 'bin/MOSA-Installer.exe'
     - path: 'bin/mscorlib.dll'
+    - path: /.*\.rsp/
 
     deploy:
       - provider: GitHub
