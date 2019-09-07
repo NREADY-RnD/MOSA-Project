@@ -72,7 +72,7 @@ namespace Mosa.Utility.SourceCodeGenerator
 			Lines.AppendLine("\t\tpublic override void Transform(Context context, TransformContext transformContext)");
 			Lines.AppendLine("\t\t{");
 
-			//ProcessResultInstructionTree(transform);
+			ProcessResultInstructionTree(transform);
 
 			Lines.AppendLine("\t\t}");
 			Lines.AppendLine("\t}");
@@ -90,7 +90,7 @@ namespace Mosa.Utility.SourceCodeGenerator
 
 			// Capture all the labeled operands into variables
 			int labelCount = 0;
-			var labelToTemp = new Dictionary<string, int>();
+			var labelToLabelNbr = new Dictionary<string, int>();
 			foreach (var name in transform.LabelSet.Labels)
 			{
 				labelCount++;
@@ -102,18 +102,18 @@ namespace Mosa.Utility.SourceCodeGenerator
 				var labelOperandName = GetOperandName(labelPosition.OperandIndex);
 				var labelName = $"context.{labelParent}{labelOperandName}";
 
-				labelToTemp.Add(label.Name, labelCount);
+				labelToLabelNbr.Add(label.Name, labelCount);
 
 				Lines.AppendLine($"\t\t\tvar t{labelCount} = {labelName};");
 			}
 			if (labelCount != 0)
 				Lines.AppendLine("");
 
-			var postOrder = transform.Postorder(transform.ResultInstructionTree);
+			var postOrder = transform.GetPostorder(transform.ResultInstructionTree);
 
 			// Create virtual register for each child instruction
 			int virtualRegisterNbr = 0;
-			var nodeToResultVirtualRegister = new Dictionary<int, int>();
+			var nodeNbrToVirtualRegisterNbr = new Dictionary<int, int>();
 			foreach (var node in postOrder)
 			{
 				if (node == transform.ResultInstructionTree)
@@ -122,7 +122,7 @@ namespace Mosa.Utility.SourceCodeGenerator
 				virtualRegisterNbr++;
 				var resultType = DetermineResultType(node);
 
-				nodeToResultVirtualRegister.Add(node.NodeNbr, virtualRegisterNbr);
+				nodeNbrToVirtualRegisterNbr.Add(node.NodeNbr, virtualRegisterNbr);
 
 				Lines.AppendLine($"\t\t\tvar v{virtualRegisterNbr} = transformContext.AllocateVirtualRegister(transformContext.{resultType});");
 			}
@@ -132,7 +132,8 @@ namespace Mosa.Utility.SourceCodeGenerator
 			// Create all the constants variables
 			var operandList = transform.GetAllOperands(transform.ResultInstructionTree);
 			int constantNbr = 0;
-			var constantToConstant = new Dictionary<string, int>();
+			var constantTextToConstantNbr = new Dictionary<string, int>();
+			var constantToConstantNbr = new Dictionary<Operand, int>();
 			foreach (var operand in operandList)
 			{
 				string name = CreateConstantName(operand);
@@ -140,22 +141,26 @@ namespace Mosa.Utility.SourceCodeGenerator
 				if (name == null)
 					continue;
 
-				if (constantToConstant.ContainsKey(name))
+				if (constantTextToConstantNbr.TryGetValue(name, out int found))
+				{
+					constantToConstantNbr.Add(operand, found);
+					Lines.AppendLine($"\t\t\tvar c{operand} = transformContext.CreateConstant({name});");
 					continue;
+				}
 
 				constantNbr++;
+				constantTextToConstantNbr.Add(name, constantNbr);
+				constantToConstantNbr.Add(operand, constantNbr);
 
 				Lines.AppendLine($"\t\t\tvar c{constantNbr} = transformContext.CreateConstant({name});");
-
-				constantToConstant.Add(name, constantNbr);
 			}
 			if (constantNbr != 0)
 				Lines.AppendLine("");
 
 			// Evaluate functions
-			var methodList = transform.GetList(transform.ResultInstructionTree);
-			int evalNbr = 0;
-			var evalToEval = new Dictionary<string, int>();
+			int methodNbr = 0;
+			var methodToExpressionText = new Dictionary<string, int>();
+			var methodToMethodNbr = new Dictionary<Method, int>();
 			foreach (var node in postOrder)
 			{
 				foreach (var operand in node.Operands)
@@ -163,22 +168,27 @@ namespace Mosa.Utility.SourceCodeGenerator
 					if (!operand.IsMethod)
 						continue;
 
-					string name = CreateExpression(operand.Method, transform);
+					string name = CreateExpression(operand.Method, labelToLabelNbr, constantToConstantNbr);
 
-					if (evalToEval.ContainsKey(name))
+					if (methodToExpressionText.TryGetValue(name, out int found))
+					{
+						methodToMethodNbr.Add(operand.Method, found);
+						Lines.AppendLine($"\t\t\tvar e{found} = transformContext.CreateConstant({name});");
 						continue;
+					}
 
-					evalNbr++;
+					methodNbr++;
 
-					Lines.AppendLine($"\t\t\tvar e{constantNbr} = {name};");
+					methodToMethodNbr.Add(operand.Method, methodNbr);
+					methodToExpressionText.Add(name, methodNbr);
 
-					evalToEval.Add(name, constantNbr);
+					Lines.AppendLine($"\t\t\tvar e{methodNbr} = transformContext.CreateConstant({name});");
 				}
 			}
-			if (evalNbr != 0)
+			if (methodNbr != 0)
 				Lines.AppendLine("");
 
-			// Create Operand List
+			// Create Instructions
 			bool firstInstruction = true;
 			foreach (var node in postOrder)
 			{
@@ -187,42 +197,31 @@ namespace Mosa.Utility.SourceCodeGenerator
 				{
 					if (operand.IsLabel)
 					{
-						var name = labelToTemp[operand.LabelName];
-						sb.Append($"t{name}");
+						sb.Append($"t{labelToLabelNbr[operand.LabelName]}");
 					}
 					else if (operand.IsInteger)
 					{
-						var name = CreateConstantName(operand);
-						var nbr = constantToConstant[name];
-						sb.Append($"c{nbr}");
+						sb.Append($"c{constantToConstantNbr[operand]}");
 					}
 					else if (operand.IsLong)
 					{
-						var name = CreateConstantName(operand);
-						var nbr = constantToConstant[name];
-						sb.Append($"c{nbr}");
+						sb.Append($"c{constantToConstantNbr[operand]}");
 					}
 					else if (operand.IsDouble)
 					{
-						var name = CreateConstantName(operand);
-						var nbr = constantToConstant[name];
-						sb.Append($"c{nbr}");
+						sb.Append($"c{constantToConstantNbr[operand]}");
 					}
 					else if (operand.IsFloat)
 					{
-						var name = CreateConstantName(operand);
-						var nbr = constantToConstant[name];
-						sb.Append($"c{nbr}");
+						sb.Append($"c{constantToConstantNbr[operand]}");
 					}
 					else if (operand.IsInstruction)
 					{
-						var nbr = nodeToResultVirtualRegister[operand.InstructionNode.NodeNbr];
-						sb.Append($"v{nbr}");
+						sb.Append($"v{nodeNbrToVirtualRegisterNbr[operand.InstructionNode.NodeNbr]}");
 					}
 					else if (operand.IsMethod)
 					{
-						var name = CreateExpression(operand.Method, transform);
-						var nbr = evalToEval[name];
+						var nbr = methodToMethodNbr[operand.Method];
 						sb.Append($"e{nbr}");
 					}
 
@@ -239,7 +238,7 @@ namespace Mosa.Utility.SourceCodeGenerator
 				if (!string.IsNullOrWhiteSpace(node.InstructionName))
 				{
 					var instruction = node.InstructionName.Replace("IR.", "IRInstruction."); ;
-					var result = node == transform.ResultInstructionTree ? "result" : $"v{nodeToResultVirtualRegister[node.NodeNbr]}";
+					var result = node == transform.ResultInstructionTree ? "result" : $"v{nodeNbrToVirtualRegisterNbr[node.NodeNbr]}";
 
 					Lines.AppendLine($"\t\t\tcontext.{operation}Instruction({instruction}, {result}, {operands});");
 				}
@@ -252,7 +251,7 @@ namespace Mosa.Utility.SourceCodeGenerator
 			}
 		}
 
-		private string CreateExpression(Method method, Transformation transform)
+		private string CreateExpression(Method method, Dictionary<string, int> labelToLabelNbr, Dictionary<Operand, int> constantToConstantNbr)
 		{
 			var sb = new StringBuilder();
 
@@ -261,8 +260,37 @@ namespace Mosa.Utility.SourceCodeGenerator
 
 			foreach (var operand in method.Parameters)
 			{
-				sb.Append(""); //
+				if (operand.IsLabel)
+				{
+					var name = labelToLabelNbr[operand.LabelName];
+					sb.Append($"t{name}");
+				}
+				else if (operand.IsInteger)
+				{
+					sb.Append($"c{constantToConstantNbr[operand]}");
+				}
+				else if (operand.IsLong)
+				{
+					sb.Append($"c{constantToConstantNbr[operand]}");
+				}
+				else if (operand.IsDouble)
+				{
+					sb.Append($"c{constantToConstantNbr[operand]}");
+				}
+				else if (operand.IsFloat)
+				{
+					sb.Append($"c{constantToConstantNbr[operand]}");
+				}
+				else if (operand.IsMethod)
+				{
+					sb.Append(CreateExpression(operand.Method, labelToLabelNbr, constantToConstantNbr));
+				}
+
+				sb.Append(", ");
 			}
+
+			if (method.Parameters.Count != 0)
+				sb.Length -= 2;
 
 			sb.Append(")");
 

@@ -7,7 +7,7 @@
 			"SubName": "",
 			"Expression": "IR.Add32 a b",
 			"Filter": "IsResolvedConstant(a) & IsResolvedConstant(b)",
-			"Result": "[Add32(a,b)]"
+			"Result": "[Add32(ToInt32(a),ToInt32(b))]"
 		},
 		{
 			"FamilyName": "IR2",
@@ -16,7 +16,7 @@
 			"SubName": "",
 			"Expression": "IR.Add64 a b",
 			"Filter": "IsResolvedConstant(a) & IsResolvedConstant(b)",
-			"Result": "[Add64(a,b)]"
+			"Result": "[Add64(ToInt64(a),ToInt64(b))]"
 		},
 		{
 			"FamilyName": "IR2",

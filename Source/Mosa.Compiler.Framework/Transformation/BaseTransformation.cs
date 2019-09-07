@@ -232,12 +232,22 @@ namespace Mosa.Compiler.Framework.Transformation
 			return value;
 		}
 
-		protected static ulong Add(ulong a, ulong b)
+		protected static uint Add32(uint a, uint b)
 		{
 			return a + b;
 		}
 
-		protected static ulong Sub(ulong a, ulong b)
+		protected static ulong Add64(ulong a, ulong b)
+		{
+			return a + b;
+		}
+
+		protected static uint Sub32(uint a, uint b)
+		{
+			return a - b;
+		}
+
+		protected static ulong Sub64(ulong a, ulong b)
 		{
 			return a - b;
 		}
