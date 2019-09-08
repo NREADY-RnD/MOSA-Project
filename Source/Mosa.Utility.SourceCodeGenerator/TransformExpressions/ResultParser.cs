@@ -116,7 +116,7 @@ namespace Mosa.Utility.SourceCodeGenerator.TransformExpressions
 
 					if (next.TokenType == TokenType.OpenParens)
 					{
-						var innerNode = ParseExpression(tokens, index + 2);
+						var innerNode = ParseExpression(tokens, index - 1);
 
 						index = innerNode.end;
 

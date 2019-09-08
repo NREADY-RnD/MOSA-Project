@@ -192,12 +192,12 @@ namespace Mosa.Compiler.Framework.Transformation
 
 		#region Expression Methods
 
-		protected static uint To32(Operand operand)
+		protected static uint ToInt32(Operand operand)
 		{
 			return operand.ConstantUnsigned32;
 		}
 
-		protected static ulong To64(Operand operand)
+		protected static ulong ToInt64(Operand operand)
 		{
 			return operand.ConstantUnsigned64;
 		}
@@ -212,12 +212,12 @@ namespace Mosa.Compiler.Framework.Transformation
 			return operand.ConstantSigned64;
 		}
 
-		protected static uint To32(ulong value)
+		protected static uint ToInt32(ulong value)
 		{
 			return (uint)value;
 		}
 
-		protected static ulong To64(ulong value)
+		protected static ulong ToInt64(ulong value)
 		{
 			return value;
 		}
