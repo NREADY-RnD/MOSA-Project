@@ -38,7 +38,7 @@ namespace Mosa.Utility.SourceCodeGenerator
 			Lines.AppendLine("using Mosa.Compiler.Framework.Transformation;");
 
 			Lines.AppendLine();
-			Lines.AppendLine($"namespace Mosa.Compiler.Framework.Transformation.{node.FamilyName}.{node.Type}");
+			Lines.AppendLine($"namespace Mosa.Compiler.Framework.Transformation.Auto.{node.FamilyName}.{node.Type}");
 			Lines.AppendLine("{");
 			Lines.AppendLine("\t/// <summary>");
 			Lines.AppendLine($"\t/// {node.Name}{node.SubName}");

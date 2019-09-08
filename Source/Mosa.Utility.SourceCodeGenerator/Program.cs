@@ -13,22 +13,22 @@ namespace Mosa.Utility.SourceCodeGenerator
 
 			new BuildTransformationFiles(
 				Path.Combine(dataPath, @"IR-Optimizations-ConstantFolding.json"),
-				Path.Combine(targetPath, @"Mosa.Compiler.Framework\Transformation")
+				Path.Combine(targetPath, @"Mosa.Compiler.Framework\Transformation\Auto")
 			);
 
 			new BuildTransformationFiles(
 				Path.Combine(dataPath, @"IR-Optimizations-Simplification.json"),
-				Path.Combine(targetPath, @"Mosa.Compiler.Framework\Transformation")
+				Path.Combine(targetPath, @"Mosa.Compiler.Framework\Transformation\Auto")
 			);
 
 			new BuildTransformationFiles(
 				Path.Combine(dataPath, @"IR-Optimizations-StrengthReduction.json"),
-				Path.Combine(targetPath, @"Mosa.Compiler.Framework\Transformation")
+				Path.Combine(targetPath, @"Mosa.Compiler.Framework\Transformation\Auto")
 			);
 
 			new BuildTransformationFiles(
 				Path.Combine(dataPath, @"IR-Optimizations-Rewrite.json"),
-				Path.Combine(targetPath, @"Mosa.Compiler.Framework\Transformation")
+				Path.Combine(targetPath, @"Mosa.Compiler.Framework\Transformation\Auto")
 			);
 
 			new BuildIRInstruction(

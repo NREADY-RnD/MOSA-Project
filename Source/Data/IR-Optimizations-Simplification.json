@@ -1,7 +1,7 @@
 ﻿{
 	"Optimizations": [
 		{
-			"FamilyName": "IR2",
+			"FamilyName": "IR",
 			"Type": "Simplification",
 			"Name": "LogicalNot32",
 			"SubName": "Twice",
@@ -10,7 +10,7 @@
 			"Result": "(IR.MoveInt32 x)"
 		},
 		{
-			"FamilyName": "IR2",
+			"FamilyName": "IR",
 			"Type": "Simplification",
 			"Name": "LogicalNot64",
 			"SubName": "Twice",
