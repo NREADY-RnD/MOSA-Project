@@ -1,0 +1,22 @@
+﻿{
+	"Optimizations": [
+		{
+			"FamilyName": "IR2",
+			"Type": "Simplification",
+			"Name": "LogicalNot32",
+			"SubName": "Twice",
+			"Expression": "IR.LogicalNot32 (IR.LogicalNot32 x)",
+			"Filter": "",
+			"Result": "x"
+		},
+		{
+			"FamilyName": "IR2",
+			"Type": "Simplification",
+			"Name": "LogicalNot64",
+			"SubName": "Twice",
+			"Expression": "IR.LogicalNot64 (IR.LogicalNot64 x)",
+			"Filter": "",
+			"Result": "x"
+		}
+	]
+}

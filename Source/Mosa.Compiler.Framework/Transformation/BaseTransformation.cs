@@ -202,14 +202,24 @@ namespace Mosa.Compiler.Framework.Transformation
 			return operand.ConstantUnsigned64;
 		}
 
-		protected static int ToSigned32(Operand operand)
+		protected static int ToSignedInt32(Operand operand)
 		{
 			return operand.ConstantSigned32;
 		}
 
-		protected static long ToSigned64(Operand operand)
+		protected static long ToSignedInt64(Operand operand)
 		{
 			return operand.ConstantSigned64;
+		}
+
+		protected static double ToDouble(Operand operand)
+		{
+			return operand.ConstantDouble;
+		}
+
+		protected static float ToFloat(Operand operand)
+		{
+			return operand.ConstantFloat;
 		}
 
 		protected static uint ToInt32(ulong value)
@@ -242,12 +252,32 @@ namespace Mosa.Compiler.Framework.Transformation
 			return a + b;
 		}
 
+		protected static float AddR4(float a, float b)
+		{
+			return a + b;
+		}
+
+		protected static double AddR8(double a, double b)
+		{
+			return a + b;
+		}
+
 		protected static uint Sub32(uint a, uint b)
 		{
 			return a - b;
 		}
 
 		protected static ulong Sub64(ulong a, ulong b)
+		{
+			return a - b;
+		}
+
+		protected static float SubR4(float a, float b)
+		{
+			return a - b;
+		}
+
+		protected static double SubR8(double a, double b)
 		{
 			return a - b;
 		}
@@ -280,6 +310,46 @@ namespace Mosa.Compiler.Framework.Transformation
 		protected static long SignedMod(long a, long b)
 		{
 			return a % b;
+		}
+
+		protected static float MulR4(float a, float b)
+		{
+			return a * b;
+		}
+
+		protected static double MulR8(double a, double b)
+		{
+			return a * b;
+		}
+
+		protected static float DivR4(float a, float b)
+		{
+			return a / b;
+		}
+
+		protected static double DivR8(double a, double b)
+		{
+			return a / b;
+		}
+
+		protected static uint ShiftRight32(uint a, int b)
+		{
+			return a >> b;
+		}
+
+		protected static ulong ShiftRight64(ulong a, int b)
+		{
+			return a >> b;
+		}
+
+		protected static uint ShiftLeft32(uint a, int b)
+		{
+			return a << b;
+		}
+
+		protected static ulong ShiftLeft64(ulong a, int b)
+		{
+			return a << b;
 		}
 
 		protected static uint GetPowerOfTwo(ulong value)
