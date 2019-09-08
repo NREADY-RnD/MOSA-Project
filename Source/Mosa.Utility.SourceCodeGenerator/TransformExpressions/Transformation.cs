@@ -37,8 +37,6 @@ namespace Mosa.Utility.SourceCodeGenerator.TransformExpressions
 			Filters = FilterParser.ParseAll(TokenizedFilter);
 
 			ResultInstructionTree = ResultParser.Parse(TokenizedResult);
-
-			//var reversePostOrder = Preorder(ResultInstructionTree);
 		}
 
 		public override string ToString()
@@ -274,7 +272,9 @@ namespace Mosa.Utility.SourceCodeGenerator.TransformExpressions
 						}
 						else
 						{
-							result.Add(operand);
+							// except constants in expressions
+							if (!(operand.IsInteger || operand.IsLong || operand.IsFloat || operand.IsDouble))
+								result.Add(operand);
 						}
 					}
 				}

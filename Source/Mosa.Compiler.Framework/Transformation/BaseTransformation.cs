@@ -12,26 +12,12 @@ namespace Mosa.Compiler.Framework.Transformation
 		#region Properties
 
 		public BaseInstruction Instruction { get; private set; }
-		public List<BaseInstruction> Instructions { get; private set; }
 
 		public string Name { get; }
 
 		#endregion Properties
 
-		#region Data Fields
-
-		protected int OperandFiltersCount;
-		protected OperandFilter[] OperandFilters = new OperandFilter[10];
-
-		#endregion Data Fields
-
 		#region Constructors
-
-		protected BaseTransformation()
-		{
-			Name = ExtractName();
-			TransformationDirectory.Add(this);
-		}
 
 		public BaseTransformation(BaseInstruction instruction)
 			: this()
@@ -39,42 +25,13 @@ namespace Mosa.Compiler.Framework.Transformation
 			Instruction = instruction;
 		}
 
-		public BaseTransformation(List<BaseInstruction> instructions)
-			: this()
+		protected BaseTransformation()
 		{
-			Instructions = instructions;
-		}
-
-		public BaseTransformation(BaseInstruction instruction, OperandFilter operand1 = null, OperandFilter operand2 = null, OperandFilter operand3 = null, OperandFilter operand4 = null, OperandFilter operand5 = null, OperandFilter operand6 = null)
-			: this(instruction)
-		{
-			AddFilter(1, operand1);
-			AddFilter(2, operand2);
-			AddFilter(3, operand3);
-			AddFilter(4, operand4);
-			AddFilter(5, operand5);
-			AddFilter(6, operand6);
-		}
-
-		public BaseTransformation(List<BaseInstruction> instructions, OperandFilter operand1 = null, OperandFilter operand2 = null, OperandFilter operand3 = null, OperandFilter operand4 = null)
-			: this(instructions)
-		{
-			AddFilter(1, operand1);
-			AddFilter(2, operand2);
-			AddFilter(3, operand3);
-			AddFilter(4, operand4);
+			Name = ExtractName();
+			TransformationDirectory.Add(this);
 		}
 
 		#endregion Constructors
-
-		public void AddFilter(int index, OperandFilter filter)
-		{
-			if (filter == null)
-				return;
-
-			OperandFiltersCount = Math.Max(index - 1, OperandFiltersCount);
-			OperandFilters[index - 1] = filter;
-		}
 
 		#region Internals
 
@@ -92,61 +49,9 @@ namespace Mosa.Compiler.Framework.Transformation
 
 		#endregion Internals
 
-		public bool ValidateInstruction(Context context)
-		{
-			if (context.IsEmpty)
-				return false;
-
-			return context.Instruction == Instruction;
-		}
-
-		public virtual bool Match(Context context, TransformContext transformContext)
-		{
-			// Default - built in match
-
-			if (OperandFiltersCount == 0)
-				return true;
-
-			// operand counts must match
-			if (OperandFiltersCount != context.OperandCount)
-				return false;
-
-			if (OperandFiltersCount >= 1 && !OperandFilters[0].Compare(context.Operand1))
-				return false;
-
-			if (OperandFiltersCount >= 2 && !OperandFilters[1].Compare(context.Operand2))
-				return false;
-
-			if (OperandFiltersCount >= 3 && !OperandFilters[2].Compare(context.Operand3))
-				return false;
-
-			for (int i = 3; i < OperandFiltersCount; i++)
-			{
-				if (!OperandFilters[i].Compare(context.GetOperand(i)))
-					return false;
-			}
-
-			return false;
-		}
+		public abstract bool Match(Context context, TransformContext transformContext);
 
 		public abstract void Transform(Context context, TransformContext transformContext);
-
-		protected static bool ValidateSSAForm(Operand operand)
-		{
-			return operand.Definitions.Count == 1;
-		}
-
-		protected static BaseInstruction GetMove(Operand operand)
-		{
-			if (operand.IsR4)
-				return IRInstruction.MoveFloatR4;
-			else if (operand.IsR8)
-				return IRInstruction.MoveFloatR8;
-			else if (operand.Is64BitInteger)
-				return IRInstruction.MoveInt64;
-			else
-				return IRInstruction.MoveInt32;
-		}
 
 		#region Filter Methods
 
@@ -173,11 +78,6 @@ namespace Mosa.Compiler.Framework.Transformation
 			return false;
 		}
 
-		protected static bool IsResolvedConstant(Operand operand)
-		{
-			return operand.IsResolvedConstant;
-		}
-
 		protected static bool IsPowerOfTwo32(Operand operand)
 		{
 			return BitTwiddling.IsPowerOfTwo(operand.ConstantUnsigned32);
@@ -188,59 +88,14 @@ namespace Mosa.Compiler.Framework.Transformation
 			return BitTwiddling.IsPowerOfTwo(operand.ConstantUnsigned64);
 		}
 
+		protected static bool IsResolvedConstant(Operand operand)
+		{
+			return operand.IsResolvedConstant;
+		}
+
 		#endregion Filter Methods
 
 		#region Expression Methods
-
-		protected static uint ToInt32(Operand operand)
-		{
-			return operand.ConstantUnsigned32;
-		}
-
-		protected static ulong ToInt64(Operand operand)
-		{
-			return operand.ConstantUnsigned64;
-		}
-
-		protected static int ToSignedInt32(Operand operand)
-		{
-			return operand.ConstantSigned32;
-		}
-
-		protected static long ToSignedInt64(Operand operand)
-		{
-			return operand.ConstantSigned64;
-		}
-
-		protected static double ToDouble(Operand operand)
-		{
-			return operand.ConstantDouble;
-		}
-
-		protected static float ToFloat(Operand operand)
-		{
-			return operand.ConstantFloat;
-		}
-
-		protected static uint ToInt32(ulong value)
-		{
-			return (uint)value;
-		}
-
-		protected static ulong ToInt64(ulong value)
-		{
-			return value;
-		}
-
-		protected static double ToDouble(double value)
-		{
-			return value;
-		}
-
-		protected static float ToFloat(float value)
-		{
-			return value;
-		}
 
 		protected static uint Add32(uint a, uint b)
 		{
@@ -260,6 +115,186 @@ namespace Mosa.Compiler.Framework.Transformation
 		protected static double AddR8(double a, double b)
 		{
 			return a + b;
+		}
+
+		protected static uint And32(uint a, uint b)
+		{
+			return a & b;
+		}
+
+		protected static ulong And64(ulong a, ulong b)
+		{
+			return a & b;
+		}
+
+		protected static uint BoolToInt32(uint a)
+		{
+			return a == 0 ? (uint)0 : 1;
+		}
+
+		protected static ulong BoolToInt64(ulong a)
+		{
+			return a == 0 ? (ulong)0 : 1;
+		}
+
+		protected static float DivR4(float a, float b)
+		{
+			return a / b;
+		}
+
+		protected static double DivR8(double a, double b)
+		{
+			return a / b;
+		}
+
+		protected static long DivSigned32(long a, long b)
+		{
+			return a / b;
+		}
+
+		protected static long DivSigned64(long a, long b)
+		{
+			return a / b;
+		}
+
+		protected static uint DivUnsigned32(uint a, uint b)
+		{
+			return a / b;
+		}
+
+		protected static ulong DivUnsigned64(ulong a, ulong b)
+		{
+			return a / b;
+		}
+
+		protected static uint GetPowerOfTwo(ulong value)
+		{
+			return BitTwiddling.GetPowerOfTwo(value);
+		}
+
+		protected static uint GetPowerOfTwo(Operand operand)
+		{
+			return GetPowerOfTwo(operand.ConstantUnsigned64);
+		}
+
+		protected static long ModSigned32(long a, long b)
+		{
+			return a % b;
+		}
+
+		protected static long ModSigned64(long a, long b)
+		{
+			return a % b;
+		}
+
+		protected static uint ModUnsigned32(uint a, uint b)
+		{
+			return a % b;
+		}
+
+		protected static ulong ModUnsigned64(ulong a, ulong b)
+		{
+			return a % b;
+		}
+
+		protected static float MulR4(float a, float b)
+		{
+			return a * b;
+		}
+
+		protected static double MulR8(double a, double b)
+		{
+			return a * b;
+		}
+
+		protected static long MulSigned32(long a, long b)
+		{
+			return a * b;
+		}
+
+		protected static long MulSigned64(long a, long b)
+		{
+			return a * b;
+		}
+
+		protected static uint MulUnsigned32(uint a, uint b)
+		{
+			return a * b;
+		}
+
+		protected static ulong MulUnsigned64(ulong a, ulong b)
+		{
+			return a * b;
+		}
+
+		protected static uint Not32(uint a)
+		{
+			return ~a;
+		}
+
+		protected static ulong Not64(ulong a)
+		{
+			return ~a;
+		}
+
+		protected static uint Or32(uint a, uint b)
+		{
+			return a | b;
+		}
+
+		protected static ulong Or64(ulong a, ulong b)
+		{
+			return a | b;
+		}
+
+		protected static float RemR4(float a, float b)
+		{
+			return a % b;
+		}
+
+		protected static double RemR8(double a, double b)
+		{
+			return a % b;
+		}
+
+		protected static long RemSigned32(long a, long b)
+		{
+			return a % b;
+		}
+
+		protected static long RemSigned64(long a, long b)
+		{
+			return a % b;
+		}
+
+		protected static uint RemUnsigned32(uint a, uint b)
+		{
+			return a % b;
+		}
+
+		protected static ulong RemUnsigned64(ulong a, ulong b)
+		{
+			return a % b;
+		}
+
+		protected static uint ShiftLeft32(uint a, long b)
+		{
+			return a << (int)b;
+		}
+
+		protected static ulong ShiftLeft64(ulong a, long b)
+		{
+			return a << (int)b;
+		}
+
+		protected static uint ShiftRight32(uint a, long b)
+		{
+			return a >> (int)b;
+		}
+
+		protected static ulong ShiftRight64(ulong a, long b)
+		{
+			return a >> (int)b;
 		}
 
 		protected static uint Sub32(uint a, uint b)
@@ -282,103 +317,118 @@ namespace Mosa.Compiler.Framework.Transformation
 			return a - b;
 		}
 
-		protected static ulong UnsignedMultiple(ulong a, ulong b)
+		protected static uint To64(uint a, uint b)
 		{
-			return a * b;
+			return (a << 32) | b;
 		}
 
-		protected static ulong UnsignedDivide(ulong a, ulong b)
+		protected static double ToDouble(Operand operand)
 		{
-			return a / b;
+			return operand.ConstantDouble;
 		}
 
-		protected static ulong UnsignedMod(ulong a, ulong b)
+		protected static double ToDouble(double value)
 		{
-			return a % b;
+			return value;
 		}
 
-		protected static long SignedMultiple(long a, long b)
+		protected static float ToFloat(Operand operand)
 		{
-			return a * b;
+			return operand.ConstantFloat;
 		}
 
-		protected static long SignedDivide(long a, long b)
+		protected static float ToFloat(float value)
 		{
-			return a / b;
+			return value;
 		}
 
-		protected static long SignedMod(long a, long b)
+		protected static uint ToInt32(Operand operand)
 		{
-			return a % b;
+			return operand.ConstantUnsigned32;
 		}
 
-		protected static float MulR4(float a, float b)
+		protected static uint ToInt32(ulong value)
 		{
-			return a * b;
+			return (uint)value;
 		}
 
-		protected static double MulR8(double a, double b)
+		protected static ushort ToShort(ulong value)
 		{
-			return a * b;
+			return (ushort)value;
 		}
 
-		protected static float DivR4(float a, float b)
+		protected static byte ToByte(ulong value)
 		{
-			return a / b;
+			return (byte)value;
 		}
 
-		protected static double DivR8(double a, double b)
+		protected static ushort ToShort(Operand operand)
 		{
-			return a / b;
+			return (ushort)operand.ConstantUnsigned32;
 		}
 
-		protected static uint ShiftRight32(uint a, int b)
+		protected static byte ToByte(Operand operand)
 		{
-			return a >> b;
+			return (byte)operand.ConstantUnsigned32;
 		}
 
-		protected static ulong ShiftRight64(ulong a, int b)
+		protected static ulong ToInt64(Operand operand)
 		{
-			return a >> b;
+			return operand.ConstantUnsigned64;
 		}
 
-		protected static uint ShiftLeft32(uint a, int b)
+		protected static ulong ToInt64(ulong value)
 		{
-			return a << b;
+			return value;
 		}
 
-		protected static ulong ShiftLeft64(ulong a, int b)
+		protected static int ToSignedInt32(Operand operand)
 		{
-			return a << b;
+			return operand.ConstantSigned32;
 		}
 
-		protected static uint GetPowerOfTwo(ulong value)
+		protected static long ToSignedInt64(Operand operand)
 		{
-			return BitTwiddling.GetPowerOfTwo(value);
+			return operand.ConstantSigned64;
 		}
 
-		protected static uint GetPowerOfTwo(Operand operand)
+		protected static float ToFloatR4(int a)
 		{
-			return GetPowerOfTwo(operand.ConstantUnsigned64);
+			return (float)a;
+		}
+
+		protected static float ToFloatR4(long a)
+		{
+			return (float)a;
+		}
+
+		protected static double ToFloatR8(int a)
+		{
+			return (double)a;
+		}
+
+		protected static double ToFloatR8(long a)
+		{
+			return (double)a;
+		}
+
+		protected static uint Xor32(uint a, uint b)
+		{
+			return a ^ b;
+		}
+
+		protected static ulong Xor64(ulong a, ulong b)
+		{
+			return a ^ b;
 		}
 
 		#endregion Expression Methods
 
 		#region SignExtend Helpers
 
-		protected static uint SignExtend8x32(byte value)
-		{
-			return ((value & 0x80) == 0) ? value : (value | 0xFFFFFF00);
-		}
-
 		protected static uint SignExtend16x32(ushort value)
 		{
 			return ((value & 0x8000) == 0) ? value : (value | 0xFFFF0000);
-		}
-
-		protected static ulong SignExtend8x64(byte value)
-		{
-			return ((value & 0x80) == 0) ? value : (value | 0xFFFFFFFFFFFFFF00ul);
 		}
 
 		protected static ulong SignExtend16x64(ushort value)
@@ -389,6 +439,16 @@ namespace Mosa.Compiler.Framework.Transformation
 		protected static ulong SignExtend32x64(uint value)
 		{
 			return ((value & 0x80000000) == 0) ? value : (value | 0xFFFFFFFF00000000ul);
+		}
+
+		protected static uint SignExtend8x32(byte value)
+		{
+			return ((value & 0x80) == 0) ? value : (value | 0xFFFFFF00);
+		}
+
+		protected static ulong SignExtend8x64(byte value)
+		{
+			return ((value & 0x80) == 0) ? value : (value | 0xFFFFFFFFFFFFFF00ul);
 		}
 
 		#endregion SignExtend Helpers

@@ -267,19 +267,19 @@ namespace Mosa.Utility.SourceCodeGenerator
 				}
 				else if (operand.IsInteger)
 				{
-					sb.Append($"c{constantToConstantNbr[operand]}");
+					sb.Append(CreateConstantName(operand));
 				}
 				else if (operand.IsLong)
 				{
-					sb.Append($"c{constantToConstantNbr[operand]}");
+					sb.Append(CreateConstantName(operand));
 				}
 				else if (operand.IsDouble)
 				{
-					sb.Append($"c{constantToConstantNbr[operand]}");
+					sb.Append(CreateConstantName(operand));
 				}
 				else if (operand.IsFloat)
 				{
-					sb.Append($"c{constantToConstantNbr[operand]}");
+					sb.Append(CreateConstantName(operand));
 				}
 				else if (operand.IsMethod)
 				{
@@ -305,7 +305,7 @@ namespace Mosa.Utility.SourceCodeGenerator
 			}
 			else if (operand.IsLong)
 			{
-				return $"{operand.Long}UL";
+				return $"{operand.Long}L";
 			}
 			else if (operand.IsDouble)
 			{

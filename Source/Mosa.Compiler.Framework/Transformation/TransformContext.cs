@@ -60,7 +60,12 @@ namespace Mosa.Compiler.Framework.Transformation
 				CollectVirtualRegisters(context, virtualRegisters);
 			}
 
+			// TODO: note last virtual register #
+			// TODO: note the node
+
 			transformation.Transform(context, this);
+
+			// TODO: add all NEW virtual register to the collection
 
 			TraceAfter(context);
 

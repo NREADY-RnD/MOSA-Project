@@ -7,7 +7,7 @@
 			"SubName": "Twice",
 			"Expression": "IR.LogicalNot32 (IR.LogicalNot32 x)",
 			"Filter": "",
-			"Result": "x"
+			"Result": "(IR.MoveInt32 x)"
 		},
 		{
 			"FamilyName": "IR2",
@@ -16,7 +16,7 @@
 			"SubName": "Twice",
 			"Expression": "IR.LogicalNot64 (IR.LogicalNot64 x)",
 			"Filter": "",
-			"Result": "x"
+			"Result": "(IR.MoveInt64 x)"
 		}
 	]
 }

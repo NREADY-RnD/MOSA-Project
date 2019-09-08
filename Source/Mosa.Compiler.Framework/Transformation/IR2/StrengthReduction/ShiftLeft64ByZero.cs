@@ -34,7 +34,7 @@ namespace Mosa.Compiler.Framework.Transformation.IR2.StrengthReduction
 
 			var t1 = context.Operand1;
 
-			context.SetInstruction(GetMove(result), result, t1);
+			context.SetInstruction(IRInstruction.MoveInt64, result, t1);
 		}
 	}
 }

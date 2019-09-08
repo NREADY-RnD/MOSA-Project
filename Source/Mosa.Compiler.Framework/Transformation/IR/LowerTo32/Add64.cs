@@ -6,8 +6,13 @@ namespace Mosa.Compiler.Framework.Transformation.IR.LowerTo32
 {
 	public sealed class Add64 : BaseTransformation
 	{
-		public Add64() : base(IRInstruction.Add64, OperandFilter.Any, OperandFilter.Any)
+		public Add64() : base(IRInstruction.Add64)
 		{
+		}
+
+		public override bool Match(Context context, TransformContext transformContext)
+		{
+			return true;
 		}
 
 		public override void Transform(Context context, TransformContext transformContext)

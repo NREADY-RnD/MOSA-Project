@@ -126,19 +126,19 @@ namespace Mosa.Compiler.Framework
 			}
 			else if (instruction == IRInstruction.ConvertInt32ToFloatR4)
 			{
-				return ConstantOperand.Create(result.Type, (float)op1.ConstantUnsigned64);
+				return ConstantOperand.Create(result.Type, (float)op1.ConstantSigned64);
 			}
 			else if (instruction == IRInstruction.ConvertInt32ToFloatR8)
 			{
-				return ConstantOperand.Create(result.Type, (double)op1.ConstantUnsigned64);
+				return ConstantOperand.Create(result.Type, (double)op1.ConstantSigned64);
 			}
 			else if (instruction == IRInstruction.ConvertInt64ToFloatR4)
 			{
-				return ConstantOperand.Create(result.Type, (float)op1.ConstantUnsigned64);
+				return ConstantOperand.Create(result.Type, (float)op1.ConstantSigned64);
 			}
 			else if (instruction == IRInstruction.ConvertInt64ToFloatR8)
 			{
-				return ConstantOperand.Create(result.Type, (double)op1.ConstantUnsigned64);
+				return ConstantOperand.Create(result.Type, (double)op1.ConstantSigned64);
 			}
 
 			return null;

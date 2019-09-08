@@ -37,7 +37,7 @@ namespace Mosa.Compiler.Framework.Transformation.IR2.ConstantFolding
 
 			var e1 = transformContext.CreateConstant(AddR4(ToFloat(t1), ToFloat(t2)));
 
-			context.SetInstruction(GetMove(result), result, e1);
+			context.SetInstruction(IRInstruction.MoveFloatR4, result, e1);
 		}
 	}
 }

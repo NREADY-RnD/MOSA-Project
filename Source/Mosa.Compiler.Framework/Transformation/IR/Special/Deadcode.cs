@@ -55,5 +55,10 @@ namespace Mosa.Compiler.Framework.Transformation.IR.Special
 		{
 			context.SetInstruction(IRInstruction.Nop);
 		}
+
+		private static bool ValidateSSAForm(Operand operand)
+		{
+			return operand.Definitions.Count == 1;
+		}
 	}
 }

@@ -7,7 +7,7 @@
 			"SubName": "LeftZero",
 			"Expression": "IR.Add32 a 0",
 			"Filter": "",
-			"Result": "a"
+			"Result": "(IR.MoveInt32 a)"
 		},
 		{
 			"FamilyName": "IR2",
@@ -16,7 +16,7 @@
 			"SubName": "RightZero",
 			"Expression": "IR.Add32 0 a",
 			"Filter": "",
-			"Result": "a"
+			"Result": "(IR.MoveInt32 a)"
 		},
 		{
 			"FamilyName": "IR2",
@@ -25,7 +25,7 @@
 			"SubName": "LeftZero",
 			"Expression": "IR.Add64 a 0",
 			"Filter": "",
-			"Result": "a"
+			"Result": "(IR.MoveInt64 a)"
 		},
 		{
 			"FamilyName": "IR2",
@@ -34,7 +34,7 @@
 			"SubName": "RightZero",
 			"Expression": "IR.Add64 0 a",
 			"Filter": "",
-			"Result": "a"
+			"Result": "(IR.MoveInt64 a)"
 		},
 		{
 			"FamilyName": "IR2",
@@ -43,7 +43,7 @@
 			"SubName": "ZeroValue",
 			"Expression": "IR.ShiftRight32 0 a",
 			"Filter": "",
-			"Result": "0"
+			"Result": "(IR.MoveInt32 0)"
 		},
 		{
 			"FamilyName": "IR2",
@@ -52,7 +52,7 @@
 			"SubName": "ByZero",
 			"Expression": "IR.ShiftRight32 a 0",
 			"Filter": "",
-			"Result": "a"
+			"Result": "(IR.MoveInt32 a)"
 		},
 		{
 			"FamilyName": "IR2",
@@ -61,7 +61,7 @@
 			"SubName": "ZeroValue",
 			"Expression": "IR.ShiftRight64 0 a",
 			"Filter": "",
-			"Result": "0"
+			"Result": "(IR.MoveInt64 0)"
 		},
 		{
 			"FamilyName": "IR2",
@@ -70,7 +70,7 @@
 			"SubName": "ByZero",
 			"Expression": "IR.ShiftRight64 a 0",
 			"Filter": "",
-			"Result": "a"
+			"Result": "(IR.MoveInt64 a)"
 		},
 		{
 			"FamilyName": "IR2",
@@ -79,7 +79,7 @@
 			"SubName": "ByZero",
 			"Expression": "IR.ShiftLeft32 a 0",
 			"Filter": "",
-			"Result": "a"
+			"Result": "(IR.MoveInt32 a)"
 		},
 		{
 			"FamilyName": "IR2",
@@ -88,7 +88,7 @@
 			"SubName": "ByZero",
 			"Expression": "IR.ShiftLeft32 a 0",
 			"Filter": "",
-			"Result": "a"
+			"Result": "(IR.MoveInt32 a)"
 		},
 		{
 			"FamilyName": "IR2",
@@ -97,7 +97,7 @@
 			"SubName": "ByZero",
 			"Expression": "IR.ShiftLeft64 a 0",
 			"Filter": "",
-			"Result": "a"
+			"Result": "(IR.MoveInt64 a)"
 		},
 		{
 			"FamilyName": "IR2",
@@ -106,7 +106,7 @@
 			"SubName": "ByZero",
 			"Expression": "IR.ShiftLeft64 a 0",
 			"Filter": "",
-			"Result": "a"
+			"Result": "(IR.MoveInt64 a)"
 		},
 
 		{
@@ -116,7 +116,7 @@
 			"SubName": "ByZero",
 			"Expression": "IR.Sub32 a 0",
 			"Filter": "",
-			"Result": "a"
+			"Result": "(IR.MoveInt32 a)"
 		},
 		{
 			"FamilyName": "IR2",
@@ -125,7 +125,7 @@
 			"SubName": "ByZero",
 			"Expression": "IR.Sub64 a 0",
 			"Filter": "",
-			"Result": "a"
+			"Result": "(IR.MoveInt64 a)"
 		},
 		{
 			"FamilyName": "IR2",
@@ -134,7 +134,7 @@
 			"SubName": "BySame",
 			"Expression": "IR.Sub32 a a",
 			"Filter": "",
-			"Result": "0"
+			"Result": "(IR.MoveInt32 0)"
 		},
 		{
 			"FamilyName": "IR2",
@@ -143,7 +143,7 @@
 			"SubName": "BySame",
 			"Expression": "IR.Sub64 a a",
 			"Filter": "",
-			"Result": "0"
+			"Result": "(IR.MoveInt64 0)"
 		},
 		{
 			"FamilyName": "IR2",

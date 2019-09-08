@@ -6,13 +6,16 @@ namespace Mosa.Compiler.Framework.Transformation.IR.ConstantFolding
 {
 	public sealed class CompareInt64x32 : BaseTransformation
 	{
-		public CompareInt64x32() : base(IRInstruction.CompareInt64x32, OperandFilter.ResolvedConstant, OperandFilter.ResolvedConstant)
+		public CompareInt64x32() : base(IRInstruction.CompareInt64x32)
 		{
 		}
 
 		public override bool Match(Context context, TransformContext transformContext)
 		{
-			if (!(context.Operand1.IsResolvedConstant && context.Operand2.IsResolvedConstant))
+			if (!IsResolvedConstant(context.Operand1))
+				return false;
+
+			if (!IsResolvedConstant(context.Operand2))
 				return false;
 
 			switch (context.ConditionCode)

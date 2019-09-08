@@ -39,9 +39,9 @@ namespace Mosa.Compiler.Framework.Transformation.IR2.ConstantFolding
 			var t2 = context.Operand2;
 			var t3 = context.Operand3;
 
-			var e1 = transformContext.CreateConstant(Add64(Add64(ToInt32(t1), ToInt64(t2)), ToInt64(t3)));
+			var e1 = transformContext.CreateConstant(Add64(Add64(ToInt32(t1), ToInt64(t2)), BoolToInt64(ToInt64(t3))));
 
-			context.SetInstruction(GetMove(result), result, e1);
+			context.SetInstruction(IRInstruction.MoveInt64, result, e1);
 		}
 	}
 }
