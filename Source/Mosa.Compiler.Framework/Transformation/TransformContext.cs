@@ -1,5 +1,6 @@
 ﻿// Copyright (c) MOSA Project. Licensed under the New BSD License.
 
+using Mosa.Compiler.Common;
 using Mosa.Compiler.Framework.IR;
 using Mosa.Compiler.Framework.Trace;
 using Mosa.Compiler.MosaTypeSystem;
@@ -47,7 +48,7 @@ namespace Mosa.Compiler.Framework.Transformation
 			return VirtualRegisters.Allocate(type);
 		}
 
-		public bool ApplyTransform(Context context, BaseTransformation transformation, Stack<Operand> virtualRegisters = null)
+		public bool ApplyTransform(Context context, BaseTransformation transformation, List<Operand> virtualRegisters = null)
 		{
 			if (!transformation.Match(context, this))
 				return false;
@@ -68,28 +69,19 @@ namespace Mosa.Compiler.Framework.Transformation
 
 		#region WorkList
 
-		private void CollectVirtualRegisters(Operand operand, Stack<Operand> virtualRegisters)
-		{
-			// work list stays small, so the check is inexpensive
-			if (virtualRegisters.Contains(operand))
-				return;
-
-			virtualRegisters.Push(operand);
-		}
-
-		private void CollectVirtualRegisters(Context context, Stack<Operand> virtualRegisters)
+		private static void CollectVirtualRegisters(Context context, List<Operand> virtualRegisters)
 		{
 			if (context.Result != null)
 			{
-				CollectVirtualRegisters(context.Result, virtualRegisters);
+				virtualRegisters.AddIfNew(context.Result);
 			}
 			if (context.Result2 != null)
 			{
-				CollectVirtualRegisters(context.Result2, virtualRegisters);
+				virtualRegisters.AddIfNew(context.Result2);
 			}
 			foreach (var operand in context.Operands)
 			{
-				CollectVirtualRegisters(operand, virtualRegisters);
+				virtualRegisters.AddIfNew(operand);
 			}
 		}
 
