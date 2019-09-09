@@ -85,6 +85,14 @@ namespace Mosa.Compiler.Framework.Transformation.Auto
 		public static readonly BaseTransformation IR_StrengthReduction_Sub64BySame = new IR.StrengthReduction.Sub64BySame();
 		public static readonly BaseTransformation IR_StrengthReduction_MulUnsigned32ByPowerOfTwo = new IR.StrengthReduction.MulUnsigned32ByPowerOfTwo();
 		public static readonly BaseTransformation IR_StrengthReduction_MulUnsigned64ByPowerOfTwo = new IR.StrengthReduction.MulUnsigned64ByPowerOfTwo();
+		public static readonly BaseTransformation IR_StrengthReduction_MulSigned32ByPowerOfTwo = new IR.StrengthReduction.MulSigned32ByPowerOfTwo();
+		public static readonly BaseTransformation IR_StrengthReduction_MulSigned64ByPowerOfTwo = new IR.StrengthReduction.MulSigned64ByPowerOfTwo();
+		public static readonly BaseTransformation IR_StrengthReduction_DivUnsigned32ByPowerOfTwo = new IR.StrengthReduction.DivUnsigned32ByPowerOfTwo();
+		public static readonly BaseTransformation IR_StrengthReduction_DivUnsigned64ByPowerOfTwo = new IR.StrengthReduction.DivUnsigned64ByPowerOfTwo();
+		public static readonly BaseTransformation IR_StrengthReduction_DivSigned32ByPowerOfTwo = new IR.StrengthReduction.DivSigned32ByPowerOfTwo();
+		public static readonly BaseTransformation IR_StrengthReduction_DivSigned64ByPowerOfTwo = new IR.StrengthReduction.DivSigned64ByPowerOfTwo();
+		public static readonly BaseTransformation IR_StrengthReduction_RemUnsigned32ByPowerOfTwo = new IR.StrengthReduction.RemUnsigned32ByPowerOfTwo();
+		public static readonly BaseTransformation IR_StrengthReduction_RemUnsigned64ByPowerOfTwo = new IR.StrengthReduction.RemUnsigned64ByPowerOfTwo();
 		public static readonly BaseTransformation IR_Rewrite_Add32MultipleWithCommon = new IR.Rewrite.Add32MultipleWithCommon();
 		public static readonly BaseTransformation IR_Rewrite_Add64MultipleWithCommon = new IR.Rewrite.Add64MultipleWithCommon();
 		public static readonly BaseTransformation IR_Rewrite_Sub32MultipleWithCommon = new IR.Rewrite.Sub32MultipleWithCommon();

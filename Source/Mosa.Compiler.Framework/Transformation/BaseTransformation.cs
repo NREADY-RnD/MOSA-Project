@@ -57,6 +57,9 @@ namespace Mosa.Compiler.Framework.Transformation
 
 		protected static bool AreSame(Operand operand1, Operand operand2)
 		{
+			if (operand1 == operand2)
+				return true;
+
 			if (operand1.IsVirtualRegister && operand1.IsVirtualRegister && operand1 == operand2)
 				return true;
 
@@ -65,7 +68,10 @@ namespace Mosa.Compiler.Framework.Transformation
 
 			if (operand1.IsResolvedConstant && operand2.IsResolvedConstant)
 			{
-				if (operand1.IsInteger && operand1.ConstantUnsigned64 == operand2.ConstantUnsigned64)
+				if (operand1.IsLong && operand1.ConstantUnsigned64 == operand2.ConstantUnsigned64)
+					return true;
+
+				if (operand1.IsInteger && operand1.ConstantUnsigned32 == operand2.ConstantUnsigned32)
 					return true;
 
 				if (operand1.IsR4 && operand1.IsR4 && operand1.ConstantDouble == operand2.ConstantDouble)
@@ -91,6 +97,11 @@ namespace Mosa.Compiler.Framework.Transformation
 		protected static bool IsResolvedConstant(Operand operand)
 		{
 			return operand.IsResolvedConstant;
+		}
+
+		protected static bool IsZero(Operand operand)
+		{
+			return operand.IsConstantZero;
 		}
 
 		#endregion Filter Methods
@@ -322,6 +333,16 @@ namespace Mosa.Compiler.Framework.Transformation
 			return (a << 32) | b;
 		}
 
+		protected static byte ToByte(ulong value)
+		{
+			return (byte)value;
+		}
+
+		protected static byte ToByte(Operand operand)
+		{
+			return (byte)operand.ConstantUnsigned32;
+		}
+
 		protected static double ToDouble(Operand operand)
 		{
 			return operand.ConstantDouble;
@@ -342,56 +363,6 @@ namespace Mosa.Compiler.Framework.Transformation
 			return value;
 		}
 
-		protected static uint ToInt32(Operand operand)
-		{
-			return operand.ConstantUnsigned32;
-		}
-
-		protected static uint ToInt32(ulong value)
-		{
-			return (uint)value;
-		}
-
-		protected static ushort ToShort(ulong value)
-		{
-			return (ushort)value;
-		}
-
-		protected static byte ToByte(ulong value)
-		{
-			return (byte)value;
-		}
-
-		protected static ushort ToShort(Operand operand)
-		{
-			return (ushort)operand.ConstantUnsigned32;
-		}
-
-		protected static byte ToByte(Operand operand)
-		{
-			return (byte)operand.ConstantUnsigned32;
-		}
-
-		protected static ulong ToInt64(Operand operand)
-		{
-			return operand.ConstantUnsigned64;
-		}
-
-		protected static ulong ToInt64(ulong value)
-		{
-			return value;
-		}
-
-		protected static int ToSignedInt32(Operand operand)
-		{
-			return operand.ConstantSigned32;
-		}
-
-		protected static long ToSignedInt64(Operand operand)
-		{
-			return operand.ConstantSigned64;
-		}
-
 		protected static float ToFloatR4(int a)
 		{
 			return (float)a;
@@ -410,6 +381,46 @@ namespace Mosa.Compiler.Framework.Transformation
 		protected static double ToFloatR8(long a)
 		{
 			return (double)a;
+		}
+
+		protected static uint ToInt32(Operand operand)
+		{
+			return operand.ConstantUnsigned32;
+		}
+
+		protected static uint ToInt32(ulong value)
+		{
+			return (uint)value;
+		}
+
+		protected static ulong ToInt64(Operand operand)
+		{
+			return operand.ConstantUnsigned64;
+		}
+
+		protected static ulong ToInt64(ulong value)
+		{
+			return value;
+		}
+
+		protected static ushort ToShort(ulong value)
+		{
+			return (ushort)value;
+		}
+
+		protected static ushort ToShort(Operand operand)
+		{
+			return (ushort)operand.ConstantUnsigned32;
+		}
+
+		protected static int ToSignedInt32(Operand operand)
+		{
+			return operand.ConstantSigned32;
+		}
+
+		protected static long ToSignedInt64(Operand operand)
+		{
+			return operand.ConstantSigned64;
 		}
 
 		protected static uint Xor32(uint a, uint b)

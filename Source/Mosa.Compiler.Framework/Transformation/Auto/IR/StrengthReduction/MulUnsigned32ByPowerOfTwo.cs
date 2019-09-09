@@ -17,6 +17,9 @@ namespace Mosa.Compiler.Framework.Transformation.Auto.IR.StrengthReduction
 
 		public override bool Match(Context context, TransformContext transformContext)
 		{
+			if (!IsResolvedConstant(context.Operand2))
+				return false;
+
 			if (!IsPowerOfTwo32(context.Operand2))
 				return false;
 
@@ -30,7 +33,7 @@ namespace Mosa.Compiler.Framework.Transformation.Auto.IR.StrengthReduction
 			var t1 = context.Operand1;
 			var t2 = context.Operand2;
 
-			var e1 = transformContext.CreateConstant(GetPowerOfTwo(t2));
+			var e1 = transformContext.CreateConstant(GetPowerOfTwo(And32(ToInt32(t2), 31u)));
 
 			context.SetInstruction(IRInstruction.ShiftLeft32, result, t1, e1);
 		}

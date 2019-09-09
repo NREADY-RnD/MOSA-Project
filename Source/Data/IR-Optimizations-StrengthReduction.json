@@ -132,8 +132,8 @@
 			"Name": "MulUnsigned32",
 			"SubName": "ByPowerOfTwo",
 			"Expression": "IR.MulUnsigned32 x c",
-			"Filter": "IsPowerOfTwo32(c)",
-			"Result": "(IR.ShiftLeft32 x [GetPowerOfTwo(c)])"
+			"Filter": "IsResolvedConstant(c) & IsPowerOfTwo32(c)",
+			"Result": "(IR.ShiftLeft32 x [GetPowerOfTwo(And32(ToInt32(c),31u))])"
 		},
 		{
 			"FamilyName": "IR",
@@ -141,8 +141,80 @@
 			"Name": "MulUnsigned64",
 			"SubName": "ByPowerOfTwo",
 			"Expression": "IR.MulUnsigned64 x c",
-			"Filter": "IsPowerOfTwo64(c)",
-			"Result": "(IR.ShiftLeft64 x [GetPowerOfTwo(c)])"
+			"Filter": "IsResolvedConstant(c) & IsPowerOfTwo64(c)",
+			"Result": "(IR.ShiftLeft64 x [GetPowerOfTwo(And32(ToInt32(c),63u))])"
+		},
+		{
+			"FamilyName": "IR",
+			"Type": "StrengthReduction",
+			"Name": "MulSigned32",
+			"SubName": "ByPowerOfTwo",
+			"Expression": "IR.MulSigned32 x c",
+			"Filter": "IsResolvedConstant(c) & IsPowerOfTwo32(c)",
+			"Result": "(IR.ShiftLeft32 x [GetPowerOfTwo(And32(ToInt32(c),31u))])"
+		},
+		{
+			"FamilyName": "IR",
+			"Type": "StrengthReduction",
+			"Name": "MulSigned64",
+			"SubName": "ByPowerOfTwo",
+			"Expression": "IR.MulSigned64 x c",
+			"Filter": "IsResolvedConstant(c) & IsPowerOfTwo64(c)",
+			"Result": "(IR.ShiftLeft64 x [GetPowerOfTwo(And32(ToInt32(c),63u))])"
+		},
+		{
+			"FamilyName": "IR",
+			"Type": "StrengthReduction",
+			"Name": "DivUnsigned32",
+			"SubName": "ByPowerOfTwo",
+			"Expression": "IR.DivUnsigned32 x c",
+			"Filter": "IsResolvedConstant(c) & IsPowerOfTwo32(c)",
+			"Result": "(IR.ShiftRight32 x [GetPowerOfTwo(And32(ToInt32(c),31u))])"
+		},
+		{
+			"FamilyName": "IR",
+			"Type": "StrengthReduction",
+			"Name": "DivUnsigned64",
+			"SubName": "ByPowerOfTwo",
+			"Expression": "IR.DivUnsigned64 x c",
+			"Filter": "IsResolvedConstant(c) & IsPowerOfTwo64(c)",
+			"Result": "(IR.ShiftRight64 x [GetPowerOfTwo(And32(ToInt32(c),63u))])"
+		},
+		{
+			"FamilyName": "IR",
+			"Type": "StrengthReduction",
+			"Name": "DivSigned32",
+			"SubName": "ByPowerOfTwo",
+			"Expression": "IR.DivSigned32 x c",
+			"Filter": "IsResolvedConstant(c) & IsPowerOfTwo32(c)",
+			"Result": "(IR.ShiftRight32 x [GetPowerOfTwo(And32(ToInt32(c),31u))])"
+		},
+		{
+			"FamilyName": "IR",
+			"Type": "StrengthReduction",
+			"Name": "DivSigned64",
+			"SubName": "ByPowerOfTwo",
+			"Expression": "IR.DivSigned64 x c",
+			"Filter": "IsResolvedConstant(c) & IsPowerOfTwo64(c)",
+			"Result": "(IR.ShiftRight64 x [GetPowerOfTwo(And32(ToInt32(c),63u))])"
+		},
+		{
+			"FamilyName": "IR",
+			"Type": "StrengthReduction",
+			"Name": "RemUnsigned32",
+			"SubName": "ByPowerOfTwo",
+			"Expression": "IR.RemUnsigned32 x c",
+			"Filter": "IsResolvedConstant(c) & IsPowerOfTwo32(c) & !IsZero(c)",
+			"Result": "(IR.LogicalAnd32 x [Sub32(ShiftLeft32(1u,GetPowerOfTwo(And32(ToInt32(c),31u))),1u)])"
+		},
+		{
+			"FamilyName": "IR",
+			"Type": "StrengthReduction",
+			"Name": "RemUnsigned64",
+			"SubName": "ByPowerOfTwo",
+			"Expression": "IR.RemUnsigned64 x c",
+			"Filter": "IsResolvedConstant(c) & IsPowerOfTwo64(c) & !IsZero(c)",
+			"Result": "(IR.LogicalAnd64 x [Sub32(ShiftLeft32(1u,GetPowerOfTwo(And32(ToInt32(c),63u))),1u)])"
 		}
 	]
 }

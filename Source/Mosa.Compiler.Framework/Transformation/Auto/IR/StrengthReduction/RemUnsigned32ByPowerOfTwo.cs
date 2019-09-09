@@ -7,11 +7,11 @@ using Mosa.Compiler.Framework.IR;
 namespace Mosa.Compiler.Framework.Transformation.Auto.IR.StrengthReduction
 {
 	/// <summary>
-	/// MulUnsigned64ByPowerOfTwo
+	/// RemUnsigned32ByPowerOfTwo
 	/// </summary>
-	public sealed class MulUnsigned64ByPowerOfTwo : BaseTransformation
+	public sealed class RemUnsigned32ByPowerOfTwo : BaseTransformation
 	{
-		public MulUnsigned64ByPowerOfTwo() : base(IRInstruction.MulUnsigned64)
+		public RemUnsigned32ByPowerOfTwo() : base(IRInstruction.RemUnsigned32)
 		{
 		}
 
@@ -20,7 +20,10 @@ namespace Mosa.Compiler.Framework.Transformation.Auto.IR.StrengthReduction
 			if (!IsResolvedConstant(context.Operand2))
 				return false;
 
-			if (!IsPowerOfTwo64(context.Operand2))
+			if (!IsPowerOfTwo32(context.Operand2))
+				return false;
+
+			if (IsZero(context.Operand2))
 				return false;
 
 			return true;
@@ -33,9 +36,9 @@ namespace Mosa.Compiler.Framework.Transformation.Auto.IR.StrengthReduction
 			var t1 = context.Operand1;
 			var t2 = context.Operand2;
 
-			var e1 = transformContext.CreateConstant(GetPowerOfTwo(And32(ToInt32(t2), 63u)));
+			var e1 = transformContext.CreateConstant(Sub32(ShiftLeft32(1u, GetPowerOfTwo(And32(ToInt32(t2), 31u))), 1u));
 
-			context.SetInstruction(IRInstruction.ShiftLeft64, result, t1, e1);
+			context.SetInstruction(IRInstruction.LogicalAnd32, result, t1, e1);
 		}
 	}
 }

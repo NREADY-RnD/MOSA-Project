@@ -253,14 +253,15 @@ namespace Mosa.Compiler.Framework
 			{
 				return ConstantOperand.Create(result.Type, op1.ConstantDouble / op2.ConstantDouble);
 			}
-			else if (instruction == IRInstruction.ArithShiftRight32)
-			{
-				return ConstantOperand.Create(result.Type, ((ulong)(((long)op1.ConstantUnsigned64) >> (int)op2.ConstantUnsigned64)) & 0xFFFFFFFF);
-			}
-			else if (instruction == IRInstruction.ArithShiftRight64)
-			{
-				return ConstantOperand.Create(result.Type, (ulong)(((long)op1.ConstantUnsigned64) >> (int)op2.ConstantUnsigned64));
-			}
+
+			//else if (instruction == IRInstruction.ArithShiftRight32)
+			//{
+			//	return ConstantOperand.Create(result.Type, ((ulong)(((long)op1.ConstantUnsigned64) >> (int)op2.ConstantUnsigned64)) & 0xFFFFFFFF);
+			//}
+			//else if (instruction == IRInstruction.ArithShiftRight64)
+			//{
+			//	return ConstantOperand.Create(result.Type, (ulong)(((long)op1.ConstantUnsigned64) >> (int)op2.ConstantUnsigned64));
+			//}
 			else if (instruction == IRInstruction.ShiftRight32)
 			{
 				return ConstantOperand.Create(result.Type, (op1.ConstantUnsigned64 >> (int)op2.ConstantUnsigned64) & 0xFFFFFFFF);
@@ -633,20 +634,17 @@ namespace Mosa.Compiler.Framework
 			if (op2.IsConstantZero || op2.IsVirtualRegister)
 				return null;
 
-			if ((node.Instruction == IRInstruction.DivUnsigned32 || node.Instruction == IRInstruction.DivUnsigned64) && BitTwiddling.IsPowerOfTwo(op2.ConstantUnsigned64))
-			{
-				uint shift = BitTwiddling.GetPowerOfTwo(op2.ConstantUnsigned64);
+			uint shift = BitTwiddling.GetPowerOfTwo(op2.ConstantUnsigned64);
 
-				if (shift < 32 || (shift < 64 && result.Is64BitInteger))
+			if (shift < 32 || (shift < 64 && result.Is64BitInteger))
+			{
+				return new SimpleInstruction()
 				{
-					return new SimpleInstruction()
-					{
-						Instruction = Select(result.Is64BitInteger, IRInstruction.ShiftRight32, IRInstruction.ShiftRight64),
-						Result = result,
-						Operand1 = op1,
-						Operand2 = ConstantOperand.Create(result.Type, (uint)shift)
-					};
-				}
+					Instruction = Select(result.Is64BitInteger, IRInstruction.ShiftRight32, IRInstruction.ShiftRight64),
+					Result = result,
+					Operand1 = op1,
+					Operand2 = ConstantOperand.Create(result.Type, (uint)shift)
+				};
 			}
 
 			return null;

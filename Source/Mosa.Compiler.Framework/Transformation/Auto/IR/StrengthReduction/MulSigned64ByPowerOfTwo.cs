@@ -7,11 +7,11 @@ using Mosa.Compiler.Framework.IR;
 namespace Mosa.Compiler.Framework.Transformation.Auto.IR.StrengthReduction
 {
 	/// <summary>
-	/// MulUnsigned64ByPowerOfTwo
+	/// MulSigned64ByPowerOfTwo
 	/// </summary>
-	public sealed class MulUnsigned64ByPowerOfTwo : BaseTransformation
+	public sealed class MulSigned64ByPowerOfTwo : BaseTransformation
 	{
-		public MulUnsigned64ByPowerOfTwo() : base(IRInstruction.MulUnsigned64)
+		public MulSigned64ByPowerOfTwo() : base(IRInstruction.MulSigned64)
 		{
 		}
 
