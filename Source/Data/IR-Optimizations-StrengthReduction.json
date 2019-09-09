@@ -84,31 +84,12 @@
 		{
 			"FamilyName": "IR",
 			"Type": "StrengthReduction",
-			"Name": "ShiftLeft32",
-			"SubName": "ByZero",
-			"Expression": "IR.ShiftLeft32 a 0",
-			"Filter": "",
-			"Result": "(IR.MoveInt32 a)"
-		},
-		{
-			"FamilyName": "IR",
-			"Type": "StrengthReduction",
 			"Name": "ShiftLeft64",
 			"SubName": "ByZero",
 			"Expression": "IR.ShiftLeft64 a 0",
 			"Filter": "",
 			"Result": "(IR.MoveInt64 a)"
 		},
-		{
-			"FamilyName": "IR",
-			"Type": "StrengthReduction",
-			"Name": "ShiftLeft64",
-			"SubName": "ByZero",
-			"Expression": "IR.ShiftLeft64 a 0",
-			"Filter": "",
-			"Result": "(IR.MoveInt64 a)"
-		},
-
 		{
 			"FamilyName": "IR",
 			"Type": "StrengthReduction",

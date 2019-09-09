@@ -7,11 +7,11 @@ using Mosa.Compiler.Framework.IR;
 namespace Mosa.Compiler.Framework.Transformation.Auto.IR.ConstantFolding
 {
 	/// <summary>
-	/// ConvertInt32ToFloatR4
+	/// ConvertInt32ToFloatR8
 	/// </summary>
-	public sealed class ConvertInt32ToFloatR4 : BaseTransformation
+	public sealed class ConvertInt32ToFloatR8 : BaseTransformation
 	{
-		public ConvertInt32ToFloatR4() : base(IRInstruction.ConvertInt32ToFloatR4)
+		public ConvertInt32ToFloatR8() : base(IRInstruction.ConvertInt32ToFloatR8)
 		{
 		}
 
@@ -29,9 +29,9 @@ namespace Mosa.Compiler.Framework.Transformation.Auto.IR.ConstantFolding
 
 			var t1 = context.Operand1;
 
-			var e1 = transformContext.CreateConstant(ToFloatR4(ToSignedInt32(t1)));
+			var e1 = transformContext.CreateConstant(ToFloatR8(ToSignedInt32(t1)));
 
-			context.SetInstruction(IRInstruction.MoveFloatR4, result, e1);
+			context.SetInstruction(IRInstruction.MoveFloatR8, result, e1);
 		}
 	}
 }

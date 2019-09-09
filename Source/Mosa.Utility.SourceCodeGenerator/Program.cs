@@ -12,31 +12,42 @@ namespace Mosa.Utility.SourceCodeGenerator
 			var dataPath = @"..\Source\Data";
 			var targetPath = @"..\Source\";
 
-			new BuildTransformationFiles(
+			new BuildTransformations(
 				Path.Combine(dataPath, @"IR-Optimizations-ConstantFolding.json"),
 				Path.Combine(targetPath, @"Mosa.Compiler.Framework\Transformation\Auto")
 			).Execute();
 
-			new BuildTransformationFiles(
+			new BuildTransformations(
 				Path.Combine(dataPath, @"IR-Optimizations-Simplification.json"),
 				Path.Combine(targetPath, @"Mosa.Compiler.Framework\Transformation\Auto")
 			);
 
-			new BuildTransformationFiles(
+			new BuildTransformations(
 				Path.Combine(dataPath, @"IR-Optimizations-StrengthReduction.json"),
 				Path.Combine(targetPath, @"Mosa.Compiler.Framework\Transformation\Auto")
 			).Execute();
 
-			new BuildTransformationFiles(
+			new BuildTransformations(
 				Path.Combine(dataPath, @"IR-Optimizations-Rewrite.json"),
 				Path.Combine(targetPath, @"Mosa.Compiler.Framework\Transformation\Auto")
 			).Execute();
 
-			new BuildTransformationFile(
+			new BuildTransformationListFile(
 				Path.Combine(targetPath, @"Mosa.Compiler.Framework\Transformation\Auto"),
 				"AutoTransformations.cs",
 				"Mosa.Compiler.Framework.Transformation.Auto",
 				"AutoTransformations",
+				new List<string>()
+				{
+					"IR."
+				}
+			).Execute();
+
+			new BuildTransformationFile(
+				Path.Combine(targetPath, @"Mosa.Compiler.Framework\Transformation\Auto"),
+				"AutoTransformation.cs",
+				"Mosa.Compiler.Framework.Transformation.Auto",
+				"AutoTransformation",
 				new List<string>()
 				{
 					"IR."

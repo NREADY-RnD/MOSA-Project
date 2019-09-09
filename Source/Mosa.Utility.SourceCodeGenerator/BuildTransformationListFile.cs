@@ -5,13 +5,13 @@ using System.Text.RegularExpressions;
 
 namespace Mosa.Utility.SourceCodeGenerator
 {
-	public class BuildTransformationFile : BuildBaseTemplate
+	public class BuildTransformationListFile : BuildBaseTemplate
 	{
 		protected List<string> Filters;
 		protected string Namespace;
 		protected string Classname;
 
-		public BuildTransformationFile(string destinationPath, string destinationFile, string @namespace, string classname, List<string> filters)
+		public BuildTransformationListFile(string destinationPath, string destinationFile, string @namespace, string classname, List<string> filters)
 			: base(null, destinationPath, destinationFile)
 		{
 			Filters = filters;
@@ -22,16 +22,17 @@ namespace Mosa.Utility.SourceCodeGenerator
 		protected override void Body()
 		{
 			//Lines.AppendLine("using Mosa.Compiler.Framework;");
-			//Lines.AppendLine("using System.Collections.Generic;");
+			Lines.AppendLine("using System.Collections.Generic;");
 			Lines.AppendLine();
 
 			Lines.AppendLine($"namespace {Namespace}");
 			Lines.AppendLine("{");
 			Lines.AppendLine("\t/// <summary>");
-			Lines.AppendLine("\t/// Transformation");
+			Lines.AppendLine("\t/// Transformations");
 			Lines.AppendLine("\t/// </summary>");
 			Lines.AppendLine($"\tpublic static class {Classname}");
 			Lines.AppendLine("\t{");
+			Lines.AppendLine("\t\tpublic static readonly List<BaseTransformation> List = new List<BaseTransformation> {");
 
 			foreach (var name in BuildTransformations.Transformations)
 			{
@@ -55,10 +56,12 @@ namespace Mosa.Utility.SourceCodeGenerator
 					var newname = name.Replace(Namespace, string.Empty);
 					var newname2 = name.Replace(".", "_");
 
-					Lines.AppendLine($"\t\tpublic static readonly BaseTransformation {newname2} = new {newname}();");
+					//Lines.AppendLine($"\t\t\tnew {newname}(),");
+					Lines.AppendLine($"\t\t\tAutoTransformation.{newname2},");
 				}
 			}
 
+			Lines.AppendLine("\t\t};");
 			Lines.AppendLine("\t}");
 			Lines.AppendLine("}");
 		}

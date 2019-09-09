@@ -7,11 +7,11 @@ using System.Text;
 
 namespace Mosa.Utility.SourceCodeGenerator
 {
-	public class BuildTransformationFiles : BuildBaseTemplate
+	public class BuildTransformations : BuildBaseTemplate
 	{
 		public static List<string> Transformations = new List<string>();
 
-		public BuildTransformationFiles(string jsonFile, string destinationPath)
+		public BuildTransformations(string jsonFile, string destinationPath)
 			: base(jsonFile, destinationPath)
 		{
 		}
