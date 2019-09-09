@@ -135,7 +135,10 @@ namespace Mosa.Compiler.Framework.IR
 		public static readonly NewObject NewObject = new NewObject();
 		public static readonly NewString NewString = new NewString();
 		public static readonly Nop Nop = new Nop();
-		public static readonly Phi Phi = new Phi();
+		public static readonly Phi32 Phi32 = new Phi32();
+		public static readonly Phi64 Phi64 = new Phi64();
+		public static readonly PhiR4 PhiR4 = new PhiR4();
+		public static readonly PhiR8 PhiR8 = new PhiR8();
 		public static readonly Prologue Prologue = new Prologue();
 		public static readonly RemFloatR4 RemFloatR4 = new RemFloatR4();
 		public static readonly RemFloatR8 RemFloatR8 = new RemFloatR8();

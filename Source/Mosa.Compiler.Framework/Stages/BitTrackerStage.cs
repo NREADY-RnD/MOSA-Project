@@ -150,7 +150,8 @@ namespace Mosa.Compiler.Framework.Stages
 			Register(InstructionsRemovedCount);
 			Register(BranchesRemovedCount);
 
-			Register(IRInstruction.Phi, Phi);
+			Register(IRInstruction.Phi32, Phi32);
+			Register(IRInstruction.Phi64, Phi64);
 
 			Register(IRInstruction.MoveInt32, MoveInt32);
 			Register(IRInstruction.MoveInt64, MoveInt64);
@@ -1531,7 +1532,30 @@ namespace Mosa.Compiler.Framework.Stages
 			};
 		}
 
-		private Value Phi(InstructionNode node)
+		private Value Phi32(InstructionNode node)
+		{
+			Debug.Assert(node.OperandCount != 0);
+
+			var value = node.Operand1.IsConstant ? new Value(node.Operand1.ConstantUnsigned32, false) : Values[node.Operand1.Index];
+
+			for (int i = 1; i < node.OperandCount; i++)
+			{
+				var operand = node.GetOperand(i);
+				var value2 = operand.IsConstant ? new Value(operand.ConstantUnsigned32, false) : Values[operand.Index];
+
+				value.MaxValue = Math.Max(value.MaxValue, value2.MaxValue);
+				value.MinValue = Math.Min(value.MinValue, value2.MinValue);
+				value.AreRangeValuesDeterminate = value.AreRangeValuesDeterminate && value2.AreRangeValuesDeterminate;
+				value.BitsSet &= value2.BitsSet;
+				value.BitsClear &= value2.BitsClear;
+			}
+
+			value.Is32Bit = true;
+
+			return value;
+		}
+
+		private Value Phi64(InstructionNode node)
 		{
 			Debug.Assert(node.OperandCount != 0);
 
@@ -1549,15 +1573,7 @@ namespace Mosa.Compiler.Framework.Stages
 				value.BitsClear &= value2.BitsClear;
 			}
 
-			if (node.Result.Is64BitInteger)
-			{
-				value.Is64Bit = true;
-			}
-			else
-			{
-				//value.BitsClear |= Upper32BitsSet;
-				value.Is32Bit = true;
-			}
+			value.Is64Bit = true;
 
 			return value;
 		}

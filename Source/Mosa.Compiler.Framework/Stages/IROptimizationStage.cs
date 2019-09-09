@@ -921,7 +921,7 @@ namespace Mosa.Compiler.Framework.Stages
 
 		private void ConstantFoldingPhi(InstructionNode node)
 		{
-			if (node.Instruction != IRInstruction.Phi)
+			if (node.Instruction != IRInstruction.Phi32 && node.Instruction != IRInstruction.Phi64 && node.Instruction != IRInstruction.PhiR4 && node.Instruction != IRInstruction.PhiR8)
 				return;
 
 			if (!ValidateSSAForm(node.Result))
@@ -953,7 +953,7 @@ namespace Mosa.Compiler.Framework.Stages
 
 		private void SimplifyPhi2(InstructionNode node)
 		{
-			if (node.Instruction != IRInstruction.Phi)
+			if (node.Instruction != IRInstruction.Phi32 && node.Instruction != IRInstruction.Phi64 && node.Instruction != IRInstruction.PhiR4 && node.Instruction != IRInstruction.PhiR8)
 				return;
 
 			if (!ValidateSSAForm(node.Result))
@@ -1122,7 +1122,7 @@ namespace Mosa.Compiler.Framework.Stages
 
 		private void DeadCodeEliminationPhi(InstructionNode node)
 		{
-			if (node.Instruction != IRInstruction.Phi)
+			if (node.Instruction != IRInstruction.Phi32 && node.Instruction != IRInstruction.Phi64 && node.Instruction != IRInstruction.PhiR4 && node.Instruction != IRInstruction.PhiR8)
 				return;
 
 			if (!ValidateSSAForm(node.Result))

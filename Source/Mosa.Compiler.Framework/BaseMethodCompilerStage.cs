@@ -512,7 +512,7 @@ namespace Mosa.Compiler.Framework
 					if (node.IsEmptyOrNop)
 						continue;
 
-					if (node.Instruction != IRInstruction.Phi)
+					if (node.Instruction != IRInstruction.Phi32 && node.Instruction != IRInstruction.Phi64 && node.Instruction != IRInstruction.PhiR4 && node.Instruction != IRInstruction.PhiR8)
 						break;
 
 					var sourceBlocks = node.PhiBlocks;
@@ -548,7 +548,7 @@ namespace Mosa.Compiler.Framework
 					if (node.IsEmptyOrNop)
 						continue;
 
-					if (node.Instruction != IRInstruction.Phi)
+					if (node.Instruction != IRInstruction.Phi32 && node.Instruction != IRInstruction.Phi64 && node.Instruction != IRInstruction.PhiR4 && node.Instruction != IRInstruction.PhiR8)
 						break;
 
 					int index = node.PhiBlocks.IndexOf(source);

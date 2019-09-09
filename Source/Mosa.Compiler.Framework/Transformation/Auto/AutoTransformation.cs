@@ -6,7 +6,7 @@
 namespace Mosa.Compiler.Framework.Transformation.Auto
 {
 	/// <summary>
-	/// Transformations
+	/// Transformation
 	/// </summary>
 	public static class AutoTransformation
 	{

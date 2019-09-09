@@ -313,7 +313,7 @@ namespace Mosa.Compiler.Framework.Stages
 
 			// Exit
 			//newBlocks[4].AppendInstruction(IRInstruction.MoveInt32, result, resultLow);
-			newBlocks[4].AppendInstruction(IRInstruction.Phi, result, CreateConstant((uint)1), CreateConstant((uint)0));
+			newBlocks[4].AppendInstruction(IRInstruction.Phi32, result, CreateConstant((uint)1), CreateConstant((uint)0));
 			newBlocks[4].PhiBlocks = new List<BasicBlock>(2) { newBlocks[2].Block, newBlocks[3].Block };
 			newBlocks[4].AppendInstruction(IRInstruction.Jmp, nextBlock.Block);
 		}

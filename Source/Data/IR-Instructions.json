@@ -860,7 +860,28 @@
 			"OperandCount": 0
 		},
 		{
-			"Name": "Phi",
+			"Name": "Phi32",
+			"FamilyName": "IR",
+			"ResultCount": 0,
+			"OperandCount": 0,
+			"VariableOperands": "true"
+		},
+		{
+			"Name": "Phi64",
+			"FamilyName": "IR",
+			"ResultCount": 0,
+			"OperandCount": 0,
+			"VariableOperands": "true"
+		},
+		{
+			"Name": "PhiR4",
+			"FamilyName": "IR",
+			"ResultCount": 0,
+			"OperandCount": 0,
+			"VariableOperands": "true"
+		},
+		{
+			"Name": "PhiR8",
 			"FamilyName": "IR",
 			"ResultCount": 0,
 			"OperandCount": 0,

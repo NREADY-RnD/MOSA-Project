@@ -15,7 +15,7 @@ namespace Mosa.Compiler.Framework.Transformation.Manual
 		public static readonly BaseTransformation IR_ConstantFolding_CompareInt64x64 = new IR.ConstantFolding.CompareInt64x64();
 
 		public static readonly BaseTransformation IR_LowerTo32_Add64 = new IR.LowerTo32.Add64();
-		public static readonly BaseTransformation IR_Simplification_Phi = new IR.Simplification.Phi();
+		public static readonly BaseTransformation IR_Simplification_Phi32 = new IR.Simplification.Phi32();
 		public static readonly BaseTransformation IR_Special_CodeInDeadBlock = new Transformation.IR.Special.CodeInDeadBlock();
 		public static readonly BaseTransformation IR_Special_Deadcode = new Transformation.IR.Special.Deadcode();
 	}

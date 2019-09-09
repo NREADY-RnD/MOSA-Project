@@ -536,7 +536,7 @@ namespace Mosa.Compiler.Framework
 				return false;
 
 			// special case - phi instruction references itself - this can be caused by optimizations
-			if (node.Instruction == IRInstruction.Phi && node.Result == node.Operand1)
+			if ((node.Result == node.Operand1) && (node.Instruction == IRInstruction.Phi32 || node.Instruction == IRInstruction.Phi64 || node.Instruction == IRInstruction.PhiR4 || node.Instruction == IRInstruction.PhiR8))
 				return true;
 
 			if (node.Result.Uses.Count != 0)
@@ -567,7 +567,7 @@ namespace Mosa.Compiler.Framework
 
 		public static SimpleInstruction PhiSimplication(InstructionNode node)
 		{
-			if (node.Instruction != IRInstruction.Phi)
+			if (node.Instruction != IRInstruction.Phi32 && node.Instruction != IRInstruction.Phi64 && node.Instruction != IRInstruction.PhiR4 && node.Instruction != IRInstruction.PhiR8)
 				return null;
 
 			if (node.OperandCount == 1 && node.Result.IsInteger)

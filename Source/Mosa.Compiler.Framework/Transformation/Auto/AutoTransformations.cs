@@ -7,7 +7,7 @@ using System.Collections.Generic;
 namespace Mosa.Compiler.Framework.Transformation.Auto
 {
 	/// <summary>
-	/// Transformation
+	/// Transformations
 	/// </summary>
 	public static class AutoTransformations
 	{

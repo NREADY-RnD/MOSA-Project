@@ -19,7 +19,7 @@ namespace Mosa.Compiler.Framework.Transformation.IR.Special
 				return false;
 
 			// special case - phi instruction references itself - this can be caused by optimizations
-			if (context.Instruction == IRInstruction.Phi && context.Result == context.Operand1)
+			if (context.Result == context.Operand1 && (context.Instruction == IRInstruction.Phi32 && context.Instruction == IRInstruction.Phi64 && context.Instruction == IRInstruction.PhiR4 && context.Instruction == IRInstruction.PhiR8))
 				return true;
 
 			if (context.Result.Uses.Count != 0)
