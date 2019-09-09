@@ -9,6 +9,8 @@ namespace Mosa.Utility.SourceCodeGenerator
 {
 	public class BuildTransformationFiles : BuildBaseTemplate
 	{
+		public static List<string> Transformations = new List<string>();
+
 		public BuildTransformationFiles(string jsonFile, string destinationPath)
 			: base(jsonFile, destinationPath)
 		{
@@ -33,9 +35,12 @@ namespace Mosa.Utility.SourceCodeGenerator
 
 		protected override void Body(dynamic node = null)
 		{
-			Lines.AppendLine("using Mosa.Compiler.Framework;");
+			Transformations.Add($"{node.FamilyName}.{node.Type}.{node.Name}{node.SubName}");
+
+			//Lines.AppendLine("using Mosa.Compiler.Framework;");
 			Lines.AppendLine("using Mosa.Compiler.Framework.IR;");
-			Lines.AppendLine("using Mosa.Compiler.Framework.Transformation;");
+
+			//Lines.AppendLine("using Mosa.Compiler.Framework.Transformation;");
 
 			Lines.AppendLine();
 			Lines.AppendLine($"namespace Mosa.Compiler.Framework.Transformation.Auto.{node.FamilyName}.{node.Type}");
