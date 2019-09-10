@@ -30,8 +30,6 @@ namespace Mosa.Compiler.Framework.Transformation.Auto.IR.StrengthReduction
 		{
 			var result = context.Result;
 
-			var t1 = context.Operand2;
-
 			var c1 = transformContext.CreateConstant(0L);
 
 			context.SetInstruction(IRInstruction.MoveInt64, result, c1);

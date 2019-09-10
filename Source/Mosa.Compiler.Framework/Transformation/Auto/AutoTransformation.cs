@@ -69,6 +69,10 @@ namespace Mosa.Compiler.Framework.Transformation.Auto
 		public static readonly BaseTransformation IR_ConstantFolding_ConvertInt32ToFloatR8 = new IR.ConstantFolding.ConvertInt32ToFloatR8();
 		public static readonly BaseTransformation IR_ConstantFolding_ConvertInt64ToFloatR4 = new IR.ConstantFolding.ConvertInt64ToFloatR4();
 		public static readonly BaseTransformation IR_ConstantFolding_ConvertInt64ToFloatR8 = new IR.ConstantFolding.ConvertInt64ToFloatR8();
+		public static readonly BaseTransformation IR_ConstantFolding_IfThenElse32AlwaysTrue = new IR.ConstantFolding.IfThenElse32AlwaysTrue();
+		public static readonly BaseTransformation IR_ConstantFolding_IfThenElse64AlwaysTrue = new IR.ConstantFolding.IfThenElse64AlwaysTrue();
+		public static readonly BaseTransformation IR_ConstantFolding_IfThenElse32AlwaysFalse = new IR.ConstantFolding.IfThenElse32AlwaysFalse();
+		public static readonly BaseTransformation IR_ConstantFolding_IfThenElse64AlwaysFalse = new IR.ConstantFolding.IfThenElse64AlwaysFalse();
 		public static readonly BaseTransformation IR_StrengthReduction_Add32LeftZero = new IR.StrengthReduction.Add32LeftZero();
 		public static readonly BaseTransformation IR_StrengthReduction_Add32RightZero = new IR.StrengthReduction.Add32RightZero();
 		public static readonly BaseTransformation IR_StrengthReduction_Add64LeftZero = new IR.StrengthReduction.Add64LeftZero();

@@ -98,9 +98,12 @@ namespace Mosa.Utility.SourceCodeGenerator
 			var labelToLabelNbr = new Dictionary<string, int>();
 			foreach (var name in transform.LabelSet.Labels)
 			{
-				labelCount++;
-
 				var label = transform.LabelSet.GetExpressionLabel(name);
+
+				if (!label.IsInResult)
+					continue;
+
+				labelCount++;
 
 				var labelPosition = label.Positions[0];
 				var labelParent = NodeNbrToNode[labelPosition.NodeNbr];

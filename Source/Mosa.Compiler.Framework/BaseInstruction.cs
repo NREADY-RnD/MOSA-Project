@@ -197,6 +197,8 @@ namespace Mosa.Compiler.Framework
 
 		private static object _lock = new object();
 
+		public static int MaximumInstructionID { get { return NextInstructionID; } }
+
 		#endregion Static Data
 
 		#region Construction

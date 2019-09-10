@@ -530,6 +530,42 @@
 			"Expression": "IR.ConvertInt64ToFloatR8 a",
 			"Filter": "IsResolvedConstant(a)",
 			"Result": "(IR.MoveFloatR8 [ToFloatR8(ToSignedInt64(a))])"
+		},
+		{
+			"FamilyName": "IR",
+			"Type": "ConstantFolding",
+			"Name": "IfThenElse32",
+			"SubName": "AlwaysTrue",
+			"Expression": "IR.IfThenElse32 a b c",
+			"Filter": "IsResolvedConstant(a) & !IsZero(a)",
+			"Result": "(IR.MoveInt32 b)"
+		},
+		{
+			"FamilyName": "IR",
+			"Type": "ConstantFolding",
+			"Name": "IfThenElse64",
+			"SubName": "AlwaysTrue",
+			"Expression": "IR.IfThenElse64 a b c",
+			"Filter": "IsResolvedConstant(a) & !IsZero(a)",
+			"Result": "(IR.MoveInt64 b)"
+		},
+		{
+			"FamilyName": "IR",
+			"Type": "ConstantFolding",
+			"Name": "IfThenElse32",
+			"SubName": "AlwaysFalse",
+			"Expression": "IR.IfThenElse32 a b c",
+			"Filter": "IsResolvedConstant(a) & IsZero(a)",
+			"Result": "(IR.MoveInt32 c)"
+		},
+		{
+			"FamilyName": "IR",
+			"Type": "ConstantFolding",
+			"Name": "IfThenElse64",
+			"SubName": "AlwaysFalse",
+			"Expression": "IR.IfThenElse64 a b c",
+			"Filter": "IsResolvedConstant(a) & IsZero(a)",
+			"Result": "(IR.MoveInt64 c)"
 		}
 	]
 }

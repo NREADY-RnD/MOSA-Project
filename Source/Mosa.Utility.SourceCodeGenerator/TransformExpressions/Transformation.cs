@@ -37,6 +37,8 @@ namespace Mosa.Utility.SourceCodeGenerator.TransformExpressions
 			Filters = FilterParser.ParseAll(TokenizedFilter);
 
 			ResultInstructionTree = ResultParser.Parse(TokenizedResult);
+
+			LabelSet.AddUse(ResultInstructionTree);
 		}
 
 		public override string ToString()

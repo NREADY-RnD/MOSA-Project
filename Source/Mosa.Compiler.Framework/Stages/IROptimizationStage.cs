@@ -220,14 +220,14 @@ namespace Mosa.Compiler.Framework.Stages
 			if (!operand.IsVirtualRegister)
 				return;
 
-			foreach (var index in operand.Uses)
+			foreach (var node in operand.Uses)
 			{
-				AddToWorkList(index);
+				AddToWorkList(node);
 			}
 
-			foreach (var index in operand.Definitions)
+			foreach (var node in operand.Definitions)
 			{
-				AddToWorkList(index);
+				AddToWorkList(node);
 			}
 		}
 
