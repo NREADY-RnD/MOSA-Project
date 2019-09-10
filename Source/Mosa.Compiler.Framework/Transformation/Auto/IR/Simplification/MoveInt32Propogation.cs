@@ -7,11 +7,11 @@ using Mosa.Compiler.Framework.IR;
 namespace Mosa.Compiler.Framework.Transformation.Auto.IR.Simplification
 {
 	/// <summary>
-	/// LogicalNot64Twice
+	/// MoveInt32Propogation
 	/// </summary>
-	public sealed class LogicalNot64Twice : BaseTransformation
+	public sealed class MoveInt32Propogation : BaseTransformation
 	{
-		public LogicalNot64Twice() : base(IRInstruction.LogicalNot64)
+		public MoveInt32Propogation() : base(IRInstruction.MoveInt32)
 		{
 		}
 
@@ -23,7 +23,7 @@ namespace Mosa.Compiler.Framework.Transformation.Auto.IR.Simplification
 			if (context.Operand1.Definitions.Count != 1)
 				return false;
 
-			if (context.Operand1.Definitions[0].Instruction != IRInstruction.LogicalNot64)
+			if (context.Operand1.Definitions[0].Instruction != IRInstruction.MoveInt32)
 				return false;
 
 			return true;
@@ -35,7 +35,7 @@ namespace Mosa.Compiler.Framework.Transformation.Auto.IR.Simplification
 
 			var t1 = context.Operand1.Definitions[0].Operand1;
 
-			context.SetInstruction(IRInstruction.MoveInt64, result, t1);
+			context.SetInstruction(IRInstruction.MoveInt32, result, t1);
 		}
 	}
 }

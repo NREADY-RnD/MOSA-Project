@@ -20,7 +20,7 @@ namespace Mosa.Utility.SourceCodeGenerator
 			new BuildTransformations(
 				Path.Combine(dataPath, @"IR-Optimizations-Simplification.json"),
 				Path.Combine(targetPath, @"Mosa.Compiler.Framework\Transformation\Auto")
-			);
+			).Execute();
 
 			new BuildTransformations(
 				Path.Combine(dataPath, @"IR-Optimizations-StrengthReduction.json"),

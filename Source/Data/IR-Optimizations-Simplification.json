@@ -3,11 +3,20 @@
 		{
 			"FamilyName": "IR",
 			"Type": "Simplification",
-			"Name": "LogicalNot32",
-			"SubName": "Twice",
-			"Expression": "IR.LogicalNot32 (IR.LogicalNot32 x)",
+			"Name": "MoveInt32",
+			"SubName": "Propogation",
+			"Expression": "IR.MoveInt32 (IR.MoveInt32 a)",
 			"Filter": "",
-			"Result": "(IR.MoveInt32 x)"
+			"Result": "(IR.MoveInt32 a)"
+		},
+		{
+			"FamilyName": "IR",
+			"Type": "Simplification",
+			"Name": "MoveInt64",
+			"SubName": "Propogation",
+			"Expression": "IR.MoveInt64 (IR.MoveInt64 a)",
+			"Filter": "",
+			"Result": "(IR.MoveInt64 a)"
 		},
 		{
 			"FamilyName": "IR",

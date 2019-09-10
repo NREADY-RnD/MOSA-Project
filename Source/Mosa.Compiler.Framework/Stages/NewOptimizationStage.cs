@@ -1,10 +1,9 @@
 ﻿// Copyright (c) MOSA Project. Licensed under the New BSD License.
 
-using Mosa.Compiler.Common;
-using Mosa.Compiler.Framework.IR;
 using Mosa.Compiler.Framework.Trace;
 using Mosa.Compiler.Framework.Transformation;
 using Mosa.Compiler.Framework.Transformation.Auto;
+using Mosa.Compiler.Framework.Transformation.Manual;
 using System.Collections.Generic;
 
 namespace Mosa.Compiler.Framework.Stages
@@ -20,30 +19,34 @@ namespace Mosa.Compiler.Framework.Stages
 
 		private List<BaseTransformation>[] transformations;
 
-		private List<Operand> operandWorklist = new List<Operand>();
-		private List<InstructionNode> nodeWorklist = new List<InstructionNode>();
-
 		protected override void Initialize()
 		{
 			transformations = new List<BaseTransformation>[BaseInstruction.MaximumInstructionID];
 
 			Register(OptimizationsCount);
 
-			foreach (var transformation in AutoTransformations.List)
+			CreateTransformationList(AutoTransformations.List);
+			CreateTransformationList(ManualTransformations.List);
+		}
+
+		private void CreateTransformationList(List<BaseTransformation> list)
+		{
+			foreach (var transformation in list)
 			{
-				if (transformations[transformation.Instruction.ID] == null)
+				int id = transformation.Instruction != null ? transformation.Instruction.ID : 0;
+
+				if (transformations[id] == null)
 				{
-					transformations[transformation.Instruction.ID] = new List<BaseTransformation>();
+					transformations[id] = new List<BaseTransformation>();
 				}
 
-				transformations[transformation.Instruction.ID].Add(transformation);
+				transformations[id].Add(transformation);
 			}
 		}
 
 		protected override void Finish()
 		{
 			trace = null;
-			operandWorklist.Clear();
 		}
 
 		protected override void Run()
@@ -68,59 +71,62 @@ namespace Mosa.Compiler.Framework.Stages
 			var context = new Context(BasicBlocks.PrologueBlock);
 			var transformContext = new TransformContext(MethodCompiler, trace);
 
-			foreach (var block in BasicBlocks)
+			var updated = false;
+			var changed = true;
+			while (changed)
 			{
-				for (var node = block.AfterFirst; !node.IsBlockEndInstruction; node = node.Next)
+				changed = false;
+
+				foreach (var block in BasicBlocks)
 				{
-					if (node.IsEmptyOrNop)
-						continue;
+					for (var node = block.AfterFirst; !node.IsBlockEndInstruction; node = node.Next)
+					{
+						updated = true;
 
-					context.Node = node;
+						while (updated)
+						{
+							if (node.IsEmptyOrNop)
+								break;
 
-					Do(context, transformContext);
+							context.Node = node;
 
-					ProcessWorklist();
+							updated = ApplyTransformations(context, transformContext);
+
+							changed |= updated;
+						}
+					}
 				}
 			}
 		}
 
-		private void ProcessWorklist()
+		private bool ApplyTransformations(Context context, TransformContext transformContext)
 		{
-			foreach (var operand in operandWorklist)
-			{
-				foreach (var use in operand.Uses)
-				{
-					nodeWorklist.AddIfNew(use);
-				}
+			if (ApplyTransformations(context, transformContext, context.Instruction.ID))
+				return true;
 
-				foreach (var def in operand.Definitions)
-				{
-					nodeWorklist.AddIfNew(def);
-				}
-			}
-
-			operandWorklist.Clear();
+			return ApplyTransformations(context, transformContext, 0);
 		}
 
-		private void Do(Context context, TransformContext transformContext)
+		private bool ApplyTransformations(Context context, TransformContext transformContext, int id)
 		{
-			var instructionTransformations = transformations[context.Instruction.ID];
+			var instructionTransformations = transformations[id];
+
+			if (instructionTransformations == null)
+				return false;
+
 			int count = instructionTransformations.Count;
 
 			for (int i = 0; i < count; i++)
 			{
 				var transformation = instructionTransformations[i];
 
-				var changed = transformContext.ApplyTransform(context, transformation, operandWorklist);
+				var updated = transformContext.ApplyTransform(context, transformation);
 
-				if (!changed)
-					continue;
-
-				if (context.IsEmptyOrNop)
-					return;
-
-				i = 0;
+				if (updated)
+					return true;
 			}
+
+			return false;
 		}
 	}
 }
