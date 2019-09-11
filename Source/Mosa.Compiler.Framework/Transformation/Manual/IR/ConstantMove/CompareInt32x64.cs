@@ -12,10 +12,10 @@ namespace Mosa.Compiler.Framework.Transformation.Manual.IR.ConstantMove
 
 		public override bool Match(Context context, TransformContext transformContext)
 		{
-			if (!IsConstant(context.Operand2))
+			if (IsConstant(context.Operand2))
 				return false;
 
-			if (IsConstant(context.Operand1))
+			if (!IsConstant(context.Operand1))
 				return false;
 
 			return true;

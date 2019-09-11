@@ -18,10 +18,10 @@ namespace Mosa.Compiler.Framework.Transformation.Manual
 			ManualTransformation.IR_ConstantFolding_CompareInt64x32,
 			ManualTransformation.IR_ConstantFolding_CompareInt64x64,
 
-			//ManualTransformation.IR_ConstantMove_CompareInt32x32,
-			//ManualTransformation.IR_ConstantMove_CompareInt32x64,
-			//ManualTransformation.IR_ConstantMove_CompareInt64x32,
-			//ManualTransformation.IR_ConstantMove_CompareInt64x64,
+			ManualTransformation.IR_ConstantMove_CompareInt32x32,
+			ManualTransformation.IR_ConstantMove_CompareInt32x64,
+			ManualTransformation.IR_ConstantMove_CompareInt64x32,
+			ManualTransformation.IR_ConstantMove_CompareInt64x64,
 
 			ManualTransformation.IR_Rewrite_CompareInt32x32,
 			ManualTransformation.IR_Rewrite_CompareInt32x64,
