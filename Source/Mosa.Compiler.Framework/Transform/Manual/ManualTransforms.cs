@@ -71,6 +71,12 @@ namespace Mosa.Compiler.Framework.Transform.Manual
 			ManualInstance.IR_ConstantMove_CompareIntBranch32,
 			ManualInstance.IR_ConstantMove_CompareIntBranch64,
 
+			ManualInstance.IR_Rewrite_CompareIntBranch32,
+			ManualInstance.IR_Rewrite_CompareIntBranch64,
+
+			//ManualInstance.IR_Rewrite_CompareIntBranch32From64,
+			//ManualInstance.IR_Rewrite_CompareIntBranch64From32
+
 			//ManualTransformation.IR_Simplification_Phi32,
 			//ManualTransformation.IR_Simplification_Phi64,
 			//ManualTransformation.IR_Simplification_PhiR4,

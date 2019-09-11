@@ -69,5 +69,11 @@ namespace Mosa.Compiler.Framework.Transform.Manual
 
 		public static readonly BaseTransformation IR_ConstantMove_CompareIntBranch32 = new IR.ConstantMove.CompareIntBranch32();
 		public static readonly BaseTransformation IR_ConstantMove_CompareIntBranch64 = new IR.ConstantMove.CompareIntBranch64();
+
+		public static readonly BaseTransformation IR_Rewrite_CompareIntBranch32 = new IR.Rewrite.CompareIntBranch32();
+		public static readonly BaseTransformation IR_Rewrite_CompareIntBranch64 = new IR.Rewrite.CompareIntBranch64();
+
+		public static readonly BaseTransformation IR_Rewrite_CompareIntBranch32From64 = new IR.Rewrite.CompareIntBranch32From64();
+		public static readonly BaseTransformation IR_Rewrite_CompareIntBranch64From32 = new IR.Rewrite.CompareIntBranch64From32();
 	}
 }

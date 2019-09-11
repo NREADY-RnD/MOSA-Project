@@ -18,10 +18,6 @@ namespace Mosa.Compiler.Framework.Transform.IR.Special
 			if (!ValidateSSAForm(context.Result))
 				return false;
 
-			// special case - phi instruction references itself - this can be caused by optimizations
-			if (context.Result == context.Operand1 && (context.Instruction == IRInstruction.Phi32 && context.Instruction == IRInstruction.Phi64 && context.Instruction == IRInstruction.PhiR4 && context.Instruction == IRInstruction.PhiR8))
-				return true;
-
 			if (context.Result.Uses.Count != 0)
 				return false;
 
@@ -54,11 +50,6 @@ namespace Mosa.Compiler.Framework.Transform.IR.Special
 		public override void Transform(Context context, TransformContext transformContext)
 		{
 			context.SetInstruction(IRInstruction.Nop);
-		}
-
-		private static bool ValidateSSAForm(Operand operand)
-		{
-			return operand.Definitions.Count == 1;
 		}
 	}
 }
