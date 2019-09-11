@@ -25,7 +25,7 @@
 			"SubName": "",
 			"Expression": "IR.AddFloatR4 a b",
 			"Filter": "IsResolvedConstant(a) & IsResolvedConstant(b)",
-			"Result": "(IR.MoveFloatR4 [AddR4(ToFloat(a),ToFloat(b))])"
+			"Result": "(IR.MoveFloatR4 [AddR4(ToR4(a),ToR4(b))])"
 		},
 		{
 			"FamilyName": "IR",
@@ -34,7 +34,7 @@
 			"SubName": "",
 			"Expression": "IR.AddFloatR8 a b",
 			"Filter": "IsResolvedConstant(a) & IsResolvedConstant(b)",
-			"Result": "(IR.MoveFloatR8 [AddR8(ToDouble(a),ToDouble(b))])"
+			"Result": "(IR.MoveFloatR8 [AddR8(ToR8(a),ToR8(b))])"
 		},
 		{
 			"FamilyName": "IR",
@@ -133,7 +133,7 @@
 			"SubName": "",
 			"Expression": "IR.DivFloatR8 a b",
 			"Filter": "IsResolvedConstant(a) & IsResolvedConstant(b)",
-			"Result": "(IR.MoveFloatR8 [DivR8(ToDouble(a),ToDouble(b))])"
+			"Result": "(IR.MoveFloatR8 [DivR8(ToR8(a),ToR8(b))])"
 		},
 		{
 			"FamilyName": "IR",
@@ -142,7 +142,7 @@
 			"SubName": "",
 			"Expression": "IR.DivFloatR4 a b",
 			"Filter": "IsResolvedConstant(a) & IsResolvedConstant(b)",
-			"Result": "(IR.MoveFloatR4 [DivR4(ToFloat(a),ToFloat(b))])"
+			"Result": "(IR.MoveFloatR4 [DivR4(ToR4(a),ToR4(b))])"
 		},
 		{
 			"FamilyName": "IR",
@@ -286,7 +286,7 @@
 			"SubName": "",
 			"Expression": "IR.MulFloatR4 a b",
 			"Filter": "IsResolvedConstant(a) & IsResolvedConstant(b)",
-			"Result": "(IR.MoveFloatR4 [MulR4(ToFloat(a),ToFloat(b))])"
+			"Result": "(IR.MoveFloatR4 [MulR4(ToR4(a),ToR4(b))])"
 		},
 		{
 			"FamilyName": "IR",
@@ -295,7 +295,7 @@
 			"SubName": "",
 			"Expression": "IR.MulFloatR8 a b",
 			"Filter": "IsResolvedConstant(a) & IsResolvedConstant(b)",
-			"Result": "(IR.MoveFloatR8 [MulR8(ToDouble(a),ToDouble(b))])"
+			"Result": "(IR.MoveFloatR8 [MulR8(ToR8(a),ToR8(b))])"
 		},
 		{
 			"FamilyName": "IR",
@@ -340,7 +340,7 @@
 			"SubName": "",
 			"Expression": "IR.RemFloatR4 a b",
 			"Filter": "IsResolvedConstant(a) & IsResolvedConstant(b)",
-			"Result": "(IR.MoveFloatR4 [RemR4(ToFloat(a),ToFloat(b))])"
+			"Result": "(IR.MoveFloatR4 [RemR4(ToR4(a),ToR4(b))])"
 		},
 		{
 			"FamilyName": "IR",
@@ -349,7 +349,7 @@
 			"SubName": "",
 			"Expression": "IR.RemFloatR8 a b",
 			"Filter": "IsResolvedConstant(a) & IsResolvedConstant(b)",
-			"Result": "(IR.MoveFloatR8 [RemR8(ToDouble(a),ToDouble(b))])"
+			"Result": "(IR.MoveFloatR8 [RemR8(ToR8(a),ToR8(b))])"
 		},
 		{
 			"FamilyName": "IR",
@@ -376,7 +376,7 @@
 			"SubName": "",
 			"Expression": "IR.SubFloatR4 a b",
 			"Filter": "IsResolvedConstant(a) & IsResolvedConstant(b)",
-			"Result": "(IR.MoveFloatR4 [SubR4(ToFloat(a),ToFloat(b))])"
+			"Result": "(IR.MoveFloatR4 [SubR4(ToR4(a),ToR4(b))])"
 		},
 		{
 			"FamilyName": "IR",
@@ -385,7 +385,7 @@
 			"SubName": "",
 			"Expression": "IR.SubFloatR8 a b",
 			"Filter": "IsResolvedConstant(a) & IsResolvedConstant(b)",
-			"Result": "(IR.MoveFloatR8 [SubR8(ToDouble(a),ToDouble(b))])"
+			"Result": "(IR.MoveFloatR8 [SubR8(ToR8(a),ToR8(b))])"
 		},
 		{
 			"FamilyName": "IR",
@@ -502,7 +502,7 @@
 			"SubName": "",
 			"Expression": "IR.ConvertInt32ToFloatR4 a",
 			"Filter": "IsResolvedConstant(a)",
-			"Result": "(IR.MoveFloatR4 [ToFloatR4(ToSignedInt32(a))])"
+			"Result": "(IR.MoveFloatR4 [ToR4(ToSignedInt32(a))])"
 		},
 		{
 			"FamilyName": "IR",
@@ -511,7 +511,7 @@
 			"SubName": "",
 			"Expression": "IR.ConvertInt32ToFloatR8 a",
 			"Filter": "IsResolvedConstant(a)",
-			"Result": "(IR.MoveFloatR8 [ToFloatR8(ToSignedInt32(a))])"
+			"Result": "(IR.MoveFloatR8 [ToR8(ToSignedInt32(a))])"
 		},
 		{
 			"FamilyName": "IR",
@@ -520,7 +520,7 @@
 			"SubName": "",
 			"Expression": "IR.ConvertInt64ToFloatR4 a",
 			"Filter": "IsResolvedConstant(a)",
-			"Result": "(IR.MoveFloatR4 [ToFloatR4(ToSignedInt64(a))])"
+			"Result": "(IR.MoveFloatR4 [ToR4(ToSignedInt64(a))])"
 		},
 		{
 			"FamilyName": "IR",
@@ -529,7 +529,7 @@
 			"SubName": "",
 			"Expression": "IR.ConvertInt64ToFloatR8 a",
 			"Filter": "IsResolvedConstant(a)",
-			"Result": "(IR.MoveFloatR8 [ToFloatR8(ToSignedInt64(a))])"
+			"Result": "(IR.MoveFloatR8 [ToR8(ToSignedInt64(a))])"
 		},
 		{
 			"FamilyName": "IR",

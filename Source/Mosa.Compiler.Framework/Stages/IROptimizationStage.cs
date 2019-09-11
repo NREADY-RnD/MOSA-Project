@@ -437,7 +437,6 @@ namespace Mosa.Compiler.Framework.Stages
 
 			var op1 = node.Operand1;
 			var op2 = node.Operand2;
-			var result = node.Result;
 
 			if (!op1.IsResolvedConstant || !op2.IsResolvedConstant)
 				return;
@@ -459,8 +458,7 @@ namespace Mosa.Compiler.Framework.Stages
 				return;
 			}
 
-			bool compareResult = true;
-
+			bool compareResult;
 			switch (node.ConditionCode)
 			{
 				case ConditionCode.Equal: compareResult = (op1.ConstantUnsigned64 == op2.ConstantUnsigned64); break;

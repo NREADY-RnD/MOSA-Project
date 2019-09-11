@@ -32,6 +32,11 @@ namespace Mosa.Utility.SourceCodeGenerator
 				Path.Combine(targetPath, @"Mosa.Compiler.Framework\Transformation\Auto")
 			).Execute();
 
+			new BuildTransformations(
+				Path.Combine(dataPath, @"IR-Optimizations-ConstantMove.json"),
+				Path.Combine(targetPath, @"Mosa.Compiler.Framework\Transformation\Auto")
+			).Execute();
+
 			new BuildTransformationListFile(
 				Path.Combine(targetPath, @"Mosa.Compiler.Framework\Transformation\Auto"),
 				"AutoTransformations.cs",

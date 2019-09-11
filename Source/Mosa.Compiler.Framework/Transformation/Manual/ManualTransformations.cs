@@ -11,7 +11,8 @@ namespace Mosa.Compiler.Framework.Transformation.Manual
 	/// </summary>
 	public static class ManualTransformations
 	{
-		public static readonly List<BaseTransformation> List = new List<BaseTransformation> {
+		public static readonly List<BaseTransformation> List = new List<BaseTransformation>
+		{
 			ManualTransformation.IR_ConstantFolding_CompareInt32x32,
 			ManualTransformation.IR_ConstantFolding_CompareInt32x64,
 			ManualTransformation.IR_ConstantFolding_CompareInt64x32,
@@ -40,6 +41,11 @@ namespace Mosa.Compiler.Framework.Transformation.Manual
 			ManualTransformation.IR_Simplification_CompareInt32x64NotSame,
 			ManualTransformation.IR_Simplification_CompareInt64x32NotSame,
 			ManualTransformation.IR_Simplification_CompareInt64x64NotSame,
+
+			ManualTransformation.IR_Special_PropagateMove32,
+			ManualTransformation.IR_Special_PropagateMove64,
+			ManualTransformation.IR_Special_PropagateMoveR4,
+			ManualTransformation.IR_Special_PropagateMoveR8,
 		};
 	}
 }

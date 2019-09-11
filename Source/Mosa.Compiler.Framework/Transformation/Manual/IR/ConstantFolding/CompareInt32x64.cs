@@ -37,23 +37,25 @@ namespace Mosa.Compiler.Framework.Transformation.Manual.IR.ConstantFolding
 
 		public override void Transform(Context context, TransformContext transformContext)
 		{
-			bool compareResult = true;
+			bool compare = true;
 
 			switch (context.ConditionCode)
 			{
-				case ConditionCode.Equal: compareResult = context.Operand1.ConstantUnsigned64 == context.Operand2.ConstantUnsigned64; break;
-				case ConditionCode.NotEqual: compareResult = context.Operand1.ConstantUnsigned64 != context.Operand2.ConstantUnsigned64; break;
-				case ConditionCode.GreaterOrEqual: compareResult = context.Operand1.ConstantUnsigned64 >= context.Operand2.ConstantUnsigned64; break;
-				case ConditionCode.GreaterThan: compareResult = context.Operand1.ConstantUnsigned64 > context.Operand2.ConstantUnsigned64; break;
-				case ConditionCode.LessOrEqual: compareResult = context.Operand1.ConstantUnsigned64 <= context.Operand2.ConstantUnsigned64; break;
-				case ConditionCode.LessThan: compareResult = context.Operand1.ConstantUnsigned64 < context.Operand2.ConstantUnsigned64; break;
-				case ConditionCode.UnsignedGreaterThan: compareResult = context.Operand1.ConstantUnsigned64 > context.Operand2.ConstantUnsigned64; break;
-				case ConditionCode.UnsignedGreaterOrEqual: compareResult = context.Operand1.ConstantUnsigned64 >= context.Operand2.ConstantUnsigned64; break;
-				case ConditionCode.UnsignedLessThan: compareResult = context.Operand1.ConstantUnsigned64 < context.Operand2.ConstantUnsigned64; break;
-				case ConditionCode.UnsignedLessOrEqual: compareResult = context.Operand1.ConstantUnsigned64 <= context.Operand2.ConstantUnsigned64; break;
+				case ConditionCode.Equal: compare = context.Operand1.ConstantUnsigned64 == context.Operand2.ConstantUnsigned64; break;
+				case ConditionCode.NotEqual: compare = context.Operand1.ConstantUnsigned64 != context.Operand2.ConstantUnsigned64; break;
+				case ConditionCode.GreaterOrEqual: compare = context.Operand1.ConstantUnsigned64 >= context.Operand2.ConstantUnsigned64; break;
+				case ConditionCode.GreaterThan: compare = context.Operand1.ConstantUnsigned64 > context.Operand2.ConstantUnsigned64; break;
+				case ConditionCode.LessOrEqual: compare = context.Operand1.ConstantUnsigned64 <= context.Operand2.ConstantUnsigned64; break;
+				case ConditionCode.LessThan: compare = context.Operand1.ConstantUnsigned64 < context.Operand2.ConstantUnsigned64; break;
+				case ConditionCode.UnsignedGreaterThan: compare = context.Operand1.ConstantUnsigned64 > context.Operand2.ConstantUnsigned64; break;
+				case ConditionCode.UnsignedGreaterOrEqual: compare = context.Operand1.ConstantUnsigned64 >= context.Operand2.ConstantUnsigned64; break;
+				case ConditionCode.UnsignedLessThan: compare = context.Operand1.ConstantUnsigned64 < context.Operand2.ConstantUnsigned64; break;
+				case ConditionCode.UnsignedLessOrEqual: compare = context.Operand1.ConstantUnsigned64 <= context.Operand2.ConstantUnsigned64; break;
 			}
 
-			transformContext.SetResultToConstant(context, compareResult ? 1 : 0);
+			var e1 = transformContext.CreateConstant(BoolToInt64(compare));
+
+			context.SetInstruction(IRInstruction.MoveInt64, context.Result, e1);
 		}
 	}
 }

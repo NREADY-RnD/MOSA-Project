@@ -4,6 +4,7 @@ using Mosa.Compiler.Framework.Trace;
 using Mosa.Compiler.Framework.Transformation;
 using Mosa.Compiler.Framework.Transformation.Auto;
 using Mosa.Compiler.Framework.Transformation.Manual;
+using System;
 using System.Collections.Generic;
 
 namespace Mosa.Compiler.Framework.Stages
@@ -13,19 +14,20 @@ namespace Mosa.Compiler.Framework.Stages
 	/// </summary>
 	public class NewOptimizationStage : BaseMethodCompilerStage
 	{
-		private Counter OptimizationsCount = new Counter("FastSimplification.Optimizations");
+		private const int MaximumInstructionID = 1000;
+
+		private Counter OptimizationsCount = new Counter("NewOptimizationStage.Optimizations");
+
+		private List<BaseTransformation>[] transformations = new List<BaseTransformation>[MaximumInstructionID];
 
 		private TraceLog trace;
 
-		private List<BaseTransformation>[] transformations;
-
 		protected override void Initialize()
 		{
-			transformations = new List<BaseTransformation>[BaseInstruction.MaximumInstructionID];
-
 			Register(OptimizationsCount);
 
-			CreateTransformationList(AutoTransformations.List);
+			//CreateTransformationList(AutoTransformations.List);
+
 			CreateTransformationList(ManualTransformations.List);
 		}
 
@@ -33,7 +35,7 @@ namespace Mosa.Compiler.Framework.Stages
 		{
 			foreach (var transformation in list)
 			{
-				int id = transformation.Instruction != null ? transformation.Instruction.ID : 0;
+				int id = transformation.Instruction == null ? 0 : transformation.Instruction.ID;
 
 				if (transformations[id] == null)
 				{
@@ -123,7 +125,10 @@ namespace Mosa.Compiler.Framework.Stages
 				var updated = transformContext.ApplyTransform(context, transformation);
 
 				if (updated)
+				{
+					OptimizationsCount.Increment();
 					return true;
+				}
 			}
 
 			return false;

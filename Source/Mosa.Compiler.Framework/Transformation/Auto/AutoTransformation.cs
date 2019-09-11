@@ -75,7 +75,22 @@ namespace Mosa.Compiler.Framework.Transformation.Auto
 		public static readonly BaseTransformation IR_ConstantFolding_IfThenElse64AlwaysFalse = new IR.ConstantFolding.IfThenElse64AlwaysFalse();
 		public static readonly BaseTransformation IR_Simplification_MoveInt32Propogation = new IR.Simplification.MoveInt32Propogation();
 		public static readonly BaseTransformation IR_Simplification_MoveInt64Propogation = new IR.Simplification.MoveInt64Propogation();
+		public static readonly BaseTransformation IR_Simplification_LogicalNot32Twice = new IR.Simplification.LogicalNot32Twice();
 		public static readonly BaseTransformation IR_Simplification_LogicalNot64Twice = new IR.Simplification.LogicalNot64Twice();
+		public static readonly BaseTransformation IR_Simplification_Add32Combine = new IR.Simplification.Add32Combine();
+		public static readonly BaseTransformation IR_Simplification_Add64Combine = new IR.Simplification.Add64Combine();
+		public static readonly BaseTransformation IR_Simplification_AddFloatR4Combine = new IR.Simplification.AddFloatR4Combine();
+		public static readonly BaseTransformation IR_Simplification_AddFloatR8Combine = new IR.Simplification.AddFloatR8Combine();
+		public static readonly BaseTransformation IR_Simplification_Sub32Combine = new IR.Simplification.Sub32Combine();
+		public static readonly BaseTransformation IR_Simplification_Sub64Combine = new IR.Simplification.Sub64Combine();
+		public static readonly BaseTransformation IR_Simplification_SubFloatR4Combine = new IR.Simplification.SubFloatR4Combine();
+		public static readonly BaseTransformation IR_Simplification_SubFloatR8Combine = new IR.Simplification.SubFloatR8Combine();
+		public static readonly BaseTransformation IR_Simplification_MulSigned32 = new IR.Simplification.MulSigned32();
+		public static readonly BaseTransformation IR_Simplification_MulSigned64 = new IR.Simplification.MulSigned64();
+		public static readonly BaseTransformation IR_Simplification_MulFloatR4 = new IR.Simplification.MulFloatR4();
+		public static readonly BaseTransformation IR_Simplification_MulFloatR8 = new IR.Simplification.MulFloatR8();
+		public static readonly BaseTransformation IR_Simplification_MulUnsigned32 = new IR.Simplification.MulUnsigned32();
+		public static readonly BaseTransformation IR_Simplification_MulUnsigned64 = new IR.Simplification.MulUnsigned64();
 		public static readonly BaseTransformation IR_StrengthReduction_Add32LeftZero = new IR.StrengthReduction.Add32LeftZero();
 		public static readonly BaseTransformation IR_StrengthReduction_Add32RightZero = new IR.StrengthReduction.Add32RightZero();
 		public static readonly BaseTransformation IR_StrengthReduction_Add64LeftZero = new IR.StrengthReduction.Add64LeftZero();
@@ -104,5 +119,15 @@ namespace Mosa.Compiler.Framework.Transformation.Auto
 		public static readonly BaseTransformation IR_Rewrite_Add64MultipleWithCommon = new IR.Rewrite.Add64MultipleWithCommon();
 		public static readonly BaseTransformation IR_Rewrite_Sub32MultipleWithCommon = new IR.Rewrite.Sub32MultipleWithCommon();
 		public static readonly BaseTransformation IR_Rewrite_Sub64MultipleWithCommon = new IR.Rewrite.Sub64MultipleWithCommon();
+		public static readonly BaseTransformation IR_ConstantMove_Add32 = new IR.ConstantMove.Add32();
+		public static readonly BaseTransformation IR_ConstantMove_Add64 = new IR.ConstantMove.Add64();
+		public static readonly BaseTransformation IR_ConstantMove_AddFloatR4 = new IR.ConstantMove.AddFloatR4();
+		public static readonly BaseTransformation IR_ConstantMove_AddFloatR8 = new IR.ConstantMove.AddFloatR8();
+		public static readonly BaseTransformation IR_ConstantMove_MulSigned32 = new IR.ConstantMove.MulSigned32();
+		public static readonly BaseTransformation IR_ConstantMove_MulSigned64 = new IR.ConstantMove.MulSigned64();
+		public static readonly BaseTransformation IR_ConstantMove_MulUnsigned32 = new IR.ConstantMove.MulUnsigned32();
+		public static readonly BaseTransformation IR_ConstantMove_MulUnsigned64 = new IR.ConstantMove.MulUnsigned64();
+		public static readonly BaseTransformation IR_ConstantMove_MulFloatR4 = new IR.ConstantMove.MulFloatR4();
+		public static readonly BaseTransformation IR_ConstantMove_MulFloatR8 = new IR.ConstantMove.MulFloatR8();
 	}
 }

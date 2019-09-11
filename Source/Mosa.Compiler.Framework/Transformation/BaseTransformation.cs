@@ -138,9 +138,19 @@ namespace Mosa.Compiler.Framework.Transformation
 			return a & b;
 		}
 
+		protected static uint BoolToInt32(bool b)
+		{
+			return b ? (uint)1 : 0;
+		}
+
 		protected static uint BoolToInt32(uint a)
 		{
 			return a == 0 ? (uint)0 : 1;
+		}
+
+		protected static long BoolToInt64(bool b)
+		{
+			return b ? (long)1 : 0;
 		}
 
 		protected static ulong BoolToInt64(ulong a)
@@ -343,42 +353,42 @@ namespace Mosa.Compiler.Framework.Transformation
 			return (byte)operand.ConstantUnsigned32;
 		}
 
-		protected static double ToDouble(Operand operand)
+		protected static double ToR8(Operand operand)
 		{
 			return operand.ConstantDouble;
 		}
 
-		protected static double ToDouble(double value)
+		protected static double ToR8(double value)
 		{
 			return value;
 		}
 
-		protected static float ToFloat(Operand operand)
+		protected static float ToR4(Operand operand)
 		{
 			return operand.ConstantFloat;
 		}
 
-		protected static float ToFloat(float value)
+		protected static float ToR4(float value)
 		{
 			return value;
 		}
 
-		protected static float ToFloatR4(int a)
+		protected static float ToR4(int a)
 		{
 			return (float)a;
 		}
 
-		protected static float ToFloatR4(long a)
+		protected static float ToR4(long a)
 		{
 			return (float)a;
 		}
 
-		protected static double ToFloatR8(int a)
+		protected static double ToR8(int a)
 		{
 			return (double)a;
 		}
 
-		protected static double ToFloatR8(long a)
+		protected static double ToR8(long a)
 		{
 			return (double)a;
 		}

@@ -36,7 +36,7 @@ namespace Mosa.Compiler.Framework.Transformation.Auto.IR.StrengthReduction
 			var t1 = context.Operand1;
 			var t2 = context.Operand2;
 
-			var e1 = transformContext.CreateConstant(Sub32(ShiftLeft32(1u, GetPowerOfTwo(And32(ToInt32(t2), 63u))), 1u));
+			var e1 = transformContext.CreateConstant(Sub64(ShiftLeft64(1u, And32(GetPowerOfTwo(ToInt32(t2)), 31u)), 1u));
 
 			context.SetInstruction(IRInstruction.LogicalAnd64, result, t1, e1);
 		}
