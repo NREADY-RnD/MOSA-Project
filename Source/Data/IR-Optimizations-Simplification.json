@@ -161,6 +161,133 @@
 			"Expression": "IR.MulUnsigned64 (IR.MulUnsigned64 a b) c",
 			"Filter": "IsResolvedConstant(b) & IsResolvedConstant(c)",
 			"Result": "(IR.MulUnsigned64 a [MulUnsigned64(ToInt64(b), ToInt64(c))])"
+		},
+		{
+			"FamilyName": "IR",
+			"Type": "Simplification",
+			"Name": "LogicalOr32",
+			"SubName": "Combine",
+			"Expression": "IR.LogicalOr32 (IR.LogicalOr32 a b) c",
+			"Filter": "IsResolvedConstant(b) & IsResolvedConstant(c)",
+			"Result": "(IR.LogicalOr32 a [Or32(ToInt32(b), ToInt32(c))])"
+		},
+		{
+			"FamilyName": "IR",
+			"Type": "Simplification",
+			"Name": "LogicalOr64",
+			"SubName": "Combine",
+			"Expression": "IR.LogicalOr64 (IR.LogicalOr64 a b) c",
+			"Filter": "IsResolvedConstant(b) & IsResolvedConstant(c)",
+			"Result": "(IR.LogicalOr64 a [Or64(ToInt64(b), ToInt64(c))])"
+		},
+		{
+			"FamilyName": "IR",
+			"Type": "Simplification",
+			"Name": "LogicalAnd32",
+			"SubName": "Combine",
+			"Expression": "IR.LogicalAnd32 (IR.LogicalAnd32 a b) c",
+			"Filter": "IsResolvedConstant(b) & IsResolvedConstant(c)",
+			"Result": "(IR.LogicalAnd32 a [And32(ToInt32(b), ToInt32(c))])"
+		},
+		{
+			"FamilyName": "IR",
+			"Type": "Simplification",
+			"Name": "LogicalAnd64",
+			"SubName": "Combine",
+			"Expression": "IR.LogicalAnd64 (IR.LogicalAnd64 a b) c",
+			"Filter": "IsResolvedConstant(b) & IsResolvedConstant(c)",
+			"Result": "(IR.LogicalAnd64 a [And64(ToInt64(b), ToInt64(c))])"
+		},
+		{
+			"FamilyName": "IR",
+			"Type": "Simplification",
+			"Name": "LogicalXor32",
+			"SubName": "Combine",
+			"Expression": "IR.LogicalXor32 (IR.LogicalXor32 a b) c",
+			"Filter": "IsResolvedConstant(b) & IsResolvedConstant(c)",
+			"Result": "(IR.LogicalXor32 a [Xor32(ToInt32(b), ToInt32(c))])"
+		},
+		{
+			"FamilyName": "IR",
+			"Type": "Simplification",
+			"Name": "LogicalXor64",
+			"SubName": "Combine",
+			"Expression": "IR.LogicalXor64 (IR.LogicalXor64 a b) c",
+			"Filter": "IsResolvedConstant(b) & IsResolvedConstant(c)",
+			"Result": "(IR.LogicalXor64 a [Xor64(ToInt64(b), ToInt64(c))])"
+		},
+
+		{
+			"FamilyName": "IR",
+			"Type": "Simplification",
+			"Name": "AddSub32",
+			"SubName": "Combine",
+			"Expression": "IR.Add32 (IR.Sub32 a b) c",
+			"Filter": "IsResolvedConstant(b) & IsResolvedConstant(c)",
+			"Result": "(IR.Sub32 a [Add32(ToInt32(b), ToInt32(c))])"
+		},
+		{
+			"FamilyName": "IR",
+			"Type": "Simplification",
+			"Name": "AddSub64",
+			"SubName": "Combine",
+			"Expression": "IR.Add64 (IR.Sub64 a b) c",
+			"Filter": "IsResolvedConstant(b) & IsResolvedConstant(c)",
+			"Result": "(IR.Sub64 a [Add64(ToInt64(b), ToInt64(c))])"
+		},
+		{
+			"FamilyName": "IR",
+			"Type": "Simplification",
+			"Name": "AddSubR4",
+			"SubName": "Combine",
+			"Expression": "IR.AddR4 (IR.SubR4 a b) c",
+			"Filter": "IsResolvedConstant(b) & IsResolvedConstant(c)",
+			"Result": "(IR.SubR4 a [AddR4(ToR4(b), ToR4(c))])"
+		},
+		{
+			"FamilyName": "IR",
+			"Type": "Simplification",
+			"Name": "AddSubR8",
+			"SubName": "Combine",
+			"Expression": "IR.AddR8 (IR.SubR8 a b) c",
+			"Filter": "IsResolvedConstant(b) & IsResolvedConstant(c)",
+			"Result": "(IR.SubR8 a [AddR8(ToR8(b), ToR8(c))])"
+		},
+		{
+			"FamilyName": "IR",
+			"Type": "Simplification",
+			"Name": "SubAdd32",
+			"SubName": "Combine",
+			"Expression": "IR.Sub32 (IR.Add32 a b) c",
+			"Filter": "IsResolvedConstant(b) & IsResolvedConstant(c)",
+			"Result": "(IR.Add32 a [Sub32(ToInt32(b), ToInt32(c))])"
+		},
+		{
+			"FamilyName": "IR",
+			"Type": "Simplification",
+			"Name": "SubAdd64",
+			"SubName": "Combine",
+			"Expression": "IR.Sub64 (IR.Add64 a b) c",
+			"Filter": "IsResolvedConstant(b) & IsResolvedConstant(c)",
+			"Result": "(IR.Add64 a [Sub64(ToInt64(b), ToInt64(c))])"
+		},
+		{
+			"FamilyName": "IR",
+			"Type": "Simplification",
+			"Name": "SubAddR4",
+			"SubName": "Combine",
+			"Expression": "IR.SubR4 (IR.AddR4 a b) c",
+			"Filter": "IsResolvedConstant(b) & IsResolvedConstant(c)",
+			"Result": "(IR.AddR4 a [SubR4(ToR4(b), ToR4(c))])"
+		},
+		{
+			"FamilyName": "IR",
+			"Type": "Simplification",
+			"Name": "SubAddR8",
+			"SubName": "Combine",
+			"Expression": "IR.SubR8 (IR.AddR8 a b) c",
+			"Filter": "IsResolvedConstant(b) & IsResolvedConstant(c)",
+			"Result": "(IR.AddR8 a [SubR8(ToR8(b), ToR8(c))])"
 		}
 	]
 }

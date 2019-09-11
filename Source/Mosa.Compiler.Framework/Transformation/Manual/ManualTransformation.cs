@@ -12,6 +12,16 @@ namespace Mosa.Compiler.Framework.Transformation.Manual
 		public static readonly BaseTransformation IR_ConstantFolding_CompareInt64x32 = new IR.ConstantFolding.CompareInt64x32();
 		public static readonly BaseTransformation IR_ConstantFolding_CompareInt64x64 = new IR.ConstantFolding.CompareInt64x64();
 
+		public static readonly BaseTransformation IR_ConstantMove_CompareInt32x32 = new IR.ConstantMove.CompareInt32x32();
+		public static readonly BaseTransformation IR_ConstantMove_CompareInt32x64 = new IR.ConstantMove.CompareInt32x64();
+		public static readonly BaseTransformation IR_ConstantMove_CompareInt64x32 = new IR.ConstantMove.CompareInt64x32();
+		public static readonly BaseTransformation IR_ConstantMove_CompareInt64x64 = new IR.ConstantMove.CompareInt64x64();
+
+		public static readonly BaseTransformation IR_Rewrite_CompareInt32x32 = new IR.Rewrite.CompareInt32x32GreaterThanZero();
+		public static readonly BaseTransformation IR_Rewrite_CompareInt32x64 = new IR.Rewrite.CompareInt32x64GreaterThanZero();
+		public static readonly BaseTransformation IR_Rewrite_CompareInt64x32 = new IR.Rewrite.CompareInt64x32GreaterThanZero();
+		public static readonly BaseTransformation IR_Rewrite_CompareInt64x64 = new IR.Rewrite.CompareInt64x64GreaterThanZero();
+
 		public static readonly BaseTransformation IR_LowerTo32_Add64 = new IR.LowerTo32.Add64();
 		public static readonly BaseTransformation IR_Special_CodeInDeadBlock = new Transformation.IR.Special.CodeInDeadBlock();
 		public static readonly BaseTransformation IR_Special_Deadcode = new Transformation.IR.Special.Deadcode();
@@ -40,5 +50,10 @@ namespace Mosa.Compiler.Framework.Transformation.Manual
 		public static readonly BaseTransformation IR_Special_PropagateMove64 = new Transformation.IR.Special.PropagateMove64();
 		public static readonly BaseTransformation IR_Special_PropagateMoveR4 = new Transformation.IR.Special.PropagateMoveR4();
 		public static readonly BaseTransformation IR_Special_PropagateMoveR8 = new Transformation.IR.Special.PropagateMoveR8();
+
+		public static readonly BaseTransformation IR_Special_PropagatePhi32 = new IR.Special.PropagatePhi32();
+		public static readonly BaseTransformation IR_Special_PropagatePhi64 = new IR.Special.PropagatePhi64();
+		public static readonly BaseTransformation IR_Special_PropagatePhiR4 = new IR.Special.PropagatePhiR4();
+		public static readonly BaseTransformation IR_Special_PropagatePhiR8 = new IR.Special.PropagatePhiR8();
 	}
 }

@@ -18,14 +18,19 @@ namespace Mosa.Compiler.Framework.Transformation.Manual
 			ManualTransformation.IR_ConstantFolding_CompareInt64x32,
 			ManualTransformation.IR_ConstantFolding_CompareInt64x64,
 
+			//ManualTransformation.IR_ConstantMove_CompareInt32x32,
+			//ManualTransformation.IR_ConstantMove_CompareInt32x64,
+			//ManualTransformation.IR_ConstantMove_CompareInt64x32,
+			//ManualTransformation.IR_ConstantMove_CompareInt64x64,
+
+			ManualTransformation.IR_Rewrite_CompareInt32x32,
+			ManualTransformation.IR_Rewrite_CompareInt32x64,
+			ManualTransformation.IR_Rewrite_CompareInt64x32,
+			ManualTransformation.IR_Rewrite_CompareInt64x64,
+
 			//ManualTransformation.IR_LowerTo32_Add64,
 			ManualTransformation.IR_Special_CodeInDeadBlock,
 			ManualTransformation.IR_Special_Deadcode,
-
-			ManualTransformation.IR_Simplification_Phi32,
-			ManualTransformation.IR_Simplification_Phi64,
-			ManualTransformation.IR_Simplification_PhiR4,
-			ManualTransformation.IR_Simplification_PhiR8,
 
 			ManualTransformation.IR_Simplification_AddCarryOut32CarryNotUsed,
 			ManualTransformation.IR_Simplification_AddCarryOut64CarryNotUsed,
@@ -46,6 +51,16 @@ namespace Mosa.Compiler.Framework.Transformation.Manual
 			ManualTransformation.IR_Special_PropagateMove64,
 			ManualTransformation.IR_Special_PropagateMoveR4,
 			ManualTransformation.IR_Special_PropagateMoveR8,
+
+			ManualTransformation.IR_Special_PropagatePhi32,
+			ManualTransformation.IR_Special_PropagatePhi64,
+			ManualTransformation.IR_Special_PropagatePhiR4,
+			ManualTransformation.IR_Special_PropagatePhiR8,
+
+			//ManualTransformation.IR_Simplification_Phi32,
+			//ManualTransformation.IR_Simplification_Phi64,
+			//ManualTransformation.IR_Simplification_PhiR4,
+			//ManualTransformation.IR_Simplification_PhiR8,
 		};
 	}
 }

@@ -12,7 +12,7 @@ namespace Mosa.Compiler.Framework.Transformation.Manual.IR.Simplification
 
 		public override bool Match(Context context, TransformContext transformContext)
 		{
-			return (context.OperandCount == 1);
+			return context.OperandCount == 1;
 		}
 
 		public override void Transform(Context context, TransformContext transformContext)

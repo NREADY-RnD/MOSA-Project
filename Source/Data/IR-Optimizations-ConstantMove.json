@@ -89,6 +89,61 @@
 			"Expression": "IR.MulUnsigned64 a b",
 			"Filter": "IsResolvedConstant(a) & !IsResolvedConstant(b)",
 			"Result": "(IR.MulR8 b a)"
+		},
+		{
+			"FamilyName": "IR",
+			"Type": "ConstantMove",
+			"Name": "LogicalAnd32",
+			"SubName": "",
+			"Expression": "IR.LogicalAnd32 a b",
+			"Filter": "IsResolvedConstant(a) & !IsResolvedConstant(b)",
+			"Result": "(IR.LogicalAnd32 b a)"
+		},
+		{
+			"FamilyName": "IR",
+			"Type": "ConstantMove",
+			"Name": "LogicalAnd64",
+			"SubName": "",
+			"Expression": "IR.LogicalAnd64 a b",
+			"Filter": "IsResolvedConstant(a) & !IsResolvedConstant(b)",
+			"Result": "(IR.LogicalAnd64 b a)"
+		},
+
+		{
+			"FamilyName": "IR",
+			"Type": "ConstantMove",
+			"Name": "LogicalOr32",
+			"SubName": "",
+			"Expression": "IR.LogicalOr32 a b",
+			"Filter": "IsResolvedConstant(a) & !IsResolvedConstant(b)",
+			"Result": "(IR.LogicalOr32 b a)"
+		},
+		{
+			"FamilyName": "IR",
+			"Type": "ConstantMove",
+			"Name": "LogicalOr64",
+			"SubName": "",
+			"Expression": "IR.LogicalOr64 a b",
+			"Filter": "IsResolvedConstant(a) & !IsResolvedConstant(b)",
+			"Result": "(IR.LogicalOr64 b a)"
+		},
+		{
+			"FamilyName": "IR",
+			"Type": "ConstantMove",
+			"Name": "LogicalXor32",
+			"SubName": "",
+			"Expression": "IR.LogicalXor32 a b",
+			"Filter": "IsResolvedConstant(a) & !IsResolvedConstant(b)",
+			"Result": "(IR.LogicalXor32 b a)"
+		},
+		{
+			"FamilyName": "IR",
+			"Type": "ConstantMove",
+			"Name": "LogicalXor64",
+			"SubName": "",
+			"Expression": "IR.LogicalXor64 a b",
+			"Filter": "IsResolvedConstant(a) & !IsResolvedConstant(b)",
+			"Result": "(IR.LogicalXor64 b a)"
 		}
 	]
 }

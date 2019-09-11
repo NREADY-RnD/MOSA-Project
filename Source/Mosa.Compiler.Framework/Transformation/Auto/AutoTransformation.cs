@@ -91,6 +91,20 @@ namespace Mosa.Compiler.Framework.Transformation.Auto
 		public static readonly BaseTransformation IR_Simplification_MulR8 = new IR.Simplification.MulR8();
 		public static readonly BaseTransformation IR_Simplification_MulUnsigned32 = new IR.Simplification.MulUnsigned32();
 		public static readonly BaseTransformation IR_Simplification_MulUnsigned64 = new IR.Simplification.MulUnsigned64();
+		public static readonly BaseTransformation IR_Simplification_LogicalOr32Combine = new IR.Simplification.LogicalOr32Combine();
+		public static readonly BaseTransformation IR_Simplification_LogicalOr64Combine = new IR.Simplification.LogicalOr64Combine();
+		public static readonly BaseTransformation IR_Simplification_LogicalAnd32Combine = new IR.Simplification.LogicalAnd32Combine();
+		public static readonly BaseTransformation IR_Simplification_LogicalAnd64Combine = new IR.Simplification.LogicalAnd64Combine();
+		public static readonly BaseTransformation IR_Simplification_LogicalXor32Combine = new IR.Simplification.LogicalXor32Combine();
+		public static readonly BaseTransformation IR_Simplification_LogicalXor64Combine = new IR.Simplification.LogicalXor64Combine();
+		public static readonly BaseTransformation IR_Simplification_AddSub32Combine = new IR.Simplification.AddSub32Combine();
+		public static readonly BaseTransformation IR_Simplification_AddSub64Combine = new IR.Simplification.AddSub64Combine();
+		public static readonly BaseTransformation IR_Simplification_AddSubR4Combine = new IR.Simplification.AddSubR4Combine();
+		public static readonly BaseTransformation IR_Simplification_AddSubR8Combine = new IR.Simplification.AddSubR8Combine();
+		public static readonly BaseTransformation IR_Simplification_SubAdd32Combine = new IR.Simplification.SubAdd32Combine();
+		public static readonly BaseTransformation IR_Simplification_SubAdd64Combine = new IR.Simplification.SubAdd64Combine();
+		public static readonly BaseTransformation IR_Simplification_SubAddR4Combine = new IR.Simplification.SubAddR4Combine();
+		public static readonly BaseTransformation IR_Simplification_SubAddR8Combine = new IR.Simplification.SubAddR8Combine();
 		public static readonly BaseTransformation IR_StrengthReduction_Add32LeftZero = new IR.StrengthReduction.Add32LeftZero();
 		public static readonly BaseTransformation IR_StrengthReduction_Add32RightZero = new IR.StrengthReduction.Add32RightZero();
 		public static readonly BaseTransformation IR_StrengthReduction_Add64LeftZero = new IR.StrengthReduction.Add64LeftZero();
@@ -129,5 +143,11 @@ namespace Mosa.Compiler.Framework.Transformation.Auto
 		public static readonly BaseTransformation IR_ConstantMove_MulUnsigned64 = new IR.ConstantMove.MulUnsigned64();
 		public static readonly BaseTransformation IR_ConstantMove_MulR4 = new IR.ConstantMove.MulR4();
 		public static readonly BaseTransformation IR_ConstantMove_MulR8 = new IR.ConstantMove.MulR8();
+		public static readonly BaseTransformation IR_ConstantMove_LogicalAnd32 = new IR.ConstantMove.LogicalAnd32();
+		public static readonly BaseTransformation IR_ConstantMove_LogicalAnd64 = new IR.ConstantMove.LogicalAnd64();
+		public static readonly BaseTransformation IR_ConstantMove_LogicalOr32 = new IR.ConstantMove.LogicalOr32();
+		public static readonly BaseTransformation IR_ConstantMove_LogicalOr64 = new IR.ConstantMove.LogicalOr64();
+		public static readonly BaseTransformation IR_ConstantMove_LogicalXor32 = new IR.ConstantMove.LogicalXor32();
+		public static readonly BaseTransformation IR_ConstantMove_LogicalXor64 = new IR.ConstantMove.LogicalXor64();
 	}
 }

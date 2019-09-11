@@ -94,6 +94,11 @@ namespace Mosa.Compiler.Framework.Transformation
 			return BitTwiddling.IsPowerOfTwo(operand.ConstantUnsigned64);
 		}
 
+		protected static bool IsConstant(Operand operand)
+		{
+			return operand.IsConstant;
+		}
+
 		protected static bool IsResolvedConstant(Operand operand)
 		{
 			return operand.IsResolvedConstant;
