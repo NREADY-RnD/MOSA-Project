@@ -21,20 +21,20 @@
 		{
 			"FamilyName": "IR",
 			"Type": "ConstantFolding",
-			"Name": "AddFloatR4",
+			"Name": "AddR4",
 			"SubName": "",
-			"Expression": "IR.AddFloatR4 a b",
+			"Expression": "IR.AddR4 a b",
 			"Filter": "IsResolvedConstant(a) & IsResolvedConstant(b)",
-			"Result": "(IR.MoveFloatR4 [AddR4(ToR4(a),ToR4(b))])"
+			"Result": "(IR.MoveR4 [AddR4(ToR4(a),ToR4(b))])"
 		},
 		{
 			"FamilyName": "IR",
 			"Type": "ConstantFolding",
-			"Name": "AddFloatR8",
+			"Name": "AddR8",
 			"SubName": "",
-			"Expression": "IR.AddFloatR8 a b",
+			"Expression": "IR.AddR8 a b",
 			"Filter": "IsResolvedConstant(a) & IsResolvedConstant(b)",
-			"Result": "(IR.MoveFloatR8 [AddR8(ToR8(a),ToR8(b))])"
+			"Result": "(IR.MoveR8 [AddR8(ToR8(a),ToR8(b))])"
 		},
 		{
 			"FamilyName": "IR",
@@ -129,20 +129,20 @@
 		{
 			"FamilyName": "IR",
 			"Type": "ConstantFolding",
-			"Name": "DivFloatR8",
+			"Name": "DivR8",
 			"SubName": "",
-			"Expression": "IR.DivFloatR8 a b",
+			"Expression": "IR.DivR8 a b",
 			"Filter": "IsResolvedConstant(a) & IsResolvedConstant(b)",
-			"Result": "(IR.MoveFloatR8 [DivR8(ToR8(a),ToR8(b))])"
+			"Result": "(IR.MoveR8 [DivR8(ToR8(a),ToR8(b))])"
 		},
 		{
 			"FamilyName": "IR",
 			"Type": "ConstantFolding",
-			"Name": "DivFloatR4",
+			"Name": "DivR4",
 			"SubName": "",
-			"Expression": "IR.DivFloatR4 a b",
+			"Expression": "IR.DivR4 a b",
 			"Filter": "IsResolvedConstant(a) & IsResolvedConstant(b)",
-			"Result": "(IR.MoveFloatR4 [DivR4(ToR4(a),ToR4(b))])"
+			"Result": "(IR.MoveR4 [DivR4(ToR4(a),ToR4(b))])"
 		},
 		{
 			"FamilyName": "IR",
@@ -282,20 +282,20 @@
 		{
 			"FamilyName": "IR",
 			"Type": "ConstantFolding",
-			"Name": "MulFloatR4",
+			"Name": "MulR4",
 			"SubName": "",
-			"Expression": "IR.MulFloatR4 a b",
+			"Expression": "IR.MulR4 a b",
 			"Filter": "IsResolvedConstant(a) & IsResolvedConstant(b)",
-			"Result": "(IR.MoveFloatR4 [MulR4(ToR4(a),ToR4(b))])"
+			"Result": "(IR.MoveR4 [MulR4(ToR4(a),ToR4(b))])"
 		},
 		{
 			"FamilyName": "IR",
 			"Type": "ConstantFolding",
-			"Name": "MulFloatR8",
+			"Name": "MulR8",
 			"SubName": "",
-			"Expression": "IR.MulFloatR8 a b",
+			"Expression": "IR.MulR8 a b",
 			"Filter": "IsResolvedConstant(a) & IsResolvedConstant(b)",
-			"Result": "(IR.MoveFloatR8 [MulR8(ToR8(a),ToR8(b))])"
+			"Result": "(IR.MoveR8 [MulR8(ToR8(a),ToR8(b))])"
 		},
 		{
 			"FamilyName": "IR",
@@ -336,20 +336,20 @@
 		{
 			"FamilyName": "IR",
 			"Type": "ConstantFolding",
-			"Name": "RemFloatR4",
+			"Name": "RemR4",
 			"SubName": "",
-			"Expression": "IR.RemFloatR4 a b",
+			"Expression": "IR.RemR4 a b",
 			"Filter": "IsResolvedConstant(a) & IsResolvedConstant(b)",
-			"Result": "(IR.MoveFloatR4 [RemR4(ToR4(a),ToR4(b))])"
+			"Result": "(IR.MoveR4 [RemR4(ToR4(a),ToR4(b))])"
 		},
 		{
 			"FamilyName": "IR",
 			"Type": "ConstantFolding",
-			"Name": "RemFloatR8",
+			"Name": "RemR8",
 			"SubName": "",
-			"Expression": "IR.RemFloatR8 a b",
+			"Expression": "IR.RemR8 a b",
 			"Filter": "IsResolvedConstant(a) & IsResolvedConstant(b)",
-			"Result": "(IR.MoveFloatR8 [RemR8(ToR8(a),ToR8(b))])"
+			"Result": "(IR.MoveR8 [RemR8(ToR8(a),ToR8(b))])"
 		},
 		{
 			"FamilyName": "IR",
@@ -372,20 +372,20 @@
 		{
 			"FamilyName": "IR",
 			"Type": "ConstantFolding",
-			"Name": "SubFloatR4",
+			"Name": "SubR4",
 			"SubName": "",
-			"Expression": "IR.SubFloatR4 a b",
+			"Expression": "IR.SubR4 a b",
 			"Filter": "IsResolvedConstant(a) & IsResolvedConstant(b)",
-			"Result": "(IR.MoveFloatR4 [SubR4(ToR4(a),ToR4(b))])"
+			"Result": "(IR.MoveR4 [SubR4(ToR4(a),ToR4(b))])"
 		},
 		{
 			"FamilyName": "IR",
 			"Type": "ConstantFolding",
-			"Name": "SubFloatR8",
+			"Name": "SubR8",
 			"SubName": "",
-			"Expression": "IR.SubFloatR8 a b",
+			"Expression": "IR.SubR8 a b",
 			"Filter": "IsResolvedConstant(a) & IsResolvedConstant(b)",
-			"Result": "(IR.MoveFloatR8 [SubR8(ToR8(a),ToR8(b))])"
+			"Result": "(IR.MoveR8 [SubR8(ToR8(a),ToR8(b))])"
 		},
 		{
 			"FamilyName": "IR",
@@ -498,38 +498,38 @@
 		{
 			"FamilyName": "IR",
 			"Type": "ConstantFolding",
-			"Name": "ConvertInt32ToFloatR4",
+			"Name": "ConvertInt32ToR4",
 			"SubName": "",
-			"Expression": "IR.ConvertInt32ToFloatR4 a",
+			"Expression": "IR.ConvertInt32ToR4 a",
 			"Filter": "IsResolvedConstant(a)",
-			"Result": "(IR.MoveFloatR4 [ToR4(ToSignedInt32(a))])"
+			"Result": "(IR.MoveR4 [ToR4(ToSignedInt32(a))])"
 		},
 		{
 			"FamilyName": "IR",
 			"Type": "ConstantFolding",
-			"Name": "ConvertInt32ToFloatR8",
+			"Name": "ConvertInt32ToR8",
 			"SubName": "",
-			"Expression": "IR.ConvertInt32ToFloatR8 a",
+			"Expression": "IR.ConvertInt32ToR8 a",
 			"Filter": "IsResolvedConstant(a)",
-			"Result": "(IR.MoveFloatR8 [ToR8(ToSignedInt32(a))])"
+			"Result": "(IR.MoveR8 [ToR8(ToSignedInt32(a))])"
 		},
 		{
 			"FamilyName": "IR",
 			"Type": "ConstantFolding",
-			"Name": "ConvertInt64ToFloatR4",
+			"Name": "ConvertInt64ToR4",
 			"SubName": "",
-			"Expression": "IR.ConvertInt64ToFloatR4 a",
+			"Expression": "IR.ConvertInt64ToR4 a",
 			"Filter": "IsResolvedConstant(a)",
-			"Result": "(IR.MoveFloatR4 [ToR4(ToSignedInt64(a))])"
+			"Result": "(IR.MoveR4 [ToR4(ToSignedInt64(a))])"
 		},
 		{
 			"FamilyName": "IR",
 			"Type": "ConstantFolding",
-			"Name": "ConvertInt64ToFloatR8",
+			"Name": "ConvertInt64ToR8",
 			"SubName": "",
-			"Expression": "IR.ConvertInt64ToFloatR8 a",
+			"Expression": "IR.ConvertInt64ToR8 a",
 			"Filter": "IsResolvedConstant(a)",
-			"Result": "(IR.MoveFloatR8 [ToR8(ToSignedInt64(a))])"
+			"Result": "(IR.MoveR8 [ToR8(ToSignedInt64(a))])"
 		},
 		{
 			"FamilyName": "IR",

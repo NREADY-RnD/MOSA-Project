@@ -90,8 +90,8 @@ namespace Mosa.Compiler.Framework.Stages
 							|| node.Instruction == IRInstruction.LoadParamCompound
 							|| node.Instruction == IRInstruction.LoadParamInt32
 							|| node.Instruction == IRInstruction.LoadParamInt64
-							|| node.Instruction == IRInstruction.LoadParamFloatR4
-							|| node.Instruction == IRInstruction.LoadParamFloatR4
+							|| node.Instruction == IRInstruction.LoadParamR4
+							|| node.Instruction == IRInstruction.LoadParamR4
 							|| node.Instruction == IRInstruction.LoadParamSignExtend16x32
 							|| node.Instruction == IRInstruction.LoadParamSignExtend16x64
 							|| node.Instruction == IRInstruction.LoadParamSignExtend32x64

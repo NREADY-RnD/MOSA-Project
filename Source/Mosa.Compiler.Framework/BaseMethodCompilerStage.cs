@@ -797,9 +797,9 @@ namespace Mosa.Compiler.Framework
 			else if (type.IsU8)
 				return IRInstruction.LoadInt64;
 			else if (type.IsR4)
-				return IRInstruction.LoadFloatR4;
+				return IRInstruction.LoadR4;
 			else if (type.IsR8)
-				return IRInstruction.LoadFloatR8;
+				return IRInstruction.LoadR8;
 			else if (Is32BitPlatform)   // review
 				return IRInstruction.LoadInt32;
 			else if (Is64BitPlatform)
@@ -829,9 +829,9 @@ namespace Mosa.Compiler.Framework
 			else if (type.IsU8)
 				return IRInstruction.MoveInt64;
 			else if (type.IsR4)
-				return IRInstruction.MoveFloatR4;
+				return IRInstruction.MoveR4;
 			else if (type.IsR8)
-				return IRInstruction.MoveFloatR8;
+				return IRInstruction.MoveR8;
 			else if (Is32BitPlatform)   // review
 				return IRInstruction.MoveInt32;
 			else if (Is64BitPlatform)
@@ -853,9 +853,9 @@ namespace Mosa.Compiler.Framework
 		public static BaseIRInstruction GetStoreParameterInstruction(MosaType type, bool is32bitPlatform)
 		{
 			if (type.IsR4)
-				return IRInstruction.StoreParamFloatR4;
+				return IRInstruction.StoreParamR4;
 			else if (type.IsR8)
-				return IRInstruction.StoreParamFloatR8;
+				return IRInstruction.StoreParamR8;
 			else if (type.IsUI1 || type.IsBoolean)
 				return IRInstruction.StoreParamInt8;
 			else if (type.IsUI2 || type.IsChar)
@@ -875,9 +875,9 @@ namespace Mosa.Compiler.Framework
 		public static BaseIRInstruction GetLoadParameterInstruction(MosaType type, bool is32bitPlatform)
 		{
 			if (type.IsR4)
-				return IRInstruction.LoadParamFloatR4;
+				return IRInstruction.LoadParamR4;
 			else if (type.IsR8)
-				return IRInstruction.LoadParamFloatR8;
+				return IRInstruction.LoadParamR8;
 			else if (type.IsU1 || type.IsBoolean)
 				return IRInstruction.LoadParamZeroExtend8x32;
 			else if (type.IsI1)
@@ -928,9 +928,9 @@ namespace Mosa.Compiler.Framework
 		public BaseIRInstruction GetStoreInstruction(MosaType type)
 		{
 			if (type.IsR4)
-				return IRInstruction.StoreFloatR4;
+				return IRInstruction.StoreR4;
 			else if (type.IsR8)
-				return IRInstruction.StoreFloatR8;
+				return IRInstruction.StoreR8;
 			else if (type.IsUI1 || type.IsBoolean)
 				return IRInstruction.StoreInt8;
 			else if (type.IsUI2 || type.IsChar)
@@ -966,8 +966,8 @@ namespace Mosa.Compiler.Framework
 		{
 			return instruction == IRInstruction.MoveInt32
 				|| instruction == IRInstruction.MoveInt64
-				|| instruction == IRInstruction.MoveFloatR8
-				|| instruction == IRInstruction.MoveFloatR4;
+				|| instruction == IRInstruction.MoveR8
+				|| instruction == IRInstruction.MoveR4;
 		}
 
 		public static void ReplaceOperand(Operand target, Operand replacement)

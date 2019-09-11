@@ -298,8 +298,8 @@ namespace Mosa.Compiler.Framework.Stages
 
 				if (node.Instruction == IRInstruction.MoveInt32
 					|| node.Instruction == IRInstruction.MoveInt64
-					|| node.Instruction == IRInstruction.MoveFloatR4
-					|| node.Instruction == IRInstruction.MoveFloatR8)
+					|| node.Instruction == IRInstruction.MoveR4
+					|| node.Instruction == IRInstruction.MoveR8)
 				{
 					if (node.Result.IsCPURegister || node.Operand1.IsCPURegister)
 					{

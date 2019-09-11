@@ -22,18 +22,18 @@ namespace Mosa.Platform.x86.Stages
 		protected override void PopulateVisitationDictionary()
 		{
 			AddVisitation(IRInstruction.Add64, Add64);
-			AddVisitation(IRInstruction.BitCopyFloatR8ToInt64, BitCopyFloatR8ToInt64);
-			AddVisitation(IRInstruction.BitCopyInt64ToFloatR8, BitCopyInt64ToFloatR8);
+			AddVisitation(IRInstruction.BitCopyR8ToInt64, BitCopyFloatR8ToInt64);
+			AddVisitation(IRInstruction.BitCopyInt64ToR8, BitCopyInt64ToFloatR8);
 			AddVisitation(IRInstruction.ArithShiftRight64, ArithShiftRight64);
 			AddVisitation(IRInstruction.Call, Call);
 			AddVisitation(IRInstruction.CompareInt32x64, CompareInt32x64);
 			AddVisitation(IRInstruction.CompareInt64x32, CompareInt64x32);
 			AddVisitation(IRInstruction.CompareInt64x64, CompareInt64x64);
 			AddVisitation(IRInstruction.CompareIntBranch64, CompareIntBranch64);
-			AddVisitation(IRInstruction.ConvertFloatR4ToInt64, ConvertFloatR4ToInt64);
-			AddVisitation(IRInstruction.ConvertFloatR8ToInt64, ConvertFloatR8ToInteger64);
-			AddVisitation(IRInstruction.ConvertInt64ToFloatR4, ConvertInt64ToFloatR4);
-			AddVisitation(IRInstruction.ConvertInt64ToFloatR8, ConvertInt64ToFloatR8);
+			AddVisitation(IRInstruction.ConvertR4ToInt64, ConvertFloatR4ToInt64);
+			AddVisitation(IRInstruction.ConvertR8ToInt64, ConvertFloatR8ToInteger64);
+			AddVisitation(IRInstruction.ConvertInt64ToR4, ConvertInt64ToFloatR4);
+			AddVisitation(IRInstruction.ConvertInt64ToR8, ConvertInt64ToFloatR8);
 			AddVisitation(IRInstruction.IfThenElse64, IfThenElse64);
 			AddVisitation(IRInstruction.LoadInt64, LoadInt64);
 			AddVisitation(IRInstruction.LoadParamInt64, LoadParamInt64);

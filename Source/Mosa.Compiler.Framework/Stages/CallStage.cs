@@ -38,12 +38,12 @@ namespace Mosa.Compiler.Framework.Stages
 
 		private void SetReturnR4(Context context)
 		{
-			context.SetInstruction(IRInstruction.MoveFloatR4, Operand.CreateCPURegister(context.Operand1.Type, Architecture.ReturnFloatingPointRegister), context.Operand1);
+			context.SetInstruction(IRInstruction.MoveR4, Operand.CreateCPURegister(context.Operand1.Type, Architecture.ReturnFloatingPointRegister), context.Operand1);
 		}
 
 		private void SetReturnR8(Context context)
 		{
-			context.SetInstruction(IRInstruction.MoveFloatR8, Operand.CreateCPURegister(context.Operand1.Type, Architecture.ReturnFloatingPointRegister), context.Operand1);
+			context.SetInstruction(IRInstruction.MoveR8, Operand.CreateCPURegister(context.Operand1.Type, Architecture.ReturnFloatingPointRegister), context.Operand1);
 		}
 
 		private void SetReturn32(Context context)
@@ -294,11 +294,11 @@ namespace Mosa.Compiler.Framework.Stages
 			}
 			else if (operand.IsR4)
 			{
-				context.AppendInstruction(IRInstruction.StoreFloatR4, null, scratch, offsetOperand, operand);
+				context.AppendInstruction(IRInstruction.StoreR4, null, scratch, offsetOperand, operand);
 			}
 			else if (operand.IsR8)
 			{
-				context.AppendInstruction(IRInstruction.StoreFloatR8, null, scratch, offsetOperand, operand);
+				context.AppendInstruction(IRInstruction.StoreR8, null, scratch, offsetOperand, operand);
 			}
 			else if (MosaTypeLayout.IsStoredOnStack(operand.Type))
 			{
@@ -335,13 +335,13 @@ namespace Mosa.Compiler.Framework.Stages
 			{
 				var returnFP = Operand.CreateCPURegister(result.Type, Architecture.ReturnFloatingPointRegister);
 				context.AppendInstruction(IRInstruction.Gen, returnFP);
-				context.AppendInstruction(IRInstruction.MoveFloatR4, result, returnFP);
+				context.AppendInstruction(IRInstruction.MoveR4, result, returnFP);
 			}
 			else if (result.IsR8)
 			{
 				var returnFP = Operand.CreateCPURegister(result.Type, Architecture.ReturnFloatingPointRegister);
 				context.AppendInstruction(IRInstruction.Gen, returnFP);
-				context.AppendInstruction(IRInstruction.MoveFloatR8, result, returnFP);
+				context.AppendInstruction(IRInstruction.MoveR8, result, returnFP);
 			}
 			else if (MosaTypeLayout.IsStoredOnStack(result.Type))
 			{

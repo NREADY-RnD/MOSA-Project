@@ -17,7 +17,7 @@ namespace Mosa.Compiler.Framework.Transformation.Manual.IR.Simplification
 
 		public override void Transform(Context context, TransformContext transformContext)
 		{
-			context.SetInstruction(IRInstruction.MoveFloatR8, context.Result, context.Operand1);
+			context.SetInstruction(IRInstruction.MoveR8, context.Result, context.Operand1);
 		}
 	}
 }

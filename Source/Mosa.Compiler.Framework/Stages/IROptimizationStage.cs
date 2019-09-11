@@ -315,8 +315,8 @@ namespace Mosa.Compiler.Framework.Stages
 		{
 			if (!(node.Instruction == IRInstruction.MoveInt32
 				|| node.Instruction == IRInstruction.MoveInt64
-				|| node.Instruction == IRInstruction.MoveFloatR4
-				|| node.Instruction == IRInstruction.MoveFloatR8))
+				|| node.Instruction == IRInstruction.MoveR4
+				|| node.Instruction == IRInstruction.MoveR8))
 				return;
 
 			if (!ValidateSSAForm(node.Result))
@@ -857,8 +857,8 @@ namespace Mosa.Compiler.Framework.Stages
 				|| node.Instruction == IRInstruction.StoreInt16
 				|| node.Instruction == IRInstruction.StoreInt32
 				|| node.Instruction == IRInstruction.StoreInt64
-				|| node.Instruction == IRInstruction.StoreFloatR4
-				|| node.Instruction == IRInstruction.StoreFloatR8
+				|| node.Instruction == IRInstruction.StoreR4
+				|| node.Instruction == IRInstruction.StoreR8
 				|| node.Instruction == IRInstruction.LoadSignExtend8x32
 				|| node.Instruction == IRInstruction.LoadSignExtend16x32
 				|| node.Instruction == IRInstruction.LoadSignExtend8x64
@@ -1269,8 +1269,8 @@ namespace Mosa.Compiler.Framework.Stages
 				|| node.Instruction == IRInstruction.LoadZeroExtend8x64
 				|| node.Instruction == IRInstruction.LoadZeroExtend16x64
 				|| node.Instruction == IRInstruction.LoadZeroExtend32x64
-				|| node.Instruction == IRInstruction.LoadFloatR4
-				|| node.Instruction == IRInstruction.LoadFloatR8))
+				|| node.Instruction == IRInstruction.LoadR4
+				|| node.Instruction == IRInstruction.LoadR8))
 				return;
 
 			if (!node.Operand1.IsVirtualRegister)
@@ -1300,17 +1300,17 @@ namespace Mosa.Compiler.Framework.Stages
 			// Rational - the inliner can not transform the bits between floating point and regular registers without a load and store to memory (at least on Intel Platforms)
 			if ((node.Instruction == IRInstruction.LoadInt32 || node.Instruction == IRInstruction.LoadInt64) && paramType.IsFloatingPoint)
 				return;
-			else if ((node.Instruction == IRInstruction.LoadFloatR4 || node.Instruction == IRInstruction.LoadFloatR8) && paramType.IsInteger)
+			else if ((node.Instruction == IRInstruction.LoadR4 || node.Instruction == IRInstruction.LoadR8) && paramType.IsInteger)
 				return;
 
 			if (node.Instruction == IRInstruction.LoadInt32)
 				instruction = IRInstruction.LoadParamInt32;
 			else if (node.Instruction == IRInstruction.LoadInt64)
 				instruction = IRInstruction.LoadParamInt64;
-			else if (node.Instruction == IRInstruction.LoadFloatR4)
-				instruction = IRInstruction.LoadParamFloatR4;
-			else if (node.Instruction == IRInstruction.LoadFloatR8)
-				instruction = IRInstruction.LoadParamFloatR8;
+			else if (node.Instruction == IRInstruction.LoadR4)
+				instruction = IRInstruction.LoadParamR4;
+			else if (node.Instruction == IRInstruction.LoadR8)
+				instruction = IRInstruction.LoadParamR8;
 			else if (node.Instruction == IRInstruction.LoadSignExtend8x32)
 				instruction = IRInstruction.LoadParamSignExtend8x32;
 			else if (node.Instruction == IRInstruction.LoadSignExtend16x32)

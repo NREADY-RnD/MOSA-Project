@@ -88,8 +88,8 @@ namespace Mosa.Compiler.Framework.Stages
 					}
 					else if ((node.Instruction == IRInstruction.MoveInt32
 						|| node.Instruction == IRInstruction.MoveInt64
-						|| node.Instruction == IRInstruction.MoveFloatR4
-						|| node.Instruction == IRInstruction.MoveFloatR8)
+						|| node.Instruction == IRInstruction.MoveR4
+						|| node.Instruction == IRInstruction.MoveR8)
 						&& node.Operand1.IsVirtualRegister
 						&& ValidateSSAForm(node.Operand1))
 					{

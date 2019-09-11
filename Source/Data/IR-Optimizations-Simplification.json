@@ -57,20 +57,20 @@
 		{
 			"FamilyName": "IR",
 			"Type": "Simplification",
-			"Name": "AddFloatR4",
+			"Name": "AddR4",
 			"SubName": "Combine",
-			"Expression": "IR.AddFloatR4 (IR.AddFloatR4 a b) c",
+			"Expression": "IR.AddR4 (IR.AddR4 a b) c",
 			"Filter": "IsResolvedConstant(b) & IsResolvedConstant(c)",
-			"Result": "(IR.AddFloatR4 a [AddR4(ToR4(b), ToR4(c))])"
+			"Result": "(IR.AddR4 a [AddR4(ToR4(b), ToR4(c))])"
 		},
 		{
 			"FamilyName": "IR",
 			"Type": "Simplification",
-			"Name": "AddFloatR8",
+			"Name": "AddR8",
 			"SubName": "Combine",
-			"Expression": "IR.AddFloatR8 (IR.AddFloatR8 a b) c",
+			"Expression": "IR.AddR8 (IR.AddR8 a b) c",
 			"Filter": "IsResolvedConstant(b) & IsResolvedConstant(c)",
-			"Result": "(IR.AddFloatR8 a [AddR8(ToR8(b), ToR8(c))])"
+			"Result": "(IR.AddR8 a [AddR8(ToR8(b), ToR8(c))])"
 		},
 		{
 			"FamilyName": "IR",
@@ -93,20 +93,20 @@
 		{
 			"FamilyName": "IR",
 			"Type": "Simplification",
-			"Name": "SubFloatR4",
+			"Name": "SubR4",
 			"SubName": "Combine",
-			"Expression": "IR.SubFloatR4 (IR.SubFloatR4 a b) c",
+			"Expression": "IR.SubR4 (IR.SubR4 a b) c",
 			"Filter": "IsResolvedConstant(b) & IsResolvedConstant(c)",
-			"Result": "(IR.SubFloatR4 a [SubR4(ToR4(b), ToR4(c))])"
+			"Result": "(IR.SubR4 a [SubR4(ToR4(b), ToR4(c))])"
 		},
 		{
 			"FamilyName": "IR",
 			"Type": "Simplification",
-			"Name": "SubFloatR8",
+			"Name": "SubR8",
 			"SubName": "Combine",
-			"Expression": "IR.SubFloatR8 (IR.SubFloatR8 a b) c",
+			"Expression": "IR.SubR8 (IR.SubR8 a b) c",
 			"Filter": "IsResolvedConstant(b) & IsResolvedConstant(c)",
-			"Result": "(IR.SubFloatR8 a [SubR8(ToR8(b), ToR8(c))])"
+			"Result": "(IR.SubR8 a [SubR8(ToR8(b), ToR8(c))])"
 		},
 		{
 			"FamilyName": "IR",
@@ -129,20 +129,20 @@
 		{
 			"FamilyName": "IR",
 			"Type": "Simplification",
-			"Name": "MulFloatR4",
+			"Name": "MulR4",
 			"MulSignedName": "Combine",
-			"Expression": "IR.MulFloatR4 (IR.MulFloatR4 a b) c",
+			"Expression": "IR.MulR4 (IR.MulR4 a b) c",
 			"Filter": "IsResolvedConstant(b) & IsResolvedConstant(c)",
-			"Result": "(IR.MulFloatR4 a [MulR4(ToR4(b), ToR4(c))])"
+			"Result": "(IR.MulR4 a [MulR4(ToR4(b), ToR4(c))])"
 		},
 		{
 			"FamilyName": "IR",
 			"Type": "Simplification",
-			"Name": "MulFloatR8",
+			"Name": "MulR8",
 			"MulSignedName": "Combine",
-			"Expression": "IR.MulFloatR8 (IR.MulFloatR8 a b) c",
+			"Expression": "IR.MulR8 (IR.MulR8 a b) c",
 			"Filter": "IsResolvedConstant(b) & IsResolvedConstant(c)",
-			"Result": "(IR.MulFloatR8 a [MulR8(ToR8(b), ToR8(c))])"
+			"Result": "(IR.MulR8 a [MulR8(ToR8(b), ToR8(c))])"
 		},
 		{
 			"FamilyName": "IR",

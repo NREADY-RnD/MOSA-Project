@@ -26,10 +26,10 @@ namespace Mosa.Platform.x64.Stages
 			AddVisitation(IRInstruction.CompareInt64x32, CompareInt64x32);
 			AddVisitation(IRInstruction.CompareInt64x64, CompareInt64x64);
 			AddVisitation(IRInstruction.CompareIntBranch64, CompareIntBranch64);
-			AddVisitation(IRInstruction.ConvertFloatR4ToInt64, ConvertFloatR4ToInt64);
-			AddVisitation(IRInstruction.ConvertFloatR8ToInt64, ConvertFloatR8ToInteger64);
-			AddVisitation(IRInstruction.ConvertInt64ToFloatR4, ConvertInt64ToFloatR4);
-			AddVisitation(IRInstruction.ConvertInt64ToFloatR8, ConvertInt64ToFloatR8);
+			AddVisitation(IRInstruction.ConvertR4ToInt64, ConvertFloatR4ToInt64);
+			AddVisitation(IRInstruction.ConvertR8ToInt64, ConvertFloatR8ToInteger64);
+			AddVisitation(IRInstruction.ConvertInt64ToR4, ConvertInt64ToFloatR4);
+			AddVisitation(IRInstruction.ConvertInt64ToR8, ConvertInt64ToFloatR8);
 			AddVisitation(IRInstruction.IfThenElse64, IfThenElse64);
 			AddVisitation(IRInstruction.LoadInt64, LoadInt64);
 			AddVisitation(IRInstruction.LoadSignExtend32x64, LoadSignExtend32x64);

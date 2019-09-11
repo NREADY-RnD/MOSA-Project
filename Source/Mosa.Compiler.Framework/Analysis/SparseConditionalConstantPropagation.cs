@@ -493,8 +493,8 @@ namespace Mosa.Compiler.Framework.Analysis
 				|| instruction == IRInstruction.LoadZeroExtend16x64
 				|| instruction == IRInstruction.LoadZeroExtend32x64
 
-				|| instruction == IRInstruction.LoadFloatR4
-				|| instruction == IRInstruction.LoadFloatR8
+				|| instruction == IRInstruction.LoadR4
+				|| instruction == IRInstruction.LoadR8
 				|| instruction == IRInstruction.LoadParamSignExtend8x32
 				|| instruction == IRInstruction.LoadParamSignExtend16x32
 				|| instruction == IRInstruction.LoadParamInt32
@@ -507,8 +507,8 @@ namespace Mosa.Compiler.Framework.Analysis
 				|| instruction == IRInstruction.LoadParamZeroExtend8x64
 				|| instruction == IRInstruction.LoadParamZeroExtend16x64
 				|| instruction == IRInstruction.LoadParamZeroExtend32x64
-				|| instruction == IRInstruction.LoadParamFloatR4
-				|| instruction == IRInstruction.LoadParamFloatR8)
+				|| instruction == IRInstruction.LoadParamR4
+				|| instruction == IRInstruction.LoadParamR8)
 			{
 				Load(node);
 			}

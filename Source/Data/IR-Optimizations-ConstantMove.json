@@ -21,20 +21,20 @@
 		{
 			"FamilyName": "IR",
 			"Type": "ConstantMove",
-			"Name": "AddFloatR4",
+			"Name": "AddR4",
 			"SubName": "",
-			"Expression": "IR.AddFloatR4 a b",
+			"Expression": "IR.AddR4 a b",
 			"Filter": "IsResolvedConstant(a) & !IsResolvedConstant(b)",
-			"Result": "(IR.AddFloatR4 b a)"
+			"Result": "(IR.AddR4 b a)"
 		},
 		{
 			"FamilyName": "IR",
 			"Type": "ConstantMove",
-			"Name": "AddFloatR8",
+			"Name": "AddR8",
 			"SubName": "",
 			"Expression": "IR.Add64 a b",
 			"Filter": "IsResolvedConstant(a) & !IsResolvedConstant(b)",
-			"Result": "(IR.AddFloatR8 b a)"
+			"Result": "(IR.AddR8 b a)"
 		},
 		{
 			"FamilyName": "IR",
@@ -75,20 +75,20 @@
 		{
 			"FamilyName": "IR",
 			"Type": "ConstantMove",
-			"Name": "MulFloatR4",
+			"Name": "MulR4",
 			"SubName": "",
-			"Expression": "IR.MulFloatR4 a b",
+			"Expression": "IR.MulR4 a b",
 			"Filter": "IsResolvedConstant(a) & !IsResolvedConstant(b)",
-			"Result": "(IR.MulFloatR4 b a)"
+			"Result": "(IR.MulR4 b a)"
 		},
 		{
 			"FamilyName": "IR",
 			"Type": "ConstantMove",
-			"Name": "MulFloatR8",
+			"Name": "MulR8",
 			"SubName": "",
 			"Expression": "IR.MulUnsigned64 a b",
 			"Filter": "IsResolvedConstant(a) & !IsResolvedConstant(b)",
-			"Result": "(IR.MulFloatR8 b a)"
+			"Result": "(IR.MulR8 b a)"
 		}
 	]
 }

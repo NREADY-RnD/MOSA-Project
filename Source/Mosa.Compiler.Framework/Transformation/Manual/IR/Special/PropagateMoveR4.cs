@@ -6,7 +6,7 @@ namespace Mosa.Compiler.Framework.Transformation.IR.Special
 {
 	public sealed class PropagateMoveR4 : BaseTransformation
 	{
-		public PropagateMoveR4() : base(IRInstruction.MoveFloatR4)
+		public PropagateMoveR4() : base(IRInstruction.MoveR4)
 		{
 		}
 
