@@ -13,11 +13,6 @@ namespace Mosa.Compiler.Framework.Transform.Manual
 	{
 		public static readonly List<BaseTransformation> List = new List<BaseTransformation>
 		{
-			ManualInstance.IR_ConstantFolding_CompareInt32x32,
-			ManualInstance.IR_ConstantFolding_CompareInt32x64,
-			ManualInstance.IR_ConstantFolding_CompareInt64x32,
-			ManualInstance.IR_ConstantFolding_CompareInt64x64,
-
 			ManualInstance.IR_ConstantMove_CompareInt32x32,
 			ManualInstance.IR_ConstantMove_CompareInt32x64,
 			ManualInstance.IR_ConstantMove_CompareInt64x32,
@@ -27,6 +22,14 @@ namespace Mosa.Compiler.Framework.Transform.Manual
 			ManualInstance.IR_Rewrite_CompareInt32x64,
 			ManualInstance.IR_Rewrite_CompareInt64x32,
 			ManualInstance.IR_Rewrite_CompareInt64x64,
+
+			ManualInstance.IR_ConstantFolding_CompareInt32x32,
+			ManualInstance.IR_ConstantFolding_CompareInt32x64,
+			ManualInstance.IR_ConstantFolding_CompareInt64x32,
+			ManualInstance.IR_ConstantFolding_CompareInt64x64,
+
+			ManualInstance.IR_ConstantFolding_CompareIntBranch32,
+			ManualInstance.IR_ConstantFolding_CompareIntBranch64,
 
 			//ManualTransformation.IR_LowerTo32_Add64,
 			ManualInstance.IR_Special_CodeInDeadBlock,
@@ -56,6 +59,17 @@ namespace Mosa.Compiler.Framework.Transform.Manual
 			ManualInstance.IR_Special_Phi64Propagate,
 			ManualInstance.IR_Special_PhiR4Propagate,
 			ManualInstance.IR_Special_PhiR8Propagate,
+
+			ManualInstance.IR_Special_Phi32Dead,
+			ManualInstance.IR_Special_Phi64Dead,
+			ManualInstance.IR_Special_PhiR4Dead,
+			ManualInstance.IR_Special_PhiR8Dead,
+
+			ManualInstance.IR_Simplification_CompareIntBranch32OnlyOnceExit,
+			ManualInstance.IR_Simplification_CompareIntBranch64OnlyOnceExit,
+
+			ManualInstance.IR_ConstantMove_CompareIntBranch32,
+			ManualInstance.IR_ConstantMove_CompareIntBranch64,
 
 			//ManualTransformation.IR_Simplification_Phi32,
 			//ManualTransformation.IR_Simplification_Phi64,

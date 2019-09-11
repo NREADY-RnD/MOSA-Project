@@ -4,9 +4,9 @@ using Mosa.Compiler.Framework.IR;
 
 namespace Mosa.Compiler.Framework.Transform.Manual.IR.ConstantFolding
 {
-	public sealed class CompareInt32x32 : BaseTransformation
+	public sealed class CompareIntBranch32 : BaseTransformation
 	{
-		public CompareInt32x32() : base(IRInstruction.CompareInt32x32)
+		public CompareIntBranch32() : base(IRInstruction.CompareIntBranch32)
 		{
 		}
 
@@ -53,9 +53,26 @@ namespace Mosa.Compiler.Framework.Transform.Manual.IR.ConstantFolding
 				case ConditionCode.UnsignedLessOrEqual: compare = context.Operand1.ConstantUnsigned32 <= context.Operand2.ConstantUnsigned32; break;
 			}
 
-			var e1 = transformContext.CreateConstant(BoolToInt32(compare));
+			if (!compare)
+			{
+				context.SetInstruction(IRInstruction.Nop);
+			}
+			else
+			{
+				var target = context.BranchTargets[0];
+				context.SetInstruction(IRInstruction.Jmp, target);
 
-			context.SetInstruction(IRInstruction.MoveInt32, context.Result, e1);
+				// rest of instructions in block are never used
+				context.GotoNext();
+				while (!context.IsBlockEndInstruction)
+				{
+					if (!context.IsEmptyOrNop)
+					{
+						context.SetInstruction(IRInstruction.Nop);
+					}
+					context.GotoNext();
+				}
+			}
 		}
 	}
 }

@@ -41,16 +41,16 @@ namespace Mosa.Compiler.Framework.Transform.Manual.IR.ConstantFolding
 
 			switch (context.ConditionCode)
 			{
-				case ConditionCode.Equal: compare = context.Operand1.ConstantUnsigned64 == context.Operand2.ConstantUnsigned64; break;
-				case ConditionCode.NotEqual: compare = context.Operand1.ConstantUnsigned64 != context.Operand2.ConstantUnsigned64; break;
-				case ConditionCode.GreaterOrEqual: compare = context.Operand1.ConstantUnsigned64 >= context.Operand2.ConstantUnsigned64; break;
-				case ConditionCode.GreaterThan: compare = context.Operand1.ConstantUnsigned64 > context.Operand2.ConstantUnsigned64; break;
-				case ConditionCode.LessOrEqual: compare = context.Operand1.ConstantUnsigned64 <= context.Operand2.ConstantUnsigned64; break;
-				case ConditionCode.LessThan: compare = context.Operand1.ConstantUnsigned64 < context.Operand2.ConstantUnsigned64; break;
-				case ConditionCode.UnsignedGreaterThan: compare = context.Operand1.ConstantUnsigned64 > context.Operand2.ConstantUnsigned64; break;
-				case ConditionCode.UnsignedGreaterOrEqual: compare = context.Operand1.ConstantUnsigned64 >= context.Operand2.ConstantUnsigned64; break;
-				case ConditionCode.UnsignedLessThan: compare = context.Operand1.ConstantUnsigned64 < context.Operand2.ConstantUnsigned64; break;
-				case ConditionCode.UnsignedLessOrEqual: compare = context.Operand1.ConstantUnsigned64 <= context.Operand2.ConstantUnsigned64; break;
+				case ConditionCode.Equal: compare = context.Operand1.ConstantUnsigned32 == context.Operand2.ConstantUnsigned32; break;
+				case ConditionCode.NotEqual: compare = context.Operand1.ConstantUnsigned32 != context.Operand2.ConstantUnsigned32; break;
+				case ConditionCode.GreaterOrEqual: compare = context.Operand1.ConstantUnsigned32 >= context.Operand2.ConstantUnsigned32; break;
+				case ConditionCode.GreaterThan: compare = context.Operand1.ConstantUnsigned32 > context.Operand2.ConstantUnsigned32; break;
+				case ConditionCode.LessOrEqual: compare = context.Operand1.ConstantUnsigned32 <= context.Operand2.ConstantUnsigned32; break;
+				case ConditionCode.LessThan: compare = context.Operand1.ConstantUnsigned32 < context.Operand2.ConstantUnsigned32; break;
+				case ConditionCode.UnsignedGreaterThan: compare = context.Operand1.ConstantUnsigned32 > context.Operand2.ConstantUnsigned32; break;
+				case ConditionCode.UnsignedGreaterOrEqual: compare = context.Operand1.ConstantUnsigned32 >= context.Operand2.ConstantUnsigned32; break;
+				case ConditionCode.UnsignedLessThan: compare = context.Operand1.ConstantUnsigned32 < context.Operand2.ConstantUnsigned32; break;
+				case ConditionCode.UnsignedLessOrEqual: compare = context.Operand1.ConstantUnsigned32 <= context.Operand2.ConstantUnsigned32; break;
 			}
 
 			var e1 = transformContext.CreateConstant(BoolToInt64(compare));
