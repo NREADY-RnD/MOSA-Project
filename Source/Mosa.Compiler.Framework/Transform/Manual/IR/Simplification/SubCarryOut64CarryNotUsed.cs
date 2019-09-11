@@ -17,7 +17,7 @@ namespace Mosa.Compiler.Framework.Transform.Manual.IR.Simplification
 
 		public override void Transform(Context context, TransformContext transformContext)
 		{
-			context.SetInstruction(IRInstruction.Sub64, context.Result, context.Operand1);
+			context.SetInstruction(IRInstruction.Sub64, context.Result, context.Operand1, context.Operand2);
 		}
 	}
 }

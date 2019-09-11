@@ -29,7 +29,7 @@ namespace Mosa.Compiler.Framework.Transform.Auto.IR.ConstantFolding
 
 			var t1 = context.Operand1;
 
-			var e1 = transformContext.CreateConstant(ShiftRight32(ToInt32(t1), 32u));
+			var e1 = transformContext.CreateConstant(ToInt32(ShiftRight64(ToInt64(t1), 32u)));
 
 			context.SetInstruction(IRInstruction.MoveInt32, result, e1);
 		}
