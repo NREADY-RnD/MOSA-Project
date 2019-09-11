@@ -40,10 +40,10 @@ namespace Mosa.Utility.SourceCodeGenerator
 			//Lines.AppendLine("using Mosa.Compiler.Framework;");
 			Lines.AppendLine("using Mosa.Compiler.Framework.IR;");
 
-			//Lines.AppendLine("using Mosa.Compiler.Framework.Transformation;");
+			//Lines.AppendLine("using Mosa.Compiler.Framework.Transform;");
 
 			Lines.AppendLine();
-			Lines.AppendLine($"namespace Mosa.Compiler.Framework.Transformation.Auto.{node.FamilyName}.{node.Type}");
+			Lines.AppendLine($"namespace Mosa.Compiler.Framework.Transform.Auto.{node.FamilyName}.{node.Type}");
 			Lines.AppendLine("{");
 			Lines.AppendLine("\t/// <summary>");
 			Lines.AppendLine($"\t/// {node.Name}{node.SubName}");

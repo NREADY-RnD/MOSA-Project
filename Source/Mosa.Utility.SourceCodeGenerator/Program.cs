@@ -14,34 +14,34 @@ namespace Mosa.Utility.SourceCodeGenerator
 
 			new BuildTransformations(
 				Path.Combine(dataPath, @"IR-Optimizations-ConstantFolding.json"),
-				Path.Combine(targetPath, @"Mosa.Compiler.Framework\Transformation\Auto")
+				Path.Combine(targetPath, @"Mosa.Compiler.Framework\Transform\Auto")
 			).Execute();
 
 			new BuildTransformations(
 				Path.Combine(dataPath, @"IR-Optimizations-Simplification.json"),
-				Path.Combine(targetPath, @"Mosa.Compiler.Framework\Transformation\Auto")
+				Path.Combine(targetPath, @"Mosa.Compiler.Framework\Transform\Auto")
 			).Execute();
 
 			new BuildTransformations(
 				Path.Combine(dataPath, @"IR-Optimizations-StrengthReduction.json"),
-				Path.Combine(targetPath, @"Mosa.Compiler.Framework\Transformation\Auto")
+				Path.Combine(targetPath, @"Mosa.Compiler.Framework\Transform\Auto")
 			).Execute();
 
 			new BuildTransformations(
 				Path.Combine(dataPath, @"IR-Optimizations-Rewrite.json"),
-				Path.Combine(targetPath, @"Mosa.Compiler.Framework\Transformation\Auto")
+				Path.Combine(targetPath, @"Mosa.Compiler.Framework\Transform\Auto")
 			).Execute();
 
 			new BuildTransformations(
 				Path.Combine(dataPath, @"IR-Optimizations-ConstantMove.json"),
-				Path.Combine(targetPath, @"Mosa.Compiler.Framework\Transformation\Auto")
+				Path.Combine(targetPath, @"Mosa.Compiler.Framework\Transform\Auto")
 			).Execute();
 
 			new BuildTransformationListFile(
-				Path.Combine(targetPath, @"Mosa.Compiler.Framework\Transformation\Auto"),
-				"AutoTransformations.cs",
-				"Mosa.Compiler.Framework.Transformation.Auto",
-				"AutoTransformations",
+				Path.Combine(targetPath, @"Mosa.Compiler.Framework\Transform\Auto"),
+				"AutoTransforms.cs",
+				"Mosa.Compiler.Framework.Transform.Auto",
+				"AutoTransforms",
 				new List<string>()
 				{
 					"IR."
@@ -49,10 +49,10 @@ namespace Mosa.Utility.SourceCodeGenerator
 			).Execute();
 
 			new BuildTransformationFile(
-				Path.Combine(targetPath, @"Mosa.Compiler.Framework\Transformation\Auto"),
-				"AutoTransformation.cs",
-				"Mosa.Compiler.Framework.Transformation.Auto",
-				"AutoTransformation",
+				Path.Combine(targetPath, @"Mosa.Compiler.Framework\Transform\Auto"),
+				"AutoInstance.cs",
+				"Mosa.Compiler.Framework.Transform.Auto",
+				"AutoInstance",
 				new List<string>()
 				{
 					"IR."

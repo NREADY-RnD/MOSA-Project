@@ -1,9 +1,9 @@
 ﻿// Copyright (c) MOSA Project. Licensed under the New BSD License.
 
 using Mosa.Compiler.Framework.Trace;
-using Mosa.Compiler.Framework.Transformation;
-using Mosa.Compiler.Framework.Transformation.Auto;
-using Mosa.Compiler.Framework.Transformation.Manual;
+using Mosa.Compiler.Framework.Transform;
+using Mosa.Compiler.Framework.Transform.Auto;
+using Mosa.Compiler.Framework.Transform.Manual;
 using System;
 using System.Collections.Generic;
 
@@ -26,9 +26,9 @@ namespace Mosa.Compiler.Framework.Stages
 		{
 			Register(OptimizationsCount);
 
-			CreateTransformationList(AutoTransformations.List);
+			CreateTransformationList(AutoTransforms.List);
 
-			CreateTransformationList(ManualTransformations.List);
+			CreateTransformationList(ManualTransforms.List);
 		}
 
 		private void CreateTransformationList(List<BaseTransformation> list)
