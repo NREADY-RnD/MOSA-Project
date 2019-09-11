@@ -12,8 +12,11 @@ namespace Mosa.Compiler.Framework.Transform.Manual.IR.Special
 
 		public override bool Match(Context context, TransformContext transformContext)
 		{
-			if (context.OperandCount == 1)
-				return true;
+			if (!IsSSAForm(context.Result))
+				return false;
+
+			if (!IsSSAForm(context.Operand1))
+				return false;
 
 			var operand = context.Operand1;
 

@@ -15,13 +15,13 @@ namespace Mosa.Compiler.Framework.Transform.IR.Special
 			if (context.ResultCount == 0 || context.ResultCount > 2)
 				return false;
 
-			if (!ValidateSSAForm(context.Result))
+			if (!IsSSAForm(context.Result))
 				return false;
 
 			if (context.Result.Uses.Count != 0)
 				return false;
 
-			if (context.ResultCount == 2 && !ValidateSSAForm(context.Result2))
+			if (context.ResultCount == 2 && !IsSSAForm(context.Result2))
 				return false;
 
 			if (context.ResultCount == 2 && context.Result2.Uses.Count != 0)

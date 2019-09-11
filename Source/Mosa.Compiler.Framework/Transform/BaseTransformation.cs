@@ -479,7 +479,7 @@ namespace Mosa.Compiler.Framework.Transform
 
 		#endregion SignExtend Helpers
 
-		protected static bool ValidateSSAForm(Operand operand)
+		protected static bool IsSSAForm(Operand operand)
 		{
 			return operand.Definitions.Count == 1;
 		}
