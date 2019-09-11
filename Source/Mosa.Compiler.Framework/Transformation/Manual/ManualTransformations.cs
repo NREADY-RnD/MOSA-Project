@@ -47,15 +47,15 @@ namespace Mosa.Compiler.Framework.Transformation.Manual
 			ManualTransformation.IR_Simplification_CompareInt64x32NotSame,
 			ManualTransformation.IR_Simplification_CompareInt64x64NotSame,
 
-			ManualTransformation.IR_Special_PropagateMove32,
-			ManualTransformation.IR_Special_PropagateMove64,
-			ManualTransformation.IR_Special_PropagateMoveR4,
-			ManualTransformation.IR_Special_PropagateMoveR8,
+			ManualTransformation.IR_Special_Move32Propagate,
+			ManualTransformation.IR_Special_Move64Propagate,
+			ManualTransformation.IR_Special_MoveR4Propagate,
+			ManualTransformation.IR_Special_MoveR8Propagate,
 
-			ManualTransformation.IR_Special_PropagatePhi32,
-			ManualTransformation.IR_Special_PropagatePhi64,
-			ManualTransformation.IR_Special_PropagatePhiR4,
-			ManualTransformation.IR_Special_PropagatePhiR8,
+			ManualTransformation.IR_Special_Phi32Propagate,
+			ManualTransformation.IR_Special_Phi64Propagate,
+			ManualTransformation.IR_Special_PhiR4Propagate,
+			ManualTransformation.IR_Special_PhiR8Propagate,
 
 			//ManualTransformation.IR_Simplification_Phi32,
 			//ManualTransformation.IR_Simplification_Phi64,

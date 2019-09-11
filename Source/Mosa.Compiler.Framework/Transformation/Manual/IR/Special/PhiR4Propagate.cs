@@ -2,23 +2,28 @@
 
 using Mosa.Compiler.Framework.IR;
 
-namespace Mosa.Compiler.Framework.Transformation.IR.Special
+namespace Mosa.Compiler.Framework.Transformation.Manual.IR.Special
 {
-	public sealed class PropagateMoveR4 : BaseTransformation
+	public sealed class PhiR4Propagate : BaseTransformation
 	{
-		public PropagateMoveR4() : base(IRInstruction.MoveR4)
+		public PhiR4Propagate() : base(IRInstruction.PhiR4)
 		{
 		}
 
 		public override bool Match(Context context, TransformContext transformContext)
 		{
-			if (context.Result.Definitions.Count != 1)
-				return false;
+			if (context.OperandCount == 1)
+				return true;
 
-			if (context.Operand1.Definitions.Count != 1)
-				return false;
+			var operand = context.Operand1;
 
-			return context.Operand1.IsResolvedConstant || context.Operand1.IsVirtualRegister;
+			foreach (var op in context.Operands)
+			{
+				if (!AreSame(op, operand))
+					return false;
+			}
+
+			return true;
 		}
 
 		public override void Transform(Context context, TransformContext transformContext)

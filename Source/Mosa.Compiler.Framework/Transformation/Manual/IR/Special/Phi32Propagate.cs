@@ -4,15 +4,26 @@ using Mosa.Compiler.Framework.IR;
 
 namespace Mosa.Compiler.Framework.Transformation.Manual.IR.Special
 {
-	public sealed class PropagatePhi64 : BaseTransformation
+	public sealed class Phi32Propagate : BaseTransformation
 	{
-		public PropagatePhi64() : base(IRInstruction.Phi64)
+		public Phi32Propagate() : base(IRInstruction.Phi32)
 		{
 		}
 
 		public override bool Match(Context context, TransformContext transformContext)
 		{
-			return context.OperandCount == 1;
+			if (context.OperandCount == 1)
+				return true;
+
+			var operand = context.Operand1;
+
+			foreach (var op in context.Operands)
+			{
+				if (!AreSame(op, operand))
+					return false;
+			}
+
+			return true;
 		}
 
 		public override void Transform(Context context, TransformContext transformContext)

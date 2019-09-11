@@ -46,14 +46,14 @@ namespace Mosa.Compiler.Framework.Transformation.Manual
 		public static readonly BaseTransformation IR_Simplification_CompareInt64x32NotSame = new IR.Simplification.CompareInt64x32NotSame();
 		public static readonly BaseTransformation IR_Simplification_CompareInt64x64NotSame = new IR.Simplification.CompareInt64x64NotSame();
 
-		public static readonly BaseTransformation IR_Special_PropagateMove32 = new Transformation.IR.Special.PropagateMove32();
-		public static readonly BaseTransformation IR_Special_PropagateMove64 = new Transformation.IR.Special.PropagateMove64();
-		public static readonly BaseTransformation IR_Special_PropagateMoveR4 = new Transformation.IR.Special.PropagateMoveR4();
-		public static readonly BaseTransformation IR_Special_PropagateMoveR8 = new Transformation.IR.Special.PropagateMoveR8();
+		public static readonly BaseTransformation IR_Special_Move32Propagate = new Transformation.IR.Special.Move32Propagate();
+		public static readonly BaseTransformation IR_Special_Move64Propagate = new Transformation.IR.Special.Move64Propagate();
+		public static readonly BaseTransformation IR_Special_MoveR4Propagate = new Transformation.IR.Special.MoveR4Propagate();
+		public static readonly BaseTransformation IR_Special_MoveR8Propagate = new Transformation.IR.Special.MoveR8Propagate();
 
-		public static readonly BaseTransformation IR_Special_PropagatePhi32 = new IR.Special.PropagatePhi32();
-		public static readonly BaseTransformation IR_Special_PropagatePhi64 = new IR.Special.PropagatePhi64();
-		public static readonly BaseTransformation IR_Special_PropagatePhiR4 = new IR.Special.PropagatePhiR4();
-		public static readonly BaseTransformation IR_Special_PropagatePhiR8 = new IR.Special.PropagatePhiR8();
+		public static readonly BaseTransformation IR_Special_Phi32Propagate = new IR.Special.Phi32Propagate();
+		public static readonly BaseTransformation IR_Special_Phi64Propagate = new IR.Special.Phi64Propagate();
+		public static readonly BaseTransformation IR_Special_PhiR4Propagate = new IR.Special.PhiR4Propagate();
+		public static readonly BaseTransformation IR_Special_PhiR8Propagate = new IR.Special.PhiR8Propagate();
 	}
 }

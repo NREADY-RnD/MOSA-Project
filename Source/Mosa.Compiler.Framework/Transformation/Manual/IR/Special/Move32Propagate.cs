@@ -4,9 +4,9 @@ using Mosa.Compiler.Framework.IR;
 
 namespace Mosa.Compiler.Framework.Transformation.IR.Special
 {
-	public sealed class PropagateMove64 : BaseTransformation
+	public sealed class Move32Propagate : BaseTransformation
 	{
-		public PropagateMove64() : base(IRInstruction.MoveInt64)
+		public Move32Propagate() : base(IRInstruction.MoveInt32)
 		{
 		}
 
