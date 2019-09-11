@@ -214,7 +214,7 @@
 			"SubName": "ByPowerOfTwo",
 			"Expression": "IR.RemUnsigned64 x c",
 			"Filter": "IsResolvedConstant(c) & IsPowerOfTwo64(c) & !IsZero(c)",
-			"Result": "(IR.LogicalAnd64 x [Sub64(ShiftLeft64(1u,And32(GetPowerOfTwo(ToInt32(c)),31u)),1u)]"
+			"Result": "(IR.LogicalAnd64 x [Sub64(ShiftLeft64(1u,And32(GetPowerOfTwo(ToInt32(c)),31u)),1u)])"
 		}
 	]
 }

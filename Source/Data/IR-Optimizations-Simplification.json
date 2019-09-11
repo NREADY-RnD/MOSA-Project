@@ -288,6 +288,24 @@
 			"Expression": "IR.SubR8 (IR.AddR8 a b) c",
 			"Filter": "IsResolvedConstant(b) & IsResolvedConstant(c)",
 			"Result": "(IR.AddR8 a [SubR8(ToR8(b), ToR8(c))])"
+		},
+		{
+			"FamilyName": "IR",
+			"Type": "Simplification",
+			"Name": "GetLow64",
+			"SubName": "FromTo64",
+			"Expression": "IR.GetLow64 (IR.To64 a b))",
+			"Filter": "",
+			"Result": "(IR.MoveInt32 a)"
+		},
+		{
+			"FamilyName": "IR",
+			"Type": "Simplification",
+			"Name": "GetLHigh64",
+			"SubName": "FromTo64",
+			"Expression": "IR.GetHigh64 (IR.To64 a b))",
+			"Filter": "",
+			"Result": "(IR.MoveInt32 b)"
 		}
 	]
 }

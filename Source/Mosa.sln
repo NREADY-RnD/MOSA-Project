@@ -228,7 +228,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Instructions", "Instruction
 		Data\X86-Instructions.json = Data\X86-Instructions.json
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Transformations", "Transformations", "{F84EFA2E-4B38-410F-A7DE-385DB71BB37F}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Transforms", "Transforms", "{F84EFA2E-4B38-410F-A7DE-385DB71BB37F}"
 	ProjectSection(SolutionItems) = preProject
 		Data\IR-Optimizations-ConstantFolding.json = Data\IR-Optimizations-ConstantFolding.json
 		Data\IR-Optimizations-ConstantMove.json = Data\IR-Optimizations-ConstantMove.json
