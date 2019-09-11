@@ -26,7 +26,7 @@ namespace Mosa.Compiler.Framework.Stages
 		{
 			Register(OptimizationsCount);
 
-			//CreateTransformationList(AutoTransformations.List);
+			CreateTransformationList(AutoTransformations.List);
 
 			CreateTransformationList(ManualTransformations.List);
 		}
