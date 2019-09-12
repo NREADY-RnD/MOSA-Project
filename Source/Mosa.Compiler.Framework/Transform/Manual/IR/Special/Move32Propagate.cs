@@ -6,7 +6,7 @@ namespace Mosa.Compiler.Framework.Transform.IR.Special
 {
 	public sealed class Move32Propagate : BaseTransformation
 	{
-		public Move32Propagate() : base(IRInstruction.MoveInt32)
+		public Move32Propagate() : base(IRInstruction.Move32)
 		{
 		}
 

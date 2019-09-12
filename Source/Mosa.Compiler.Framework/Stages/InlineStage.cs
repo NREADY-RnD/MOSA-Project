@@ -120,9 +120,9 @@ namespace Mosa.Compiler.Framework.Stages
 							BaseInstruction moveInstruction = null;
 
 							if (node.Instruction == IRInstruction.SetReturn32)
-								moveInstruction = IRInstruction.MoveInt32;
+								moveInstruction = IRInstruction.Move32;
 							else if (node.Instruction == IRInstruction.SetReturn64)
-								moveInstruction = IRInstruction.MoveInt64;
+								moveInstruction = IRInstruction.Move64;
 							else if (node.Instruction == IRInstruction.SetReturnR4)
 								moveInstruction = IRInstruction.MoveR4;
 							else if (node.Instruction == IRInstruction.SetReturnR8)
@@ -222,15 +222,15 @@ namespace Mosa.Compiler.Framework.Stages
 			{
 				newNode.Instruction = IRInstruction.MoveR8;
 			}
-			else if (instruction == IRInstruction.LoadParamInt32
+			else if (instruction == IRInstruction.LoadParam32
 				|| instruction == IRInstruction.LoadParamSignExtend8x32
 				|| instruction == IRInstruction.LoadParamSignExtend16x32
 				|| instruction == IRInstruction.LoadParamZeroExtend8x32
 				|| instruction == IRInstruction.LoadParamZeroExtend16x32)
 			{
-				newNode.Instruction = IRInstruction.MoveInt32;
+				newNode.Instruction = IRInstruction.Move32;
 			}
-			else if (instruction == IRInstruction.LoadParamInt64
+			else if (instruction == IRInstruction.LoadParam64
 				|| instruction == IRInstruction.LoadParamSignExtend8x64
 				|| instruction == IRInstruction.LoadParamSignExtend16x64
 				|| instruction == IRInstruction.LoadParamSignExtend32x64
@@ -238,17 +238,17 @@ namespace Mosa.Compiler.Framework.Stages
 				|| instruction == IRInstruction.LoadParamZeroExtend16x64
 				|| instruction == IRInstruction.LoadParamZeroExtend32x64)
 			{
-				newNode.Instruction = IRInstruction.MoveInt64;
+				newNode.Instruction = IRInstruction.Move64;
 			}
-			else if (instruction == IRInstruction.StoreParamInt8
-				|| instruction == IRInstruction.StoreParamInt16
-				|| instruction == IRInstruction.StoreParamInt32)
+			else if (instruction == IRInstruction.StoreParam8
+				|| instruction == IRInstruction.StoreParam16
+				|| instruction == IRInstruction.StoreParam32)
 			{
-				newNode.SetInstruction(IRInstruction.MoveInt32, newNode.Operand1, newNode.Operand2);
+				newNode.SetInstruction(IRInstruction.Move32, newNode.Operand1, newNode.Operand2);
 			}
-			else if (instruction == IRInstruction.StoreParamInt64)
+			else if (instruction == IRInstruction.StoreParam64)
 			{
-				newNode.SetInstruction(IRInstruction.MoveInt64, newNode.Operand1, newNode.Operand2);
+				newNode.SetInstruction(IRInstruction.Move64, newNode.Operand1, newNode.Operand2);
 			}
 			else if (instruction == IRInstruction.StoreParamR4)
 			{

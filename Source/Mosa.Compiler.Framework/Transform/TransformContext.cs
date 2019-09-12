@@ -174,7 +174,7 @@ namespace Mosa.Compiler.Framework.Transform
 		{
 			if (operand2.IsResolvedConstant)
 			{
-				context.SetInstruction(IRInstruction.MoveInt32, operand1, CreateConstant(operand2.ConstantUnsigned32));
+				context.SetInstruction(IRInstruction.Move32, operand1, CreateConstant(operand2.ConstantUnsigned32));
 			}
 			else
 			{
@@ -186,7 +186,7 @@ namespace Mosa.Compiler.Framework.Transform
 		{
 			if (operand2.IsResolvedConstant)
 			{
-				context.SetInstruction(IRInstruction.MoveInt32, operand1, CreateConstant(operand2.ConstantUnsigned64 >> 32));
+				context.SetInstruction(IRInstruction.Move32, operand1, CreateConstant(operand2.ConstantUnsigned64 >> 32));
 			}
 			else
 			{
@@ -198,7 +198,7 @@ namespace Mosa.Compiler.Framework.Transform
 		{
 			if (operand2.IsResolvedConstant)
 			{
-				context.AppendInstruction(IRInstruction.MoveInt32, operand1, CreateConstant(operand2.ConstantUnsigned32));
+				context.AppendInstruction(IRInstruction.Move32, operand1, CreateConstant(operand2.ConstantUnsigned32));
 			}
 			else
 			{
@@ -210,7 +210,7 @@ namespace Mosa.Compiler.Framework.Transform
 		{
 			if (operand2.IsResolvedConstant)
 			{
-				context.AppendInstruction(IRInstruction.MoveInt32, operand1, CreateConstant(operand2.ConstantUnsigned64 >> 32));
+				context.AppendInstruction(IRInstruction.Move32, operand1, CreateConstant(operand2.ConstantUnsigned64 >> 32));
 			}
 			else
 			{

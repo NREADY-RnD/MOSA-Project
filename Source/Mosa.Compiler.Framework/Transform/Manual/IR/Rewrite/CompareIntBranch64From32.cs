@@ -27,7 +27,7 @@ namespace Mosa.Compiler.Framework.Transform.Manual.IR.Rewrite
 			if (context.Operand1.Definitions.Count != 1)
 				return false;
 
-			if (context.Operand1.Definitions[0].Instruction != IRInstruction.CompareInt32x64)
+			if (context.Operand1.Definitions[0].Instruction != IRInstruction.Compare32x64)
 				return false;
 
 			return true;

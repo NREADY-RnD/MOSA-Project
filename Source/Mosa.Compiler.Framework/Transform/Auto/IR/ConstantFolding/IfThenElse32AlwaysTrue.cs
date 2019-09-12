@@ -32,7 +32,7 @@ namespace Mosa.Compiler.Framework.Transform.Auto.IR.ConstantFolding
 
 			var t1 = context.Operand2;
 
-			context.SetInstruction(IRInstruction.MoveInt32, result, t1);
+			context.SetInstruction(IRInstruction.Move32, result, t1);
 		}
 	}
 }

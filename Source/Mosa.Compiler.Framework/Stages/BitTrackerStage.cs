@@ -153,8 +153,8 @@ namespace Mosa.Compiler.Framework.Stages
 			Register(IRInstruction.Phi32, Phi32);
 			Register(IRInstruction.Phi64, Phi64);
 
-			Register(IRInstruction.MoveInt32, MoveInt32);
-			Register(IRInstruction.MoveInt64, MoveInt64);
+			Register(IRInstruction.Move32, MoveInt32);
+			Register(IRInstruction.Move64, MoveInt64);
 
 			Register(IRInstruction.Truncation64x32, Truncation64x32);
 
@@ -193,9 +193,9 @@ namespace Mosa.Compiler.Framework.Stages
 			Register(IRInstruction.ShiftLeft32, ShiftLeft32);
 			Register(IRInstruction.ShiftLeft64, ShiftLeft64);
 
-			Register(IRInstruction.CompareInt32x32, CompareInt32x32);
-			Register(IRInstruction.CompareInt64x64, CompareInt64x64);
-			Register(IRInstruction.CompareInt64x32, CompareInt64x32);
+			Register(IRInstruction.Compare32x32, CompareInt32x32);
+			Register(IRInstruction.Compare64x64, CompareInt64x64);
+			Register(IRInstruction.Compare64x32, CompareInt64x32);
 
 			Register(IRInstruction.MulUnsigned32, MulUnsigned32);
 			Register(IRInstruction.MulUnsigned64, MulUnsigned64);
@@ -277,10 +277,10 @@ namespace Mosa.Compiler.Framework.Stages
 			IntegerLoads.Add(IRInstruction.LoadParamZeroExtend8x64);
 			IntegerLoads.Add(IRInstruction.LoadParamZeroExtend16x64);
 			IntegerLoads.Add(IRInstruction.LoadParamZeroExtend32x64);
-			IntegerLoads.Add(IRInstruction.LoadInt32);
-			IntegerLoads.Add(IRInstruction.LoadInt64);
-			IntegerLoads.Add(IRInstruction.LoadParamInt32);
-			IntegerLoads.Add(IRInstruction.LoadParamInt64);
+			IntegerLoads.Add(IRInstruction.Load32);
+			IntegerLoads.Add(IRInstruction.Load64);
+			IntegerLoads.Add(IRInstruction.LoadParam32);
+			IntegerLoads.Add(IRInstruction.LoadParam64);
 		}
 
 		private void Register(BaseInstruction instruction, NodeVisitationDelegate method)

@@ -163,22 +163,22 @@ namespace Mosa.Compiler.Framework.Transform
 			return a & b;
 		}
 
-		protected static uint BoolToInt32(bool b)
+		protected static uint BoolTo32(bool b)
 		{
 			return b ? (uint)1 : 0;
 		}
 
-		protected static uint BoolToInt32(uint a)
+		protected static uint BoolTo32(uint a)
 		{
 			return a == 0 ? (uint)0 : 1;
 		}
 
-		protected static long BoolToInt64(bool b)
+		protected static long BoolTo64(bool b)
 		{
 			return b ? (long)1 : 0;
 		}
 
-		protected static ulong BoolToInt64(ulong a)
+		protected static ulong BoolTo64(ulong a)
 		{
 			return a == 0 ? (ulong)0 : 1;
 		}
@@ -418,22 +418,22 @@ namespace Mosa.Compiler.Framework.Transform
 			return (double)a;
 		}
 
-		protected static uint ToInt32(Operand operand)
+		protected static uint To32(Operand operand)
 		{
 			return operand.ConstantUnsigned32;
 		}
 
-		protected static uint ToInt32(ulong value)
+		protected static uint To32(ulong value)
 		{
 			return (uint)value;
 		}
 
-		protected static ulong ToInt64(Operand operand)
+		protected static ulong To64(Operand operand)
 		{
 			return operand.ConstantUnsigned64;
 		}
 
-		protected static ulong ToInt64(ulong value)
+		protected static ulong To64(ulong value)
 		{
 			return value;
 		}
@@ -448,12 +448,12 @@ namespace Mosa.Compiler.Framework.Transform
 			return (ushort)operand.ConstantUnsigned32;
 		}
 
-		protected static int ToSignedInt32(Operand operand)
+		protected static int ToSigned32(Operand operand)
 		{
 			return operand.ConstantSigned32;
 		}
 
-		protected static long ToSignedInt64(Operand operand)
+		protected static long ToSigned64(Operand operand)
 		{
 			return operand.ConstantSigned64;
 		}

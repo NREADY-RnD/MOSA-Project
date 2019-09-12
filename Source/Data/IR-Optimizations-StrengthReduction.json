@@ -7,7 +7,7 @@
 			"SubName": "LeftZero",
 			"Expression": "IR.Add32 a 0",
 			"Filter": "",
-			"Result": "(IR.MoveInt32 a)"
+			"Result": "(IR.Move32 a)"
 		},
 		{
 			"FamilyName": "IR",
@@ -16,7 +16,7 @@
 			"SubName": "RightZero",
 			"Expression": "IR.Add32 0 a",
 			"Filter": "",
-			"Result": "(IR.MoveInt32 a)"
+			"Result": "(IR.Move32 a)"
 		},
 		{
 			"FamilyName": "IR",
@@ -25,7 +25,7 @@
 			"SubName": "LeftZero",
 			"Expression": "IR.Add64 a 0",
 			"Filter": "",
-			"Result": "(IR.MoveInt64 a)"
+			"Result": "(IR.Move64 a)"
 		},
 		{
 			"FamilyName": "IR",
@@ -34,7 +34,7 @@
 			"SubName": "RightZero",
 			"Expression": "IR.Add64 0 a",
 			"Filter": "",
-			"Result": "(IR.MoveInt64 a)"
+			"Result": "(IR.Move64 a)"
 		},
 		{
 			"FamilyName": "IR",
@@ -43,7 +43,7 @@
 			"SubName": "ZeroValue",
 			"Expression": "IR.ShiftRight32 0 a",
 			"Filter": "",
-			"Result": "(IR.MoveInt32 0)"
+			"Result": "(IR.Move32 0)"
 		},
 		{
 			"FamilyName": "IR",
@@ -52,7 +52,7 @@
 			"SubName": "ByZero",
 			"Expression": "IR.ShiftRight32 a 0",
 			"Filter": "",
-			"Result": "(IR.MoveInt32 a)"
+			"Result": "(IR.Move32 a)"
 		},
 		{
 			"FamilyName": "IR",
@@ -61,7 +61,7 @@
 			"SubName": "ZeroValue",
 			"Expression": "IR.ShiftRight64 0 a",
 			"Filter": "",
-			"Result": "(IR.MoveInt64 0)"
+			"Result": "(IR.Move64 0)"
 		},
 		{
 			"FamilyName": "IR",
@@ -70,7 +70,7 @@
 			"SubName": "ByZero",
 			"Expression": "IR.ShiftRight64 a 0",
 			"Filter": "",
-			"Result": "(IR.MoveInt64 a)"
+			"Result": "(IR.Move64 a)"
 		},
 		{
 			"FamilyName": "IR",
@@ -79,7 +79,7 @@
 			"SubName": "ByZero",
 			"Expression": "IR.ShiftLeft32 a 0",
 			"Filter": "",
-			"Result": "(IR.MoveInt32 a)"
+			"Result": "(IR.Move32 a)"
 		},
 		{
 			"FamilyName": "IR",
@@ -88,7 +88,7 @@
 			"SubName": "ByZero",
 			"Expression": "IR.ShiftLeft64 a 0",
 			"Filter": "",
-			"Result": "(IR.MoveInt64 a)"
+			"Result": "(IR.Move64 a)"
 		},
 		{
 			"FamilyName": "IR",
@@ -97,7 +97,7 @@
 			"SubName": "ByZero",
 			"Expression": "IR.Sub32 a 0",
 			"Filter": "",
-			"Result": "(IR.MoveInt32 a)"
+			"Result": "(IR.Move32 a)"
 		},
 		{
 			"FamilyName": "IR",
@@ -106,7 +106,7 @@
 			"SubName": "ByZero",
 			"Expression": "IR.Sub64 a 0",
 			"Filter": "",
-			"Result": "(IR.MoveInt64 a)"
+			"Result": "(IR.Move64 a)"
 		},
 		{
 			"FamilyName": "IR",
@@ -115,7 +115,7 @@
 			"SubName": "BySame",
 			"Expression": "IR.Sub32 a a",
 			"Filter": "",
-			"Result": "(IR.MoveInt32 0)"
+			"Result": "(IR.Move32 0)"
 		},
 		{
 			"FamilyName": "IR",
@@ -124,7 +124,7 @@
 			"SubName": "BySame",
 			"Expression": "IR.Sub64 a a",
 			"Filter": "",
-			"Result": "(IR.MoveInt64 0)"
+			"Result": "(IR.Move64 0)"
 		},
 		{
 			"FamilyName": "IR",
@@ -133,7 +133,7 @@
 			"SubName": "ByPowerOfTwo",
 			"Expression": "IR.MulUnsigned32 x c",
 			"Filter": "IsResolvedConstant(c) & IsPowerOfTwo32(c)",
-			"Result": "(IR.ShiftLeft32 x [GetPowerOfTwo(And32(ToInt32(c),31u))])"
+			"Result": "(IR.ShiftLeft32 x [GetPowerOfTwo(And32(To32(c),31u))])"
 		},
 		{
 			"FamilyName": "IR",
@@ -142,7 +142,7 @@
 			"SubName": "ByPowerOfTwo",
 			"Expression": "IR.MulUnsigned64 x c",
 			"Filter": "IsResolvedConstant(c) & IsPowerOfTwo64(c)",
-			"Result": "(IR.ShiftLeft64 x [GetPowerOfTwo(And32(ToInt32(c),63u))])"
+			"Result": "(IR.ShiftLeft64 x [GetPowerOfTwo(And32(To32(c),63u))])"
 		},
 		{
 			"FamilyName": "IR",
@@ -151,7 +151,7 @@
 			"SubName": "ByPowerOfTwo",
 			"Expression": "IR.MulSigned32 x c",
 			"Filter": "IsResolvedConstant(c) & IsPowerOfTwo32(c)",
-			"Result": "(IR.ShiftLeft32 x [GetPowerOfTwo(And32(ToInt32(c),31u))])"
+			"Result": "(IR.ShiftLeft32 x [GetPowerOfTwo(And32(To32(c),31u))])"
 		},
 		{
 			"FamilyName": "IR",
@@ -160,7 +160,7 @@
 			"SubName": "ByPowerOfTwo",
 			"Expression": "IR.MulSigned64 x c",
 			"Filter": "IsResolvedConstant(c) & IsPowerOfTwo64(c)",
-			"Result": "(IR.ShiftLeft64 x [GetPowerOfTwo(And32(ToInt32(c),63u))])"
+			"Result": "(IR.ShiftLeft64 x [GetPowerOfTwo(And32(To32(c),63u))])"
 		},
 		{
 			"FamilyName": "IR",
@@ -169,7 +169,7 @@
 			"SubName": "ByPowerOfTwo",
 			"Expression": "IR.DivUnsigned32 x c",
 			"Filter": "IsResolvedConstant(c) & IsPowerOfTwo32(c)",
-			"Result": "(IR.ShiftRight32 x [GetPowerOfTwo(And32(ToInt32(c),31u))])"
+			"Result": "(IR.ShiftRight32 x [GetPowerOfTwo(And32(To32(c),31u))])"
 		},
 		{
 			"FamilyName": "IR",
@@ -178,7 +178,7 @@
 			"SubName": "ByPowerOfTwo",
 			"Expression": "IR.DivUnsigned64 x c",
 			"Filter": "IsResolvedConstant(c) & IsPowerOfTwo64(c)",
-			"Result": "(IR.ShiftRight64 x [GetPowerOfTwo(And32(ToInt32(c),63u))])"
+			"Result": "(IR.ShiftRight64 x [GetPowerOfTwo(And32(To32(c),63u))])"
 		},
 		{
 			"FamilyName": "IR",
@@ -187,7 +187,7 @@
 			"SubName": "ByPowerOfTwo",
 			"Expression": "IR.DivSigned32 x c",
 			"Filter": "IsResolvedConstant(c) & IsPowerOfTwo32(c)",
-			"Result": "(IR.ShiftRight32 x [GetPowerOfTwo(And32(ToInt32(c),31u))])"
+			"Result": "(IR.ShiftRight32 x [GetPowerOfTwo(And32(To32(c),31u))])"
 		},
 		{
 			"FamilyName": "IR",
@@ -196,7 +196,7 @@
 			"SubName": "ByPowerOfTwo",
 			"Expression": "IR.DivSigned64 x c",
 			"Filter": "IsResolvedConstant(c) & IsPowerOfTwo64(c)",
-			"Result": "(IR.ShiftRight64 x [GetPowerOfTwo(And32(ToInt32(c),63u))])"
+			"Result": "(IR.ShiftRight64 x [GetPowerOfTwo(And32(To32(c),63u))])"
 		},
 		{
 			"FamilyName": "IR",
@@ -205,7 +205,7 @@
 			"SubName": "ByPowerOfTwo",
 			"Expression": "IR.RemUnsigned32 x c",
 			"Filter": "IsResolvedConstant(c) & IsPowerOfTwo32(c) & !IsZero(c)",
-			"Result": "(IR.LogicalAnd32 x [Sub32(ShiftLeft32(1u,And32(GetPowerOfTwo(ToInt32(c)),31u)),1u)])"
+			"Result": "(IR.LogicalAnd32 x [Sub32(ShiftLeft32(1u,And32(GetPowerOfTwo(To32(c)),31u)),1u)])"
 		},
 		{
 			"FamilyName": "IR",
@@ -214,7 +214,7 @@
 			"SubName": "ByPowerOfTwo",
 			"Expression": "IR.RemUnsigned64 x c",
 			"Filter": "IsResolvedConstant(c) & IsPowerOfTwo64(c) & !IsZero(c)",
-			"Result": "(IR.LogicalAnd64 x [Sub64(ShiftLeft64(1u,And32(GetPowerOfTwo(ToInt32(c)),63u)),1u)])"
+			"Result": "(IR.LogicalAnd64 x [Sub64(ShiftLeft64(1u,And32(GetPowerOfTwo(To32(c)),63u)),1u)])"
 		},
 		{
 			"FamilyName": "IR",
@@ -223,7 +223,7 @@
 			"SubName": "FromRightShiftAndTo64",
 			"Expression": "IR.GetLow64 (IR.ShiftRight64 (IR.To64 a b) 32u)",
 			"Filter": "",
-			"Result": "(IR.MoveInt32 b)"
+			"Result": "(IR.Move32 b)"
 		},
 		{
 			"FamilyName": "IR",
@@ -232,7 +232,7 @@
 			"SubName": "FromRightLeftAndTo64",
 			"Expression": "IR.GetHigh64 (IR.ShiftLeft64 (IR.To64 a b) 32u)",
 			"Filter": "",
-			"Result": "(IR.MoveInt32 a)"
+			"Result": "(IR.Move32 a)"
 		},
 		{
 			"FamilyName": "IR",
@@ -240,8 +240,8 @@
 			"Name": "GetHigh64",
 			"SubName": "FromShiftedMore32",
 			"Expression": "IR.GetHigh64 (IR.ShiftRight64 a b)",
-			"Filter": "IsGreaterThanOrEqual(And32(ToInt32(b),63u),32u)",
-			"Result": "(IR.MoveInt32 0)"
+			"Filter": "IsGreaterThanOrEqual(And32(To32(b),63u),32u)",
+			"Result": "(IR.Move32 0)"
 		},
 		{
 			"FamilyName": "IR",
@@ -249,8 +249,8 @@
 			"Name": "GetLow64",
 			"SubName": "FromShiftedMore32",
 			"Expression": "IR.GetLow64 (IR.ShiftLeft64 a b)",
-			"Filter": "IsGreaterThanOrEqual(And32(ToInt32(b),63u),32u)",
-			"Result": "(IR.MoveInt32 0)"
+			"Filter": "IsGreaterThanOrEqual(And32(To32(b),63u),32u)",
+			"Result": "(IR.Move32 0)"
 		}
 	]
 }

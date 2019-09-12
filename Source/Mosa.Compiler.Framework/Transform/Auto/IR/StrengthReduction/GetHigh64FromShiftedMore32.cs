@@ -26,7 +26,7 @@ namespace Mosa.Compiler.Framework.Transform.Auto.IR.StrengthReduction
 			if (context.Operand1.Definitions[0].Instruction != IRInstruction.ShiftRight64)
 				return false;
 
-			if (!IsGreaterThanOrEqual(And32(ToInt32(context.Operand1.Definitions[0].Operand2), 63), 32))
+			if (!IsGreaterThanOrEqual(And32(To32(context.Operand1.Definitions[0].Operand2), 63), 32))
 				return false;
 
 			return true;
@@ -38,7 +38,7 @@ namespace Mosa.Compiler.Framework.Transform.Auto.IR.StrengthReduction
 
 			var c1 = transformContext.CreateConstant(0L);
 
-			context.SetInstruction(IRInstruction.MoveInt32, result, c1);
+			context.SetInstruction(IRInstruction.Move32, result, c1);
 		}
 	}
 }

@@ -296,8 +296,8 @@ namespace Mosa.Compiler.Framework.Stages
 					node.Operand2 = operand1;
 				}
 
-				if (node.Instruction == IRInstruction.MoveInt32
-					|| node.Instruction == IRInstruction.MoveInt64
+				if (node.Instruction == IRInstruction.Move32
+					|| node.Instruction == IRInstruction.Move64
 					|| node.Instruction == IRInstruction.MoveR4
 					|| node.Instruction == IRInstruction.MoveR8)
 				{

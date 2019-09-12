@@ -13,23 +13,23 @@ namespace Mosa.Compiler.Framework.Transform.Manual
 	{
 		public static readonly List<BaseTransformation> List = new List<BaseTransformation>
 		{
-			ManualInstance.IR_ConstantMove_CompareInt32x32,
-			ManualInstance.IR_ConstantMove_CompareInt32x64,
-			ManualInstance.IR_ConstantMove_CompareInt64x32,
-			ManualInstance.IR_ConstantMove_CompareInt64x64,
+			ManualInstance.IR_ConstantMove_Compare32x32,
+			ManualInstance.IR_ConstantMove_Compare32x64,
+			ManualInstance.IR_ConstantMove_Compare64x32,
+			ManualInstance.IR_ConstantMove_Compare64x64,
 
 			ManualInstance.IR_ConstantMove_CompareIntBranch32,
 			ManualInstance.IR_ConstantMove_CompareIntBranch64,
 
-			ManualInstance.IR_Rewrite_CompareInt32x32,
-			ManualInstance.IR_Rewrite_CompareInt32x64,
-			ManualInstance.IR_Rewrite_CompareInt64x32,
-			ManualInstance.IR_Rewrite_CompareInt64x64,
+			ManualInstance.IR_Rewrite_Compare32x32,
+			ManualInstance.IR_Rewrite_Compare32x64,
+			ManualInstance.IR_Rewrite_Compare64x32,
+			ManualInstance.IR_Rewrite_Compare64x64,
 
-			ManualInstance.IR_ConstantFolding_CompareInt32x32,
-			ManualInstance.IR_ConstantFolding_CompareInt32x64,
-			ManualInstance.IR_ConstantFolding_CompareInt64x32,
-			ManualInstance.IR_ConstantFolding_CompareInt64x64,
+			ManualInstance.IR_ConstantFolding_Compare32x32,
+			ManualInstance.IR_ConstantFolding_Compare32x64,
+			ManualInstance.IR_ConstantFolding_Compare64x32,
+			ManualInstance.IR_ConstantFolding_Compare64x64,
 
 			ManualInstance.IR_ConstantFolding_CompareIntBranch32,
 			ManualInstance.IR_ConstantFolding_CompareIntBranch64,
@@ -43,15 +43,15 @@ namespace Mosa.Compiler.Framework.Transform.Manual
 			ManualInstance.IR_Simplification_SubCarryOut32CarryNotUsed,
 			ManualInstance.IR_Simplification_SubCarryOut64CarryNotUsed,
 
-			ManualInstance.IR_Simplification_CompareInt32x32Same,
-			ManualInstance.IR_Simplification_CompareInt32x64Same,
-			ManualInstance.IR_Simplification_CompareInt64x32Same,
-			ManualInstance.IR_Simplification_CompareInt64x64Same,
+			ManualInstance.IR_Simplification_Compare32x32Same,
+			ManualInstance.IR_Simplification_Compare32x64Same,
+			ManualInstance.IR_Simplification_Compare64x32Same,
+			ManualInstance.IR_Simplification_Compare64x64Same,
 
-			ManualInstance.IR_Simplification_CompareInt32x32NotSame,
-			ManualInstance.IR_Simplification_CompareInt32x64NotSame,
-			ManualInstance.IR_Simplification_CompareInt64x32NotSame,
-			ManualInstance.IR_Simplification_CompareInt64x64NotSame,
+			ManualInstance.IR_Simplification_Compare32x32NotSame,
+			ManualInstance.IR_Simplification_Compare32x64NotSame,
+			ManualInstance.IR_Simplification_Compare64x32NotSame,
+			ManualInstance.IR_Simplification_Compare64x64NotSame,
 
 			ManualInstance.IR_Special_Move32Propagate,
 			ManualInstance.IR_Special_Move64Propagate,

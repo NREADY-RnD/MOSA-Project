@@ -124,19 +124,19 @@ namespace Mosa.Compiler.Framework
 			{
 				return ConstantOperand.Create(result.Type, (uint)op1.ConstantUnsigned64);
 			}
-			else if (instruction == IRInstruction.ConvertInt32ToR4)
+			else if (instruction == IRInstruction.Convert32ToR4)
 			{
 				return ConstantOperand.Create(result.Type, (float)op1.ConstantSigned64);
 			}
-			else if (instruction == IRInstruction.ConvertInt32ToR8)
+			else if (instruction == IRInstruction.Convert32ToR8)
 			{
 				return ConstantOperand.Create(result.Type, (double)op1.ConstantSigned64);
 			}
-			else if (instruction == IRInstruction.ConvertInt64ToR4)
+			else if (instruction == IRInstruction.Convert64ToR4)
 			{
 				return ConstantOperand.Create(result.Type, (float)op1.ConstantSigned64);
 			}
-			else if (instruction == IRInstruction.ConvertInt64ToR8)
+			else if (instruction == IRInstruction.Convert64ToR8)
 			{
 				return ConstantOperand.Create(result.Type, (double)op1.ConstantSigned64);
 			}
@@ -306,7 +306,7 @@ namespace Mosa.Compiler.Framework
 			{
 				return ConstantOperand.Create(result.Type, op2.ConstantUnsigned64 << 32 | op1.ConstantUnsigned64);
 			}
-			else if (instruction == IRInstruction.CompareInt32x32 || instruction == IRInstruction.CompareInt64x32 || instruction == IRInstruction.CompareInt64x64 || instruction == IRInstruction.CompareInt32x64)
+			else if (instruction == IRInstruction.Compare32x32 || instruction == IRInstruction.Compare64x32 || instruction == IRInstruction.Compare64x64 || instruction == IRInstruction.Compare32x64)
 			{
 				bool compareResult = true;
 
@@ -511,7 +511,7 @@ namespace Mosa.Compiler.Framework
 			{
 				return op1;
 			}
-			else if (instruction == IRInstruction.CompareInt32x32 || instruction == IRInstruction.CompareInt64x32 || instruction == IRInstruction.CompareInt64x64 || instruction == IRInstruction.CompareInt32x64)
+			else if (instruction == IRInstruction.Compare32x32 || instruction == IRInstruction.Compare64x32 || instruction == IRInstruction.Compare64x64 || instruction == IRInstruction.Compare32x64)
 			{
 				var condition = node.ConditionCode;
 
@@ -717,7 +717,7 @@ namespace Mosa.Compiler.Framework
 
 			return new SimpleInstruction()
 			{
-				Instruction = Select(node.Instruction == IRInstruction.IfThenElse32, IRInstruction.MoveInt32, IRInstruction.MoveInt64),
+				Instruction = Select(node.Instruction == IRInstruction.IfThenElse32, IRInstruction.Move32, IRInstruction.Move64),
 				Result = node.Result,
 				Operand1 = result ? node.Operand2 : node.Operand3,
 			};
@@ -830,7 +830,7 @@ namespace Mosa.Compiler.Framework
 
 		private static BaseInstruction GetMoveInteger(Operand operand)
 		{
-			return operand.Is64BitInteger ? (BaseInstruction)IRInstruction.MoveInt64 : IRInstruction.MoveInt32;
+			return operand.Is64BitInteger ? (BaseInstruction)IRInstruction.Move64 : IRInstruction.Move32;
 		}
 
 		private static BaseInstruction GetMove(Operand operand)
@@ -840,9 +840,9 @@ namespace Mosa.Compiler.Framework
 			else if (operand.IsR8)
 				return IRInstruction.MoveR8;
 			else if (operand.Is64BitInteger)
-				return IRInstruction.MoveInt64;
+				return IRInstruction.Move64;
 			else
-				return IRInstruction.MoveInt32;
+				return IRInstruction.Move32;
 		}
 
 		#endregion Helpers

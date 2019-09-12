@@ -43,7 +43,7 @@ namespace Mosa.Compiler.Framework.Transform.Auto.IR.Simplification
 			var t2 = context.Operand1.Definitions[0].Operand2;
 			var t3 = context.Operand2;
 
-			var e1 = transformContext.CreateConstant(MulSigned64(ToSignedInt64(t2), ToSignedInt64(t3)));
+			var e1 = transformContext.CreateConstant(MulSigned64(ToSigned64(t2), ToSigned64(t3)));
 
 			context.SetInstruction(IRInstruction.MulSigned64, result, t1, e1);
 		}

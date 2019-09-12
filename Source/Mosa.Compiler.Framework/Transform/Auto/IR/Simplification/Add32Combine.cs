@@ -43,7 +43,7 @@ namespace Mosa.Compiler.Framework.Transform.Auto.IR.Simplification
 			var t2 = context.Operand1.Definitions[0].Operand2;
 			var t3 = context.Operand2;
 
-			var e1 = transformContext.CreateConstant(Add32(ToInt32(t2), ToInt32(t3)));
+			var e1 = transformContext.CreateConstant(Add32(To32(t2), To32(t3)));
 
 			context.SetInstruction(IRInstruction.Add32, result, t1, e1);
 		}

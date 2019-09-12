@@ -35,7 +35,7 @@ namespace Mosa.Compiler.Framework.Transform.Auto.IR.Simplification
 
 			var t1 = context.Operand1.Definitions[0].Operand1;
 
-			context.SetInstruction(IRInstruction.MoveInt64, result, t1);
+			context.SetInstruction(IRInstruction.Move64, result, t1);
 		}
 	}
 }
