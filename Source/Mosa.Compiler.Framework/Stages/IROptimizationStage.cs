@@ -126,7 +126,8 @@ namespace Mosa.Compiler.Framework.Stages
 				SimplifyParamLoad,
 				GetHigh64Propagation,
 				GetLow64Propagation,
-				FoldGetLow64PointerConstant,
+
+				//FoldGetLow64PointerConstant,
 				FoldLoadStoreOffsets,
 				ConstantFoldingPhi,
 				DeadCodeEliminationPhi,

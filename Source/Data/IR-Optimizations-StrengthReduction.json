@@ -214,7 +214,43 @@
 			"SubName": "ByPowerOfTwo",
 			"Expression": "IR.RemUnsigned64 x c",
 			"Filter": "IsResolvedConstant(c) & IsPowerOfTwo64(c) & !IsZero(c)",
-			"Result": "(IR.LogicalAnd64 x [Sub64(ShiftLeft64(1u,And32(GetPowerOfTwo(ToInt32(c)),31u)),1u)])"
+			"Result": "(IR.LogicalAnd64 x [Sub64(ShiftLeft64(1u,And32(GetPowerOfTwo(ToInt32(c)),63u)),1u)])"
+		},
+		{
+			"FamilyName": "IR",
+			"Type": "StrengthReduction",
+			"Name": "GetLow64",
+			"SubName": "FromRightShiftAndTo64",
+			"Expression": "IR.GetLow64 (IR.ShiftRight64 (IR.To64 a b) 32u)",
+			"Filter": "",
+			"Result": "(IR.MoveInt32 b)"
+		},
+		{
+			"FamilyName": "IR",
+			"Type": "StrengthReduction",
+			"Name": "GetHigh64",
+			"SubName": "FromRightLeftAndTo64",
+			"Expression": "IR.GetHigh64 (IR.ShiftLeft64 (IR.To64 a b) 32u)",
+			"Filter": "",
+			"Result": "(IR.MoveInt32 a)"
+		},
+		{
+			"FamilyName": "IR",
+			"Type": "StrengthReduction",
+			"Name": "GetHigh64",
+			"SubName": "FromShiftedMore32",
+			"Expression": "IR.GetHigh64 (IR.ShiftRight64 a b)",
+			"Filter": "IsGreaterThanOrEqual(And32(ToInt32(b),63u),32u)",
+			"Result": "(IR.MoveInt32 0)"
+		},
+		{
+			"FamilyName": "IR",
+			"Type": "StrengthReduction",
+			"Name": "GetLow64",
+			"SubName": "FromShiftedMore32",
+			"Expression": "IR.GetLow64 (IR.ShiftLeft64 a b)",
+			"Filter": "IsGreaterThanOrEqual(And32(ToInt32(b),63u),32u)",
+			"Result": "(IR.MoveInt32 0)"
 		}
 	]
 }

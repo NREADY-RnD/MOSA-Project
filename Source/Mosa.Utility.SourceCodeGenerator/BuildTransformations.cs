@@ -64,7 +64,7 @@ namespace Mosa.Utility.SourceCodeGenerator
 			Lines.AppendLine("\t\tpublic override bool Match(Context context, TransformContext transformContext)");
 			Lines.AppendLine("\t\t{");
 
-			ProcessExpressionNode(transform.InstructionTree, string.Empty);
+			ProcessExpressionNode(transform.InstructionTree);
 
 			ProcessDuplicatesInExpression(transform);
 
@@ -384,16 +384,20 @@ namespace Mosa.Utility.SourceCodeGenerator
 
 			foreach (var filter in filters)
 			{
-				ProcessFilters(filter, transform);
+				var sb = new StringBuilder();
+
+				if (!filter.IsNegated)
+					sb.Append('!');
+
+				sb.Append(ProcessFilters(filter, transform));
+
+				EmitCondition(sb.ToString());
 			}
 		}
 
-		private void ProcessFilters(Method filter, Transformation transform)
+		private string ProcessFilters(Method filter, Transformation transform)
 		{
 			var sb = new StringBuilder();
-
-			if (!filter.IsNegated)
-				sb.Append('!');
 
 			sb.Append(filter.MethodName);
 			sb.Append('(');
@@ -402,7 +406,7 @@ namespace Mosa.Utility.SourceCodeGenerator
 			{
 				if (parameter.IsMethod)
 				{
-					ProcessFilters(parameter.Method, transform);
+					sb.Append(ProcessFilters(parameter.Method, transform));
 				}
 				else if (parameter.IsLabel)
 				{
@@ -440,21 +444,24 @@ namespace Mosa.Utility.SourceCodeGenerator
 
 			sb.Append(')');
 
-			EmitCondition(sb.ToString());
+			return sb.ToString();
 		}
 
-		private void ProcessExpressionNode(InstructionNode instructionNode, string parent)
+		private void ProcessExpressionNode(InstructionNode instructionNode)
 		{
-			NodeNbrToNode.Add(instructionNode.NodeNbr, parent);
-
-			foreach (var operand in instructionNode.Operands)
+			if (instructionNode.NodeNbr == 0)
 			{
-				ProcessConditions(operand, parent, instructionNode.NodeNbr);
+				NodeNbrToNode.Add(instructionNode.NodeNbr, string.Empty);
 			}
 
 			foreach (var operand in instructionNode.Operands)
 			{
-				ProcessNestedConditions(operand, parent, instructionNode.NodeNbr);
+				ProcessConditions(operand, instructionNode);
+			}
+
+			foreach (var operand in instructionNode.Operands)
+			{
+				ProcessNestedConditions(operand, instructionNode);
 			}
 		}
 
@@ -465,12 +472,12 @@ namespace Mosa.Utility.SourceCodeGenerator
 			Lines.AppendLine("");
 		}
 
-		protected void ProcessConditions(Operand operand, string parent, int nodeNbr)
+		protected void ProcessConditions(Operand operand, InstructionNode parent)
 		{
 			if (operand.IsAny)
 				return; // nothing;
 
-			var operandName = parent + GetOperandName(operand.Index);
+			var operandName = NodeNbrToNode[parent.NodeNbr] + GetOperandName(operand.Index);
 
 			if (operand.IsInstruction)
 			{
@@ -503,20 +510,23 @@ namespace Mosa.Utility.SourceCodeGenerator
 			}
 		}
 
-		protected void ProcessNestedConditions(Operand operand, string parent, int nodeNbr)
+		protected void ProcessNestedConditions(Operand operand, InstructionNode node)
 		{
 			if (!operand.IsInstruction)
 				return;
 
-			var operandName = parent + GetOperandName(operand.Index);
+			var parent = $"{NodeNbrToNode[node.NodeNbr]}";
+			var operandName = GetOperandName(operand.Index);
 
-			EmitCondition($"context.{operandName}.Definitions.Count != 1");
+			EmitCondition($"context.{parent}{operandName}.Definitions.Count != 1");
 
 			var instructionName = operand.InstructionNode.InstructionName.Replace("IR.", "IRInstruction.");
 
-			EmitCondition($"context.{operandName}.Definitions[0].Instruction != {instructionName}");
+			EmitCondition($"context.{parent}{operandName}.Definitions[0].Instruction != {instructionName}");
 
-			ProcessExpressionNode(operand.InstructionNode, $"{parent}{operandName}.Definitions[0].");
+			NodeNbrToNode.Add(operand.InstructionNode.NodeNbr, $"{parent}{operandName}.Definitions[0].");
+
+			ProcessExpressionNode(operand.InstructionNode);
 		}
 
 		protected string GetOperandName(int index)

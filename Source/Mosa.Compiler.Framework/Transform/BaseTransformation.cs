@@ -109,6 +109,26 @@ namespace Mosa.Compiler.Framework.Transform
 			return operand.IsConstantZero;
 		}
 
+		protected static bool IsGreaterThan(ulong a, ulong b)
+		{
+			return a > b;
+		}
+
+		protected static bool IsLessThan(ulong a, ulong b)
+		{
+			return a < b;
+		}
+
+		protected static bool IsGreaterThanOrEqual(ulong a, ulong b)
+		{
+			return a >= b;
+		}
+
+		protected static bool IsLessThanOrEqual(ulong a, ulong b)
+		{
+			return a <= b;
+		}
+
 		#endregion Filter Methods
 
 		#region Expression Methods

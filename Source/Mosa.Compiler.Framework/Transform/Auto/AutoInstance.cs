@@ -131,6 +131,10 @@ namespace Mosa.Compiler.Framework.Transform.Auto
 		public static readonly BaseTransformation IR_StrengthReduction_DivSigned64ByPowerOfTwo = new IR.StrengthReduction.DivSigned64ByPowerOfTwo();
 		public static readonly BaseTransformation IR_StrengthReduction_RemUnsigned32ByPowerOfTwo = new IR.StrengthReduction.RemUnsigned32ByPowerOfTwo();
 		public static readonly BaseTransformation IR_StrengthReduction_RemUnsigned64ByPowerOfTwo = new IR.StrengthReduction.RemUnsigned64ByPowerOfTwo();
+		public static readonly BaseTransformation IR_StrengthReduction_GetLow64FromRightShiftAndTo64 = new IR.StrengthReduction.GetLow64FromRightShiftAndTo64();
+		public static readonly BaseTransformation IR_StrengthReduction_GetHigh64FromRightLeftAndTo64 = new IR.StrengthReduction.GetHigh64FromRightLeftAndTo64();
+		public static readonly BaseTransformation IR_StrengthReduction_GetHigh64FromShiftedMore32 = new IR.StrengthReduction.GetHigh64FromShiftedMore32();
+		public static readonly BaseTransformation IR_StrengthReduction_GetLow64FromShiftedMore32 = new IR.StrengthReduction.GetLow64FromShiftedMore32();
 		public static readonly BaseTransformation IR_Rewrite_Add32MultipleWithCommon = new IR.Rewrite.Add32MultipleWithCommon();
 		public static readonly BaseTransformation IR_Rewrite_Add64MultipleWithCommon = new IR.Rewrite.Add64MultipleWithCommon();
 		public static readonly BaseTransformation IR_Rewrite_Sub32MultipleWithCommon = new IR.Rewrite.Sub32MultipleWithCommon();

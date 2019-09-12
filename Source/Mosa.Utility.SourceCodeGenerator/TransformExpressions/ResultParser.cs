@@ -160,7 +160,7 @@ namespace Mosa.Utility.SourceCodeGenerator.TransformExpressions
 				}
 			}
 
-			return (method, index);
+			throw new Exception($"parsing error unexpected end");
 		}
 	}
 }
