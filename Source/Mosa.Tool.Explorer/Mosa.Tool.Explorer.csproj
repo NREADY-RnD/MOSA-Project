@@ -156,6 +156,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="magnifier.ico" />
+    <PackageReference Include="System.ComponentModel.Composition" Version="4.6.0" />
+    <PackageReference Include="CommandLineParser" Version="2.6.0" />
+    <PackageReference Include="dnlib" Version="3.2.0" />
+    <PackageReference Include="SharpDisasm" Version="1.1.11" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="CommandLineParser">

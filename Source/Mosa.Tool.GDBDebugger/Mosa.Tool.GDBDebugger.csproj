@@ -318,6 +318,16 @@
     <PackageReference Include="SharpDisasm">
       <Version>1.1.11</Version>
     </PackageReference>
+    <PackageReference Include="CommandLineParser" Version="2.6.0" />
+    <PackageReference Include="dnlib" Version="3.2.0" />
+    <PackageReference Include="DockPanelSuite" Version="3.0.6" />
+    <PackageReference Include="DockPanelSuite.ThemeVS2015" Version="3.0.6" />
+    <PackageReference Include="SharpDisasm" Version="1.1.11" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="DebugVMImageWindow.cs" />
+    <Compile Remove="DebugVMImageWindow.Designer.cs" />
+    <Compile Remove="DebugInfo\DebugSource.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -110,6 +110,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <PackageReference Include="CommandLineParser" Version="2.6.0" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="CommandLineParser">

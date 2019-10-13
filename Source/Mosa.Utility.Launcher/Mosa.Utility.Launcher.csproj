@@ -87,6 +87,8 @@
     <Compile Include="AppLocations.cs" />
     <Compile Include="Emulator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <PackageReference Include="CommandLineParser" Version="2.6.0" />
+    <PackageReference Include="SharpDisasm" Version="1.1.11" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Mosa.Compiler.Common\Mosa.Compiler.Common.csproj">
