@@ -911,12 +911,6 @@ namespace Mosa.Compiler.Framework.RegisterAllocator
 						// fixed and not spillable
 						liveInterval.NeverSpill = true;
 					}
-
-					//else if (liveInterval.VirtualRegister.VirtualRegisterOperand.Type.IsUserValueType)
-					//{
-					//	// Value types will never be spilled (they are already allocated in stack anyways)
-					//	liveInterval.NeverSpill = true;
-					//}
 					else
 					{
 						// Calculate spill costs for live interval
