@@ -144,14 +144,7 @@ namespace Mosa.Compiler.Framework.Stages
 
 			context.GotoPrevious();
 
-			while (context.IsEmpty
-				|| context.Instruction.FlowControl == FlowControl.ConditionalBranch
-				|| context.Instruction.FlowControl == FlowControl.UnconditionalBranch
-				|| context.Instruction.FlowControl == FlowControl.Return
-				|| context.Instruction == IRInstruction.Jmp)
-			{
-				context.GotoPrevious();
-			}
+			context.GotoBeforeBranch();
 
 			for (int i = 0; i < sourceOperands.Count; i++)
 			{

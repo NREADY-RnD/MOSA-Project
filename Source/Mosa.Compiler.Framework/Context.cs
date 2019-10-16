@@ -231,6 +231,18 @@ namespace Mosa.Compiler.Framework
 			Node = Node.Previous;
 		}
 
+		public void GotoBeforeBranch()
+		{
+			// Note: This won't work for expanded switch statements
+			while (IsEmptyOrNop
+				|| Instruction.FlowControl == FlowControl.UnconditionalBranch
+				|| Instruction.FlowControl == FlowControl.ConditionalBranch
+				|| Instruction.FlowControl == FlowControl.Return)
+			{
+				GotoPrevious();
+			}
+		}
+
 		/// <summary>
 		/// Appends an (empty) instruction after the current index.
 		/// </summary>

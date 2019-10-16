@@ -51,9 +51,12 @@ namespace Mosa.Compiler.Framework.RegisterAllocator
 
 		private readonly List<InstructionNode> SlotsToNodes;
 
-		protected BaseRegisterAllocator(BasicBlocks basicBlocks, VirtualRegisters virtualRegisters, BaseArchitecture architecture, AddStackLocalDelegate addStackLocal, Operand stackFrame, ITraceFactory traceFactory)
+		protected bool HasProtectedRegions;
+
+		protected BaseRegisterAllocator(BasicBlocks basicBlocks, VirtualRegisters virtualRegisters, BaseArchitecture architecture, AddStackLocalDelegate addStackLocal, Operand stackFrame, bool hasProtectedRegions, ITraceFactory traceFactory)
 		{
 			TraceFactory = traceFactory;
+			HasProtectedRegions = hasProtectedRegions;
 
 			BasicBlocks = basicBlocks;
 			Architecture = architecture;
@@ -1347,17 +1350,41 @@ namespace Mosa.Compiler.Framework.RegisterAllocator
 				if (!register.IsUsed || register.IsPhysicalRegister || !register.IsSpilled)
 					continue;
 
-				foreach (var liveInterval in register.LiveIntervals)
+				//if (HasProtectedRegions)
 				{
-					foreach (var def in liveInterval.DefPositions)
+					// spill at every write
+					foreach (var liveInterval in register.LiveIntervals)
 					{
-						var context = new Context(GetNode(def));
+						foreach (var def in liveInterval.DefPositions)
+						{
+							var context = new Context(GetNode(def));
 
-						Architecture.InsertStoreInstruction(context, StackFrame, register.SpillSlotOperand, liveInterval.AssignedPhysicalOperand);
+							Architecture.InsertStoreInstruction(context, StackFrame, register.SpillSlotOperand, liveInterval.AssignedPhysicalOperand);
 
-						context.Marked = true;
+							context.Marked = true;
+						}
 					}
 				}
+
+				//else
+				//{
+				//	// spill at the end of the region
+				//	foreach (var liveInterval in register.LiveIntervals)
+				//	{
+				//		if (liveInterval.AssignedPhysicalRegister == null)
+				//			continue;
+
+				//		var context = new Context(GetNode(liveInterval.End));
+
+				//		context.GotoPrevious();
+
+				//		context.GotoBeforeBranch();
+
+				//		Architecture.InsertStoreInstruction(context, StackFrame, register.SpillSlotOperand, liveInterval.AssignedPhysicalOperand);
+
+				//		context.Marked = true;
+				//	}
+				//}
 			}
 		}
 
