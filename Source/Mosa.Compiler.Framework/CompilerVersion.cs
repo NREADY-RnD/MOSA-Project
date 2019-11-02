@@ -1,7 +1,7 @@
 ﻿// Copyright (c) MOSA Project. Licensed under the New BSD License.
 
-using System.Reflection;
 using System;
+using System.Reflection;
 
 namespace Mosa.Compiler.Framework
 {
