@@ -2,14 +2,12 @@
 
 using Mosa.Compiler.Framework;
 using Mosa.Compiler.Framework.CompilerStages;
-using Mosa.Compiler.Framework.IR;
 using Mosa.Compiler.Framework.Linker.Elf;
 using Mosa.Compiler.Framework.Stages;
 using Mosa.Platform.Intel;
 using Mosa.Platform.x86.CompilerStages;
 using Mosa.Platform.x86.Stages;
 using System.Collections.Generic;
-using System.Diagnostics;
 
 namespace Mosa.Platform.x86
 {
