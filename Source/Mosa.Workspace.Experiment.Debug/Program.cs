@@ -13,7 +13,11 @@ namespace Mosa.Workspace.Experiment.Debug
 	{
 		private static void Main()
 		{
-			Compile();
+			//Compile();
+
+			var reader = new ConfigurationReader();
+
+			reader.Import(@".mosa-global.txt");
 		}
 
 		private static void Compile()
