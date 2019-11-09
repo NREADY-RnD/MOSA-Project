@@ -2,13 +2,17 @@ Import:
 #	.mosa-global.yml
 
 Compiler:
-	Architecture: x86	# Options: x86, x64, ArmARMv8A32
+	Architecture: x86					# Platform: x86, x64, ArmARMv8A32
 	BaseAddress: 0x00400000
 	EnableStatistics : false
 	TraceLevel: 0
-	EnableMethodScanner: false # experimental option
+	EnableMethodScanner: false			# experimental option
+	Multithreading: true
 	EmitInline: false
+	Advance:
+		PlugKorlib: true
 	#OutputFile
+	#SourceFile:
 
 SearchPaths:
 
@@ -17,9 +21,15 @@ Linker:
 	EmitStaticRelocations: false
 
 CompilerDebug:
-	DebugFile:
-	MapFile:
-	CompileTimeFile:
+	Emit:
+		Debug: false
+			File: %DEFAULT%
+		Map: false
+			File: %DEFAULT%
+		CompileTime: false
+			File: %DEFAULT%
+		Asm: false
+			File: %DEFAULT%
 
 Optimizations:
 	Basic: true
@@ -43,3 +53,49 @@ Optimizations.Inline.Aggressive:		# Aggressively inline methods
 
 Optimizations.Inline.Exclude:
 	'Mosa.UnitTests::*'					# Don't inline the unit tests methods
+
+Explorer:
+	Filter:
+
+Launcher:
+	Start: yes							# Immediately start the compiler
+	Launch: yes							# Launch VM after compile
+	Exit: yes							# Exit immediately after launch
+
+	Advance:
+		HuntForCorLib: true				# Hunts for CoreLib in various directories
+		LaunchGDBDebugger: false		# Launch the GDB debugger application after VM launch
+
+Image:
+	Format: img							# Image Format: BIN, IMG, VHD, VDI, ISO, VMDK
+	FileSystem:	fat12					# File System: FAT12, FAT16, FAT32, ISO????
+	BootLoaderImage:					# ???
+	Destination:						# Destination Directory
+	ImageFile:							# Image File Name
+
+Emulator: qemu							# Emulator: Qemu, VMware, Bochs
+	Memory: 128							# Emulator Memory in MB
+	Display: on							# Show video display
+	GDB: false							# Enable GDB within emulator
+	Serial: none						# Serial Emulation type: None, Pipe, TCPServer, TCPClient
+		Host: localhost					# Serial Host
+		Port: 1234						# Serial Port
+		Pipe:							# Serial Pipename
+
+GDB:
+	Host: localhost						# Host IP or Name for GDB
+	Port: 1234							# Port Number for GDB
+
+Multiboot:
+	Version:							# Multiboot version: None, V1, V2
+	Video: off					
+		Width:							# Video Width
+		Height:							# Video Height
+		Depth:							# Video Depth
+
+Debugger:
+	#WatchFile:
+	#BreakpointFile:
+
+Advanced:
+	#InterruptMethodName:

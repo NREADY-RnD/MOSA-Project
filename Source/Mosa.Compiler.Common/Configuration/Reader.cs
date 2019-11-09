@@ -3,61 +3,19 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace Mosa.Workspace.Experiment.Debug
+namespace Mosa.Compiler.Common.Configuration
 {
-	public sealed class ConfigurationReader
+	public static class Reader
 	{
-		private sealed class Property
-		{
-			public string Name { get; set; }
-
-			public string Value { get; set; }
-
-			public List<string> List { get; } = new List<string>();
-
-			public override string ToString()
-			{
-				if (Value == null)
-					return Name;
-				else
-					return $"{Name}={Value}";
-			}
-
-			public bool IsValueTrue
-			{
-				get
-				{
-					if (string.IsNullOrEmpty(Value))
-						return false;
-
-					return Value.ToLower().StartsWith("true") || Value.ToLower().StartsWith("y");
-				}
-			}
-
-			public bool IsValueFalse
-			{
-				get
-				{
-					if (string.IsNullOrEmpty(Value))
-						return false;
-
-					return Value.ToLower().StartsWith("false") || Value.ToLower().StartsWith("n");
-				}
-			}
-		}
-
-		private List<Property> Properties = new List<Property>();
-		private Dictionary<string, Property> Lookups = new Dictionary<string, Property>();
-
 		private static char[] whitespace = new char[] { '\t', ' ' };
 
-		public void Import(string filename)
+		public static void Import(string filename, Settings settings)
 		{
 			var lines = File.ReadAllLines(filename);
-			Import(lines);
+			Import(lines, settings);
 		}
 
-		public void Import(IList<string> lines)
+		public static void Import(IList<string> lines, Settings settings)
 		{
 			string lastProperty = string.Empty;
 			int lastLevel = 0;
@@ -76,17 +34,17 @@ namespace Mosa.Workspace.Experiment.Debug
 				if (data.Length == 0)
 					continue;
 
-				if (data.StartsWith('\'') || data.StartsWith('-'))
+				if (data.StartsWith("\'") || data.StartsWith("-"))
 				{
 					string item = string.Empty;
 
-					if (data.StartsWith('\''))
+					if (data.StartsWith("\'"))
 						item = data.Trim('\'');
-					else if (data.StartsWith('-'))
+					else if (data.StartsWith("-"))
 						item = data.Substring(1).Trim(whitespace);
 
 					var parent = GetSubPropertyName(lastProperty, level + lastLevel);
-					var property = GetProperty(parent);
+					var property = settings.CreateProperty(parent);
 
 					property.List.Add(item);
 
@@ -104,7 +62,7 @@ namespace Mosa.Workspace.Experiment.Debug
 
 					lastProperty = fullname;
 
-					var property = GetProperty(fullname);
+					var property = settings.CreateProperty(fullname);
 					property.Value = value;
 
 					lastLevel = CountLevels(property.Name) + level;
@@ -113,23 +71,36 @@ namespace Mosa.Workspace.Experiment.Debug
 			}
 		}
 
-		private Property GetProperty(string fullname)
+		public static void ParseArguments(string[] args, List<ArgumentMap> map, Settings settings)
 		{
-			if (!Lookups.TryGetValue(fullname, out Property property))
+			for (int at = 0; at < args.Length; at++)
 			{
-				property = new Property()
+				var arg = args[at];
+				var argumentMap = FindArgumentMap(arg, map);
+
+				if (argumentMap == null)
+					continue;
+
+				var property = settings.CreateProperty(argumentMap.Setting);
+
+				if (argumentMap.Argument == null)
 				{
-					Name = fullname
-				};
-
-				Properties.Add(property);
-				Lookups.Add(fullname, property);
+					property.Value = arg;
+				}
+				else if (argumentMap.Value != null)
+				{
+					property.Value = argumentMap.Value;
+				}
+				else
+				{
+					property.Value = args[++at];
+				}
 			}
-
-			return property;
 		}
 
-		private string ParsePropertyName(string data)
+		#region Internal Methods
+
+		private static string ParsePropertyName(string data)
 		{
 			var pos = data.IndexOf(':');
 
@@ -141,7 +112,7 @@ namespace Mosa.Workspace.Experiment.Debug
 			return name;
 		}
 
-		private string ParsePropertyValue(string data)
+		private static string ParsePropertyValue(string data)
 		{
 			var pos = data.IndexOf(':');
 
@@ -153,7 +124,7 @@ namespace Mosa.Workspace.Experiment.Debug
 			return value;
 		}
 
-		private string TrimOutComment(string line)
+		private static string TrimOutComment(string line)
 		{
 			int pos = line.IndexOf('#');
 
@@ -163,7 +134,7 @@ namespace Mosa.Workspace.Experiment.Debug
 			return line.Substring(0, pos);
 		}
 
-		private string GetSubPropertyName(string name, int level)
+		private static string GetSubPropertyName(string name, int level)
 		{
 			if (level == 0)
 				return string.Empty;
@@ -188,7 +159,7 @@ namespace Mosa.Workspace.Experiment.Debug
 			return name;
 		}
 
-		private int DetermineLevel(string line)
+		private static int DetermineLevel(string line)
 		{
 			for (int i = 0; i < line.Length; i++)
 			{
@@ -201,7 +172,7 @@ namespace Mosa.Workspace.Experiment.Debug
 			return 0;
 		}
 
-		private int CountLevels(string name)
+		private static int CountLevels(string name)
 		{
 			int count = 0;
 
@@ -212,6 +183,26 @@ namespace Mosa.Workspace.Experiment.Debug
 			}
 
 			return count;
+		}
+
+		#endregion Internal Methods
+
+		public static ArgumentMap FindArgumentMap(string arg, List<ArgumentMap> map)
+		{
+			ArgumentMap empty = null;
+
+			foreach (var entry in map)
+			{
+				if (entry.Argument == arg)
+					return entry;
+
+				if (entry.Value == null && entry.Argument == null)
+				{
+					empty = entry;
+				}
+			}
+
+			return empty;
 		}
 	}
 }

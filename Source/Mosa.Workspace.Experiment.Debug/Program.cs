@@ -1,10 +1,12 @@
 ﻿// Copyright (c) MOSA Project. Licensed under the New BSD License.
 
+using Mosa.Compiler.Common.Configuration;
 using Mosa.Compiler.Common.Exceptions;
 using Mosa.Compiler.Framework;
 using Mosa.Compiler.Framework.Linker;
 using Mosa.Compiler.MosaTypeSystem;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace Mosa.Workspace.Experiment.Debug
@@ -15,9 +17,25 @@ namespace Mosa.Workspace.Experiment.Debug
 		{
 			//Compile();
 
-			var reader = new ConfigurationReader();
+			var args = new string[] { "--q", "--autostart", "--output-map", "--output-asm", "--output-debug", "--threading-off", "--inline-off", "Mosa.CoolWorld.x86.exe" };
 
-			reader.Import(@".mosa-global.txt");
+			List<ArgumentMap> map = new List<ArgumentMap>()
+			{
+				new ArgumentMap(){ Argument = "--q", Setting = "Launcher.Exit", Value = "true"},
+				new ArgumentMap(){ Argument = "--autostart", Setting = "Launcher.Start", Value = "true"},
+				new ArgumentMap(){ Argument = "--output-map", Setting = "CompilerDebug.Emit.Map", Value = "true"},
+				new ArgumentMap(){ Argument = "--output-asm", Setting = "CompilerDebug.Emit.Asm", Value = "true"},
+				new ArgumentMap(){ Argument = "--output-debug", Setting = "CompilerDebug.Emit.Debug", Value = "true"},
+				new ArgumentMap(){ Argument = "--threading-off", Setting = "Compiler.Multithreading", Value = "false"},
+				new ArgumentMap(){ Argument = "--inline-off", Setting = "Optimizations.Inline", Value = "false"},
+				new ArgumentMap(){ Argument = null, Setting = "Compiler.SourceFile", Value = null},
+		   };
+
+			var settings = new Settings();
+
+			Reader.ParseArguments(args, map, settings);
+
+			//Reader.Import(@".mosa-global.txt", settings);
 		}
 
 		private static void Compile()
