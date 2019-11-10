@@ -24,7 +24,7 @@ namespace Mosa.Compiler.Framework
 		/// <summary>
 		/// Gets or sets the architecture.
 		/// </summary>
-		public BaseArchitecture Architecture { get; set; }
+		public BaseArchitecture Platform { get; set; }
 
 		/// <summary>
 		/// Gets or sets the output file.

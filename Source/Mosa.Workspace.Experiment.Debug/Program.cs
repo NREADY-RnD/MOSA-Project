@@ -29,13 +29,14 @@ namespace Mosa.Workspace.Experiment.Debug
 				new ArgumentMap(){ Argument = "--threading-off", Setting = "Compiler.Multithreading", Value = "false"},
 				new ArgumentMap(){ Argument = "--inline-off", Setting = "Optimizations.Inline", Value = "false"},
 				new ArgumentMap(){ Argument = null, Setting = "Compiler.SourceFile", Value = null},
-		   };
+				new ArgumentMap(){ Argument = "--settings", Setting = "Import", Value = null, IsList = true},
+			};
 
-			var settings = new Settings();
+			var argumentSettings = Reader.ParseArguments(args, map);
 
-			Reader.ParseArguments(args, map, settings);
+			var fileSettings = Reader.Import(@".mosa-global.txt");
 
-			//Reader.Import(@".mosa-global.txt", settings);
+			var settings = Settings.Merge(fileSettings, argumentSettings);
 		}
 
 		private static void Compile()
@@ -68,7 +69,7 @@ namespace Mosa.Workspace.Experiment.Debug
 				EnableStatistics = true,
 			};
 
-			compilerOptions.Architecture = SelectArchitecture(platform);
+			compilerOptions.Platform = SelectArchitecture(platform);
 
 			compilerOptions.AddSourceFile($"Mosa.TestWorld.{platform}.exe");
 			compilerOptions.AddSourceFile("Mosa.Plug.Korlib.dll");

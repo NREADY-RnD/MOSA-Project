@@ -12,5 +12,7 @@ namespace Mosa.Compiler.Common.Configuration
 		public string Setting { get; set; }
 
 		public string Value { get; set; }
+
+		public bool IsList { get; set; } = false;
 	}
 }

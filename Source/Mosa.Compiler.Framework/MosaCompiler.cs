@@ -70,7 +70,7 @@ namespace Mosa.Compiler.Framework
 			lock (_lock)
 			{
 				TypeSystem = typeSystem;
-				TypeLayout = new MosaTypeLayout(typeSystem, CompilerOptions.Architecture.NativePointerSize, CompilerOptions.Architecture.NativeAlignment);
+				TypeLayout = new MosaTypeLayout(typeSystem, CompilerOptions.Platform.NativePointerSize, CompilerOptions.Platform.NativeAlignment);
 
 				Linker = null;
 				Compiler = null;
@@ -86,7 +86,7 @@ namespace Mosa.Compiler.Framework
 				if (Stage != CompileStage.Loaded)
 					return;
 
-				Linker = new MosaLinker(CompilerOptions.BaseAddress, CompilerOptions.Architecture.ElfMachineType, CompilerOptions.EmitAllSymbols, CompilerOptions.EmitStaticRelocations, CompilerOptions.EmitShortSymbolNames, CompilerOptions.LinkerFormatType, CompilerOptions.CreateExtraSections, CompilerOptions.CreateExtraProgramHeaders);
+				Linker = new MosaLinker(CompilerOptions.BaseAddress, CompilerOptions.Platform.ElfMachineType, CompilerOptions.EmitAllSymbols, CompilerOptions.EmitStaticRelocations, CompilerOptions.EmitShortSymbolNames, CompilerOptions.LinkerFormatType, CompilerOptions.CreateExtraSections, CompilerOptions.CreateExtraProgramHeaders);
 				Compiler = new Compiler(this);
 
 				Stage = CompileStage.Initialized;

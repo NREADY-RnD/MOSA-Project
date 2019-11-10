@@ -179,8 +179,8 @@ namespace Mosa.Compiler.Framework
 				(compilerOptions.EnableLoopInvariantCodeMotion && compilerOptions.EnableSSA) ? new LoopInvariantCodeMotionStage() : null,
 				(compilerOptions.EnableSparseConditionalConstantPropagation && compilerOptions.EnableSSA) ? new SparseConditionalConstantPropagationStage() : null,
 				(compilerOptions.EnableBasicOptimizations && compilerOptions.EnableSSA) ? new OptimizationStage() : null,
-				(compilerOptions.EnableLongExpansion && compilerOptions.Architecture.NativePointerSize == 4) ? new LongExpansionStage() : null,
-				(compilerOptions.EnableBasicOptimizations && compilerOptions.EnableLongExpansion && compilerOptions.Architecture.NativePointerSize == 4) ? new OptimizationStage() : null,
+				(compilerOptions.EnableLongExpansion && compilerOptions.Platform.NativePointerSize == 4) ? new LongExpansionStage() : null,
+				(compilerOptions.EnableBasicOptimizations && compilerOptions.EnableLongExpansion && compilerOptions.Platform.NativePointerSize == 4) ? new OptimizationStage() : null,
 				(compilerOptions.EnableBitTracker) ? new BitTrackerStage() : null,
 				(compilerOptions.TwoPassOptimizations && compilerOptions.EnableValueNumbering && compilerOptions.EnableSSA) ? new ValueNumberingStage() : null,
 				(compilerOptions.TwoPassOptimizations && compilerOptions.EnableLoopInvariantCodeMotion && compilerOptions.EnableSSA) ? new LoopInvariantCodeMotionStage() : null,
@@ -223,7 +223,7 @@ namespace Mosa.Compiler.Framework
 			CompilerOptions = mosaCompiler.CompilerOptions;
 			Linker = mosaCompiler.Linker;
 			CompilerTrace = mosaCompiler.CompilerTrace;
-			Architecture = CompilerOptions.Architecture;
+			Architecture = CompilerOptions.Platform;
 
 			StackFrame = Operand.CreateCPURegister(TypeSystem.BuiltIn.Pointer, Architecture.StackFrameRegister);
 			StackPointer = Operand.CreateCPURegister(TypeSystem.BuiltIn.Pointer, Architecture.StackPointerRegister);

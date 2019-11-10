@@ -105,7 +105,7 @@ Example: Mosa.Tool.Compiler.exe -o Mosa.HelloWorld.x86.bin -a x86 --mboot v1 --x
 					throw new Exception("No output file specified.");
 				}
 
-				if (compiler.CompilerOptions.Architecture == null)
+				if (compiler.CompilerOptions.Platform == null)
 				{
 					throw new Exception("No Architecture specified.");
 				}
@@ -162,7 +162,7 @@ Example: Mosa.Tool.Compiler.exe -o Mosa.HelloWorld.x86.bin -a x86 --mboot v1 --x
 			var sb = new StringBuilder();
 			sb.Append(" > Output file: ").AppendLine(compiler.CompilerOptions.OutputFile);
 			sb.Append(" > Input file(s): ").AppendLine(string.Join(", ", new List<string>(GetInputFileNames()).ToArray()));
-			sb.Append(" > Architecture: ").AppendLine(compiler.CompilerOptions.Architecture.GetType().FullName);
+			sb.Append(" > Architecture: ").AppendLine(compiler.CompilerOptions.Platform.GetType().FullName);
 			sb.Append(" > Binary format: ").AppendLine(compiler.CompilerOptions.LinkerFormatType.ToString());
 			sb.Append(" > Boot spec: ").AppendLine(compiler.CompilerOptions.MultibootSpecification.ToString());
 			sb.Append(" > Is executable: ").AppendLine(options.IsInputExecutable.ToString());

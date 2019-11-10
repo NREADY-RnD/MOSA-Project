@@ -97,7 +97,7 @@ namespace Mosa.Utility.Launcher
 				compiler.CompilerOptions.TwoPassOptimizations = LauncherOptions.TwoPassOptimizations;
 				compiler.CompilerOptions.EnableValueNumbering = LauncherOptions.EnableValueNumbering;
 				compiler.CompilerOptions.OutputFile = CompiledFile;
-				compiler.CompilerOptions.Architecture = SelectArchitecture(LauncherOptions.PlatformType);
+				compiler.CompilerOptions.Platform = SelectArchitecture(LauncherOptions.PlatformType);
 				compiler.CompilerOptions.LinkerFormatType = LauncherOptions.LinkerFormatType;
 				compiler.CompilerOptions.MultibootSpecification = LauncherOptions.MultibootSpecification;
 				compiler.CompilerOptions.SetCustomOption("multiboot.video", LauncherOptions.VBEVideo ? "true" : "false");
@@ -592,7 +592,5 @@ namespace Mosa.Utility.Launcher
 				default: throw new NotImplementCompilerException("Unknown or unsupported Architecture");
 			}
 		}
-
-
 	}
 }

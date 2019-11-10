@@ -1,14 +1,15 @@
 Import:
-#	.mosa-global.yml
+	#'.mosa-global.txt'
 
 Compiler:
-	Architecture: x86					# Platform: x86, x64, ArmARMv8A32
+	Platform: x86					# Platform: x86, x64, ArmARMv8A32
 	BaseAddress: 0x00400000
 	EnableStatistics : false
 	TraceLevel: 0
-	EnableMethodScanner: false			# experimental option
+	MethodScanner: false				# Experimental option to enable the method scanner
 	Multithreading: true
-	EmitInline: false
+	EmitInline: false					# Emit all inlined methods
+	EmitBinary: true					# Emit Binary
 	Advance:
 		PlugKorlib: true
 	#OutputFile
@@ -38,6 +39,7 @@ Optimizations:
 	ValueNumbering: true
 	LongExpansion: true
 	BitTracker: true
+	LoopInvariantCodeMotion: true
 	Platform: true
 	Inline: true
 		Maximum: 12

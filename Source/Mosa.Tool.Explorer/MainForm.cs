@@ -2,6 +2,7 @@
 
 using CommandLine;
 using Mosa.Compiler.Common;
+using Mosa.Compiler.Common.Configuration;
 using Mosa.Compiler.Framework;
 using Mosa.Compiler.Framework.Linker;
 using Mosa.Compiler.Framework.Trace;
@@ -18,6 +19,8 @@ namespace Mosa.Tool.Explorer
 {
 	public partial class MainForm : Form, ITraceListener
 	{
+		private Settings ExplorerSettings = new Settings();
+
 		private readonly CodeForm form = new CodeForm();
 
 		private DateTime compileStartTime;
@@ -459,8 +462,36 @@ namespace Mosa.Tool.Explorer
 			}
 		}
 
+		private void SetCompilerSettings()
+		{
+			ExplorerSettings.SetProperty("Compiler.MethodScanner", cbEnableMethodScanner.Checked);
+			ExplorerSettings.SetProperty("Compiler.EmitBinary", cbEnableBinaryCodeGeneration.Checked);
+			ExplorerSettings.SetProperty("Compiler.TraceLevel", 8);
+			ExplorerSettings.SetProperty("Compiler.Platform", cbPlatform.Text);
+			ExplorerSettings.SetProperty("Compiler.Multithreading", CBEnableMultithreading.Checked);
+
+			ExplorerSettings.SetProperty("Optimizations.SSA", cbEnableSSA.Checked);
+			ExplorerSettings.SetProperty("Optimizations.Basic", cbEnableBasicOptimizations.Checked);
+			ExplorerSettings.SetProperty("Optimizations.ValueNumbering", cbEnableValueNumbering.Checked);
+			ExplorerSettings.SetProperty("Optimizations.SCCP", cbEnableSparseConditionalConstantPropagation.Checked);
+			ExplorerSettings.SetProperty("Optimizations.BitTracker", cbEnableBitTracker.Checked);
+			ExplorerSettings.SetProperty("Optimizations.LoopInvariantCodeMotion", cbLoopInvariantCodeMotion.Checked);
+			ExplorerSettings.SetProperty("Optimizations.LongExpansion", cbEnableLongExpansion.Checked);
+			ExplorerSettings.SetProperty("Optimizations.TwoPass", cbEnableTwoPassOptimizations.Checked);
+			ExplorerSettings.SetProperty("Optimizations.Platform", cbPlatformOptimizations.Checked);
+			ExplorerSettings.SetProperty("Optimizations.Inline", cbEnableInline.Checked);
+			ExplorerSettings.SetProperty("Optimizations.Inline.ExplicitOnly", cbInlineExplicitOnly.Checked);
+
+			ExplorerSettings.SetProperty("Optimizations.Inline.Maximum", 12);
+			ExplorerSettings.SetProperty("Optimizations.Inline.AggressiveMaximum", 24);
+
+			ExplorerSettings.SetProperty("Multiboot.Version", "v2");
+		}
+
 		private void SetCompilerOptions()
 		{
+			SetCompilerSettings();
+
 			Compiler.CompilerOptions.EnableSSA = cbEnableSSA.Checked;
 			Compiler.CompilerOptions.EnableBasicOptimizations = cbEnableBasicOptimizations.Checked;
 			Compiler.CompilerOptions.EnableValueNumbering = cbEnableValueNumbering.Checked;
@@ -486,6 +517,7 @@ namespace Mosa.Tool.Explorer
 		private void CompileAll()
 		{
 			compileStartTime = DateTime.Now;
+
 			SetCompilerOptions();
 
 			Compiler.ScheduleAll();
@@ -766,7 +798,9 @@ namespace Mosa.Tool.Explorer
 
 		protected void LoadAssembly(string filename, string platform, string includeDirectory = null)
 		{
-			Compiler.CompilerOptions.Architecture = GetArchitecture(platform);
+			SetCompilerSettings();
+
+			Compiler.CompilerOptions.Platform = GetArchitecture(platform);
 			Compiler.CompilerOptions.MultibootSpecification = MultibootSpecification.V1;
 
 			Compiler.CompilerOptions.SearchPaths.Clear();
@@ -1024,10 +1058,7 @@ namespace Mosa.Tool.Explorer
 			cbEnableInline.Checked = state;
 			cbEnableLongExpansion.Checked = state;
 			cbEnableTwoPassOptimizations.Checked = state;
-
-			//cbEnableMethodScanner.Checked = state;
 			cbEnableBitTracker.Checked = state;
-
 			cbLoopInvariantCodeMotion.Checked = state;
 			cbPlatformOptimizations.Checked = state;
 		}

@@ -9,14 +9,16 @@ namespace Mosa.Compiler.Common.Configuration
 	{
 		private static char[] whitespace = new char[] { '\t', ' ' };
 
-		public static void Import(string filename, Settings settings)
+		public static Settings Import(string filename)
 		{
 			var lines = File.ReadAllLines(filename);
-			Import(lines, settings);
+			return Import(lines);
 		}
 
-		public static void Import(IList<string> lines, Settings settings)
+		public static Settings Import(IList<string> lines)
 		{
+			var settings = new Settings();
+
 			string lastProperty = string.Empty;
 			int lastLevel = 0;
 
@@ -69,10 +71,14 @@ namespace Mosa.Compiler.Common.Configuration
 					continue;
 				}
 			}
+
+			return settings;
 		}
 
-		public static void ParseArguments(string[] args, List<ArgumentMap> map, Settings settings)
+		public static Settings ParseArguments(string[] args, List<ArgumentMap> map)
 		{
+			var settings = new Settings();
+
 			for (int at = 0; at < args.Length; at++)
 			{
 				var arg = args[at];
@@ -91,11 +97,17 @@ namespace Mosa.Compiler.Common.Configuration
 				{
 					property.Value = argumentMap.Value;
 				}
+				else if (argumentMap.IsList)
+				{
+					property.List.Add(args[++at]);
+				}
 				else
 				{
 					property.Value = args[++at];
 				}
 			}
+
+			return settings;
 		}
 
 		#region Internal Methods
