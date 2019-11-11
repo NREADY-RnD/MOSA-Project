@@ -78,14 +78,14 @@ namespace Mosa.Compiler.Common.Configuration
 		public static Settings ParseArguments(string[] args, List<Argument> arguments)
 		{
 			var settings = new Settings();
-			var defaultMap = FindDefaultArgumentMap(arguments);
+			var defaultMap = GetDefaultArgumentMap(arguments);
 
 			for (int at = 1; at < args.Length; at++)
 			{
 				var arg = args[at];
-				var map = FindArgumentMap(arg, arguments);
+				var map = GetArgumentMap(arg, arguments);
 
-				if (map == null)
+				if (map == null || map.Count == 0)
 				{
 					if (defaultMap == null)
 						continue;
@@ -105,20 +105,30 @@ namespace Mosa.Compiler.Common.Configuration
 				}
 				else
 				{
-					var property = settings.CreateProperty(map.Setting);
+					bool increment = false;
 
-					if (map.Value != null)
+					foreach (var entry in map)
 					{
-						property.Value = map.Value;
+						var property = settings.CreateProperty(entry.Setting);
+
+						if (entry.Value != null)
+						{
+							property.Value = entry.Value;
+						}
+						else if (entry.IsList)
+						{
+							increment = true;
+							property.List.Add(args[at + 1]);
+						}
+						else
+						{
+							increment = true;
+							property.Value = args[at + 1];
+						}
 					}
-					else if (map.IsList)
-					{
-						property.List.Add(args[++at]);
-					}
-					else
-					{
-						property.Value = args[++at];
-					}
+
+					if (increment)
+						at++;
 				}
 			}
 
@@ -214,18 +224,7 @@ namespace Mosa.Compiler.Common.Configuration
 
 		#endregion Internal Methods
 
-		private static Argument FindArgumentMap(string arg, List<Argument> map)
-		{
-			foreach (var entry in map)
-			{
-				if (entry.Name == arg)
-					return entry;
-			}
-
-			return null;
-		}
-
-		private static List<Argument> FindArguments(string arg, List<Argument> arguments)
+		private static List<Argument> GetArgumentMap(string arg, List<Argument> arguments)
 		{
 			List<Argument> map = new List<Argument>();
 
@@ -239,7 +238,7 @@ namespace Mosa.Compiler.Common.Configuration
 			return map;
 		}
 
-		private static Argument FindDefaultArgumentMap(List<Argument> map)
+		private static Argument GetDefaultArgumentMap(List<Argument> map)
 		{
 			foreach (var entry in map)
 			{
