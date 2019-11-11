@@ -272,7 +272,7 @@ namespace Mosa.Compiler.Framework.Stages
 				return;
 			}
 
-			if (CompilerOptions.EnableSSA)
+			if (CompilerOptions.SSA)
 			{
 				Compareeger64x32SSA(context);
 			}

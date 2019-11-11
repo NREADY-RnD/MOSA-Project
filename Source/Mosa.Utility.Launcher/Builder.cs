@@ -86,16 +86,16 @@ namespace Mosa.Utility.Launcher
 
 				CompiledFile = Path.Combine(LauncherOptions.DestinationDirectory, $"{Path.GetFileNameWithoutExtension(LauncherOptions.SourceFile)}.bin");
 
-				compiler.CompilerOptions.EnableSSA = LauncherOptions.EnableSSA;
-				compiler.CompilerOptions.EnableBasicOptimizations = LauncherOptions.EnableBasicOptimizations;
-				compiler.CompilerOptions.EnableSparseConditionalConstantPropagation = LauncherOptions.EnableSparseConditionalConstantPropagation;
-				compiler.CompilerOptions.EnableInlineMethods = LauncherOptions.EnableInlineMethods;
+				compiler.CompilerOptions.SSA = LauncherOptions.EnableSSA;
+				compiler.CompilerOptions.BasicOptimizations = LauncherOptions.EnableBasicOptimizations;
+				compiler.CompilerOptions.SparseConditionalConstantPropagation = LauncherOptions.EnableSparseConditionalConstantPropagation;
+				compiler.CompilerOptions.InlineMethods = LauncherOptions.EnableInlineMethods;
 				compiler.CompilerOptions.InlineExplicitOnly = LauncherOptions.InlineExplicitOnly;
 				compiler.CompilerOptions.InlineMaximum = LauncherOptions.InlineMaximum;
 				compiler.CompilerOptions.InlineAggressiveMaximum = LauncherOptions.InlineMaximum * 2;
-				compiler.CompilerOptions.EnableLongExpansion = LauncherOptions.EnableLongExpansion;
-				compiler.CompilerOptions.TwoPassOptimizations = LauncherOptions.TwoPassOptimizations;
-				compiler.CompilerOptions.EnableValueNumbering = LauncherOptions.EnableValueNumbering;
+				compiler.CompilerOptions.LongExpansion = LauncherOptions.EnableLongExpansion;
+				compiler.CompilerOptions.TwoPass = LauncherOptions.TwoPassOptimizations;
+				compiler.CompilerOptions.ValueNumbering = LauncherOptions.EnableValueNumbering;
 				compiler.CompilerOptions.OutputFile = CompiledFile;
 				compiler.CompilerOptions.Platform = SelectArchitecture(LauncherOptions.PlatformType);
 				compiler.CompilerOptions.LinkerFormatType = LauncherOptions.LinkerFormatType;
@@ -107,10 +107,10 @@ namespace Mosa.Utility.Launcher
 				compiler.CompilerOptions.BaseAddress = LauncherOptions.BaseAddress;
 				compiler.CompilerOptions.EmitAllSymbols = LauncherOptions.EmitAllSymbols;
 				compiler.CompilerOptions.EmitStaticRelocations = LauncherOptions.EmitStaticRelocations;
-				compiler.CompilerOptions.EnableMethodScanner = LauncherOptions.EnableMethodScanner;
-				compiler.CompilerOptions.EnableBitTracker = LauncherOptions.EnableBitTracker;
-				compiler.CompilerOptions.EnableLoopInvariantCodeMotion = LauncherOptions.EnableLoopInvariantCodeMotion;
-				compiler.CompilerOptions.EnablePlatformOptimizations = LauncherOptions.EnablePlatformOptimizations;
+				compiler.CompilerOptions.MethodScanner = LauncherOptions.EnableMethodScanner;
+				compiler.CompilerOptions.BitTracker = LauncherOptions.EnableBitTracker;
+				compiler.CompilerOptions.LoopInvariantCodeMotion = LauncherOptions.EnableLoopInvariantCodeMotion;
+				compiler.CompilerOptions.PlatformOptimizations = LauncherOptions.EnablePlatformOptimizations;
 				compiler.CompilerOptions.InterruptMethodName = LauncherOptions.InterruptMethodName;
 				compiler.CompilerOptions.CreateExtraSections = LauncherOptions.CreateExtraSections;
 				compiler.CompilerOptions.CreateExtraProgramHeaders = LauncherOptions.CreateExtraProgramHeaders;

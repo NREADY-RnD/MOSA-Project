@@ -45,15 +45,15 @@ namespace Mosa.Workspace.Experiment.Debug
 
 			var compilerOptions = new CompilerOptions()
 			{
-				EnableSSA = true,
-				EnableBasicOptimizations = true,
-				EnableSparseConditionalConstantPropagation = true,
-				EnableInlineMethods = true,
-				EnableLongExpansion = true,
-				EnableValueNumbering = true,
-				TwoPassOptimizations = true,
-				EnableMethodScanner = true,
-				EnableBitTracker = true,
+				SSA = true,
+				BasicOptimizations = true,
+				SparseConditionalConstantPropagation = true,
+				InlineMethods = true,
+				LongExpansion = true,
+				ValueNumbering = true,
+				TwoPass = true,
+				MethodScanner = true,
+				BitTracker = true,
 
 				MultibootSpecification = MultibootSpecification.V1,
 				LinkerFormatType = LinkerFormatType.Elf32,
@@ -66,7 +66,7 @@ namespace Mosa.Workspace.Experiment.Debug
 				EmitBinary = false,
 				TraceLevel = 0,
 
-				EnableStatistics = true,
+				Statistics = true,
 			};
 
 			compilerOptions.Platform = SelectArchitecture(platform);

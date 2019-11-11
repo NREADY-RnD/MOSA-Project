@@ -406,7 +406,7 @@ namespace Mosa.Compiler.Framework
 
 			Symbol.SetReplacementStatus(MethodData.Inlined);
 
-			if (Compiler.CompilerOptions.EnableStatistics)
+			if (Compiler.CompilerOptions.Statistics)
 			{
 				var log = new TraceLog(TraceType.MethodCounters, Method, string.Empty, MethodData.Version);
 				log.Log(MethodData.Counters.Export());
@@ -438,7 +438,7 @@ namespace Mosa.Compiler.Framework
 					break;
 			}
 
-			if (Compiler.CompilerOptions.EnableStatistics)
+			if (Compiler.CompilerOptions.Statistics)
 			{
 				var lastTick = Stopwatch.ElapsedTicks;
 

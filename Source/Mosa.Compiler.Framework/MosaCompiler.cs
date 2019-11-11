@@ -143,7 +143,7 @@ namespace Mosa.Compiler.Framework
 		{
 			Setup();
 
-			if (!CompilerOptions.EnableMethodScanner)
+			if (!CompilerOptions.MethodScanner)
 			{
 				ScheduleAll();
 			}
@@ -173,7 +173,7 @@ namespace Mosa.Compiler.Framework
 		{
 			Setup();
 
-			if (!CompilerOptions.EnableMethodScanner)
+			if (!CompilerOptions.MethodScanner)
 			{
 				ScheduleAll();
 			}

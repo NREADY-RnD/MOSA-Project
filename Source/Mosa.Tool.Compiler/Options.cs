@@ -67,13 +67,13 @@ namespace Mosa.Tool.Compiler
 		public string DebugInfoFile { set { CompilerOptions.DebugFile = value; } }
 
 		[Option("ssa", HelpText = "Performs single static assignments at compile time.")]
-		public bool EnableSSA { set { CompilerOptions.EnableSSA = value; } }
+		public bool EnableSSA { set { CompilerOptions.SSA = value; } }
 
 		[Option("enable-single-static-assignment-form", HelpText = "Performs single static assignments at compile time.")]
 		public bool EnableSSATrue { set { EnableSSA = value; } }
 
 		[Option("optimize-ir", HelpText = "Performs ir-level optimizations.")]
-		public bool EnableIROptimizaion { set { CompilerOptions.EnableBasicOptimizations = value; } }
+		public bool EnableIROptimizaion { set { CompilerOptions.BasicOptimizations = value; } }
 
 		[Option("enable-ir-optimizations", HelpText = "Performs ir-level optimizations.")]
 		public bool EnableIROptimizaionAlt { set { EnableIROptimizaion = value; } }

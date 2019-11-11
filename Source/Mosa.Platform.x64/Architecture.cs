@@ -194,10 +194,10 @@ namespace Mosa.Platform.x64
 				{
 					new LongOperandStage(),
 					new IRTransformationStage(),
-					compilerOptions.EnablePlatformOptimizations ? new Stages.OptimizationStage() : null,
+					compilerOptions.PlatformOptimizations ? new Stages.OptimizationStage() : null,
 					new TweakStage(),
 					new FixedRegisterAssignmentStage(),
-					compilerOptions.EnablePlatformOptimizations ? new SimpleDeadCodeRemovalStage() : null,
+					compilerOptions.PlatformOptimizations ? new SimpleDeadCodeRemovalStage() : null,
 					new AddressModeConversionStage(),
 					new FloatingPointStage(),
 				});
@@ -210,7 +210,7 @@ namespace Mosa.Platform.x64
 				new BaseMethodCompilerStage[]
 				{
 					new FinalTweakStage(),
-					compilerOptions.EnablePlatformOptimizations ? new PostOptimizationStage() : null,
+					compilerOptions.PlatformOptimizations ? new PostOptimizationStage() : null,
 				});
 
 			pipeline.InsertBefore<CodeGenerationStage>(

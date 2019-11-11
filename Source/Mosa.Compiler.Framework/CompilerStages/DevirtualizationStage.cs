@@ -44,7 +44,7 @@ namespace Mosa.Compiler.Framework.CompilerStages
 
 		protected override void Finalization()
 		{
-			if (CompilerOptions.EnableStatistics)
+			if (CompilerOptions.Statistics)
 			{
 				//var log = new TraceLog(TraceType.MethodCounters, null, string.Empty);
 				//log.Log(MethodData.Counters.Export());

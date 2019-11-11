@@ -55,32 +55,32 @@ namespace Mosa.Compiler.Framework
 		/// <summary>
 		/// Gets or sets a value indicating whether SSA is enabled.
 		/// </summary>
-		public bool EnableSSA { get; set; }
+		public bool SSA { get; set; }
 
 		/// <summary>
 		/// Gets or sets a value indicating whether [enable IR optimizations].
 		/// </summary>
-		public bool EnableBasicOptimizations { get; set; }
+		public bool BasicOptimizations { get; set; }
 
 		/// <summary>
 		/// Gets or sets a value indicating whether [enable value numbering].
 		/// </summary>
-		public bool EnableValueNumbering { get; set; }
+		public bool ValueNumbering { get; set; }
 
 		/// <summary>
 		/// Gets or sets a value indicating whether [enable conditional constant propagation].
 		/// </summary>
-		public bool EnableSparseConditionalConstantPropagation { get; set; }
+		public bool SparseConditionalConstantPropagation { get; set; }
 
 		/// <summary>
 		/// Gets or sets a value indicating whether [enable loop invariant code motion].
 		/// </summary>
-		public bool EnableLoopInvariantCodeMotion { get; set; }
+		public bool LoopInvariantCodeMotion { get; set; }
 
 		/// <summary>
 		/// Gets or sets a value indicating whether [enable inline methods].
 		/// </summary>
-		public bool EnableInlineMethods { get; set; }
+		public bool InlineMethods { get; set; }
 
 		/// <summary>
 		/// Gets or sets a value indicating whether only methods are inline marked as AgressiveInlining.
@@ -100,17 +100,17 @@ namespace Mosa.Compiler.Framework
 		/// <summary>
 		/// Gets or sets a value indicating whether [enable IR long operand conversion].
 		/// </summary>
-		public bool EnableLongExpansion { get; set; }
+		public bool LongExpansion { get; set; }
 
 		/// <summary>
 		/// Gets or sets a value indicating whether [enable bit estimator].
 		/// </summary>
-		public bool EnableBitTracker { get; set; }
+		public bool BitTracker { get; set; }
 
 		/// <summary>
 		/// Gets or sets a value indicating whether [enable platform optimizations].
 		/// </summary>
-		public bool EnablePlatformOptimizations { get; set; }
+		public bool PlatformOptimizations { get; set; }
 
 		/// <summary>
 		/// Gets or sets the type of the elf.
@@ -145,12 +145,12 @@ namespace Mosa.Compiler.Framework
 		/// <summary>
 		/// Gets or sets a value indicating whether [aggressive optimizations].
 		/// </summary>
-		public bool TwoPassOptimizations { get; set; }
+		public bool TwoPass { get; set; }
 
 		/// <summary>
 		/// Gets or sets a value indicating whether [enable statistics].
 		/// </summary>
-		public bool EnableStatistics { get; set; }
+		public bool Statistics { get; set; }
 
 		/// <summary>
 		/// Gets or sets the trace level.
@@ -170,7 +170,7 @@ namespace Mosa.Compiler.Framework
 		/// <summary>
 		/// Gets or sets a value indicating whether [enable method scanner].
 		/// </summary>
-		public bool EnableMethodScanner { get; set; }
+		public bool MethodScanner { get; set; }
 
 		/// <summary>
 		/// Gets or sets a value indicating whether [emit inline methods].
@@ -187,9 +187,9 @@ namespace Mosa.Compiler.Framework
 		/// </summary>
 		public MosaLinker.CreateExtraProgramHeaderDelegate CreateExtraProgramHeaders { get; set; }
 
-		public List<string> InlineMethods { get; set; } = new List<string>();
+		public List<string> InlineMethodsList { get; set; } = new List<string>();
 
-		public List<string> DoNotInlineMethods { get; set; } = new List<string>();
+		public List<string> DoNotInlineMethodsList { get; set; } = new List<string>();
 
 		#endregion Properties
 
@@ -353,24 +353,24 @@ namespace Mosa.Compiler.Framework
 		public CompilerOptions()
 		{
 			TraceLevel = 0;
-			EnableSSA = true;
-			EnableBasicOptimizations = true;
-			EnableSparseConditionalConstantPropagation = true;
-			EnableInlineMethods = false;
+			SSA = true;
+			BasicOptimizations = true;
+			SparseConditionalConstantPropagation = true;
+			InlineMethods = false;
 			BaseAddress = 0x00400000;
 			EmitBinary = true;
 			InlineMaximum = 12;
 			InlineAggressiveMaximum = 24;
 			EmitAllSymbols = true;
 			EmitStaticRelocations = true;
-			TwoPassOptimizations = true;
-			EnableStatistics = true;
-			EnableLongExpansion = true;
-			EnableValueNumbering = true;
-			EnableLoopInvariantCodeMotion = true;
-			EnablePlatformOptimizations = true;
-			EnableMethodScanner = false;
-			EnableBitTracker = true;
+			TwoPass = true;
+			Statistics = true;
+			LongExpansion = true;
+			ValueNumbering = true;
+			LoopInvariantCodeMotion = true;
+			PlatformOptimizations = true;
+			MethodScanner = false;
+			BitTracker = true;
 			EmitInline = false;
 			EmitShortSymbolNames = true;
 		}
