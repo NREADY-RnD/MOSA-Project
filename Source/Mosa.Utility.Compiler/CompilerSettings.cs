@@ -1,23 +1,20 @@
 ﻿// Copyright (c) MOSA Project. Licensed under the New BSD License.
 
+using Mosa.Compiler.Common;
 using Mosa.Compiler.Common.Configuration;
 using Mosa.Compiler.Framework;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using Mosa.Compiler.Common;
-
-using Mosa.Compiler.Framework;
-
 using Mosa.Compiler.Framework.Linker;
 using Mosa.Compiler.Framework.Trace;
 using Mosa.Compiler.MosaTypeSystem;
+using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace Mosa.Utility.Compiler
 {
 	public static class MapCompilerOptions
 	{
-		public static void Map(Settings settings, CompilerOptions compilerOptions)
+		public static void Set(Settings settings, CompilerOptions compilerOptions)
 		{
 			compilerOptions.TraceLevel = settings.GetValueAsInteger("Compiler.TraceLevel", compilerOptions.TraceLevel);
 			compilerOptions.EmitBinary = settings.GetValueAsBoolean("Compiler.EmitBinary", compilerOptions.EmitBinary);
@@ -42,6 +39,12 @@ namespace Mosa.Utility.Compiler
 			var platform = settings.GetValue("Compiler.Platform");
 			if (platform != null)
 				compilerOptions.Platform = GetPlatform(platform);
+
+			compilerOptions.SourceFiles.Clear();
+			compilerOptions.AddSourceFiles(settings.GetList("SourceFiles"));
+
+			compilerOptions.SearchPaths.Clear();
+			compilerOptions.AddSearchPaths(settings.GetList("SearchPaths"));
 		}
 
 		private static BaseArchitecture GetPlatform(string platform)

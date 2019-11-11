@@ -244,6 +244,17 @@ namespace Mosa.Compiler.Framework
 			SourceFiles.AddIfNew(path);
 		}
 
+		public void AddSourceFiles(IList<string> files)
+		{
+			foreach (var file in files)
+			{
+				if (file == null)
+					continue;
+
+				AddSourceFile(file);
+			}
+		}
+
 		/// <summary>
 		/// Adds the source files.
 		/// </summary>

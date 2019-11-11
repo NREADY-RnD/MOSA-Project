@@ -160,6 +160,12 @@ namespace Mosa.Compiler.Common.Configuration
 			return defaultValue;
 		}
 
+		public List<string> GetList(string fullname)
+		{
+			var property = GetProperty(fullname);
+			return property.List;
+		}
+
 		public void SetProperty(string fullname, string value)
 		{
 			var property = CreateProperty(fullname);
@@ -180,6 +186,9 @@ namespace Mosa.Compiler.Common.Configuration
 
 		public void AddPropertyListValue(string fullname, string value)
 		{
+			if (value == null)
+				return;
+
 			var property = CreateProperty(fullname);
 			property.List.Add(value);
 		}
