@@ -114,7 +114,7 @@ namespace Mosa.Tool.Launcher
 			Options.EnablePlatformOptimizations = cbPlatformOptimizations.Checked;
 			Options.EnableLoopInvariantCodeMotion = cbLoopInvariantCodeMotion.Checked;
 
-			Options.OsName = tbOsName.Text;
+			//Options.OsName = tbOsName.Text;
 
 			if (Options.VBEVideo)
 			{
@@ -242,7 +242,7 @@ namespace Mosa.Tool.Launcher
 			cbPlatformOptimizations.Checked = Options.EnablePlatformOptimizations;
 			cbLoopInvariantCodeMotion.Checked = Options.EnableLoopInvariantCodeMotion;
 
-			tbOsName.Text = Options.OsName;
+			//tbOsName.Text = Options.OsName;
 
 			switch (Options.ImageFormat)
 			{

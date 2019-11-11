@@ -10,10 +10,8 @@ Compiler:
 	Multithreading: true
 	EmitInline: false					# Emit all inlined methods
 	EmitBinary: true					# Emit Binary
-	Advance:
-		PlugKorlib: true
-	#OutputFile
-	#SourceFile:
+	#OutputFile:
+	#SourceFiles:
 
 SearchPaths:
 
@@ -22,15 +20,16 @@ Linker:
 	EmitStaticRelocations: false
 
 CompilerDebug:
-	Emit:
-		Debug: false
-			File: %DEFAULT%
-		Map: false
-			File: %DEFAULT%
-		CompileTime: false
-			File: %DEFAULT%
-		Asm: false
-			File: %DEFAULT%
+	DebugFile: false
+		File: %DEFAULT%
+	MapFile: false
+		File: %DEFAULT%
+	CompileTimeFile: false
+		File: %DEFAULT%
+	AsmFile: false
+		File: %DEFAULT%
+	NasmFile: false
+		File: %DEFAULT%
 
 Optimizations:
 	Basic: true
@@ -71,7 +70,7 @@ Launcher:
 Image:
 	Format: img							# Image Format: BIN, IMG, VHD, VDI, ISO, VMDK
 	FileSystem:	fat12					# File System: FAT12, FAT16, FAT32, ISO????
-	BootLoaderImage:					# ???
+	BootLoader:							# Grub_v0.97, Grub_v2.00, Syslinux_v6.03, Syslinux_v3.72
 	Destination:						# Destination Directory
 	ImageFile:							# Image File Name
 
@@ -101,3 +100,4 @@ Debugger:
 
 Advanced:
 	#InterruptMethodName:
+	PlugKorlib: true

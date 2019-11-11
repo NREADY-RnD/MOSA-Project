@@ -16,8 +16,8 @@ namespace Mosa.Utility.Launcher
 		[Option("dest")]
 		public string DestinationDirectory { get; set; }
 
-		[Option("name")]
-		public string OsName { get; set; }
+		//[Option("name")]
+		//public string OsName { get; set; }
 
 		[Option("destination-dir")]
 		public string DestinationDirectoryAlt { set { DestinationDirectory = value; } }
