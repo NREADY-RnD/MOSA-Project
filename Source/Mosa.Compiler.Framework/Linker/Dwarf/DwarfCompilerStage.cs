@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace Mosa.Compiler.Extensions.Dwarf
+namespace Mosa.Compiler.Framework.Linker.Dwarf
 {
 	internal class DwarfCompilerStage : BaseCompilerStage
 	{

@@ -3,6 +3,7 @@
 using CommandLine;
 using Mosa.Compiler.Common.Exceptions;
 using Mosa.Compiler.Framework;
+using Mosa.Compiler.Framework.Linker.Dwarf;
 using Mosa.Compiler.Framework.Trace.BuiltIn;
 using System;
 using System.Collections.Generic;
@@ -53,7 +54,7 @@ Example: Mosa.Tool.Compiler.exe -o Mosa.HelloWorld.x86.bin -a x86 --mboot v1 --x
 		private List<BaseCompilerExtension> GetCompilerExtensions()
 		{
 			var list = new List<BaseCompilerExtension>();
-			list.Add(new Mosa.Compiler.Extensions.Dwarf.DwarfCompilerExtension());
+			list.Add(new DwarfCompilerExtension());
 			return list;
 		}
 

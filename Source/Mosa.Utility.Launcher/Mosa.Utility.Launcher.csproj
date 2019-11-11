@@ -35,7 +35,6 @@
     <ProjectReference Include="..\Mosa.Platform.x64\Mosa.Platform.x64.csproj" />
     <ProjectReference Include="..\Mosa.Platform.x86\Mosa.Platform.x86.csproj" />
     <ProjectReference Include="..\Mosa.Utility.BootImage\Mosa.Utility.BootImage.csproj" />
-    <ProjectReference Include="..\Mosa.Compiler.Extension.Dwarf\Mosa.Compiler.Extension.Dwarf.csproj" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="..\..\Tools\syslinux\6.03\mbr.bin">

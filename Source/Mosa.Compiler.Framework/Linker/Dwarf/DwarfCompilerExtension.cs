@@ -3,7 +3,7 @@
 using Mosa.Compiler.Framework;
 using Mosa.Compiler.Framework.CompilerStages;
 
-namespace Mosa.Compiler.Extensions.Dwarf
+namespace Mosa.Compiler.Framework.Linker.Dwarf
 {
 	public class DwarfCompilerExtension : BaseCompilerExtension
 	{

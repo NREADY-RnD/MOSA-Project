@@ -2,7 +2,7 @@
 
 using System.IO;
 
-namespace Mosa.Compiler.Extensions.Dwarf
+namespace Mosa.Compiler.Framework.Linker.Dwarf
 {
 	// Source: https://github.com/aumcode/nfx/blob/9fca1a4d1672cd724025f5ea242811d53197fad4/Source/NFX/IO/LEB128.cs
 	public static class LSBEncoding

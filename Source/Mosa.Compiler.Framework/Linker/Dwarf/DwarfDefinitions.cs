@@ -2,7 +2,7 @@
 
 using System.Collections.Generic;
 
-namespace Mosa.Compiler.Extensions.Dwarf
+namespace Mosa.Compiler.Framework.Linker.Dwarf
 {
 	public static class DwarfConstants
 	{
@@ -37,6 +37,7 @@ namespace Mosa.Compiler.Extensions.Dwarf
 		/// A attribute whose value is a null-terminated string containing information about the compiler that produced the compilation unit.
 		/// </summary>
 		DW_AT_producer = 0x25,
+
 		DW_AT_compdir = 0x1B,
 		DW_AT_language = 0x13,
 
@@ -58,17 +59,18 @@ namespace Mosa.Compiler.Extensions.Dwarf
 
 	public enum DwarfForm : uint
 	{
-
 		/// <summary>
 		/// Null-terminated string
 		/// </summary>
 		DW_FORM_string = 0x08,
+
 		DW_FORM_addr = 0x01,
 
 		/// <summary>
 		/// For attributes with this form, the attribute value itself in the .debug_info section begins with an unsigned LEB128 number that represents its form.
 		/// </summary>
 		DW_FORM_indirect = 0x16,
+
 		DW_FORM_data2 = 0x05,
 		DW_FORM_data4 = 0x06,
 		DW_FORM_data8 = 0x07,
@@ -130,6 +132,7 @@ namespace Mosa.Compiler.Extensions.Dwarf
 		/// Set the address register to the value given by the relocatable address.
 		/// </summary>
 		DW_LNE_set_address = 2,
+
 		DW_LNE_define_file = 3,
 	}
 

@@ -8,6 +8,7 @@ using Mosa.Compiler.Common;
 using Mosa.Compiler.Common.Exceptions;
 using Mosa.Compiler.Framework;
 using Mosa.Compiler.Framework.Linker;
+using Mosa.Compiler.Framework.Linker.Dwarf;
 using Mosa.Compiler.Framework.Trace;
 using Mosa.Compiler.MosaTypeSystem;
 using Mosa.Utility.BootImage;
@@ -68,7 +69,7 @@ namespace Mosa.Utility.Launcher
 		{
 			return new List<BaseCompilerExtension>()
 			{
-				new Compiler.Extensions.Dwarf.DwarfCompilerExtension()
+				new DwarfCompilerExtension()
 			};
 		}
 

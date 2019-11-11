@@ -143,6 +143,11 @@ namespace Mosa.Compiler.Framework
 		public bool EmitShortSymbolNames { get; set; }
 
 		/// <summary>
+		/// Gets or sets a value indicating whether [emit dwarf].
+		/// </summary>
+		public bool EmitDrawf { get; set; }
+
+		/// <summary>
 		/// Gets or sets a value indicating whether [aggressive optimizations].
 		/// </summary>
 		public bool TwoPass { get; set; }
@@ -373,6 +378,7 @@ namespace Mosa.Compiler.Framework
 			BitTracker = true;
 			EmitInline = false;
 			EmitShortSymbolNames = true;
+			EmitDrawf = false;
 		}
 	}
 }

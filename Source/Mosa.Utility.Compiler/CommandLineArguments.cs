@@ -20,12 +20,12 @@ namespace Mosa.Utility.Compiler
 				new ArgumentMap() { Argument = "--threading", Setting = "Compiler.Multithreading", Value = "true"},
 				new ArgumentMap() { Argument = "--threading-off", Setting = "Compiler.Multithreading", Value = "false"},
 				new ArgumentMap() { Argument = "--settings", Setting = "Import", Value = null, IsList = true},
-
 				new ArgumentMap() { Argument = null, Setting = "Compiler.SourceFiles", Value = null, IsList = true},
 
 				new ArgumentMap() { Argument = "--base", Setting = "Compiler.BaseAddress"},
 				new ArgumentMap() { Argument = "--scanner", Setting = "Compiler.MethodScanner", Value = "true"},
 				new ArgumentMap() { Argument = "--no-code", Setting = "Compiler.EmitBinary", Value = "false"},
+				new ArgumentMap() { Argument = "--path", Setting = "SearchPaths", IsList = true},
 
 				new ArgumentMap() { Argument = "--output-map", Setting = "CompilerDebug.Emit.Map", Value = "true"},
 				new ArgumentMap() { Argument = "--output-asm", Setting = "CompilerDebug.Emit.Asm", Value = "true"},
@@ -73,6 +73,7 @@ namespace Mosa.Utility.Compiler
 				new ArgumentMap() { Argument = "--emit-relocations", Setting = "Linker.EmitStaticRelocations", Value = "true"},
 				new ArgumentMap() { Argument = "--emit-relocations-false", Setting = "Linker.EmitStaticRelocations", Value = "false"},
 				new ArgumentMap() { Argument = "--emit-static-relocations", Setting = "Linker.EmitStaticRelocations", Value = "true"},
+				new ArgumentMap() { Argument = "--drawf", Setting = "Linker.EmitDrawf", Value = "true"},
 
 				// Explorer:
 				new ArgumentMap() { Argument = "--filter", Setting = "Explorer.Filter", Value = null},

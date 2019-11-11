@@ -3,7 +3,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace Mosa.Compiler.Extensions.Dwarf
+namespace Mosa.Compiler.Framework.Linker.Dwarf
 {
 	public class DwarfWriteContext
 	{
