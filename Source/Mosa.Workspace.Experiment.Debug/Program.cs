@@ -19,17 +19,17 @@ namespace Mosa.Workspace.Experiment.Debug
 
 			var args = new string[] { "--q", "--autostart", "--output-map", "--output-asm", "--output-debug", "--threading-off", "--inline-off", "Mosa.CoolWorld.x86.exe" };
 
-			List<ArgumentMap> map = new List<ArgumentMap>()
+			List<Argument> map = new List<Argument>()
 			{
-				new ArgumentMap(){ Argument = "--q", Setting = "Launcher.Exit", Value = "true"},
-				new ArgumentMap(){ Argument = "--autostart", Setting = "Launcher.Start", Value = "true"},
-				new ArgumentMap(){ Argument = "--output-map", Setting = "CompilerDebug.Emit.Map", Value = "true"},
-				new ArgumentMap(){ Argument = "--output-asm", Setting = "CompilerDebug.Emit.Asm", Value = "true"},
-				new ArgumentMap(){ Argument = "--output-debug", Setting = "CompilerDebug.Emit.Debug", Value = "true"},
-				new ArgumentMap(){ Argument = "--threading-off", Setting = "Compiler.Multithreading", Value = "false"},
-				new ArgumentMap(){ Argument = "--inline-off", Setting = "Optimizations.Inline", Value = "false"},
-				new ArgumentMap(){ Argument = null, Setting = "Compiler.SourceFile", Value = null},
-				new ArgumentMap(){ Argument = "--settings", Setting = "Import", Value = null, IsList = true},
+				new Argument(){ Name = "--q", Setting = "Launcher.Exit", Value = "true"},
+				new Argument(){ Name = "--autostart", Setting = "Launcher.Start", Value = "true"},
+				new Argument(){ Name = "--output-map", Setting = "CompilerDebug.Emit.Map", Value = "true"},
+				new Argument(){ Name = "--output-asm", Setting = "CompilerDebug.Emit.Asm", Value = "true"},
+				new Argument(){ Name = "--output-debug", Setting = "CompilerDebug.Emit.Debug", Value = "true"},
+				new Argument(){ Name = "--threading-off", Setting = "Compiler.Multithreading", Value = "false"},
+				new Argument(){ Name = "--inline-off", Setting = "Optimizations.Inline", Value = "false"},
+				new Argument(){ Name = null, Setting = "Compiler.SourceFile", Value = null},
+				new Argument(){ Name = "--settings", Setting = "Import", Value = null, IsList = true},
 			};
 
 			var argumentSettings = Reader.ParseArguments(args, map);

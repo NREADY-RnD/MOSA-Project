@@ -5,9 +5,9 @@ using System.IO;
 
 namespace Mosa.Compiler.Common.Configuration
 {
-	public class ArgumentMap
+	public class Argument
 	{
-		public string Argument { get; set; }
+		public string Name { get; set; }
 
 		public string Setting { get; set; }
 

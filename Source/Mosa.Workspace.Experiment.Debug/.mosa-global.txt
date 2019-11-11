@@ -3,11 +3,11 @@ Import:
 
 Compiler:
 	Platform: x86						# Platform: x86, x64, ArmARMv8A32
-	BaseAddress: 0x00400000
-	EnableStatistics : false
-	TraceLevel: 0
+	BaseAddress: 0x00400000				# Base address
+	EnableStatistics: false				# Enable statistics gathering
+	TraceLevel: 0						# Trace level for debugging
 	MethodScanner: false				# Experimental option to enable the method scanner
-	Multithreading: true
+	Multithreading: true				# Enable multithreading compile
 	EmitInline: false					# Emit all inlined methods
 	EmitBinary: true					# Emit Binary
 	#OutputFile:

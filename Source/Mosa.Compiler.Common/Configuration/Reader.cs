@@ -75,23 +75,24 @@ namespace Mosa.Compiler.Common.Configuration
 			return settings;
 		}
 
-		public static Settings ParseArguments(string[] args, List<ArgumentMap> map)
+		public static Settings ParseArguments(string[] args, List<Argument> arguments)
 		{
 			var settings = new Settings();
+			var defaultMap = FindDefaultArgumentMap(arguments);
 
 			for (int at = 1; at < args.Length; at++)
 			{
 				var arg = args[at];
-				var argumentMap = FindArgumentMap(arg, map);
+				var map = FindArgumentMap(arg, arguments);
 
-				if (argumentMap == null)
-					continue;
-
-				var property = settings.CreateProperty(argumentMap.Setting);
-
-				if (argumentMap.Argument == null)
+				if (map == null)
 				{
-					if (argumentMap.IsList)
+					if (defaultMap == null)
+						continue;
+
+					var property = settings.CreateProperty(defaultMap.Setting);
+
+					if (defaultMap.IsList)
 					{
 						property.List.Add(arg);
 					}
@@ -99,18 +100,25 @@ namespace Mosa.Compiler.Common.Configuration
 					{
 						property.Value = arg;
 					}
-				}
-				else if (argumentMap.Value != null)
-				{
-					property.Value = argumentMap.Value;
-				}
-				else if (argumentMap.IsList)
-				{
-					property.List.Add(args[++at]);
+
+					continue;
 				}
 				else
 				{
-					property.Value = args[++at];
+					var property = settings.CreateProperty(map.Setting);
+
+					if (map.Value != null)
+					{
+						property.Value = map.Value;
+					}
+					else if (map.IsList)
+					{
+						property.List.Add(args[++at]);
+					}
+					else
+					{
+						property.Value = args[++at];
+					}
 				}
 			}
 
@@ -206,22 +214,42 @@ namespace Mosa.Compiler.Common.Configuration
 
 		#endregion Internal Methods
 
-		public static ArgumentMap FindArgumentMap(string arg, List<ArgumentMap> map)
+		private static Argument FindArgumentMap(string arg, List<Argument> map)
 		{
-			ArgumentMap empty = null;
-
 			foreach (var entry in map)
 			{
-				if (entry.Argument == arg)
+				if (entry.Name == arg)
 					return entry;
+			}
 
-				if (entry.Value == null && entry.Argument == null)
+			return null;
+		}
+
+		private static List<Argument> FindArguments(string arg, List<Argument> arguments)
+		{
+			List<Argument> map = new List<Argument>();
+
+			foreach (var entry in arguments)
+			{
+				if (entry.Name == arg)
 				{
-					empty = entry;
+					map.Add(entry);
+				}
+			}
+			return map;
+		}
+
+		private static Argument FindDefaultArgumentMap(List<Argument> map)
+		{
+			foreach (var entry in map)
+			{
+				if (entry.Value == null && entry.Name == null)
+				{
+					return entry;
 				}
 			}
 
-			return empty;
+			return null;
 		}
 	}
 }
