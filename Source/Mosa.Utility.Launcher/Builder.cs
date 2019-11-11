@@ -67,10 +67,7 @@ namespace Mosa.Utility.Launcher
 
 		private List<BaseCompilerExtension> GetCompilerExtensions()
 		{
-			return new List<BaseCompilerExtension>()
-			{
-				new DwarfCompilerExtension()
-			};
+			return new List<BaseCompilerExtension>();
 		}
 
 		public void Compile()

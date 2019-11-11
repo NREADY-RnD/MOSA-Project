@@ -3,6 +3,7 @@
 using Mosa.Compiler.Common.Exceptions;
 using Mosa.Compiler.Framework.CompilerStages;
 using Mosa.Compiler.Framework.Linker;
+using Mosa.Compiler.Framework.Linker.Dwarf;
 using Mosa.Compiler.Framework.Stages;
 using Mosa.Compiler.Framework.Trace;
 using Mosa.Compiler.MosaTypeSystem;
@@ -145,6 +146,7 @@ namespace Mosa.Compiler.Framework
 				new ExceptionTableStage(),
 				new MetadataStage(),
 				new LinkerLayoutStage(),
+				(compilerOptions.EmitDrawf)  ? new DwarfCompilerStage() : null,
 				(compilerOptions.CompileTimeFile != null) ? new MethodCompileTimeStage() : null,
 				(compilerOptions.OutputFile != null && compilerOptions.EmitBinary) ? new LinkerEmitStage() : null,
 				(compilerOptions.MapFile != null) ? new MapFileStage() : null,

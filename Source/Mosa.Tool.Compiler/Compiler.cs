@@ -51,13 +51,6 @@ Example: Mosa.Tool.Compiler.exe -o Mosa.HelloWorld.x86.bin -a x86 --mboot v1 --x
 
 		#endregion Constructors
 
-		private List<BaseCompilerExtension> GetCompilerExtensions()
-		{
-			var list = new List<BaseCompilerExtension>();
-			list.Add(new DwarfCompilerExtension());
-			return list;
-		}
-
 		#region Public Methods
 
 		/// <summary>
@@ -87,7 +80,7 @@ Example: Mosa.Tool.Compiler.exe -o Mosa.HelloWorld.x86.bin -a x86 --mboot v1 --x
 					throw new Exception("No input file(s) specified.");
 				}
 
-				compiler = new MosaCompiler(options.CompilerOptions, GetCompilerExtensions());
+				compiler = new MosaCompiler(options.CompilerOptions);
 
 				Trace.Listeners.Add(new TextWriterTraceListener(Console.Out));
 				Debug.AutoFlush = true;
