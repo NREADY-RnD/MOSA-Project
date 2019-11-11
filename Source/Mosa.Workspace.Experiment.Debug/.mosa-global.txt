@@ -2,7 +2,7 @@ Import:
 	#'.mosa-global.txt'
 
 Compiler:
-	Platform: x86					# Platform: x86, x64, ArmARMv8A32
+	Platform: x86						# Platform: x86, x64, ArmARMv8A32
 	BaseAddress: 0x00400000
 	EnableStatistics : false
 	TraceLevel: 0

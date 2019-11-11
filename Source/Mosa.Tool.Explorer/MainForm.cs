@@ -20,7 +20,7 @@ namespace Mosa.Tool.Explorer
 {
 	public partial class MainForm : Form, ITraceListener
 	{
-		private Settings ExplorerSettings = new Settings();
+		private Settings Settings = new Settings();
 
 		private readonly CodeForm form = new CodeForm();
 
@@ -62,7 +62,11 @@ namespace Mosa.Tool.Explorer
 			tbLogs.Width = tabControl.Width - 4;
 			tbLogs.Height = tabControl.Height - (22 + 32 + 8);
 
+			cbPlatform.SelectedIndex = 0;
+
 			ClearAllLogs();
+
+			Settings.SetProperty("Compiler.Platform", "x86");
 		}
 
 		private void ClearAllLogs()
@@ -212,9 +216,11 @@ namespace Mosa.Tool.Explorer
 
 		public void LoadArguments(string[] args)
 		{
-			ExplorerSettings = Reader.ParseArguments(args, CommandLineArguments.GetMap());
+			var arguments = Reader.ParseArguments(args, CommandLineArguments.GetMap());
 
-			UpdateDisplay(ExplorerSettings);
+			Settings.Merge(arguments);
+
+			UpdateDisplay(Settings);
 		}
 
 		private void UpdateDisplay(Settings settings)
@@ -249,7 +255,7 @@ namespace Mosa.Tool.Explorer
 
 			var sourceFiles = settings.GetValueList("Compiler.SourceFiles");
 
-			if (sourceFiles.Count == 1)
+			if (sourceFiles != null && sourceFiles.Count == 1)
 			{
 				string file = sourceFiles[0];
 
@@ -465,28 +471,58 @@ namespace Mosa.Tool.Explorer
 
 		private void SetCompilerSettings()
 		{
-			ExplorerSettings.SetProperty("Compiler.MethodScanner", cbEnableMethodScanner.Checked);
-			ExplorerSettings.SetProperty("Compiler.EmitBinary", cbEnableBinaryCodeGeneration.Checked);
-			ExplorerSettings.SetProperty("Compiler.TraceLevel", 8);
-			ExplorerSettings.SetProperty("Compiler.Platform", cbPlatform.Text);
-			ExplorerSettings.SetProperty("Compiler.Multithreading", CBEnableMultithreading.Checked);
+			Settings.SetProperty("Compiler.MethodScanner", cbEnableMethodScanner.Checked);
+			Settings.SetProperty("Compiler.EmitBinary", cbEnableBinaryCodeGeneration.Checked);
+			Settings.SetProperty("Compiler.TraceLevel", 8);
+			Settings.SetProperty("Compiler.Platform", cbPlatform.Text);
+			Settings.SetProperty("Compiler.Multithreading", CBEnableMultithreading.Checked);
 
-			ExplorerSettings.SetProperty("Optimizations.SSA", cbEnableSSA.Checked);
-			ExplorerSettings.SetProperty("Optimizations.Basic", cbEnableBasicOptimizations.Checked);
-			ExplorerSettings.SetProperty("Optimizations.ValueNumbering", cbEnableValueNumbering.Checked);
-			ExplorerSettings.SetProperty("Optimizations.SCCP", cbEnableSparseConditionalConstantPropagation.Checked);
-			ExplorerSettings.SetProperty("Optimizations.BitTracker", cbEnableBitTracker.Checked);
-			ExplorerSettings.SetProperty("Optimizations.LoopInvariantCodeMotion", cbLoopInvariantCodeMotion.Checked);
-			ExplorerSettings.SetProperty("Optimizations.LongExpansion", cbEnableLongExpansion.Checked);
-			ExplorerSettings.SetProperty("Optimizations.TwoPass", cbEnableTwoPassOptimizations.Checked);
-			ExplorerSettings.SetProperty("Optimizations.Platform", cbPlatformOptimizations.Checked);
-			ExplorerSettings.SetProperty("Optimizations.Inline", cbEnableInline.Checked);
-			ExplorerSettings.SetProperty("Optimizations.Inline.ExplicitOnly", cbInlineExplicitOnly.Checked);
+			Settings.SetProperty("Optimizations.SSA", cbEnableSSA.Checked);
+			Settings.SetProperty("Optimizations.Basic", cbEnableBasicOptimizations.Checked);
+			Settings.SetProperty("Optimizations.ValueNumbering", cbEnableValueNumbering.Checked);
+			Settings.SetProperty("Optimizations.SCCP", cbEnableSparseConditionalConstantPropagation.Checked);
+			Settings.SetProperty("Optimizations.BitTracker", cbEnableBitTracker.Checked);
+			Settings.SetProperty("Optimizations.LoopInvariantCodeMotion", cbLoopInvariantCodeMotion.Checked);
+			Settings.SetProperty("Optimizations.LongExpansion", cbEnableLongExpansion.Checked);
+			Settings.SetProperty("Optimizations.TwoPass", cbEnableTwoPassOptimizations.Checked);
+			Settings.SetProperty("Optimizations.Platform", cbPlatformOptimizations.Checked);
+			Settings.SetProperty("Optimizations.Inline", cbEnableInline.Checked);
+			Settings.SetProperty("Optimizations.Inline.ExplicitOnly", cbInlineExplicitOnly.Checked);
 
-			ExplorerSettings.SetProperty("Optimizations.Inline.Maximum", 12);
-			ExplorerSettings.SetProperty("Optimizations.Inline.AggressiveMaximum", 24);
+			Settings.SetProperty("Optimizations.Inline.Maximum", 12);
+			Settings.SetProperty("Optimizations.Inline.AggressiveMaximum", 24);
 
-			ExplorerSettings.SetProperty("Multiboot.Version", "v2");
+			Settings.SetProperty("Multiboot.Version", "v2");
+
+			Settings.SetProperty("Compiler.Platform", cbPlatform.Text.ToLower());
+		}
+
+		private void SetCompilerSettings(string filename, string platform, string includeDirectory)
+		{
+			Compiler.CompilerOptions.SearchPaths.Clear();
+			Compiler.CompilerOptions.SourceFiles.Clear();
+
+			var sourceDirectory = Path.GetDirectoryName(filename);
+			Compiler.CompilerOptions.AddSearchPath(includeDirectory);
+			Compiler.CompilerOptions.AddSearchPath(sourceDirectory);
+
+			var fileHunter = new FileHunter(sourceDirectory);
+			Compiler.CompilerOptions.AddSourceFile(filename);
+			Compiler.CompilerOptions.AddSourceFile(fileHunter.HuntFile("Mosa.Plug.Korlib.dll")?.FullName);
+			Compiler.CompilerOptions.AddSourceFile(fileHunter.HuntFile("Mosa.Plug.Korlib." + platform + ".dll")?.FullName);
+			Compiler.CompilerOptions.AddSourceFile(fileHunter.HuntFile("Mosa.Runtime." + platform + ".dll")?.FullName);
+
+			// Search Paths
+			Settings.ClearProperty("SearchPaths");
+			Settings.AddPropertyListValue("SearchPaths", includeDirectory);
+			Settings.AddPropertyListValue("SearchPaths", Path.GetDirectoryName(filename));
+
+			// Source Files
+			Settings.ClearProperty("SourceFiles");
+			Settings.AddPropertyListValue("SourceFiles", filename);
+			Settings.AddPropertyListValue("SourceFiles", fileHunter.HuntFile("Mosa.Plug.Korlib." + platform + ".dll")?.FullName);
+			Settings.AddPropertyListValue("SourceFiles", fileHunter.HuntFile("Mosa.Plug.Korlib." + platform + ".dll")?.FullName);
+			Settings.AddPropertyListValue("SourceFiles", fileHunter.HuntFile("Mosa.Runtime." + platform + ".dll")?.FullName);
 		}
 
 		private void CompileAll()
@@ -495,7 +531,7 @@ namespace Mosa.Tool.Explorer
 
 			SetCompilerSettings();
 
-			MapCompilerOptions.Set(ExplorerSettings, Compiler.CompilerOptions);
+			MapCompilerOptions.Set(Settings, Compiler.CompilerOptions);
 			Compiler.CompilerTrace.SetTraceListener(this);
 			Compiler.ScheduleAll();
 
@@ -741,7 +777,7 @@ namespace Mosa.Tool.Explorer
 
 			SetCompilerSettings();
 
-			MapCompilerOptions.Set(ExplorerSettings, Compiler.CompilerOptions);
+			MapCompilerOptions.Set(Settings, Compiler.CompilerOptions);
 			Compiler.CompilerTrace.SetTraceListener(this);
 			Compiler.CompileSingleMethod(method);
 		}
@@ -778,6 +814,8 @@ namespace Mosa.Tool.Explorer
 		protected void LoadAssembly(string filename, string platform, string includeDirectory = null)
 		{
 			SetCompilerSettings();
+			SetCompilerSettings(filename, platform, includeDirectory);
+			MapCompilerOptions.Set(Settings, Compiler.CompilerOptions);
 
 			Compiler.Load();
 		}

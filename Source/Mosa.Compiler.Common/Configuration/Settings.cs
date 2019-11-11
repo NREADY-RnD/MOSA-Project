@@ -10,6 +10,14 @@ namespace Mosa.Compiler.Common.Configuration
 		private List<Property> Properties = new List<Property>();
 		private Dictionary<string, Property> Lookups = new Dictionary<string, Property>();
 
+		public void Merge(Settings updates)
+		{
+			foreach (var property in updates.Properties)
+			{
+				MergeProperty(property);
+			}
+		}
+
 		public static Settings Merge(Settings start, Settings updates)
 		{
 			var settings = new Settings();
@@ -111,22 +119,22 @@ namespace Mosa.Compiler.Common.Configuration
 
 		public string GetValue(string fullname)
 		{
-			return GetProperty(fullname).Value;
+			var property = GetProperty(fullname);
+
+			if (property == null)
+				return null;
+
+			return property.Value;
 		}
 
 		public List<string> GetValueList(string fullname)
 		{
-			return GetProperty(fullname).List;
-		}
+			var property = GetProperty(fullname);
 
-		public bool IsConfigurationValueTrue(string fullname)
-		{
-			return GetProperty(fullname).IsValueTrue;
-		}
+			if (property == null)
+				return null;
 
-		public bool IsConfigurationValueFalse(string fullname)
-		{
-			return GetProperty(fullname).IsValueFalse;
+			return property.List;
 		}
 
 		public bool GetValueAsBoolean(string fullname, bool defaultValue)

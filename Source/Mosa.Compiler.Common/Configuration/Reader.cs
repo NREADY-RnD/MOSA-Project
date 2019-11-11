@@ -79,7 +79,7 @@ namespace Mosa.Compiler.Common.Configuration
 		{
 			var settings = new Settings();
 
-			for (int at = 0; at < args.Length; at++)
+			for (int at = 1; at < args.Length; at++)
 			{
 				var arg = args[at];
 				var argumentMap = FindArgumentMap(arg, map);
@@ -91,7 +91,14 @@ namespace Mosa.Compiler.Common.Configuration
 
 				if (argumentMap.Argument == null)
 				{
-					property.Value = arg;
+					if (argumentMap.IsList)
+					{
+						property.List.Add(arg);
+					}
+					else
+					{
+						property.Value = arg;
+					}
 				}
 				else if (argumentMap.Value != null)
 				{

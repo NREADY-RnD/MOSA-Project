@@ -20,7 +20,7 @@ namespace Mosa.Utility.Compiler
 				new ArgumentMap() { Argument = "--threading-off", Setting = "Compiler.Multithreading", Value = "false"},
 				new ArgumentMap() { Argument = "--settings", Setting = "Import", Value = null, IsList = true},
 
-				new ArgumentMap() { Argument = null, Setting = "Compiler.SourceFile", Value = null},
+				new ArgumentMap() { Argument = null, Setting = "Compiler.SourceFiles", Value = null, IsList = true},
 
 				new ArgumentMap() { Argument = "--scanner", Setting = "Compiler.MethodScanner", Value = "true"},
 				new ArgumentMap() { Argument = "--no-code", Setting = "Compiler.EmitBinary", Value = "false"},
