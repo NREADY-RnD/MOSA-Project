@@ -3,8 +3,10 @@
 using CommandLine;
 using MetroFramework.Forms;
 using Mosa.Compiler.Common;
+using Mosa.Compiler.Common.Configuration;
 using Mosa.Compiler.Framework;
 using Mosa.Utility.BootImage;
+using Mosa.Utility.Compiler;
 using Mosa.Utility.Launcher;
 using System;
 using System.ComponentModel;
@@ -16,24 +18,16 @@ namespace Mosa.Tool.Launcher
 {
 	public partial class MainForm : MetroForm, IBuilderEvent, IStarterEvent
 	{
+		private Settings Settings = new Settings();
+
 		public Builder Builder { get; }
 
-		public Starter Starter { get; private set; }
-
-		public LauncherOptions Options { get; }
+		public LauncherOptions LauncherOptions { get; }
 
 		public AppLocations AppLocations { get; set; }
 
 		private int TotalMethods = 0;
 		private int CompletedMethods = 0;
-
-		public string ConfigFile
-		{
-			get
-			{
-				return Path.ChangeExtension(System.Reflection.Assembly.GetExecutingAssembly().Location, ".config.xml");
-			}
-		}
 
 		private readonly BindingList<IncludedEntry> includedEntries = new BindingList<IncludedEntry>();
 
@@ -56,12 +50,12 @@ namespace Mosa.Tool.Launcher
 		{
 			InitializeComponent();
 
-			Options = new LauncherOptions();
+			LauncherOptions = new LauncherOptions();
 			AppLocations = new AppLocations();
 
 			AppLocations.FindApplications();
 
-			Builder = new Builder(Options, AppLocations, this);
+			Builder = new Builder(LauncherOptions, AppLocations, this);
 
 			dataGridView1.DataSource = includedEntries;
 			dataGridView1.AutoResizeColumns();
@@ -84,39 +78,39 @@ namespace Mosa.Tool.Launcher
 
 		private void UpdateBuilderOptions()
 		{
-			Options.EnableSSA = cbEnableSSA.Checked;
-			Options.EnableBasicOptimizations = cbEnableIROptimizations.Checked;
-			Options.EnableSparseConditionalConstantPropagation = cbEnableSparseConditionalConstantPropagation.Checked;
-			Options.GenerateNASMFile = cbGenerateNASMFile.Checked;
-			Options.GenerateASMFile = cbGenerateASMFile.Checked;
-			Options.GenerateMapFile = cbGenerateMapFile.Checked;
-			Options.GenerateDebugFile = cbGenerateDebugInfoFile.Checked;
-			Options.ExitOnLaunch = cbExitOnLaunch.Checked;
-			Options.EnableQemuGDB = cbEnableQemuGDB.Checked;
-			Options.LaunchGDB = cbLaunchGDB.Checked;
-			Options.LaunchGDBDebugger = cbLaunchMosaDebugger.Checked;
-			Options.EnableMultiThreading = cbCompilerUsesMultipleThreads.Checked;
-			Options.EmulatorMemoryInMB = (uint)nmMemory.Value;
-			Options.EnableInlineMethods = cbInline.Checked;
-			Options.InlineExplicitOnly = cbInlineExplicitOnly.Checked;
-			Options.VBEVideo = cbVBEVideo.Checked;
-			Options.EnableLongExpansion = cbLongExpansion.Checked;
-			Options.TwoPassOptimizations = cbTwoPassOptimizations.Checked;
-			Options.EnableLongExpansion = cbLongExpansion.Checked;
-			Options.EnableValueNumbering = cbValueNumbering.Checked;
-			Options.GenerateDebugFile = cbGenerateDebugInfoFile.Checked;
-			Options.BaseAddress = tbBaseAddress.Text.ParseHexOrInteger();
-			Options.EmitAllSymbols = cbEmitSymbolTable.Checked;
-			Options.EmitStaticRelocations = cbRelocationTable.Checked;
-			Options.EnableMethodScanner = cbEnableMethodScanner.Checked;
-			Options.GenerateCompileTimeFile = cbGenerateCompilerTime.Checked;
-			Options.EnableBitTracker = cbBitTracker.Checked;
-			Options.EnablePlatformOptimizations = cbPlatformOptimizations.Checked;
-			Options.EnableLoopInvariantCodeMotion = cbLoopInvariantCodeMotion.Checked;
+			LauncherOptions.EnableSSA = cbEnableSSA.Checked;
+			LauncherOptions.EnableBasicOptimizations = cbEnableIROptimizations.Checked;
+			LauncherOptions.EnableSparseConditionalConstantPropagation = cbEnableSparseConditionalConstantPropagation.Checked;
+			LauncherOptions.GenerateNASMFile = cbGenerateNASMFile.Checked;
+			LauncherOptions.GenerateASMFile = cbGenerateASMFile.Checked;
+			LauncherOptions.GenerateMapFile = cbGenerateMapFile.Checked;
+			LauncherOptions.GenerateDebugFile = cbGenerateDebugInfoFile.Checked;
+			LauncherOptions.ExitOnLaunch = cbExitOnLaunch.Checked;
+			LauncherOptions.EnableQemuGDB = cbEnableQemuGDB.Checked;
+			LauncherOptions.LaunchGDB = cbLaunchGDB.Checked;
+			LauncherOptions.LaunchGDBDebugger = cbLaunchMosaDebugger.Checked;
+			LauncherOptions.EnableMultiThreading = cbCompilerUsesMultipleThreads.Checked;
+			LauncherOptions.EmulatorMemoryInMB = (uint)nmMemory.Value;
+			LauncherOptions.EnableInlineMethods = cbInline.Checked;
+			LauncherOptions.InlineExplicitOnly = cbInlineExplicitOnly.Checked;
+			LauncherOptions.VBEVideo = cbVBEVideo.Checked;
+			LauncherOptions.EnableLongExpansion = cbLongExpansion.Checked;
+			LauncherOptions.TwoPassOptimizations = cbTwoPassOptimizations.Checked;
+			LauncherOptions.EnableLongExpansion = cbLongExpansion.Checked;
+			LauncherOptions.EnableValueNumbering = cbValueNumbering.Checked;
+			LauncherOptions.GenerateDebugFile = cbGenerateDebugInfoFile.Checked;
+			LauncherOptions.BaseAddress = tbBaseAddress.Text.ParseHexOrInteger();
+			LauncherOptions.EmitAllSymbols = cbEmitSymbolTable.Checked;
+			LauncherOptions.EmitStaticRelocations = cbRelocationTable.Checked;
+			LauncherOptions.EnableMethodScanner = cbEnableMethodScanner.Checked;
+			LauncherOptions.GenerateCompileTimeFile = cbGenerateCompilerTime.Checked;
+			LauncherOptions.EnableBitTracker = cbBitTracker.Checked;
+			LauncherOptions.EnablePlatformOptimizations = cbPlatformOptimizations.Checked;
+			LauncherOptions.EnableLoopInvariantCodeMotion = cbLoopInvariantCodeMotion.Checked;
 
 			//Options.OsName = tbOsName.Text;
 
-			if (Options.VBEVideo)
+			if (LauncherOptions.VBEVideo)
 			{
 				var Mode = tbMode.Text.Split('x');
 
@@ -128,9 +122,9 @@ namespace Mosa.Tool.Launcher
 						int ModeHeight = int.Parse(Mode[1]); //Get Mode Height
 						int ModeDepth = int.Parse(Mode[2]); //Get Mode Depth
 
-						Options.Width = ModeWidth;
-						Options.Height = ModeHeight;
-						Options.Depth = ModeDepth;
+						LauncherOptions.Width = ModeWidth;
+						LauncherOptions.Height = ModeHeight;
+						LauncherOptions.Depth = ModeDepth;
 					}
 					catch (Exception e)
 					{
@@ -145,106 +139,101 @@ namespace Mosa.Tool.Launcher
 
 			switch (cbImageFormat.SelectedIndex)
 			{
-				case 0: Options.ImageFormat = ImageFormat.IMG; break;
-				case 1: Options.ImageFormat = ImageFormat.ISO; break;
-				case 2: Options.ImageFormat = ImageFormat.VHD; break;
-				case 3: Options.ImageFormat = ImageFormat.VDI; break;
-				case 4: Options.ImageFormat = ImageFormat.VMDK; break;
+				case 0: LauncherOptions.ImageFormat = ImageFormat.IMG; break;
+				case 1: LauncherOptions.ImageFormat = ImageFormat.ISO; break;
+				case 2: LauncherOptions.ImageFormat = ImageFormat.VHD; break;
+				case 3: LauncherOptions.ImageFormat = ImageFormat.VDI; break;
+				case 4: LauncherOptions.ImageFormat = ImageFormat.VMDK; break;
 				default: break;
 			}
 
 			switch (cbEmulator.SelectedIndex)
 			{
-				case 0: Options.Emulator = EmulatorType.Qemu; break;
-				case 1: Options.Emulator = EmulatorType.Bochs; break;
-				case 2: Options.Emulator = EmulatorType.VMware; break;
+				case 0: LauncherOptions.Emulator = EmulatorType.Qemu; break;
+				case 1: LauncherOptions.Emulator = EmulatorType.Bochs; break;
+				case 2: LauncherOptions.Emulator = EmulatorType.VMware; break;
 				default: break;
 			}
 
 			switch (cbDebugConnectionOption.SelectedIndex)
 			{
-				case 0: Options.SerialConnectionOption = SerialConnectionOption.None; break;
-				case 1: Options.SerialConnectionOption = SerialConnectionOption.Pipe; break;
-				case 2: Options.SerialConnectionOption = SerialConnectionOption.TCPServer; break;
-				case 3: Options.SerialConnectionOption = SerialConnectionOption.TCPClient; break;
+				case 0: LauncherOptions.SerialConnectionOption = SerialConnectionOption.None; break;
+				case 1: LauncherOptions.SerialConnectionOption = SerialConnectionOption.Pipe; break;
+				case 2: LauncherOptions.SerialConnectionOption = SerialConnectionOption.TCPServer; break;
+				case 3: LauncherOptions.SerialConnectionOption = SerialConnectionOption.TCPClient; break;
 				default: break;
 			}
 
 			switch (cbBootFormat.SelectedIndex)
 			{
-				case 0: Options.MultibootSpecification = MultibootSpecification.V1; break;
-				case 1: Options.MultibootSpecification = MultibootSpecification.V2; break;
-				default: Options.MultibootSpecification = MultibootSpecification.None; break;
+				case 0: LauncherOptions.MultibootSpecification = MultibootSpecification.V1; break;
+				case 1: LauncherOptions.MultibootSpecification = MultibootSpecification.V2; break;
+				default: LauncherOptions.MultibootSpecification = MultibootSpecification.None; break;
 			}
 
 			switch (cbBootFileSystem.SelectedIndex)
 			{
-				case 0: Options.FileSystem = Utility.BootImage.FileSystem.FAT12; break;
-				case 1: Options.FileSystem = Utility.BootImage.FileSystem.FAT16; break;
+				case 0: LauncherOptions.FileSystem = Utility.BootImage.FileSystem.FAT12; break;
+				case 1: LauncherOptions.FileSystem = Utility.BootImage.FileSystem.FAT16; break;
 				default: break;
 			}
 
 			switch (cbPlatform.SelectedIndex)
 			{
-				case 0: Options.PlatformType = PlatformType.x86; break;
-				case 1: Options.PlatformType = PlatformType.x64; break;
-				default: Options.PlatformType = PlatformType.NotSpecified; break;
+				case 0: LauncherOptions.PlatformType = PlatformType.x86; break;
+				case 1: LauncherOptions.PlatformType = PlatformType.x64; break;
+				default: LauncherOptions.PlatformType = PlatformType.NotSpecified; break;
 			}
 
 			switch (cbBootLoader.SelectedIndex)
 			{
-				case 0: Options.BootLoader = BootLoader.Syslinux_3_72; break;
-				case 1: Options.BootLoader = BootLoader.Syslinux_6_03; break;
-				case 2: Options.BootLoader = BootLoader.Grub_0_97; break;
-				case 3: Options.BootLoader = BootLoader.Grub_2_00; break;
+				case 0: LauncherOptions.BootLoader = BootLoader.Syslinux_3_72; break;
+				case 1: LauncherOptions.BootLoader = BootLoader.Syslinux_6_03; break;
+				case 2: LauncherOptions.BootLoader = BootLoader.Grub_0_97; break;
+				case 3: LauncherOptions.BootLoader = BootLoader.Grub_2_00; break;
 				default: break;
 			}
 
-			Options.IncludeFiles.Clear();
+			LauncherOptions.IncludeFiles.Clear();
 
 			foreach (var entry in includedEntries)
 			{
-				Options.IncludeFiles.Add(entry.IncludeFile);
+				LauncherOptions.IncludeFiles.Add(entry.IncludeFile);
 			}
-
-			//lbSource.Text = Path.GetFileName(Options.SourceFile);
-			//lbSourceDirectory.Text = Path.GetDirectoryName(Options.SourceFile);
 		}
 
 		private void UpdateInterfaceOptions()
 		{
-			cbEnableSSA.Checked = Options.EnableSSA;
-			cbEnableIROptimizations.Checked = Options.EnableBasicOptimizations;
-			cbEnableSparseConditionalConstantPropagation.Checked = Options.EnableSparseConditionalConstantPropagation;
-			cbGenerateNASMFile.Checked = Options.GenerateNASMFile;
-			cbGenerateASMFile.Checked = Options.GenerateASMFile;
-			cbGenerateMapFile.Checked = Options.GenerateMapFile;
-			cbGenerateDebugInfoFile.Checked = Options.GenerateDebugFile;
-			cbExitOnLaunch.Checked = Options.ExitOnLaunch;
-			cbEnableQemuGDB.Checked = Options.EnableQemuGDB;
-			cbLaunchGDB.Checked = Options.LaunchGDB;
-			cbLaunchMosaDebugger.Checked = Options.LaunchGDBDebugger;
-			cbInline.Checked = Options.EnableInlineMethods;
-			cbInlineExplicitOnly.Checked = Options.InlineExplicitOnly;
-			cbCompilerUsesMultipleThreads.Checked = Options.EnableMultiThreading;
-			nmMemory.Value = Options.EmulatorMemoryInMB;
-			cbVBEVideo.Checked = Options.VBEVideo;
-			tbBaseAddress.Text = "0x" + Options.BaseAddress.ToString("x8");
-			cbRelocationTable.Checked = Options.EmitStaticRelocations;
-			cbEmitSymbolTable.Checked = Options.EmitAllSymbols;
-			tbMode.Text = Options.Width + "x" + Options.Height + "x" + Options.Depth;
-			cbLongExpansion.Checked = Options.EnableLongExpansion;
-			cbTwoPassOptimizations.Checked = Options.TwoPassOptimizations;
-			cbValueNumbering.Checked = Options.EnableValueNumbering;
-			cbEnableMethodScanner.Checked = Options.EnableMethodScanner;
-			cbGenerateCompilerTime.Checked = Options.GenerateCompileTimeFile;
-			cbBitTracker.Checked = Options.EnableBitTracker;
-			cbPlatformOptimizations.Checked = Options.EnablePlatformOptimizations;
-			cbLoopInvariantCodeMotion.Checked = Options.EnableLoopInvariantCodeMotion;
+			cbEnableSSA.Checked = LauncherOptions.EnableSSA;
+			cbEnableIROptimizations.Checked = LauncherOptions.EnableBasicOptimizations;
+			cbEnableSparseConditionalConstantPropagation.Checked = LauncherOptions.EnableSparseConditionalConstantPropagation;
+			cbGenerateNASMFile.Checked = LauncherOptions.GenerateNASMFile;
+			cbGenerateASMFile.Checked = LauncherOptions.GenerateASMFile;
+			cbGenerateMapFile.Checked = LauncherOptions.GenerateMapFile;
+			cbGenerateDebugInfoFile.Checked = LauncherOptions.GenerateDebugFile;
+			cbExitOnLaunch.Checked = LauncherOptions.ExitOnLaunch;
+			cbEnableQemuGDB.Checked = LauncherOptions.EnableQemuGDB;
+			cbLaunchGDB.Checked = LauncherOptions.LaunchGDB;
+			cbLaunchMosaDebugger.Checked = LauncherOptions.LaunchGDBDebugger;
+			cbInline.Checked = LauncherOptions.EnableInlineMethods;
+			cbInlineExplicitOnly.Checked = LauncherOptions.InlineExplicitOnly;
+			cbCompilerUsesMultipleThreads.Checked = LauncherOptions.EnableMultiThreading;
+			nmMemory.Value = LauncherOptions.EmulatorMemoryInMB;
+			cbVBEVideo.Checked = LauncherOptions.VBEVideo;
+			tbBaseAddress.Text = "0x" + LauncherOptions.BaseAddress.ToString("x8");
+			cbRelocationTable.Checked = LauncherOptions.EmitStaticRelocations;
+			cbEmitSymbolTable.Checked = LauncherOptions.EmitAllSymbols;
+			tbMode.Text = LauncherOptions.Width + "x" + LauncherOptions.Height + "x" + LauncherOptions.Depth;
+			cbLongExpansion.Checked = LauncherOptions.EnableLongExpansion;
+			cbTwoPassOptimizations.Checked = LauncherOptions.TwoPassOptimizations;
+			cbValueNumbering.Checked = LauncherOptions.EnableValueNumbering;
+			cbEnableMethodScanner.Checked = LauncherOptions.EnableMethodScanner;
+			cbGenerateCompilerTime.Checked = LauncherOptions.GenerateCompileTimeFile;
+			cbBitTracker.Checked = LauncherOptions.EnableBitTracker;
+			cbPlatformOptimizations.Checked = LauncherOptions.EnablePlatformOptimizations;
+			cbLoopInvariantCodeMotion.Checked = LauncherOptions.EnableLoopInvariantCodeMotion;
 
-			//tbOsName.Text = Options.OsName;
-
-			switch (Options.ImageFormat)
+			switch (LauncherOptions.ImageFormat)
 			{
 				case ImageFormat.IMG: cbImageFormat.SelectedIndex = 0; break;
 				case ImageFormat.ISO: cbImageFormat.SelectedIndex = 1; break;
@@ -254,7 +243,7 @@ namespace Mosa.Tool.Launcher
 				default: break;
 			}
 
-			switch (Options.Emulator)
+			switch (LauncherOptions.Emulator)
 			{
 				case EmulatorType.Qemu: cbEmulator.SelectedIndex = 0; break;
 				case EmulatorType.Bochs: cbEmulator.SelectedIndex = 1; break;
@@ -262,14 +251,14 @@ namespace Mosa.Tool.Launcher
 				default: break;
 			}
 
-			switch (Options.FileSystem)
+			switch (LauncherOptions.FileSystem)
 			{
 				case Utility.BootImage.FileSystem.FAT12: cbBootFileSystem.SelectedIndex = 0; break;
 				case Utility.BootImage.FileSystem.FAT16: cbBootFileSystem.SelectedIndex = 1; break;
 				default: break;
 			}
 
-			switch (Options.BootLoader)
+			switch (LauncherOptions.BootLoader)
 			{
 				case BootLoader.Syslinux_3_72: cbBootLoader.SelectedIndex = 0; break;
 				case BootLoader.Syslinux_6_03: cbBootLoader.SelectedIndex = 1; break;
@@ -278,14 +267,14 @@ namespace Mosa.Tool.Launcher
 				default: break;
 			}
 
-			switch (Options.PlatformType)
+			switch (LauncherOptions.PlatformType)
 			{
 				case PlatformType.x86: cbPlatform.SelectedIndex = 0; break;
 				case PlatformType.x64: cbPlatform.SelectedIndex = 1; break;
 				default: cbPlatform.SelectedIndex = 0; break;
 			}
 
-			switch (Options.MultibootSpecification)
+			switch (LauncherOptions.MultibootSpecification)
 			{
 				case MultibootSpecification.V1: cbBootFormat.SelectedIndex = 0; break;
 
@@ -293,7 +282,7 @@ namespace Mosa.Tool.Launcher
 				default: cbBootFormat.SelectedIndex = 0; break;
 			}
 
-			switch (Options.SerialConnectionOption)
+			switch (LauncherOptions.SerialConnectionOption)
 			{
 				case SerialConnectionOption.None: cbDebugConnectionOption.SelectedIndex = 0; break;
 				case SerialConnectionOption.Pipe: cbDebugConnectionOption.SelectedIndex = 1; break;
@@ -302,9 +291,9 @@ namespace Mosa.Tool.Launcher
 				default: break;
 			}
 
-			lbDestinationDirectory.Text = Options.DestinationDirectory;
-			lbSource.Text = Options.SourceFile;
-			lbSourceDirectory.Text = Path.GetDirectoryName(Options.SourceFile);
+			lbDestinationDirectory.Text = LauncherOptions.DestinationDirectory;
+			lbSource.Text = LauncherOptions.SourceFile;
+			lbSourceDirectory.Text = Path.GetDirectoryName(LauncherOptions.SourceFile);
 		}
 
 		public void UpdateStatusLabel(string msg)
@@ -346,7 +335,7 @@ namespace Mosa.Tool.Launcher
 
 			Refresh();
 
-			if (Options.AutoStart)
+			if (LauncherOptions.AutoStart)
 			{
 				CompileBuildAndStart();
 			}
@@ -375,12 +364,12 @@ namespace Mosa.Tool.Launcher
 			{
 				var filename = openFileDialog1.FileName;
 
-				Options.SourceFile = filename;
-				Options.Paths.Clear();
-				Options.Paths.Add(Path.GetDirectoryName(filename));
+				LauncherOptions.SourceFile = filename;
+				LauncherOptions.Paths.Clear();
+				LauncherOptions.Paths.Add(Path.GetDirectoryName(filename));
 
-				lbSource.Text = Path.GetFileName(Options.SourceFile);
-				lbSourceDirectory.Text = Path.GetDirectoryName(Options.SourceFile);
+				lbSource.Text = Path.GetFileName(LauncherOptions.SourceFile);
+				lbSourceDirectory.Text = Path.GetDirectoryName(LauncherOptions.SourceFile);
 			}
 		}
 
@@ -389,7 +378,7 @@ namespace Mosa.Tool.Launcher
 			Text = "MOSA Launcher v" + CompilerVersion.VersionString;
 			tbApplicationLocations.SelectedTab = tabOptions;
 
-			foreach (var includeFile in Options.IncludeFiles)
+			foreach (var includeFile in LauncherOptions.IncludeFiles)
 			{
 				includedEntries.Add(new IncludedEntry(includeFile));
 			}
@@ -399,10 +388,9 @@ namespace Mosa.Tool.Launcher
 		{
 			if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
 			{
-				Options.DestinationDirectory = folderBrowserDialog1.SelectedPath;
+				LauncherOptions.DestinationDirectory = folderBrowserDialog1.SelectedPath;
 
-				// UpdateBuilderOptions();
-				lbDestinationDirectory.Text = Options.DestinationDirectory;
+				lbDestinationDirectory.Text = LauncherOptions.DestinationDirectory;
 			}
 		}
 
@@ -411,15 +399,11 @@ namespace Mosa.Tool.Launcher
 			if (keyData == Keys.F5)
 				CompileBuildAndStart();
 
-			//if (keyData == Keys.F6)
-			//	Builder.Launch();
-
 			return base.ProcessCmdKey(ref msg, keyData);
 		}
 
 		private void CompileBuildAndStart()
 		{
-			//Options.SaveFile(ConfigFile);
 			rtbOutput.Clear();
 			rtbCounters.Clear();
 
@@ -474,13 +458,14 @@ namespace Mosa.Tool.Launcher
 				if (CheckKeyPressed())
 					return;
 
-				Options.ImageFile = Options.BootLoaderImage ?? Builder.ImageFile;
-				Starter = new Starter(Options, AppLocations, this, Builder.Linker);
+				LauncherOptions.ImageFile = LauncherOptions.BootLoaderImage ?? Builder.ImageFile;
 
-				Starter.Launch();
+				var starter = new Starter(LauncherOptions, AppLocations, this, Builder.Linker);
+
+				starter.Launch();
 			}
 
-			if (Options.ExitOnLaunch)
+			if (LauncherOptions.ExitOnLaunch)
 			{
 				Application.Exit();
 			}
@@ -495,7 +480,7 @@ namespace Mosa.Tool.Launcher
 		{
 			UpdateBuilderOptions();
 
-			var result = CheckOptions.Verify(Options);
+			var result = CheckOptions.Verify(LauncherOptions);
 
 			if (result == null)
 			{
@@ -544,12 +529,25 @@ namespace Mosa.Tool.Launcher
 		{
 			var cliParser = new Parser(config => config.HelpWriter = Console.Out);
 
-			cliParser.ParseArguments(() => Options, args);
+			cliParser.ParseArguments(() => LauncherOptions, args);
 		}
 
 		private void timer1_Tick(object sender, EventArgs e)
 		{
 			UpdateProgress();
+		}
+
+		public void LoadArgumentsV2(string[] args)
+		{
+			var arguments = Reader.ParseArguments(args, CommandLineArguments.GetMap());
+
+			Settings.Merge(arguments);
+
+			UpdateDisplay(Settings);
+		}
+
+		private void UpdateDisplay(Settings settings)
+		{
 		}
 	}
 }

@@ -16,9 +16,6 @@ namespace Mosa.Utility.Launcher
 		[Option("dest")]
 		public string DestinationDirectory { get; set; }
 
-		//[Option("name")]
-		//public string OsName { get; set; }
-
 		[Option("destination-dir")]
 		public string DestinationDirectoryAlt { set { DestinationDirectory = value; } }
 
@@ -70,10 +67,6 @@ namespace Mosa.Utility.Launcher
 		[Option("emulator-memory", HelpText = "Emulator memory in megabytes.")]
 		public uint EmulatorMemoryInMB { get; set; }
 
-		/// <summary>
-		/// Gets or sets interrupt method name to override the architecture specific default method
-		/// </summary>
-		/// <example>Mosa.Kernel.x86.IDT::ProcessInterrupt</example>
 		[Option("interrupt-method")]
 		public string InterruptMethodName { get; set; }
 
@@ -333,8 +326,6 @@ namespace Mosa.Utility.Launcher
 		public bool EnableMethodScanner { get; set; }
 
 		public List<IncludeFile> IncludeFiles { get; set; }
-
-		public List<string> CompilerExtensions { get; set; }
 
 		public List<string> Paths { get; set; }
 
