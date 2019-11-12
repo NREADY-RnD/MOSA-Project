@@ -33,18 +33,22 @@ namespace Mosa.Utility.Compiler
 				new Argument() { Name =  "--inline", Setting = "Optimizations.Inline", Value = "true"},
 				new Argument() { Name =  "--inline-off", Setting = "Optimizations.Inline", Value = "false"},
 				new Argument() { Name =  "--ssa", Setting = "Optimizations.SSA", Value = "true"},
-				new Argument() { Name =  "--no-ssa", Setting = "Optimizations.SSA", Value = "false"},
-				new Argument() { Name =  "--no-sparse", Setting = "Optimizations.SCCP", Value = "false"},
+				new Argument() { Name =  "--ssa-off", Setting = "Optimizations.SSA", Value = "false"},
+				new Argument() { Name =  "--no-ssa", Setting = "Optimizations.SSA", Value = "false"},	// legacy
+				new Argument() { Name =  "--no-sparse", Setting = "Optimizations.SCCP", Value = "false"}, // legacy
 				new Argument() { Name =  "--sccp", Setting = "Optimizations.SCCP", Value = "true"},
-				new Argument() { Name =  "--no-sccp", Setting = "Optimizations.SCCP", Value = "false"},
-				new Argument() { Name =  "--no-ir-optimizations", Setting = "Optimizations.Basic", Value = "false"},
-				new Argument() { Name =  "--ir-optimizations-off", Setting = "Optimizations.Basic", Value = "false"},
+				new Argument() { Name =  "--sccp-off", Setting = "Optimizations.SCCP", Value = "false"},
+				new Argument() { Name =  "--no-sccp", Setting = "Optimizations.SCCP", Value = "false"}, // legacy
+				new Argument() { Name =  "--no-ir-optimizations", Setting = "Optimizations.Basic", Value = "false"}, // legacy
+				new Argument() { Name =  "--ir-optimizations-off", Setting = "Optimizations.Basic", Value = "false"}, // legacy
+				new Argument() { Name =  "--basic-optimizations-off", Setting = "Optimizations.Basic", Value = "false"},
 				new Argument() { Name =  "--inline-explicit", Setting = "Optimizations.Inline.ExplicitOnly", Value = "true"},
 				new Argument() { Name =  "--long-expansion", Setting = "Optimizations.LongExpansion", Value = "true"},
-				new Argument() { Name =  "--ir-long-expansion", Setting = "Optimizations.LongExpansion", Value = "true"},
+				new Argument() { Name =  "--long-expansion-off", Setting = "Optimizations.LongExpansion", Value = "false"},
+				new Argument() { Name =  "--ir-long-expansion", Setting = "Optimizations.LongExpansion", Value = "true"}, // legacy
 				new Argument() { Name =  "--two-pass-optimizations", Setting = "Optimizations.TwoPass", Value = "true"},
-				new Argument() { Name =  "--value-numbering", Setting = "Optimizations.Inline", Value = "true"},
-				new Argument() { Name =  "--value-numbering-off", Setting = "Optimizations.Inline", Value = "false"},
+				new Argument() { Name =  "--value-numbering", Setting = "Optimizations.ValueNumbering", Value = "true"},
+				new Argument() { Name =  "--value-numbering-off", Setting = "Optimizations.ValueNumbering", Value = "false"},
 				new Argument() { Name =  "--loop-invariant-code-motion", Setting = "Optimizations.LoopInvariantCodeMotion", Value = "true"},
 				new Argument() { Name =  "--loop-invariant-code-motion-off", Setting = "Optimizations.LoopInvariantCodeMotion", Value = "false"},
 				new Argument() { Name =  "--platform-optimizations", Setting = "Optimizations.Platform", Value = "true"},
@@ -52,6 +56,18 @@ namespace Mosa.Utility.Compiler
 				new Argument() { Name =  "--bit-tracker", Setting = "Optimizations.BitTracker", Value = "true"},
 				new Argument() { Name =  "--bit-tracker-off", Setting = "Optimizations.BitTracker", Value = "false"},
 				new Argument() { Name =  "--inline-level", Setting = "Optimizations.Inline.Maximum"},
+
+				new Argument() { Name =  "--optimizations-off", Setting = "Optimizations.Inline", Value = "false"},
+				new Argument() { Name =  "--optimizations-off", Setting = "Optimizations.SSA", Value = "false"},
+				new Argument() { Name =  "--optimizations-off", Setting = "Optimizations.SCCP", Value = "false"},
+				new Argument() { Name =  "--optimizations-off", Setting = "Optimizations.Basic", Value = "false"},
+				new Argument() { Name =  "--optimizations-off", Setting = "Optimizations.LongExpansion", Value = "false"},
+				new Argument() { Name =  "--optimizations-off", Setting = "Optimizations.Inline", Value = "false"},
+				new Argument() { Name =  "--optimizations-off", Setting = "Optimizations.LoopInvariantCodeMotion", Value = "false"},
+				new Argument() { Name =  "--optimizations-off", Setting = "Optimizations.Platform", Value = "false"},
+				new Argument() { Name =  "--optimizations-off", Setting = "Optimizations.BitTracker", Value = "false"},
+				new Argument() { Name =  "--optimizations-off", Setting = "Optimizations.ValueNumbering", Value = "false"},
+				new Argument() { Name =  "--optimizations-off", Setting = "Optimizations.TwoPass", Value = "false"},
 
 				new Argument() { Name =  "--interrupt-method", Setting = "Advanced.InterruptMethodName"},
 
