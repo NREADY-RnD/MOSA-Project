@@ -137,7 +137,7 @@ namespace Mosa.Compiler.Common.Configuration
 			return property.List;
 		}
 
-		public bool GetValueAsBoolean(string fullname, bool defaultValue)
+		public bool GetValue(string fullname, bool defaultValue)
 		{
 			var property = GetProperty(fullname);
 
@@ -153,7 +153,7 @@ namespace Mosa.Compiler.Common.Configuration
 			return defaultValue;
 		}
 
-		public int GetValueAsInteger(string fullname, int defaultValue)
+		public int GetValue(string fullname, int defaultValue)
 		{
 			var property = GetProperty(fullname);
 
@@ -168,25 +168,46 @@ namespace Mosa.Compiler.Common.Configuration
 			return defaultValue;
 		}
 
+		public long GetValue(string fullname, long defaultValue)
+		{
+			var property = GetProperty(fullname);
+
+			if (property == null)
+				return defaultValue;
+
+			if (Int64.TryParse(property.Value, out long result))
+			{
+				return result;
+			}
+
+			return defaultValue;
+		}
+
 		public List<string> GetList(string fullname)
 		{
 			var property = GetProperty(fullname);
 			return property.List;
 		}
 
-		public void SetProperty(string fullname, string value)
+		public void SetValue(string fullname, string value)
 		{
 			var property = CreateProperty(fullname);
 			property.Value = value;
 		}
 
-		public void SetProperty(string fullname, bool value)
+		public void SetValue(string fullname, bool value)
 		{
 			var property = CreateProperty(fullname);
 			property.Value = value ? "true" : "false";
 		}
 
-		public void SetProperty(string fullname, int value)
+		public void SetValue(string fullname, int value)
+		{
+			var property = CreateProperty(fullname);
+			property.Value = value.ToString();
+		}
+
+		public void SetValue(string fullname, long value)
 		{
 			var property = CreateProperty(fullname);
 			property.Value = value.ToString();

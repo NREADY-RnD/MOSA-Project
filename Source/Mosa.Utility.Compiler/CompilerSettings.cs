@@ -16,25 +16,25 @@ namespace Mosa.Utility.Compiler
 	{
 		public static void Set(Settings settings, CompilerOptions compilerOptions)
 		{
-			compilerOptions.TraceLevel = settings.GetValueAsInteger("Compiler.TraceLevel", compilerOptions.TraceLevel);
-			compilerOptions.EmitBinary = settings.GetValueAsBoolean("Compiler.EmitBinary", compilerOptions.EmitBinary);
-			compilerOptions.MethodScanner = settings.GetValueAsBoolean("Compiler.MethodScanner", compilerOptions.MethodScanner);
+			compilerOptions.TraceLevel = settings.GetValue("Compiler.TraceLevel", compilerOptions.TraceLevel);
+			compilerOptions.EmitBinary = settings.GetValue("Compiler.EmitBinary", compilerOptions.EmitBinary);
+			compilerOptions.MethodScanner = settings.GetValue("Compiler.MethodScanner", compilerOptions.MethodScanner);
 
 			//compilerOptions.EnableThreading = settings.GetValueAsBoolean("Compiler.Multithreading", compilerOptions.EnableThreading);
 
-			compilerOptions.SSA = settings.GetValueAsBoolean("Optimizations.SSA", compilerOptions.SSA);
-			compilerOptions.BasicOptimizations = settings.GetValueAsBoolean("Optimizations.Basic", compilerOptions.BasicOptimizations);
-			compilerOptions.ValueNumbering = settings.GetValueAsBoolean("Optimizations.ValueNumbering", compilerOptions.ValueNumbering);
-			compilerOptions.SparseConditionalConstantPropagation = settings.GetValueAsBoolean("Optimizations.SCCP", compilerOptions.SparseConditionalConstantPropagation);
-			compilerOptions.BitTracker = settings.GetValueAsBoolean("Optimizations.BitTracker", compilerOptions.BitTracker);
-			compilerOptions.LoopInvariantCodeMotion = settings.GetValueAsBoolean("Optimizations.LoopInvariantCodeMotion", compilerOptions.LoopInvariantCodeMotion);
-			compilerOptions.TwoPass = settings.GetValueAsBoolean("Optimizations.TwoPass", compilerOptions.TwoPass);
-			compilerOptions.LongExpansion = settings.GetValueAsBoolean("Optimizations.LongExpansion", compilerOptions.LongExpansion);
-			compilerOptions.PlatformOptimizations = settings.GetValueAsBoolean("Optimizations.Platform", compilerOptions.PlatformOptimizations);
-			compilerOptions.InlineMethods = settings.GetValueAsBoolean("Optimizations.Inline", compilerOptions.InlineMethods);
-			compilerOptions.InlineMaximum = settings.GetValueAsInteger("Optimizations.Inline.Maximum", compilerOptions.InlineMaximum);
-			compilerOptions.InlineAggressiveMaximum = settings.GetValueAsInteger("Optimizations.Inline.AggressiveMaximum", compilerOptions.InlineAggressiveMaximum);
-			compilerOptions.InlineExplicitOnly = settings.GetValueAsBoolean("Optimizations.Inline.ExplicitOnly", compilerOptions.InlineExplicitOnly);
+			compilerOptions.SSA = settings.GetValue("Optimizations.SSA", compilerOptions.SSA);
+			compilerOptions.BasicOptimizations = settings.GetValue("Optimizations.Basic", compilerOptions.BasicOptimizations);
+			compilerOptions.ValueNumbering = settings.GetValue("Optimizations.ValueNumbering", compilerOptions.ValueNumbering);
+			compilerOptions.SparseConditionalConstantPropagation = settings.GetValue("Optimizations.SCCP", compilerOptions.SparseConditionalConstantPropagation);
+			compilerOptions.BitTracker = settings.GetValue("Optimizations.BitTracker", compilerOptions.BitTracker);
+			compilerOptions.LoopInvariantCodeMotion = settings.GetValue("Optimizations.LoopInvariantCodeMotion", compilerOptions.LoopInvariantCodeMotion);
+			compilerOptions.TwoPass = settings.GetValue("Optimizations.TwoPass", compilerOptions.TwoPass);
+			compilerOptions.LongExpansion = settings.GetValue("Optimizations.LongExpansion", compilerOptions.LongExpansion);
+			compilerOptions.PlatformOptimizations = settings.GetValue("Optimizations.Platform", compilerOptions.PlatformOptimizations);
+			compilerOptions.InlineMethods = settings.GetValue("Optimizations.Inline", compilerOptions.InlineMethods);
+			compilerOptions.InlineMaximum = settings.GetValue("Optimizations.Inline.Maximum", compilerOptions.InlineMaximum);
+			compilerOptions.InlineAggressiveMaximum = settings.GetValue("Optimizations.Inline.AggressiveMaximum", compilerOptions.InlineAggressiveMaximum);
+			compilerOptions.InlineExplicitOnly = settings.GetValue("Optimizations.Inline.ExplicitOnly", compilerOptions.InlineExplicitOnly);
 
 			var platform = settings.GetValue("Compiler.Platform");
 			if (platform != null)

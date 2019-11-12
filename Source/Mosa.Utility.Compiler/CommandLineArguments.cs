@@ -94,7 +94,7 @@ namespace Mosa.Utility.Compiler
 				// Explorer:
 				new Argument() { Name =  "--filter", Setting = "Explorer.Filter", Value = null},
 
-				// Launched:
+				// Launcher:
 				new Argument() { Name =  "--dest", Setting = "Image.Destination"},
 				new Argument() { Name =  "--destination-dir", Setting = "Image.Destination"},
 				new Argument() { Name =  "--autostart", Setting = "Launcher.Start", Value="true"},

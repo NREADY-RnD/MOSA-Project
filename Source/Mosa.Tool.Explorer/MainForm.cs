@@ -66,7 +66,7 @@ namespace Mosa.Tool.Explorer
 
 			ClearAllLogs();
 
-			Settings.SetProperty("Compiler.Platform", "x86");
+			Settings.SetValue("Compiler.Platform", "x86");
 		}
 
 		private void ClearAllLogs()
@@ -225,19 +225,19 @@ namespace Mosa.Tool.Explorer
 
 		private void UpdateDisplay(Settings settings)
 		{
-			cbEnableInline.Checked = settings.GetValueAsBoolean("Optimizations.Inline", cbEnableInline.Checked);
-			cbEnableSSA.Checked = settings.GetValueAsBoolean("Optimizations.SSA", cbEnableSSA.Checked);
-			cbEnableBasicOptimizations.Checked = settings.GetValueAsBoolean("Optimizations.Basic", cbEnableBasicOptimizations.Checked);
-			cbEnableSparseConditionalConstantPropagation.Checked = settings.GetValueAsBoolean("Optimizations.SCCP", cbEnableSparseConditionalConstantPropagation.Checked);
-			cbInlineExplicitOnly.Checked = settings.GetValueAsBoolean("Optimizations.Inline.ExplicitOnly", cbInlineExplicitOnly.Checked);
-			cbPlatformOptimizations.Checked = settings.GetValueAsBoolean("Optimizations.Platform", cbPlatformOptimizations.Checked);
-			cbEnableLongExpansion.Checked = settings.GetValueAsBoolean("Optimizations.LongExpansion", cbEnableLongExpansion.Checked);
-			cbEnableTwoPassOptimizations.Checked = settings.GetValueAsBoolean("Optimizations.TwoPass", cbEnableTwoPassOptimizations.Checked);
-			cbLoopInvariantCodeMotion.Checked = settings.GetValueAsBoolean("Optimizations.LoopInvariantCodeMotion", cbLoopInvariantCodeMotion.Checked);
-			cbEnableValueNumbering.Checked = settings.GetValueAsBoolean("Optimizations.ValueNumbering", cbEnableValueNumbering.Checked);
-			cbEnableBitTracker.Checked = settings.GetValueAsBoolean("Optimizations.BitTracker", cbEnableBitTracker.Checked);
-			cbEnableBinaryCodeGeneration.Checked = settings.GetValueAsBoolean("Compiler.EmitBinary", cbEnableBinaryCodeGeneration.Checked);
-			cbEnableMethodScanner.Checked = settings.GetValueAsBoolean("Compiler.MethodScanner", cbEnableMethodScanner.Checked);
+			cbEnableInline.Checked = settings.GetValue("Optimizations.Inline", cbEnableInline.Checked);
+			cbEnableSSA.Checked = settings.GetValue("Optimizations.SSA", cbEnableSSA.Checked);
+			cbEnableBasicOptimizations.Checked = settings.GetValue("Optimizations.Basic", cbEnableBasicOptimizations.Checked);
+			cbEnableSparseConditionalConstantPropagation.Checked = settings.GetValue("Optimizations.SCCP", cbEnableSparseConditionalConstantPropagation.Checked);
+			cbInlineExplicitOnly.Checked = settings.GetValue("Optimizations.Inline.ExplicitOnly", cbInlineExplicitOnly.Checked);
+			cbPlatformOptimizations.Checked = settings.GetValue("Optimizations.Platform", cbPlatformOptimizations.Checked);
+			cbEnableLongExpansion.Checked = settings.GetValue("Optimizations.LongExpansion", cbEnableLongExpansion.Checked);
+			cbEnableTwoPassOptimizations.Checked = settings.GetValue("Optimizations.TwoPass", cbEnableTwoPassOptimizations.Checked);
+			cbLoopInvariantCodeMotion.Checked = settings.GetValue("Optimizations.LoopInvariantCodeMotion", cbLoopInvariantCodeMotion.Checked);
+			cbEnableValueNumbering.Checked = settings.GetValue("Optimizations.ValueNumbering", cbEnableValueNumbering.Checked);
+			cbEnableBitTracker.Checked = settings.GetValue("Optimizations.BitTracker", cbEnableBitTracker.Checked);
+			cbEnableBinaryCodeGeneration.Checked = settings.GetValue("Compiler.EmitBinary", cbEnableBinaryCodeGeneration.Checked);
+			cbEnableMethodScanner.Checked = settings.GetValue("Compiler.MethodScanner", cbEnableMethodScanner.Checked);
 
 			tbFilter.Text = settings.GetValue("Explorer.Filter", tbFilter.Text);
 
@@ -471,30 +471,30 @@ namespace Mosa.Tool.Explorer
 
 		private void SetCompilerSettings()
 		{
-			Settings.SetProperty("Compiler.MethodScanner", cbEnableMethodScanner.Checked);
-			Settings.SetProperty("Compiler.EmitBinary", cbEnableBinaryCodeGeneration.Checked);
-			Settings.SetProperty("Compiler.TraceLevel", 8);
-			Settings.SetProperty("Compiler.Platform", cbPlatform.Text);
-			Settings.SetProperty("Compiler.Multithreading", CBEnableMultithreading.Checked);
+			Settings.SetValue("Compiler.MethodScanner", cbEnableMethodScanner.Checked);
+			Settings.SetValue("Compiler.EmitBinary", cbEnableBinaryCodeGeneration.Checked);
+			Settings.SetValue("Compiler.TraceLevel", 8);
+			Settings.SetValue("Compiler.Platform", cbPlatform.Text);
+			Settings.SetValue("Compiler.Multithreading", CBEnableMultithreading.Checked);
 
-			Settings.SetProperty("Optimizations.SSA", cbEnableSSA.Checked);
-			Settings.SetProperty("Optimizations.Basic", cbEnableBasicOptimizations.Checked);
-			Settings.SetProperty("Optimizations.ValueNumbering", cbEnableValueNumbering.Checked);
-			Settings.SetProperty("Optimizations.SCCP", cbEnableSparseConditionalConstantPropagation.Checked);
-			Settings.SetProperty("Optimizations.BitTracker", cbEnableBitTracker.Checked);
-			Settings.SetProperty("Optimizations.LoopInvariantCodeMotion", cbLoopInvariantCodeMotion.Checked);
-			Settings.SetProperty("Optimizations.LongExpansion", cbEnableLongExpansion.Checked);
-			Settings.SetProperty("Optimizations.TwoPass", cbEnableTwoPassOptimizations.Checked);
-			Settings.SetProperty("Optimizations.Platform", cbPlatformOptimizations.Checked);
-			Settings.SetProperty("Optimizations.Inline", cbEnableInline.Checked);
-			Settings.SetProperty("Optimizations.Inline.ExplicitOnly", cbInlineExplicitOnly.Checked);
+			Settings.SetValue("Optimizations.SSA", cbEnableSSA.Checked);
+			Settings.SetValue("Optimizations.Basic", cbEnableBasicOptimizations.Checked);
+			Settings.SetValue("Optimizations.ValueNumbering", cbEnableValueNumbering.Checked);
+			Settings.SetValue("Optimizations.SCCP", cbEnableSparseConditionalConstantPropagation.Checked);
+			Settings.SetValue("Optimizations.BitTracker", cbEnableBitTracker.Checked);
+			Settings.SetValue("Optimizations.LoopInvariantCodeMotion", cbLoopInvariantCodeMotion.Checked);
+			Settings.SetValue("Optimizations.LongExpansion", cbEnableLongExpansion.Checked);
+			Settings.SetValue("Optimizations.TwoPass", cbEnableTwoPassOptimizations.Checked);
+			Settings.SetValue("Optimizations.Platform", cbPlatformOptimizations.Checked);
+			Settings.SetValue("Optimizations.Inline", cbEnableInline.Checked);
+			Settings.SetValue("Optimizations.Inline.ExplicitOnly", cbInlineExplicitOnly.Checked);
 
-			Settings.SetProperty("Optimizations.Inline.Maximum", 12);
-			Settings.SetProperty("Optimizations.Inline.AggressiveMaximum", 24);
+			Settings.SetValue("Optimizations.Inline.Maximum", 12);
+			Settings.SetValue("Optimizations.Inline.AggressiveMaximum", 24);
 
-			Settings.SetProperty("Multiboot.Version", "v2");
+			Settings.SetValue("Multiboot.Version", "v2");
 
-			Settings.SetProperty("Compiler.Platform", cbPlatform.Text.ToLower());
+			Settings.SetValue("Compiler.Platform", cbPlatform.Text.ToLower());
 		}
 
 		private void SetCompilerSettings(string filename, string platform, string includeDirectory)
