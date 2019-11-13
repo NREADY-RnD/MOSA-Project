@@ -169,7 +169,7 @@ namespace Mosa.Utility.Launcher
 
 				// TODO Include Unit Tests
 
-				if (LauncherOptions.EnableMultiThreading)
+				if (LauncherOptions.MultiThreading)
 				{
 					compiler.ThreadedCompile();
 				}
@@ -181,7 +181,7 @@ namespace Mosa.Utility.Launcher
 				Linker = compiler.Linker;
 				TypeSystem = compiler.TypeSystem;
 
-				if (LauncherOptions.ImageFormat == ImageFormat.ISO)
+				if (LauncherOptions.ImageFormat.ToUpper() == "ISO")
 				{
 					if (LauncherOptions.BootLoader == BootLoader.Grub_0_97 || LauncherOptions.BootLoader == BootLoader.Grub_2_00)
 					{
@@ -196,7 +196,7 @@ namespace Mosa.Utility.Launcher
 				{
 					CreateDiskImage(CompiledFile);
 
-					if (LauncherOptions.ImageFormat == ImageFormat.VMDK)
+					if (LauncherOptions.ImageFormat.ToUpper() == "VMDK")
 					{
 						CreateVMDK();
 					}
@@ -259,10 +259,10 @@ namespace Mosa.Utility.Launcher
 			bootImageOptions.VolumeLabel = "MOSABOOT";
 
 			var vmext = ".img";
-			switch (LauncherOptions.ImageFormat)
+			switch (LauncherOptions.ImageFormat.ToUpper())
 			{
-				case ImageFormat.VHD: vmext = ".vhd"; break;
-				case ImageFormat.VDI: vmext = ".vdi"; break;
+				case "VHD": vmext = ".vhd"; break;
+				case "VDI": vmext = ".vdi"; break;
 				default: break;
 			}
 
@@ -270,8 +270,17 @@ namespace Mosa.Utility.Launcher
 
 			bootImageOptions.DiskImageFileName = ImageFile;
 			bootImageOptions.PatchSyslinuxOption = true;
-			bootImageOptions.ImageFormat = LauncherOptions.ImageFormat;
 			bootImageOptions.BootLoader = LauncherOptions.BootLoader;
+
+			switch (LauncherOptions.ImageFormat.ToUpper())
+			{
+				case "IMG": bootImageOptions.ImageFormat = ImageFormat.IMG; break;
+				case "ISO": bootImageOptions.ImageFormat = ImageFormat.ISO; break;
+				case "VHD": bootImageOptions.ImageFormat = ImageFormat.VHD; break;
+				case "VDI": bootImageOptions.ImageFormat = ImageFormat.VDI; break;
+				case "VMDK": bootImageOptions.ImageFormat = ImageFormat.VMDK; break;
+				default: break;
+			}
 
 			switch (LauncherOptions.FileSystem.ToLower())
 			{

@@ -47,22 +47,22 @@ namespace Mosa.Utility.Launcher
 		public bool EmulatorBochs { set { Emulator = "Bochs"; } }
 
 		[Option("image-format")]
-		public ImageFormat ImageFormat { get; set; }
+		public string ImageFormat { get; set; }
 
 		[Option("vhd")]
-		public bool ImageFormatVHD { set { ImageFormat = ImageFormat.VHD; } }
+		public bool ImageFormatVHD { set { ImageFormat = "VHD"; } }
 
 		[Option("img")]
-		public bool ImageFormatIMG { set { ImageFormat = ImageFormat.IMG; } }
+		public bool ImageFormatIMG { set { ImageFormat = "IMG"; } }
 
 		[Option("vdi")]
-		public bool ImageFormatVDI { set { ImageFormat = ImageFormat.VDI; } }
+		public bool ImageFormatVDI { set { ImageFormat = "VDI"; } }
 
 		[Option("iso")]
-		public bool ImageFormatISO { set { ImageFormat = ImageFormat.ISO; } }
+		public bool ImageFormatISO { set { ImageFormat = "ISO"; } }
 
 		[Option("vmdk")]
-		public bool ImageFormatVMDK { set { ImageFormat = ImageFormat.VMDK; } }
+		public bool ImageFormatVMDK { set { ImageFormat = "VMDK"; } }
 
 		[Option("emulator-memory", HelpText = "Emulator memory in megabytes.")]
 		public uint EmulatorMemoryInMB { get; set; }
@@ -176,16 +176,16 @@ namespace Mosa.Utility.Launcher
 		public string FileSystem { get; set; }
 
 		[Option("serial-connection")]
-		public SerialConnectionOption SerialConnectionOption { get; set; }
+		public string SerialConnection { get; set; }
 
 		[Option("serial-pipe")]
-		public bool SerialConnectionOptionPipe { set { SerialConnectionOption = SerialConnectionOption.Pipe; } }
+		public bool SerialConnectionPipe { set { SerialConnection = "Pipe"; } }
 
 		[Option("serial-tcpclient")]
-		public bool SerialConnectionOptionTCPClient { set { SerialConnectionOption = SerialConnectionOption.TCPClient; } }
+		public bool SerialConnectionTCPClient { set { SerialConnection = "TCPClient"; } }
 
 		[Option("serial-tcpserver")]
-		public bool SerialConnectionOptionTCPServer { set { SerialConnectionOption = SerialConnectionOption.TCPServer; } }
+		public bool SerialConnectionTCPServer { set { SerialConnection = "TCPServer"; } }
 
 		[Option("serial-connection-port")]
 		public int SerialConnectionPort { get; set; }
@@ -197,10 +197,10 @@ namespace Mosa.Utility.Launcher
 		public string SerialPipeName { get; set; } = "MOSA";
 
 		[Option("threading")]
-		public bool EnableMultiThreading { get; set; } = true;
+		public bool MultiThreading { get; set; } = true;
 
 		[Option("threading-off")]
-		public bool UseMultiThreadingCompilerFalse { set { EnableMultiThreading = false; } }
+		public bool UseMultiThreadingCompilerFalse { set { MultiThreading = false; } }
 
 		[Option("bootloader")]
 		public BootLoader BootLoader { get; set; }
@@ -285,7 +285,7 @@ namespace Mosa.Utility.Launcher
 
 				if (value.EndsWith(".bin"))
 				{
-					ImageFormat = ImageFormat.BIN;
+					ImageFormat = "BIN";
 				}
 			}
 		}
@@ -367,9 +367,9 @@ namespace Mosa.Utility.Launcher
 			Paths = new List<string>();
 			DestinationDirectory = Path.Combine(Path.GetTempPath(), "MOSA");
 			BootLoader = BootLoader.Syslinux_3_72; // Can't use the Default in the attribute because it would overwrite other bootloader options
-			SerialConnectionOption = SerialConnectionOption.None;
+			SerialConnection = "None";
 			Emulator = "Qemu";
-			ImageFormat = ImageFormat.IMG;
+			ImageFormat = "IMG";
 			PlatformType = PlatformType.x86;
 			FileSystem = "FAT16";
 			BaseAddress = 0x00400000;

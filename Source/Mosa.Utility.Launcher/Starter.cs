@@ -85,17 +85,20 @@ namespace Mosa.Utility.Launcher
 
 			arg += " -serial null"; // TODO: Redirect to file
 
-			if (LauncherOptions.SerialConnectionOption == SerialConnectionOption.Pipe)
+			if (LauncherOptions.SerialConnection != null)
 			{
-				arg = arg + " -serial pipe:" + LauncherOptions.SerialPipeName;
-			}
-			else if (LauncherOptions.SerialConnectionOption == SerialConnectionOption.TCPServer)
-			{
-				arg = arg + " -serial tcp:" + LauncherOptions.SerialConnectionHost + ":" + LauncherOptions.SerialConnectionPort.ToString() + ",server,nowait";
-			}
-			else if (LauncherOptions.SerialConnectionOption == SerialConnectionOption.TCPClient)
-			{
-				arg = arg + " -serial tcp:" + LauncherOptions.SerialConnectionHost + ":" + LauncherOptions.SerialConnectionPort.ToString() + ",client,nowait";
+				if (LauncherOptions.SerialConnection == "pipe")
+				{
+					arg = arg + " -serial pipe:" + LauncherOptions.SerialPipeName;
+				}
+				else if (LauncherOptions.SerialConnection == "tcpserver")
+				{
+					arg = arg + " -serial tcp:" + LauncherOptions.SerialConnectionHost + ":" + LauncherOptions.SerialConnectionPort.ToString() + ",server,nowait";
+				}
+				else if (LauncherOptions.SerialConnection == "tcpclient")
+				{
+					arg = arg + " -serial tcp:" + LauncherOptions.SerialConnectionHost + ":" + LauncherOptions.SerialConnectionPort.ToString() + ",client,nowait";
+				}
 			}
 
 			if (LauncherOptions.EnableQemuGDB)
@@ -103,13 +106,13 @@ namespace Mosa.Utility.Launcher
 				arg += " -S -gdb tcp::" + LauncherOptions.GDBPort.ToString();
 			}
 
-			if (LauncherOptions.ImageFormat == ImageFormat.ISO)
+			if (LauncherOptions.ImageFormat.ToUpper() == "ISO")
 			{
 				arg = arg + " -cdrom " + Quote(LauncherOptions.ImageFile);
 			}
 			else
 			{
-				if (LauncherOptions.ImageFormat == ImageFormat.BIN)
+				if (LauncherOptions.ImageFormat.ToUpper() == "BIN")
 					arg = arg + " -kernel " + Quote(LauncherOptions.ImageFile);
 				else
 					arg = arg + " -hda " + Quote(LauncherOptions.ImageFile);
@@ -143,7 +146,7 @@ namespace Mosa.Utility.Launcher
 			sb.AppendLine("vgaromimage: file=" + Quote(Path.Combine(AppLocations.BOCHSBIOSDirectory, "VGABIOS-lgpl-latest")));
 			sb.AppendLine("display_library: x, options=" + Quote("gui_debug"));
 
-			if (LauncherOptions.ImageFormat == ImageFormat.ISO)
+			if (LauncherOptions.ImageFormat.ToUpper() == "ISO")
 			{
 				sb.AppendLine("ata0-master: type=cdrom,path=" + Quote(LauncherOptions.ImageFile) + ",status=inserted");
 			}
@@ -153,7 +156,7 @@ namespace Mosa.Utility.Launcher
 			}
 
 			sb.AppendLine(@"com1: enabled=1, mode=pipe-server, dev=\\.\pipe\MOSA1");
-			if (LauncherOptions.SerialConnectionOption == SerialConnectionOption.Pipe)
+			if (LauncherOptions.SerialConnection != null && LauncherOptions.SerialConnection.ToLower() == "pipe")
 			{
 				sb.AppendLine(@"com2: enabled=1, mode=pipe-server, dev=\\.\pipe\MOSA2");
 			}
@@ -185,7 +188,7 @@ namespace Mosa.Utility.Launcher
 			sb.AppendLine("ide0:0.present = \"TRUE\"");
 			sb.AppendLine("ide0:0.fileName = " + Quote(LauncherOptions.ImageFile));
 
-			if (LauncherOptions.ImageFormat == ImageFormat.ISO)
+			if (LauncherOptions.ImageFormat.ToUpper() == "ISO")
 			{
 				sb.AppendLine("ide0:0.deviceType = \"cdrom-image\"");
 			}
@@ -199,7 +202,7 @@ namespace Mosa.Utility.Launcher
 			sb.AppendLine("serial0.pipe.endPoint = \"server\"");
 			sb.AppendLine("serial0.tryNoRxLoss = \"FALSE\"");
 
-			if (LauncherOptions.SerialConnectionOption == SerialConnectionOption.Pipe)
+			if (LauncherOptions.SerialConnection != null && LauncherOptions.SerialConnection == "pipe")
 			{
 				sb.AppendLine("serial1.present = \"TRUE\"");
 				sb.AppendLine("serial1.yieldOnMsrRead = \"FALSE\"");

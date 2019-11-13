@@ -89,7 +89,7 @@ namespace Mosa.Tool.Launcher
 			LauncherOptions.EnableQemuGDB = cbEnableQemuGDB.Checked;
 			LauncherOptions.LaunchGDB = cbLaunchGDB.Checked;
 			LauncherOptions.LaunchGDBDebugger = cbLaunchMosaDebugger.Checked;
-			LauncherOptions.EnableMultiThreading = cbCompilerUsesMultipleThreads.Checked;
+			LauncherOptions.MultiThreading = cbCompilerUsesMultipleThreads.Checked;
 			LauncherOptions.EmulatorMemoryInMB = (uint)nmMemory.Value;
 			LauncherOptions.EnableInlineMethods = cbInline.Checked;
 			LauncherOptions.InlineExplicitOnly = cbInlineExplicitOnly.Checked;
@@ -139,11 +139,11 @@ namespace Mosa.Tool.Launcher
 
 			switch (cbImageFormat.SelectedIndex)
 			{
-				case 0: LauncherOptions.ImageFormat = ImageFormat.IMG; break;
-				case 1: LauncherOptions.ImageFormat = ImageFormat.ISO; break;
-				case 2: LauncherOptions.ImageFormat = ImageFormat.VHD; break;
-				case 3: LauncherOptions.ImageFormat = ImageFormat.VDI; break;
-				case 4: LauncherOptions.ImageFormat = ImageFormat.VMDK; break;
+				case 0: LauncherOptions.ImageFormat = "IMG"; break;
+				case 1: LauncherOptions.ImageFormat = "ISO"; break;
+				case 2: LauncherOptions.ImageFormat = "VHD"; break;
+				case 3: LauncherOptions.ImageFormat = "VDI"; break;
+				case 4: LauncherOptions.ImageFormat = "VMDK"; break;
 				default: break;
 			}
 
@@ -157,10 +157,10 @@ namespace Mosa.Tool.Launcher
 
 			switch (cbDebugConnectionOption.SelectedIndex)
 			{
-				case 0: LauncherOptions.SerialConnectionOption = SerialConnectionOption.None; break;
-				case 1: LauncherOptions.SerialConnectionOption = SerialConnectionOption.Pipe; break;
-				case 2: LauncherOptions.SerialConnectionOption = SerialConnectionOption.TCPServer; break;
-				case 3: LauncherOptions.SerialConnectionOption = SerialConnectionOption.TCPClient; break;
+				case 0: LauncherOptions.SerialConnection = "None"; break;
+				case 1: LauncherOptions.SerialConnection = "Pipe"; break;
+				case 2: LauncherOptions.SerialConnection = "TCPServer"; break;
+				case 3: LauncherOptions.SerialConnection = "TCPClient"; break;
 				default: break;
 			}
 
@@ -217,7 +217,7 @@ namespace Mosa.Tool.Launcher
 			cbLaunchMosaDebugger.Checked = LauncherOptions.LaunchGDBDebugger;
 			cbInline.Checked = LauncherOptions.EnableInlineMethods;
 			cbInlineExplicitOnly.Checked = LauncherOptions.InlineExplicitOnly;
-			cbCompilerUsesMultipleThreads.Checked = LauncherOptions.EnableMultiThreading;
+			cbCompilerUsesMultipleThreads.Checked = LauncherOptions.MultiThreading;
 			nmMemory.Value = LauncherOptions.EmulatorMemoryInMB;
 			cbVBEVideo.Checked = LauncherOptions.VBEVideo;
 			tbBaseAddress.Text = "0x" + LauncherOptions.BaseAddress.ToString("x8");
@@ -233,13 +233,13 @@ namespace Mosa.Tool.Launcher
 			cbPlatformOptimizations.Checked = LauncherOptions.EnablePlatformOptimizations;
 			cbLoopInvariantCodeMotion.Checked = LauncherOptions.EnableLoopInvariantCodeMotion;
 
-			switch (LauncherOptions.ImageFormat)
+			switch (LauncherOptions.ImageFormat.ToUpper())
 			{
-				case ImageFormat.IMG: cbImageFormat.SelectedIndex = 0; break;
-				case ImageFormat.ISO: cbImageFormat.SelectedIndex = 1; break;
-				case ImageFormat.VHD: cbImageFormat.SelectedIndex = 2; break;
-				case ImageFormat.VDI: cbImageFormat.SelectedIndex = 3; break;
-				case ImageFormat.VMDK: cbImageFormat.SelectedIndex = 4; break;
+				case "IMG": cbImageFormat.SelectedIndex = 0; break;
+				case "ISO": cbImageFormat.SelectedIndex = 1; break;
+				case "VHD": cbImageFormat.SelectedIndex = 2; break;
+				case "VDI": cbImageFormat.SelectedIndex = 3; break;
+				case "VMDK": cbImageFormat.SelectedIndex = 4; break;
 				default: break;
 			}
 
@@ -282,15 +282,21 @@ namespace Mosa.Tool.Launcher
 			//	default: cbBootFormat.SelectedIndex = 0; break;
 			//}
 
-			switch (LauncherOptions.SerialConnectionOption)
+			if (LauncherOptions.SerialConnection != null)
 			{
-				case SerialConnectionOption.None: cbDebugConnectionOption.SelectedIndex = 0; break;
-				case SerialConnectionOption.Pipe: cbDebugConnectionOption.SelectedIndex = 1; break;
-				case SerialConnectionOption.TCPServer: cbDebugConnectionOption.SelectedIndex = 2; break;
-				case SerialConnectionOption.TCPClient: cbDebugConnectionOption.SelectedIndex = 3; break;
-				default: break;
+				switch (LauncherOptions.SerialConnection.ToLower())
+				{
+					case "none": cbDebugConnectionOption.SelectedIndex = 0; break;
+					case "pipe": cbDebugConnectionOption.SelectedIndex = 1; break;
+					case "tcpserver": cbDebugConnectionOption.SelectedIndex = 2; break;
+					case "tcpclient": cbDebugConnectionOption.SelectedIndex = 3; break;
+					default: cbDebugConnectionOption.SelectedIndex = 0; break;
+				}
 			}
-
+			else
+			{
+				cbDebugConnectionOption.SelectedIndex = 0;
+			}
 			lbDestinationDirectory.Text = LauncherOptions.DestinationDirectory;
 			lbSource.Text = LauncherOptions.SourceFile;
 			lbSourceDirectory.Text = Path.GetDirectoryName(LauncherOptions.SourceFile);

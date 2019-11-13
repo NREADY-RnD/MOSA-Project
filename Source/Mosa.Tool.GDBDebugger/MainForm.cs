@@ -132,7 +132,7 @@ namespace Mosa.Tool.GDBDebugger
 
 			CalculateVMHash();
 
-			LauncherOptions.SerialConnectionOption = SerialConnectionOption.TCPServer;
+			LauncherOptions.SerialConnection = "TCPServer";
 			LauncherOptions.SerialConnectionPort = 1250;
 
 			if (LauncherOptions.ImageFile != null)
@@ -472,16 +472,16 @@ namespace Mosa.Tool.GDBDebugger
 			}
 		}
 
-		private static ImageFormat GetFormat(string fileName)
+		private static string GetFormat(string fileName)
 		{
 			switch (Path.GetExtension(fileName).ToLower())
 			{
-				case ".bin": return ImageFormat.BIN;
-				case ".img": return ImageFormat.IMG;
-				case ".iso": return ImageFormat.ISO;
+				case ".bin": return "BIN";
+				case ".img": return "IMG";
+				case ".iso": return "ISO";
 			}
 
-			return ImageFormat.NotSpecified;
+			return string.Empty;
 		}
 
 		private void toolStripButton1_Click(object sender, EventArgs e)

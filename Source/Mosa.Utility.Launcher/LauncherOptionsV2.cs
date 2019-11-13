@@ -46,7 +46,11 @@ namespace Mosa.Utility.Launcher
 			set { Settings.SetValue("Emulator", value); }
 		}
 
-		public ImageFormat ImageFormat { get; set; }
+		public string ImageFormat
+		{
+			get { return Settings.GetValue("Image.Format", null); }
+			set { Settings.SetValue("Image.Format", value); }
+		}
 
 		public int EmulatorMemoryInMB
 		{
@@ -186,7 +190,7 @@ namespace Mosa.Utility.Launcher
 			set { Settings.SetValue("Emulator.Serial.Pipe", value); }
 		}
 
-		public bool EnableMultiThreading
+		public bool MultiThreading
 		{
 			get { return Settings.GetValue("Compiler.Multithreading", false); }
 			set { Settings.SetValue("Compiler.Multithreading", value); }
@@ -270,8 +274,6 @@ namespace Mosa.Utility.Launcher
 			set { Settings.SetValue("GDB.Host", value); }
 		}
 
-		private string _ImageFile;
-
 		public string ImageFile
 		{
 			get { return Settings.GetValue("Image.ImageFile", null); }
@@ -330,7 +332,11 @@ namespace Mosa.Utility.Launcher
 
 		public BootLoader BootLoader { get; set; }
 
-		public SerialConnectionOption SerialConnectionOption { get; set; }
+		public string SerialConnection
+		{
+			get { return Settings.GetValue("Emulator.Serial", string.Empty); }
+			set { Settings.SetValue("Emulator.Serial", value); }
+		}
 
 		public List<IncludeFile> IncludeFiles { get; set; }
 
@@ -352,9 +358,9 @@ namespace Mosa.Utility.Launcher
 			IncludeFiles = new List<IncludeFile>();
 			DestinationDirectory = Path.Combine(Path.GetTempPath(), "MOSA");
 			BootLoader = BootLoader.Syslinux_3_72; // Can't use the Default in the attribute because it would overwrite other bootloader options
-			SerialConnectionOption = SerialConnectionOption.None;
+			SerialConnection = "None";
 			Emulator = "Qemu";
-			ImageFormat = ImageFormat.IMG;
+			ImageFormat = "IMG";
 			LinkerFormat = "elf32";
 			PlatformType = PlatformType.x86;
 			FileSystem = "FAT16";

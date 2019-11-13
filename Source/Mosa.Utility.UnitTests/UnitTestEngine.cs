@@ -66,11 +66,11 @@ namespace Mosa.Utility.UnitTests
 				TwoPassOptimizations = true,
 				EnableBitTracker = true,
 
-				EnableMultiThreading = false,
+				MultiThreading = false,
 				EnableMethodScanner = false,
 
 				Emulator = "Qemu",
-				ImageFormat = ImageFormat.IMG,
+				ImageFormat = "IMG",
 				PlatformType = PlatformType.x86,
 				EmulatorMemoryInMB = 128,
 				DestinationDirectory = Path.Combine(Path.GetTempPath(), "MOSA-UnitTest"),
@@ -84,7 +84,7 @@ namespace Mosa.Utility.UnitTests
 				BaseAddress = 0x00500000,
 				EmitStaticRelocations = false,
 				EmitAllSymbols = false,
-				SerialConnectionOption = SerialConnectionOption.TCPServer,
+				SerialConnection = "tcpserver",
 				SerialConnectionPort = 9999,
 				SerialConnectionHost = "127.0.0.1",
 				SerialPipeName = "MOSA",
@@ -314,12 +314,15 @@ namespace Mosa.Utility.UnitTests
 
 		private void Connect()
 		{
-			if (LauncherOptions.SerialConnectionOption == SerialConnectionOption.TCPServer)
+			if (LauncherOptions.SerialConnection == null)
+				return;
+
+			if (LauncherOptions.SerialConnection.ToLower() == "tcpserver")
 			{
 				var client = new TcpClient(LauncherOptions.SerialConnectionHost, LauncherOptions.SerialConnectionPort);
 				DebugServerEngine.Stream = new DebugNetworkStream(client.Client, true);
 			}
-			else if (LauncherOptions.SerialConnectionOption == SerialConnectionOption.Pipe)
+			else if (LauncherOptions.SerialConnection.ToLower() == "pipe")
 			{
 				var pipeStream = new NamedPipeClientStream(".", LauncherOptions.SerialPipeName, PipeDirection.InOut);
 				pipeStream.Connect();
