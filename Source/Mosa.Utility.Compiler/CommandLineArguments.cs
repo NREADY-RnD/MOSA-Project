@@ -27,26 +27,21 @@ namespace Mosa.Utility.Compiler
 				new Argument() { Name =  "--no-code", Setting = "Compiler.EmitBinary", Value = "false"},
 				new Argument() { Name =  "--path", Setting = "SearchPaths", IsList = true},
 
-				new Argument() { Name =  "--output-map", Setting = "CompilerDebug.Emit.Map", Value = "true"},
-				new Argument() { Name =  "--output-asm", Setting = "CompilerDebug.Emit.Asm", Value = "true"},
-				new Argument() { Name =  "--output-debug", Setting = "CompilerDebug.Emit.Debug", Value = "true"},
 				new Argument() { Name =  "--inline", Setting = "Optimizations.Inline", Value = "true"},
 				new Argument() { Name =  "--inline-off", Setting = "Optimizations.Inline", Value = "false"},
 				new Argument() { Name =  "--ssa", Setting = "Optimizations.SSA", Value = "true"},
 				new Argument() { Name =  "--ssa-off", Setting = "Optimizations.SSA", Value = "false"},
-				new Argument() { Name =  "--no-ssa", Setting = "Optimizations.SSA", Value = "false"},	// legacy
-				new Argument() { Name =  "--no-sparse", Setting = "Optimizations.SCCP", Value = "false"}, // legacy
+
 				new Argument() { Name =  "--sccp", Setting = "Optimizations.SCCP", Value = "true"},
 				new Argument() { Name =  "--sccp-off", Setting = "Optimizations.SCCP", Value = "false"},
-				new Argument() { Name =  "--no-sccp", Setting = "Optimizations.SCCP", Value = "false"}, // legacy
-				new Argument() { Name =  "--no-ir-optimizations", Setting = "Optimizations.Basic", Value = "false"}, // legacy
-				new Argument() { Name =  "--ir-optimizations-off", Setting = "Optimizations.Basic", Value = "false"}, // legacy
+				new Argument() { Name =  "--basic-optimizations", Setting = "Optimizations.Basic", Value = "true"},
 				new Argument() { Name =  "--basic-optimizations-off", Setting = "Optimizations.Basic", Value = "false"},
 				new Argument() { Name =  "--inline-explicit", Setting = "Optimizations.Inline.ExplicitOnly", Value = "true"},
+				new Argument() { Name =  "--inline-explicit-off", Setting = "Optimizations.Inline.ExplicitOnly", Value = "false"},
 				new Argument() { Name =  "--long-expansion", Setting = "Optimizations.LongExpansion", Value = "true"},
 				new Argument() { Name =  "--long-expansion-off", Setting = "Optimizations.LongExpansion", Value = "false"},
-				new Argument() { Name =  "--ir-long-expansion", Setting = "Optimizations.LongExpansion", Value = "true"}, // legacy
-				new Argument() { Name =  "--two-pass-optimizations", Setting = "Optimizations.TwoPass", Value = "true"},
+				new Argument() { Name =  "--two-pass", Setting = "Optimizations.TwoPass", Value = "true"},
+				new Argument() { Name =  "--two-pass-off", Setting = "Optimizations.TwoPass", Value = "true"},
 				new Argument() { Name =  "--value-numbering", Setting = "Optimizations.ValueNumbering", Value = "true"},
 				new Argument() { Name =  "--value-numbering-off", Setting = "Optimizations.ValueNumbering", Value = "false"},
 				new Argument() { Name =  "--loop-invariant-code-motion", Setting = "Optimizations.LoopInvariantCodeMotion", Value = "true"},
@@ -69,8 +64,6 @@ namespace Mosa.Utility.Compiler
 				new Argument() { Name =  "--optimizations-off", Setting = "Optimizations.ValueNumbering", Value = "false"},
 				new Argument() { Name =  "--optimizations-off", Setting = "Optimizations.TwoPass", Value = "false"},
 
-				new Argument() { Name =  "--interrupt-method", Setting = "Advanced.InterruptMethodName"},
-
 				new Argument() { Name =  "--output-nasm", Setting = "CompilerDebug.NasmFile", Value = "true"},
 				new Argument() { Name =  "--output-asm", Setting = "CompilerDebug.AsmFile", Value = "true"},
 				new Argument() { Name =  "--output-map", Setting = "CompilerDebug.MapFile", Value = "true"},
@@ -82,6 +75,16 @@ namespace Mosa.Utility.Compiler
 				new Argument() { Name =  "--x86", Setting = "Compiler.Platform", Value = "x86"},
 				new Argument() { Name =  "--x64", Setting = "Compiler.Platform", Value = "x64"},
 				new Argument() { Name =  "--armv8a32", Setting = "Compiler.Platform", Value = "armv8a32"},
+
+				new Argument() { Name =  "--interrupt-method", Setting = "X86.InterruptMethodName"},
+
+//				new Argument() { Name =  "--no-sccp", Setting = "Optimizations.SCCP", Value = "false"}, // legacy
+//				new Argument() { Name =  "--no-ssa", Setting = "Optimizations.SSA", Value = "false"},	// legacy
+//				new Argument() { Name =  "--no-sparse", Setting = "Optimizations.SCCP", Value = "false"}, // legacy
+//				new Argument() { Name =  "--no-ir-optimizations", Setting = "Optimizations.Basic", Value = "false"}, // legacy
+//				new Argument() { Name =  "--ir-optimizations-off", Setting = "Optimizations.Basic", Value = "false"}, // legacy
+//				new Argument() { Name =  "--ir-long-expansion", Setting = "Optimizations.LongExpansion", Value = "true"}, // legacy
+//				new Argument() { Name =  "--two-pass-optimizations", Setting = "Optimizations.TwoPass", Value = "true"}, // legacy
 
 				// Linker
 				new Argument() { Name =  "--emit-all-symbols", Setting = "Linker.EmitAllSymbols", Value = "true"},

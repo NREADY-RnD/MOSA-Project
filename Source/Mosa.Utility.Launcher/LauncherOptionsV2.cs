@@ -52,8 +52,8 @@ namespace Mosa.Utility.Launcher
 
 		public string InterruptMethodName
 		{
-			get { return Settings.GetValue("Advanced.InterruptMethodName", null); }
-			set { Settings.SetValue("Advanced.InterruptMethodName", value); }
+			get { return Settings.GetValue("X86.InterruptMethodName", null); }
+			set { Settings.SetValue("X86.InterruptMethodName", value); }
 		}
 
 		public bool EnableSSA
@@ -294,8 +294,8 @@ namespace Mosa.Utility.Launcher
 
 		public bool PlugKorlib
 		{
-			get { return Settings.GetValue("Advanced.PlugKorlib", true); }
-			set { Settings.SetValue("Advanced.PlugKorlib", value); }
+			get { return Settings.GetValue("Compiler.Advanced.PlugKorlib", true); }
+			set { Settings.SetValue("Compiler.Advanced.PlugKorlib", value); }
 		}
 
 		public bool EnableMethodScanner

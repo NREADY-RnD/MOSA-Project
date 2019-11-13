@@ -128,8 +128,8 @@ namespace Mosa.Tool.Compiler
 		{
 			switch (format.ToLower())
 			{
-				case "v1": return Mosa.Compiler.Framework.MultibootSpecification.V1;
-				case "v2": return Mosa.Compiler.Framework.MultibootSpecification.V2;
+				case "v1": return MultibootSpecification.V1;
+				case "v2": return MultibootSpecification.V2;
 				default: throw new NotImplementCompilerException(string.Format("Unknown or unsupported MultibootSpecification {0}.", format));
 			}
 		}
