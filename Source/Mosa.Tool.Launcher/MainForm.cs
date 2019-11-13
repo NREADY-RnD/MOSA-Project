@@ -149,9 +149,9 @@ namespace Mosa.Tool.Launcher
 
 			switch (cbEmulator.SelectedIndex)
 			{
-				case 0: LauncherOptions.Emulator = EmulatorType.Qemu; break;
-				case 1: LauncherOptions.Emulator = EmulatorType.Bochs; break;
-				case 2: LauncherOptions.Emulator = EmulatorType.VMware; break;
+				case 0: LauncherOptions.Emulator = "Qemu"; break;
+				case 1: LauncherOptions.Emulator = "Bochs"; break;
+				case 2: LauncherOptions.Emulator = "VMware"; break;
 				default: break;
 			}
 
@@ -164,17 +164,17 @@ namespace Mosa.Tool.Launcher
 				default: break;
 			}
 
-			switch (cbBootFormat.SelectedIndex)
-			{
-				case 0: LauncherOptions.MultibootSpecification = MultibootSpecification.V1; break;
-				case 1: LauncherOptions.MultibootSpecification = MultibootSpecification.V2; break;
-				default: LauncherOptions.MultibootSpecification = MultibootSpecification.None; break;
-			}
+			//switch (cbBootFormat.SelectedIndex)
+			//{
+			//	case 0: LauncherOptions.MultibootSpecification = MultibootSpecification.V1; break;
+			//	case 1: LauncherOptions.MultibootSpecification = MultibootSpecification.V2; break;
+			//	default: LauncherOptions.MultibootSpecification = MultibootSpecification.None; break;
+			//}
 
 			switch (cbBootFileSystem.SelectedIndex)
 			{
-				case 0: LauncherOptions.FileSystem = Utility.BootImage.FileSystem.FAT12; break;
-				case 1: LauncherOptions.FileSystem = Utility.BootImage.FileSystem.FAT16; break;
+				case 0: LauncherOptions.FileSystem = "FAT12"; break;
+				case 1: LauncherOptions.FileSystem = "FAT16"; break;
 				default: break;
 			}
 
@@ -243,18 +243,18 @@ namespace Mosa.Tool.Launcher
 				default: break;
 			}
 
-			switch (LauncherOptions.Emulator)
+			switch (LauncherOptions.Emulator.ToLower())
 			{
-				case EmulatorType.Qemu: cbEmulator.SelectedIndex = 0; break;
-				case EmulatorType.Bochs: cbEmulator.SelectedIndex = 1; break;
-				case EmulatorType.VMware: cbEmulator.SelectedIndex = 2; break;
+				case "qemu": cbEmulator.SelectedIndex = 0; break;
+				case "bochs": cbEmulator.SelectedIndex = 1; break;
+				case "vmware": cbEmulator.SelectedIndex = 2; break;
 				default: break;
 			}
 
-			switch (LauncherOptions.FileSystem)
+			switch (LauncherOptions.FileSystem.ToLower())
 			{
-				case Utility.BootImage.FileSystem.FAT12: cbBootFileSystem.SelectedIndex = 0; break;
-				case Utility.BootImage.FileSystem.FAT16: cbBootFileSystem.SelectedIndex = 1; break;
+				case "fat12": cbBootFileSystem.SelectedIndex = 0; break;
+				case "fat16": cbBootFileSystem.SelectedIndex = 1; break;
 				default: break;
 			}
 
@@ -274,13 +274,13 @@ namespace Mosa.Tool.Launcher
 				default: cbPlatform.SelectedIndex = 0; break;
 			}
 
-			switch (LauncherOptions.MultibootSpecification)
-			{
-				case MultibootSpecification.V1: cbBootFormat.SelectedIndex = 0; break;
+			//switch (LauncherOptions.MultibootSpecification)
+			//{
+			//	case MultibootSpecification.V1: cbBootFormat.SelectedIndex = 0; break;
 
-				//case MultibootSpecification.V2: cbBootFormat.SelectedIndex = 1; break;
-				default: cbBootFormat.SelectedIndex = 0; break;
-			}
+			//	//case MultibootSpecification.V2: cbBootFormat.SelectedIndex = 1; break;
+			//	default: cbBootFormat.SelectedIndex = 0; break;
+			//}
 
 			switch (LauncherOptions.SerialConnectionOption)
 			{

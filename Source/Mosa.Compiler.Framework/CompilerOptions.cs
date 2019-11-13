@@ -115,12 +115,12 @@ namespace Mosa.Compiler.Framework
 		/// <summary>
 		/// Gets or sets the type of the elf.
 		/// </summary>
-		public LinkerFormatType LinkerFormatType { get; set; }
+		public string LinkerFormat { get; set; }
 
 		/// <summary>
 		/// Gets or sets the multiboot specification.
 		/// </summary>
-		public MultibootSpecification MultibootSpecification { get; set; }
+		public string MultibootVersion { get; set; }
 
 		/// <summary>
 		/// Gets or sets a value indicating whether [emit binary].

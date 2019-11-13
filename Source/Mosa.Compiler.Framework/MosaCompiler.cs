@@ -86,7 +86,7 @@ namespace Mosa.Compiler.Framework
 				if (Stage != CompileStage.Loaded)
 					return;
 
-				Linker = new MosaLinker(CompilerOptions.BaseAddress, CompilerOptions.Platform.ElfMachineType, CompilerOptions.EmitAllSymbols, CompilerOptions.EmitStaticRelocations, CompilerOptions.EmitShortSymbolNames, CompilerOptions.LinkerFormatType, CompilerOptions.CreateExtraSections, CompilerOptions.CreateExtraProgramHeaders);
+				Linker = new MosaLinker(CompilerOptions.BaseAddress, CompilerOptions.Platform.ElfMachineType, CompilerOptions.EmitAllSymbols, CompilerOptions.EmitStaticRelocations, CompilerOptions.EmitShortSymbolNames, CompilerOptions.LinkerFormat, CompilerOptions.CreateExtraSections, CompilerOptions.CreateExtraProgramHeaders);
 				Compiler = new Compiler(this);
 
 				Stage = CompileStage.Initialized;

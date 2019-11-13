@@ -35,16 +35,16 @@ namespace Mosa.Utility.Launcher
 		public bool ExitOnLaunchFalse { set { ExitOnLaunch = value; } }
 
 		[Option("emulator")]
-		public EmulatorType Emulator { get; set; }
+		public string Emulator { get; set; }
 
 		[Option("qemu")]
-		public bool EmulatorQEMU { set { Emulator = EmulatorType.Qemu; } }
+		public bool EmulatorQEMU { set { Emulator = "Qemu"; } }
 
 		[Option("vmware")]
-		public bool EmulatorVMware { set { Emulator = EmulatorType.VMware; } }
+		public bool EmulatorVMware { set { Emulator = "VMware"; } }
 
 		[Option("bochs")]
-		public bool EmulatorBochs { set { Emulator = EmulatorType.Bochs; } }
+		public bool EmulatorBochs { set { Emulator = "Bochs"; } }
 
 		[Option("image-format")]
 		public ImageFormat ImageFormat { get; set; }
@@ -166,26 +166,6 @@ namespace Mosa.Utility.Launcher
 		[Option("output-time")]
 		public bool GenerateCompileTimeFile { get; set; }
 
-		[Option("linker-format")]
-		public LinkerFormatType LinkerFormatType { get; set; }
-
-		[Option("elf32")]
-		public bool LinkerFormatTypeELF32 { set { LinkerFormatType = LinkerFormatType.Elf32; } }
-
-		[Option("elf")]
-		public bool LinkerFormatTypeELF { set { LinkerFormatType = LinkerFormatType.Elf32; } }
-
-		public MultibootSpecification MultibootSpecification { get; set; }
-
-		[Option("multiboot-v1")]
-		public bool MultiBootV1 { set { MultibootSpecification = MultibootSpecification.V1; } }
-
-		[Option("multiboot-v2")]
-		public bool MultiBootV2 { set { MultibootSpecification = MultibootSpecification.V2; } }
-
-		[Option("multiboot-none")]
-		public bool MultiBootNone { set { MultibootSpecification = MultibootSpecification.None; } }
-
 		[Option("no-display")]
 		public bool NoDisplay { get; set; }
 
@@ -193,7 +173,7 @@ namespace Mosa.Utility.Launcher
 		public PlatformType PlatformType { get; set; }
 
 		[Option("file-system")]
-		public BootImage.FileSystem FileSystem { get; set; }
+		public string FileSystem { get; set; }
 
 		[Option("serial-connection")]
 		public SerialConnectionOption SerialConnectionOption { get; set; }
@@ -388,11 +368,10 @@ namespace Mosa.Utility.Launcher
 			DestinationDirectory = Path.Combine(Path.GetTempPath(), "MOSA");
 			BootLoader = BootLoader.Syslinux_3_72; // Can't use the Default in the attribute because it would overwrite other bootloader options
 			SerialConnectionOption = SerialConnectionOption.None;
-			Emulator = EmulatorType.Qemu;
+			Emulator = "Qemu";
 			ImageFormat = ImageFormat.IMG;
-			LinkerFormatType = LinkerFormatType.Elf32;
 			PlatformType = PlatformType.x86;
-			FileSystem = BootImage.FileSystem.FAT16;
+			FileSystem = "FAT16";
 			BaseAddress = 0x00400000;
 			SerialConnectionHost = "127.0.0.1";
 			InlineMaximum = 12;
@@ -417,7 +396,6 @@ namespace Mosa.Utility.Launcher
 			TwoPassOptimizations = true;
 			EnableValueNumbering = true;
 			EnableBitTracker = true;
-			MultibootSpecification = MultibootSpecification.V1;
 			PlugKorlib = true;
 		}
 

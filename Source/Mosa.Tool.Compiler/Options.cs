@@ -48,12 +48,6 @@ namespace Mosa.Tool.Compiler
 		[Option('a', "architecture", HelpText = "Select one of the MOSA architectures to compile for [x86|x64|ARMv6].", Required = true)]
 		public string Architecture { set { CompilerOptions.Platform = SelectArchitecture(value); } }
 
-		[Option("mboot", HelpText = "Select multiboot specification [v1|v2].")]
-		public string Boot { set { CompilerOptions.MultibootSpecification = GetMultibootSpecification(value); } }
-
-		[Option('f', "format", HelpText = "Select the format of the binary file to create [ELF32|ELF64].")]
-		public string LinkerFormat { set { CompilerOptions.LinkerFormatType = GetLinkerFactory(value); } }
-
 		[Option('o', "out", HelpText = "The name of the output file.", Required = true)]
 		public string OutputFile { set { CompilerOptions.OutputFile = value; } }
 

@@ -53,14 +53,14 @@ namespace Mosa.Compiler.Framework.Linker
 		public CreateExtraSectionsDelegate CreateExtraSections { get; set; }
 		public CreateExtraProgramHeaderDelegate CreateExtraProgramHeaders { get; set; }
 
-		public MosaLinker(ulong baseAddress, MachineType machineType, bool emitAllSymbols, bool emitStaticRelocations, bool emitShortSymbolName, LinkerFormatType linkerFormatType, CreateExtraSectionsDelegate createExtraSections, CreateExtraProgramHeaderDelegate createExtraProgramHeaders)
+		public MosaLinker(ulong baseAddress, MachineType machineType, bool emitAllSymbols, bool emitStaticRelocations, bool emitShortSymbolName, string linkerFormat, CreateExtraSectionsDelegate createExtraSections, CreateExtraProgramHeaderDelegate createExtraProgramHeaders)
 		{
 			BaseAddress = baseAddress;
 			MachineType = machineType;
 			EmitAllSymbols = emitAllSymbols;
 			EmitStaticRelocations = emitStaticRelocations;
 			EmitShortSymbolName = emitShortSymbolName;
-			LinkerFormatType = linkerFormatType;
+			LinkerFormatType = linkerFormat.ToLower() == "elf64" ? LinkerFormatType.Elf64 : LinkerFormatType.Elf32;
 			CreateExtraSections = createExtraSections;
 			CreateExtraProgramHeaders = createExtraProgramHeaders;
 

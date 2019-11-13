@@ -96,8 +96,8 @@ namespace Mosa.Utility.Launcher
 				compiler.CompilerOptions.ValueNumbering = LauncherOptions.EnableValueNumbering;
 				compiler.CompilerOptions.OutputFile = CompiledFile;
 				compiler.CompilerOptions.Platform = SelectArchitecture(LauncherOptions.PlatformType);
-				compiler.CompilerOptions.LinkerFormatType = LauncherOptions.LinkerFormatType;
-				compiler.CompilerOptions.MultibootSpecification = LauncherOptions.MultibootSpecification;
+				compiler.CompilerOptions.LinkerFormat = "elf32";
+				compiler.CompilerOptions.MultibootVersion = "v1";
 				compiler.CompilerOptions.SetCustomOption("multiboot.video", LauncherOptions.VBEVideo ? "true" : "false");
 				compiler.CompilerOptions.SetCustomOption("multiboot.width", LauncherOptions.Width.ToString());
 				compiler.CompilerOptions.SetCustomOption("multiboot.height", LauncherOptions.Height.ToString());
@@ -270,9 +270,16 @@ namespace Mosa.Utility.Launcher
 
 			bootImageOptions.DiskImageFileName = ImageFile;
 			bootImageOptions.PatchSyslinuxOption = true;
-			bootImageOptions.FileSystem = LauncherOptions.FileSystem;
 			bootImageOptions.ImageFormat = LauncherOptions.ImageFormat;
 			bootImageOptions.BootLoader = LauncherOptions.BootLoader;
+
+			switch (LauncherOptions.FileSystem.ToLower())
+			{
+				case "fat12": bootImageOptions.FileSystem = BootImage.FileSystem.FAT12; break;
+				case "fat16": bootImageOptions.FileSystem = BootImage.FileSystem.FAT16; break;
+				case "fat32": bootImageOptions.FileSystem = BootImage.FileSystem.FAT32; break;
+				default: throw new NotImplementCompilerException("unknown file system");
+			}
 
 			Generator.Create(bootImageOptions);
 		}

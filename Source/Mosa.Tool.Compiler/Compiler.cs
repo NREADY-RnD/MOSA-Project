@@ -157,8 +157,8 @@ Example: Mosa.Tool.Compiler.exe -o Mosa.HelloWorld.x86.bin -a x86 --mboot v1 --x
 			sb.Append(" > Output file: ").AppendLine(compiler.CompilerOptions.OutputFile);
 			sb.Append(" > Input file(s): ").AppendLine(string.Join(", ", new List<string>(GetInputFileNames()).ToArray()));
 			sb.Append(" > Architecture: ").AppendLine(compiler.CompilerOptions.Platform.GetType().FullName);
-			sb.Append(" > Binary format: ").AppendLine(compiler.CompilerOptions.LinkerFormatType.ToString());
-			sb.Append(" > Boot spec: ").AppendLine(compiler.CompilerOptions.MultibootSpecification.ToString());
+			sb.Append(" > Binary format: ").AppendLine(compiler.CompilerOptions.LinkerFormat);
+			sb.Append(" > Boot spec: ").AppendLine(compiler.CompilerOptions.MultibootVersion.ToString());
 			sb.Append(" > Is executable: ").AppendLine(options.IsInputExecutable.ToString());
 			return sb.ToString();
 		}

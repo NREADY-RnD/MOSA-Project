@@ -55,8 +55,8 @@ namespace Mosa.Workspace.Experiment.Debug
 				MethodScanner = true,
 				BitTracker = true,
 
-				MultibootSpecification = MultibootSpecification.V1,
-				LinkerFormatType = LinkerFormatType.Elf32,
+				MultibootVersion = "v1",
+				LinkerFormat = "elf32",
 				InlineMaximum = 12,
 
 				BaseAddress = 0x00500000,

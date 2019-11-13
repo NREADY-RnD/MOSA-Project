@@ -56,11 +56,11 @@ namespace Mosa.Utility.Launcher
 
 		public Process LaunchVM()
 		{
-			switch (LauncherOptions.Emulator)
+			switch (LauncherOptions.Emulator.ToLower())
 			{
-				case EmulatorType.Qemu: return LaunchQemu(false);
-				case EmulatorType.Bochs: return LaunchBochs(false);
-				case EmulatorType.VMware: return LaunchVMwarePlayer(false);
+				case "qemu": return LaunchQemu(false);
+				case "bochs": return LaunchBochs(false);
+				case "vmware": return LaunchVMwarePlayer(false);
 				default: throw new InvalidOperationException();
 			}
 		}

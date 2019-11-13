@@ -40,7 +40,11 @@ namespace Mosa.Utility.Launcher
 			set { Settings.SetValue("Launcher.Exit", value); }
 		}
 
-		public EmulatorType Emulator { get; set; }
+		public string Emulator
+		{
+			get { return Settings.GetValue("Emulator", null); }
+			set { Settings.SetValue("Emulator", value); }
+		}
 
 		public ImageFormat ImageFormat { get; set; }
 
@@ -304,15 +308,27 @@ namespace Mosa.Utility.Launcher
 			set { Settings.SetValue("Compiler.MethodScanner", value); }
 		}
 
-		public LinkerFormatType LinkerFormatType { get; set; }
+		public string LinkerFormat
+		{
+			get { return Settings.GetValue("Linker.Type", "elf32"); }
+			set { Settings.SetValue("Linker.Type", value); }
+		}
 
-		public MultibootSpecification MultibootSpecification { get; set; }
+		public string MultibootSpecification
+		{
+			get { return Settings.GetValue("Multiboot.Version", string.Empty); }
+			set { Settings.SetValue("Multiboot.Version", value); }
+		}
+
+		public string FileSystem
+		{
+			get { return Settings.GetValue("Image.FileSystem", string.Empty); }
+			set { Settings.SetValue("Image.FileSystem", value); }
+		}
 
 		public PlatformType PlatformType { get; set; }
 
 		public BootLoader BootLoader { get; set; }
-
-		public BootImage.FileSystem FileSystem { get; set; }
 
 		public SerialConnectionOption SerialConnectionOption { get; set; }
 
@@ -337,11 +353,11 @@ namespace Mosa.Utility.Launcher
 			DestinationDirectory = Path.Combine(Path.GetTempPath(), "MOSA");
 			BootLoader = BootLoader.Syslinux_3_72; // Can't use the Default in the attribute because it would overwrite other bootloader options
 			SerialConnectionOption = SerialConnectionOption.None;
-			Emulator = EmulatorType.Qemu;
+			Emulator = "Qemu";
 			ImageFormat = ImageFormat.IMG;
-			LinkerFormatType = LinkerFormatType.Elf32;
+			LinkerFormat = "elf32";
 			PlatformType = PlatformType.x86;
-			FileSystem = BootImage.FileSystem.FAT16;
+			FileSystem = "FAT16";
 			BaseAddress = 0x00400000;
 			SerialConnectionHost = "127.0.0.1";
 			InlineMaximum = 12;
@@ -366,7 +382,7 @@ namespace Mosa.Utility.Launcher
 			TwoPassOptimizations = true;
 			EnableValueNumbering = true;
 			EnableBitTracker = true;
-			MultibootSpecification = MultibootSpecification.V1;
+			MultibootSpecification = "v1";
 			PlugKorlib = true;
 		}
 	}

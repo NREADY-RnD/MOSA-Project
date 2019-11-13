@@ -8,27 +8,27 @@ namespace Mosa.Utility.Launcher
 	{
 		public static string Verify(LauncherOptions options)
 		{
-			if (options.Emulator == EmulatorType.Qemu && options.ImageFormat == ImageFormat.VDI)
+			if (options.Emulator != null && options.Emulator.ToLower() == "qemu" && options.ImageFormat == ImageFormat.VDI)
 			{
 				return "QEMU does not support the VDI image format";
 			}
 
-			if (options.Emulator == EmulatorType.Bochs && options.ImageFormat == ImageFormat.VDI)
+			if (options.Emulator != null && options.Emulator.ToLower() == "bochs" && options.ImageFormat == ImageFormat.VDI)
 			{
 				return "Bochs does not support the VDI image format";
 			}
 
-			if (options.Emulator == EmulatorType.Bochs && options.ImageFormat == ImageFormat.VMDK)
+			if (options.Emulator != null && options.Emulator.ToLower() == "bochs" && options.ImageFormat == ImageFormat.VMDK)
 			{
 				return "Bochs does not support the VMDK image format";
 			}
 
-			if (options.Emulator == EmulatorType.VMware && options.ImageFormat == ImageFormat.IMG)
+			if (options.Emulator != null && options.Emulator.ToLower() == "vmware" && options.ImageFormat == ImageFormat.IMG)
 			{
 				return "VMware does not support the IMG image format";
 			}
 
-			if (options.Emulator == EmulatorType.VMware && options.ImageFormat == ImageFormat.VDI)
+			if (options.Emulator != null && options.Emulator.ToLower() == "vmware" && options.ImageFormat == ImageFormat.VDI)
 			{
 				return "VMware does not support the VHD image format";
 			}
