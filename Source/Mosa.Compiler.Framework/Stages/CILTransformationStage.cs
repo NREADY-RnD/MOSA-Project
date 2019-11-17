@@ -2127,6 +2127,19 @@ namespace Mosa.Compiler.Framework.Stages
 					return true;
 				}
 			}
+			else
+			{
+				var methodName = $"{context.InvokeMethod.DeclaringType.FullName}::{context.InvokeMethod.Name}";
+
+				var intrinsic = MethodCompiler.Compiler.GetInstrincMethod(methodName);
+
+				if (intrinsic != null)
+				{
+					intrinsic(context, MethodCompiler);
+
+					return true;
+				}
+			}
 
 			return false;
 		}

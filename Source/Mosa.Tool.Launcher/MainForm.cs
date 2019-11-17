@@ -63,6 +63,8 @@ namespace Mosa.Tool.Launcher
 			dataGridView1.Columns[2].Width = 500;
 
 			AddOutput("Current Directory: " + Environment.CurrentDirectory);
+
+			cbBootFormat.SelectedIndex = 0;
 		}
 
 		private void UpdateInterfaceAppLocations()
@@ -163,13 +165,6 @@ namespace Mosa.Tool.Launcher
 				case 3: LauncherOptions.SerialConnection = "TCPClient"; break;
 				default: break;
 			}
-
-			//switch (cbBootFormat.SelectedIndex)
-			//{
-			//	case 0: LauncherOptions.MultibootSpecification = MultibootSpecification.V1; break;
-			//	case 1: LauncherOptions.MultibootSpecification = MultibootSpecification.V2; break;
-			//	default: LauncherOptions.MultibootSpecification = MultibootSpecification.None; break;
-			//}
 
 			switch (cbBootFileSystem.SelectedIndex)
 			{
@@ -273,14 +268,6 @@ namespace Mosa.Tool.Launcher
 				case PlatformType.x64: cbPlatform.SelectedIndex = 1; break;
 				default: cbPlatform.SelectedIndex = 0; break;
 			}
-
-			//switch (LauncherOptions.MultibootSpecification)
-			//{
-			//	case MultibootSpecification.V1: cbBootFormat.SelectedIndex = 0; break;
-
-			//	//case MultibootSpecification.V2: cbBootFormat.SelectedIndex = 1; break;
-			//	default: cbBootFormat.SelectedIndex = 0; break;
-			//}
 
 			if (LauncherOptions.SerialConnection != null)
 			{

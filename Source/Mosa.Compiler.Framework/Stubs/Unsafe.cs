@@ -10,7 +10,12 @@ namespace Mosa.Compiler.Framework.Intrinsics
 		[IntrinsicMethod("System.Runtime.CompilerServices.Unsafe::SizeOf")]
 		private static void SizeOf(Context context, MethodCompiler methodCompiler)
 		{
-			return;
+			var type = context.InvokeMethod.GenericArguments[0];
+			var size = type.IsPointer ? methodCompiler.Architecture.NativePointerSize : methodCompiler.TypeLayout.GetTypeSize(type);
+
+			var move = methodCompiler.Architecture.Is32BitPlatform ? (BaseInstruction)IRInstruction.Move32 : IRInstruction.Move64;
+
+			context.SetInstruction(move, context.Result, methodCompiler.CreateConstant(size));
 		}
 	}
 }
