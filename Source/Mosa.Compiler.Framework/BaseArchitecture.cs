@@ -121,7 +121,7 @@ namespace Mosa.Compiler.Framework
 
 		#region Members
 
-		protected Dictionary<string, InstrinsicMethodDelegate> PlatformIntrinsicMethods { get; }
+		protected Dictionary<string, IntrinsicMethodDelegate> PlatformIntrinsicMethods { get; }
 
 		#endregion Members
 
@@ -202,16 +202,16 @@ namespace Mosa.Compiler.Framework
 		/// </summary>
 		/// <param name="name">The name.</param>
 		/// <returns></returns>
-		public InstrinsicMethodDelegate GetInstrinsicMethod(string name)
+		public IntrinsicMethodDelegate GetInstrinsicMethod(string name)
 		{
-			PlatformIntrinsicMethods.TryGetValue(name, out InstrinsicMethodDelegate value);
+			PlatformIntrinsicMethods.TryGetValue(name, out IntrinsicMethodDelegate value);
 
 			return value;
 		}
 
-		protected Dictionary<string, InstrinsicMethodDelegate> GetPlatformIntrinsicMethods()
+		protected Dictionary<string, IntrinsicMethodDelegate> GetPlatformIntrinsicMethods()
 		{
-			var platformIntrinsicMethods = new Dictionary<string, InstrinsicMethodDelegate>();
+			var platformIntrinsicMethods = new Dictionary<string, IntrinsicMethodDelegate>();
 
 			foreach (var type in GetType().Assembly.GetTypes())
 			{
@@ -225,7 +225,7 @@ namespace Mosa.Compiler.Framework
 
 					for (int i = 0; i < attributes.Length; i++)
 					{
-						var d = (InstrinsicMethodDelegate)Delegate.CreateDelegate(typeof(InstrinsicMethodDelegate), method);
+						var d = (IntrinsicMethodDelegate)Delegate.CreateDelegate(typeof(IntrinsicMethodDelegate), method);
 
 						// Finally add the dictionary entry mapping the target name and the delegate
 						platformIntrinsicMethods.Add(attributes[i].Target, d);

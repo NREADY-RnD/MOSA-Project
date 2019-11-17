@@ -20,6 +20,8 @@ namespace Mosa.Compiler.Framework.Stages
 	/// </remarks>
 	public sealed class CILTransformationStage : BaseCodeTransformationStageLegacy
 	{
+		private Dictionary<MosaMethod, IntrinsicMethodDelegate> InstrinsicMap = new Dictionary<MosaMethod, IntrinsicMethodDelegate>();
+
 		protected override void PopulateVisitationDictionary()
 		{
 			AddVisitation(CILInstruction.Add, Add);
@@ -2081,6 +2083,43 @@ namespace Mosa.Compiler.Framework.Stages
 			throw new CompilerException();
 		}
 
+		private IntrinsicMethodDelegate ResolveIntrinsicDelegateMethod(MosaMethod method)
+		{
+			IntrinsicMethodDelegate intrinsic = null;
+
+			if (InstrinsicMap.TryGetValue(method, out intrinsic))
+			{
+				return intrinsic;
+			}
+
+			if (method.IsExternal)
+			{
+				intrinsic = Architecture.GetInstrinsicMethod(method.ExternMethodModule);
+			}
+			else if (method.IsInternal)
+			{
+				var methodName = $"{method.DeclaringType.FullName}::{method.Name}";
+
+				intrinsic = MethodCompiler.Compiler.GetInstrincMethod(methodName);
+
+				if (intrinsic == null)
+				{
+					// special case for plugging constructors
+					intrinsic = MethodCompiler.Compiler.GetInstrincMethod($"{method.DeclaringType.FullName}::{method.Name}");
+				}
+			}
+			else
+			{
+				var methodName = $"{method.DeclaringType.FullName}::{method.Name}";
+
+				intrinsic = MethodCompiler.Compiler.GetInstrincMethod(methodName);
+			}
+
+			InstrinsicMap.Add(method, intrinsic);
+
+			return intrinsic;
+		}
+
 		/// <summary>
 		/// Processes external method calls.
 		/// </summary>
@@ -2095,53 +2134,31 @@ namespace Mosa.Compiler.Framework.Stages
 		/// </remarks>
 		private bool ProcessExternalCall(Context context)
 		{
+			var intrinsic = ResolveIntrinsicDelegateMethod(context.InvokeMethod);
+
+			if (intrinsic == null)
+				return false;
+
 			if (context.InvokeMethod.IsExternal)
 			{
-				var intrinsic = Architecture.GetInstrinsicMethod(context.InvokeMethod.ExternMethodModule);
+				var operands = context.GetOperands();
+				operands.Insert(0, Operand.CreateSymbolFromMethod(context.InvokeMethod, TypeSystem));
+				context.SetInstruction(IRInstruction.IntrinsicMethodCall, context.Result, operands);
 
-				if (intrinsic != null)
-				{
-					var operands = context.GetOperands();
-					operands.Insert(0, Operand.CreateSymbolFromMethod(context.InvokeMethod, TypeSystem));
-					context.SetInstruction(IRInstruction.IntrinsicMethodCall, context.Result, operands);
-
-					return true;
-				}
+				return true;
 			}
 			else if (context.InvokeMethod.IsInternal)
 			{
-				var methodName = $"{context.InvokeMethod.DeclaringType.FullName}::{context.InvokeMethod.Name}";
+				intrinsic(context, MethodCompiler);
 
-				var intrinsic = MethodCompiler.Compiler.GetInstrincMethod(methodName);
-
-				if (intrinsic == null)
-				{
-					// special case for plugging constructors
-					intrinsic = MethodCompiler.Compiler.GetInstrincMethod($"{context.InvokeMethod.DeclaringType.FullName}::{context.InvokeMethod.Name}");
-				}
-
-				if (intrinsic != null)
-				{
-					intrinsic(context, MethodCompiler);
-
-					return true;
-				}
+				return true;
 			}
 			else
 			{
-				var methodName = $"{context.InvokeMethod.DeclaringType.FullName}::{context.InvokeMethod.Name}";
+				intrinsic(context, MethodCompiler);
 
-				var intrinsic = MethodCompiler.Compiler.GetInstrincMethod(methodName);
-
-				if (intrinsic != null)
-				{
-					intrinsic(context, MethodCompiler);
-
-					return true;
-				}
+				return true;
 			}
-
-			return false;
 		}
 
 		/// <summary>
