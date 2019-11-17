@@ -7,7 +7,7 @@ namespace Mosa.Compiler.Framework.Intrinsics
 	/// </summary>
 	static partial class IntrinsicMethods
 	{
-		[IntrinsicMethod("Mosa.Runtime.Intrinsic:CreateInstanceSimple")]
+		[IntrinsicMethod("Mosa.Runtime.Intrinsic::CreateInstanceSimple")]
 		private static void CreateInstanceSimple(Context context, MethodCompiler methodCompiler)
 		{
 			var ctor = context.Operand1;

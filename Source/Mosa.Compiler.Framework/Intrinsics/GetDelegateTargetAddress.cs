@@ -7,7 +7,7 @@ namespace Mosa.Compiler.Framework.Intrinsics
 	/// </summary>
 	static partial class IntrinsicMethods
 	{
-		[IntrinsicMethod("Mosa.Runtime.Intrinsic:GetDelegateTargetAddress")]
+		[IntrinsicMethod("Mosa.Runtime.Intrinsic::GetDelegateTargetAddress")]
 		private static void GetDelegateTargetAddress(Context context, MethodCompiler methodCompiler)
 		{
 			var load = methodCompiler.Architecture.Is32BitPlatform ? (BaseInstruction)IRInstruction.Load32 : IRInstruction.Load64;

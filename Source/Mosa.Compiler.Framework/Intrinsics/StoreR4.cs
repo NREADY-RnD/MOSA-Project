@@ -9,7 +9,7 @@ namespace Mosa.Compiler.Framework.Intrinsics
 	/// </summary>
 	internal static partial class IntrinsicMethods
 	{
-		[IntrinsicMethod("Mosa.Runtime.Intrinsic:StoreR4")]
+		[IntrinsicMethod("Mosa.Runtime.Intrinsic::StoreR4")]
 		private static void StoreR4(Context context, MethodCompiler methodCompiler)
 		{
 			if (context.OperandCount == 2)

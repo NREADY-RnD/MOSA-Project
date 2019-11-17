@@ -271,5 +271,10 @@ namespace Mosa.TestWorld.x86
 			const uint EFER = 0xC0000080;
 			Native.WrMSR(EFER, Native.RdMSR(EFER) | 0b11);
 		}
+
+		public static int Test1()
+		{
+			return Unsafe.SizeOf<int>();
+		}
 	}
 }

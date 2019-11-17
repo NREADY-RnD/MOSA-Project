@@ -9,7 +9,7 @@ namespace Mosa.Compiler.Framework.Intrinsics
 	/// </summary>
 	static partial class IntrinsicMethods
 	{
-		[IntrinsicMethod("Mosa.Runtime.Intrinsic:Store16")]
+		[IntrinsicMethod("Mosa.Runtime.Intrinsic::Store16")]
 		private static void Store16(Context context, MethodCompiler methodCompiler)
 		{
 			if (context.OperandCount == 2)

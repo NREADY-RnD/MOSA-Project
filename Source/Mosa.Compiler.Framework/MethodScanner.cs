@@ -356,11 +356,6 @@ namespace Mosa.Compiler.Framework
 				if (scheduledMethods.Contains(method))
 					return;
 
-				if (method.FullName.Contains("Mosa.UnitTests.GenericInterfaceTestClass`1<System.Int32>::Mosa.UnitTests.IInterfaceBB<T>.Get"))
-				{
-					trace?.Log("TEST");
-				}
-
 				scheduledMethods.Add(method);
 
 				trace?.Log($" ==> Scheduling: {method}{(method.IsStatic ? " [Static]" : " [Virtual]")}");

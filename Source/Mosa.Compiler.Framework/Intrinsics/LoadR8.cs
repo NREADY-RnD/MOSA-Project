@@ -9,7 +9,7 @@ namespace Mosa.Compiler.Framework.Intrinsics
 	/// </summary>
 	static partial class IntrinsicMethods
 	{
-		[IntrinsicMethod("Mosa.Runtime.Intrinsic:LoadR8")]
+		[IntrinsicMethod("Mosa.Runtime.Intrinsic::LoadR8")]
 		private static void LoadR8(Context context, MethodCompiler methodCompiler)
 		{
 			if (context.OperandCount == 1)

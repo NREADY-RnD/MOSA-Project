@@ -66,7 +66,8 @@ Launcher:
 
 	Advance:
 		HuntForCorLib: true				# Hunts for CoreLib in various directories
-		LaunchGDBDebugger: false		# Launch the GDB debugger application after VM launch
+		LaunchGDB: false				# Launch the GDB application after VM launch
+		LaunchGDBDebugger: false		# Launch the MOSA GDB debugger application after VM launch
 
 Image:
 	Format: img							# Image Format: BIN, IMG, VHD, VDI, ISO, VMDK
@@ -100,5 +101,4 @@ Debugger:
 	#BreakpointFile:
 
 Advanced:
-	#InterruptMethodName:
 	PlugKorlib: true

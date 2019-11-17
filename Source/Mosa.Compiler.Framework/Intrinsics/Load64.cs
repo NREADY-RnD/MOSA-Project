@@ -9,7 +9,7 @@ namespace Mosa.Compiler.Framework.Intrinsics
 	/// </summary>
 	internal static partial class IntrinsicMethods
 	{
-		[IntrinsicMethod("Mosa.Runtime.Intrinsic:Load64")]
+		[IntrinsicMethod("Mosa.Runtime.Intrinsic::Load64")]
 		private static void Load64(Context context, MethodCompiler methodCompiler)
 		{
 			if (context.OperandCount == 1)

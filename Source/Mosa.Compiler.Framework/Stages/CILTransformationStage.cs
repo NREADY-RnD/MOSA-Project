@@ -414,7 +414,7 @@ namespace Mosa.Compiler.Framework.Stages
 		/// <param name="context">The context.</param>
 		private void Call(Context context)
 		{
-			if (ProcessExternalCall(context.Node))
+			if (ProcessExternalCall(context))
 				return;
 
 			var method = context.InvokeMethod;
@@ -470,7 +470,7 @@ namespace Mosa.Compiler.Framework.Stages
 		/// <param name="context">The context.</param>
 		private void Callvirt(Context context)
 		{
-			if (ProcessExternalCall(context.Node))
+			if (ProcessExternalCall(context))
 				return;
 
 			var method = context.InvokeMethod;
@@ -2084,7 +2084,7 @@ namespace Mosa.Compiler.Framework.Stages
 		/// <summary>
 		/// Processes external method calls.
 		/// </summary>
-		/// <param name="node">The transformation context.</param>
+		/// <param name="context">The transformation context.</param>
 		/// <returns>
 		///   <c>true</c> if the method was replaced by an intrinsic; <c>false</c> otherwise.
 		/// </returns>
@@ -2093,36 +2093,36 @@ namespace Mosa.Compiler.Framework.Stages
 		/// the current architecture. If it has, the method call is replaced by the specified
 		/// native instruction.
 		/// </remarks>
-		private bool ProcessExternalCall(InstructionNode node)
+		private bool ProcessExternalCall(Context context)
 		{
-			if (node.InvokeMethod.IsExternal)
+			if (context.InvokeMethod.IsExternal)
 			{
-				var intrinsic = Architecture.GetInstrinsicMethod(node.InvokeMethod.ExternMethodModule);
+				var intrinsic = Architecture.GetInstrinsicMethod(context.InvokeMethod.ExternMethodModule);
 
 				if (intrinsic != null)
 				{
-					var operands = node.GetOperands();
-					operands.Insert(0, Operand.CreateSymbolFromMethod(node.InvokeMethod, TypeSystem));
-					node.SetInstruction(IRInstruction.IntrinsicMethodCall, node.Result, operands);
+					var operands = context.GetOperands();
+					operands.Insert(0, Operand.CreateSymbolFromMethod(context.InvokeMethod, TypeSystem));
+					context.SetInstruction(IRInstruction.IntrinsicMethodCall, context.Result, operands);
 
 					return true;
 				}
 			}
-			else if (node.InvokeMethod.IsInternal)
+			else if (context.InvokeMethod.IsInternal)
 			{
-				var methodName = $"{node.InvokeMethod.DeclaringType.FullName}:{node.InvokeMethod.Name}";
+				var methodName = $"{context.InvokeMethod.DeclaringType.FullName}::{context.InvokeMethod.Name}";
 
 				var intrinsic = MethodCompiler.Compiler.GetInstrincMethod(methodName);
 
 				if (intrinsic == null)
 				{
 					// special case for plugging constructors
-					intrinsic = MethodCompiler.Compiler.GetInstrincMethod($"{node.InvokeMethod.DeclaringType.FullName}::{node.InvokeMethod.Name}");
+					intrinsic = MethodCompiler.Compiler.GetInstrincMethod($"{context.InvokeMethod.DeclaringType.FullName}::{context.InvokeMethod.Name}");
 				}
 
 				if (intrinsic != null)
 				{
-					intrinsic(new Context(node), MethodCompiler);
+					intrinsic(context, MethodCompiler);
 
 					return true;
 				}

@@ -379,6 +379,7 @@ namespace Mosa.Compiler.Framework
 			EmitInline = false;
 			EmitShortSymbolNames = true;
 			EmitDrawf = false;
+			LinkerFormat = "elf32";
 		}
 	}
 }

@@ -503,14 +503,7 @@ namespace Mosa.Tool.Explorer
 			Compiler.CompilerOptions.SourceFiles.Clear();
 
 			var sourceDirectory = Path.GetDirectoryName(filename);
-			Compiler.CompilerOptions.AddSearchPath(includeDirectory);
-			Compiler.CompilerOptions.AddSearchPath(sourceDirectory);
-
 			var fileHunter = new FileHunter(sourceDirectory);
-			Compiler.CompilerOptions.AddSourceFile(filename);
-			Compiler.CompilerOptions.AddSourceFile(fileHunter.HuntFile("Mosa.Plug.Korlib.dll")?.FullName);
-			Compiler.CompilerOptions.AddSourceFile(fileHunter.HuntFile("Mosa.Plug.Korlib." + platform + ".dll")?.FullName);
-			Compiler.CompilerOptions.AddSourceFile(fileHunter.HuntFile("Mosa.Runtime." + platform + ".dll")?.FullName);
 
 			// Search Paths
 			Settings.ClearProperty("SearchPaths");
@@ -520,7 +513,7 @@ namespace Mosa.Tool.Explorer
 			// Source Files
 			Settings.ClearProperty("SourceFiles");
 			Settings.AddPropertyListValue("SourceFiles", filename);
-			Settings.AddPropertyListValue("SourceFiles", fileHunter.HuntFile("Mosa.Plug.Korlib." + platform + ".dll")?.FullName);
+			Settings.AddPropertyListValue("SourceFiles", fileHunter.HuntFile("Mosa.Plug.Korlib.dll")?.FullName);
 			Settings.AddPropertyListValue("SourceFiles", fileHunter.HuntFile("Mosa.Plug.Korlib." + platform + ".dll")?.FullName);
 			Settings.AddPropertyListValue("SourceFiles", fileHunter.HuntFile("Mosa.Runtime." + platform + ".dll")?.FullName);
 		}
