@@ -10,7 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Mosa.Utility.Compiler
+namespace Mosa.Utility.Configuration
 {
 	public static class MapCompilerOptions
 	{
@@ -41,7 +41,7 @@ namespace Mosa.Utility.Compiler
 				compilerOptions.Platform = GetPlatform(platform);
 
 			compilerOptions.SourceFiles.Clear();
-			compilerOptions.AddSourceFiles(settings.GetList("SourceFiles"));
+			compilerOptions.AddSourceFiles(settings.GetList("Compiler.SourceFiles"));
 
 			compilerOptions.SearchPaths.Clear();
 			compilerOptions.AddSearchPaths(settings.GetList("SearchPaths"));

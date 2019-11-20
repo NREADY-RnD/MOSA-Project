@@ -36,7 +36,8 @@
     <ProjectReference Include="..\Mosa.Compiler.MosaTypeSystem\Mosa.Compiler.MosaTypeSystem.csproj" />
     <ProjectReference Include="..\Mosa.Platform.x86\Mosa.Platform.x86.csproj" />
     <ProjectReference Include="..\Mosa.Utility.BootImage\Mosa.Utility.BootImage.csproj" />
-    <ProjectReference Include="..\Mosa.Utility.Compiler\Mosa.Utility.Compiler.csproj" />
+    <ProjectReference Include="..\Mosa.Utility.Compiler\Mosa.Utility.Configuration.csproj" />
+    <ProjectReference Include="..\Mosa.Utility.Configuration\Mosa.Utility.Configuration.csproj" />
     <ProjectReference Include="..\Mosa.Utility.Launcher\Mosa.Utility.Launcher.csproj" />
   </ItemGroup>
   <ItemGroup>
@@ -49,7 +50,6 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="System.ComponentModel.Composition" Version="4.6.0" />
-    <PackageReference Include="CommandLineParser" Version="2.6.0" />
     <PackageReference Include="MetroModernUI" Version="1.4.0" />
   </ItemGroup>
 </Project>

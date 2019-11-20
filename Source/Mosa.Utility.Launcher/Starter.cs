@@ -1,7 +1,7 @@
 ﻿// Copyright (c) MOSA Project. Licensed under the New BSD License.
 
+using Mosa.Compiler.Common.Configuration;
 using Mosa.Compiler.Framework.Linker;
-using Mosa.Utility.BootImage;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -15,14 +15,14 @@ namespace Mosa.Utility.Launcher
 
 		public MosaLinker Linker { get; }
 
-		public Starter(LauncherOptions launcherOptions, AppLocations appLocations, IStarterEvent launcherEvent)
-			: base(launcherOptions, appLocations)
+		public Starter(Settings settings, AppLocations appLocations, IStarterEvent launcherEvent)
+			: base(settings, appLocations)
 		{
 			LauncherEvent = launcherEvent;
 		}
 
-		public Starter(LauncherOptions options, AppLocations appLocations, IStarterEvent launcherEvent, MosaLinker linker)
-			: base(options, appLocations)
+		public Starter(Settings settings, AppLocations appLocations, IStarterEvent launcherEvent, MosaLinker linker)
+			: base(settings, appLocations)
 		{
 			LauncherEvent = launcherEvent;
 			Linker = linker;
@@ -69,7 +69,7 @@ namespace Mosa.Utility.Launcher
 		{
 			string arg = " -L " + Quote(AppLocations.QEMUBIOSDirectory);
 
-			if (LauncherOptions.PlatformType == PlatformType.x86)
+			if (LauncherOptions.PlatformType.ToLower() == "x86")
 			{
 				arg += " -cpu qemu32,+sse4.1";
 			}
@@ -123,8 +123,8 @@ namespace Mosa.Utility.Launcher
 
 		private Process LaunchBochs(bool getOutput)
 		{
-			var logfile = Path.Combine(LauncherOptions.DestinationDirectory, Path.GetFileNameWithoutExtension(LauncherOptions.SourceFile) + "-bochs.log");
-			var configfile = Path.Combine(LauncherOptions.DestinationDirectory, Path.GetFileNameWithoutExtension(LauncherOptions.SourceFile) + ".bxrc");
+			var logfile = Path.Combine(LauncherOptions.DestinationDirectory, Path.GetFileNameWithoutExtension(LauncherOptions.SourceFiles[0]) + "-bochs.log");
+			var configfile = Path.Combine(LauncherOptions.DestinationDirectory, Path.GetFileNameWithoutExtension(LauncherOptions.SourceFiles[0]) + ".bxrc");
 			var exeDir = Path.GetDirectoryName(AppLocations.BOCHS);
 
 			var fileVersionInfo = FileVersionInfo.GetVersionInfo(AppLocations.BOCHS);
@@ -170,8 +170,8 @@ namespace Mosa.Utility.Launcher
 
 		private Process LaunchVMwarePlayer(bool getOutput)
 		{
-			var logfile = Path.Combine(LauncherOptions.DestinationDirectory, Path.GetFileNameWithoutExtension(LauncherOptions.SourceFile) + "-vmx.log");
-			var configfile = Path.Combine(LauncherOptions.DestinationDirectory, Path.GetFileNameWithoutExtension(LauncherOptions.SourceFile) + ".vmx");
+			var logfile = Path.Combine(LauncherOptions.DestinationDirectory, Path.GetFileNameWithoutExtension(LauncherOptions.SourceFiles[0]) + "-vmx.log");
+			var configfile = Path.Combine(LauncherOptions.DestinationDirectory, Path.GetFileNameWithoutExtension(LauncherOptions.SourceFiles[0]) + ".vmx");
 
 			var sb = new StringBuilder();
 
@@ -180,7 +180,7 @@ namespace Mosa.Utility.Launcher
 			sb.AppendLine("virtualHW.version = \"4\"");
 			sb.AppendLine("memsize = " + Quote(LauncherOptions.EmulatorMemoryInMB.ToString()));
 
-			sb.AppendLine("displayName = \"MOSA - " + Path.GetFileNameWithoutExtension(LauncherOptions.SourceFile) + "\"");
+			sb.AppendLine("displayName = \"MOSA - " + Path.GetFileNameWithoutExtension(LauncherOptions.SourceFiles[0]) + "\"");
 			sb.AppendLine("guestOS = \"other\"");
 			sb.AppendLine("priority.grabbed = \"normal\"");
 			sb.AppendLine("priority.ungrabbed = \"normal\"");
@@ -221,7 +221,7 @@ namespace Mosa.Utility.Launcher
 
 		private void LaunchGDBDebugger()
 		{
-			string arg = " -debugfile " + Path.Combine(LauncherOptions.DestinationDirectory, Path.GetFileNameWithoutExtension(LauncherOptions.SourceFile) + ".debug");
+			string arg = " -debugfile " + Path.Combine(LauncherOptions.DestinationDirectory, Path.GetFileNameWithoutExtension(LauncherOptions.SourceFiles[0]) + ".debug");
 			arg += " -port " + LauncherOptions.GDBPort.ToString();
 			arg += " -connect";
 			arg += " -image " + Quote(LauncherOptions.ImageFile);
@@ -230,10 +230,10 @@ namespace Mosa.Utility.Launcher
 
 		private void LaunchGDB()
 		{
-			var gdbscript = Path.Combine(LauncherOptions.DestinationDirectory, Path.GetFileNameWithoutExtension(LauncherOptions.SourceFile) + ".gdb");
+			var gdbscript = Path.Combine(LauncherOptions.DestinationDirectory, Path.GetFileNameWithoutExtension(LauncherOptions.SourceFiles[0]) + ".gdb");
 
 			string arg = " -d " + Quote(LauncherOptions.DestinationDirectory);
-			arg = arg + " -s " + Quote(Path.Combine(LauncherOptions.DestinationDirectory, Path.GetFileNameWithoutExtension(LauncherOptions.SourceFile) + ".bin"));
+			arg = arg + " -s " + Quote(Path.Combine(LauncherOptions.DestinationDirectory, Path.GetFileNameWithoutExtension(LauncherOptions.SourceFiles[0]) + ".bin"));
 			arg = arg + " -x " + Quote(gdbscript);
 
 			// FIXME!

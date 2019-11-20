@@ -7,11 +7,13 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Mosa.Utility.Compiler
+namespace Mosa.Utility.Configuration
 {
 	public static class CommandLineArguments
 	{
-		public static List<Argument> GetMap()
+		public static List<Argument> Map { get; } = GetMap();
+
+		private static List<Argument> GetMap()
 		{
 			var map = new List<Argument>()
 			{

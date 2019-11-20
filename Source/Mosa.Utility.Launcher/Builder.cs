@@ -5,13 +5,14 @@ using DiscUtils.Partitions;
 using DiscUtils.Raw;
 using DiscUtils.Streams;
 using Mosa.Compiler.Common;
+using Mosa.Compiler.Common.Configuration;
 using Mosa.Compiler.Common.Exceptions;
 using Mosa.Compiler.Framework;
 using Mosa.Compiler.Framework.Linker;
-using Mosa.Compiler.Framework.Linker.Dwarf;
 using Mosa.Compiler.Framework.Trace;
 using Mosa.Compiler.MosaTypeSystem;
 using Mosa.Utility.BootImage;
+using Mosa.Utility.Configuration;
 using SharpDisasm;
 using SharpDisasm.Translators;
 using System;
@@ -44,8 +45,8 @@ namespace Mosa.Utility.Launcher
 
 		protected ITraceListener traceListener;
 
-		public Builder(LauncherOptions options, AppLocations appLocations, IBuilderEvent builderEvent)
-			: base(options, appLocations)
+		public Builder(Settings settings, AppLocations appLocations, IBuilderEvent builderEvent)
+			: base(settings, appLocations)
 		{
 			Counters = new List<string>();
 			traceListener = new BuilderEventListener(this);
@@ -78,54 +79,29 @@ namespace Mosa.Utility.Launcher
 
 			var compiler = new MosaCompiler(GetCompilerExtensions());
 
+			var sourceFile = LauncherOptions.SourceFiles[0];
+
 			try
 			{
 				CompileStartTime = DateTime.Now;
 
-				CompiledFile = Path.Combine(LauncherOptions.DestinationDirectory, $"{Path.GetFileNameWithoutExtension(LauncherOptions.SourceFile)}.bin");
+				CompiledFile = Path.Combine(LauncherOptions.DestinationDirectory, $"{Path.GetFileNameWithoutExtension(sourceFile)}.bin");
 
-				compiler.CompilerOptions.SSA = LauncherOptions.EnableSSA;
-				compiler.CompilerOptions.BasicOptimizations = LauncherOptions.EnableBasicOptimizations;
-				compiler.CompilerOptions.SparseConditionalConstantPropagation = LauncherOptions.EnableSparseConditionalConstantPropagation;
-				compiler.CompilerOptions.InlineMethods = LauncherOptions.EnableInlineMethods;
-				compiler.CompilerOptions.InlineExplicitOnly = LauncherOptions.InlineExplicitOnly;
-				compiler.CompilerOptions.InlineMaximum = LauncherOptions.InlineMaximum;
-				compiler.CompilerOptions.InlineAggressiveMaximum = LauncherOptions.InlineMaximum * 2;
-				compiler.CompilerOptions.LongExpansion = LauncherOptions.EnableLongExpansion;
-				compiler.CompilerOptions.TwoPass = LauncherOptions.TwoPassOptimizations;
-				compiler.CompilerOptions.ValueNumbering = LauncherOptions.EnableValueNumbering;
-				compiler.CompilerOptions.OutputFile = CompiledFile;
-				compiler.CompilerOptions.Platform = SelectArchitecture(LauncherOptions.PlatformType);
-				compiler.CompilerOptions.LinkerFormat = "elf32";
-				compiler.CompilerOptions.MultibootVersion = "v1";
-				compiler.CompilerOptions.SetCustomOption("multiboot.video", LauncherOptions.VBEVideo ? "true" : "false");
-				compiler.CompilerOptions.SetCustomOption("multiboot.width", LauncherOptions.Width.ToString());
-				compiler.CompilerOptions.SetCustomOption("multiboot.height", LauncherOptions.Height.ToString());
-				compiler.CompilerOptions.SetCustomOption("multiboot.depth", LauncherOptions.Depth.ToString());
-				compiler.CompilerOptions.BaseAddress = LauncherOptions.BaseAddress;
-				compiler.CompilerOptions.EmitAllSymbols = LauncherOptions.EmitAllSymbols;
-				compiler.CompilerOptions.EmitStaticRelocations = LauncherOptions.EmitStaticRelocations;
-				compiler.CompilerOptions.MethodScanner = LauncherOptions.EnableMethodScanner;
-				compiler.CompilerOptions.BitTracker = LauncherOptions.EnableBitTracker;
-				compiler.CompilerOptions.LoopInvariantCodeMotion = LauncherOptions.EnableLoopInvariantCodeMotion;
-				compiler.CompilerOptions.PlatformOptimizations = LauncherOptions.EnablePlatformOptimizations;
-				compiler.CompilerOptions.InterruptMethodName = LauncherOptions.InterruptMethodName;
-				compiler.CompilerOptions.CreateExtraSections = LauncherOptions.CreateExtraSections;
-				compiler.CompilerOptions.CreateExtraProgramHeaders = LauncherOptions.CreateExtraProgramHeaders;
+				MapCompilerOptions.Set(LauncherOptions.Settings, compiler.CompilerOptions);
 
 				if (LauncherOptions.GenerateMapFile)
 				{
-					compiler.CompilerOptions.MapFile = Path.Combine(LauncherOptions.DestinationDirectory, $"{Path.GetFileNameWithoutExtension(LauncherOptions.SourceFile)}.map");
+					compiler.CompilerOptions.MapFile = Path.Combine(LauncherOptions.DestinationDirectory, $"{Path.GetFileNameWithoutExtension(sourceFile)}.map");
 				}
 
 				if (LauncherOptions.GenerateCompileTimeFile)
 				{
-					compiler.CompilerOptions.CompileTimeFile = Path.Combine(LauncherOptions.DestinationDirectory, $"{Path.GetFileNameWithoutExtension(LauncherOptions.SourceFile)}-time.txt");
+					compiler.CompilerOptions.CompileTimeFile = Path.Combine(LauncherOptions.DestinationDirectory, $"{Path.GetFileNameWithoutExtension(sourceFile)}-time.txt");
 				}
 
 				if (LauncherOptions.GenerateDebugFile)
 				{
-					var debugFile = LauncherOptions.DebugFile ?? Path.GetFileNameWithoutExtension(LauncherOptions.SourceFile) + ".debug";
+					var debugFile = LauncherOptions.DebugFile ?? Path.GetFileNameWithoutExtension(sourceFile) + ".debug";
 
 					compiler.CompilerOptions.DebugFile = Path.Combine(LauncherOptions.DestinationDirectory, debugFile);
 				}
@@ -137,27 +113,32 @@ namespace Mosa.Utility.Launcher
 
 				compiler.CompilerTrace.SetTraceListener(traceListener);
 
-				if (string.IsNullOrEmpty(LauncherOptions.SourceFile))
+				if (string.IsNullOrEmpty(sourceFile))
 				{
 					AddOutput("Please select a source file");
 					return;
 				}
-				else if (!File.Exists(LauncherOptions.SourceFile))
+				else if (!File.Exists(sourceFile))
 				{
-					AddOutput($"File {LauncherOptions.SourceFile} does not exists");
+					AddOutput($"File {sourceFile} does not exists");
 					return;
 				}
 
-				compiler.CompilerOptions.AddSourceFile(LauncherOptions.SourceFile);
+				compiler.CompilerOptions.AddSourceFile(sourceFile);
 				compiler.CompilerOptions.AddSearchPaths(LauncherOptions.Paths);
 
-				var fileHunter = new FileHunter(Path.GetDirectoryName(LauncherOptions.SourceFile));
+				var fileHunter = new FileHunter(Path.GetDirectoryName(sourceFile));
+
+				string platform = LauncherOptions.PlatformType.ToLower();
+
+				if (platform == "armv8a32")
+					platform = "ARMv8A32";
 
 				var inputFiles = new List<FileInfo>
 				{
 					(LauncherOptions.HuntForCorLib) ? fileHunter.HuntFile("mscorlib.dll") : null,
 					(LauncherOptions.PlugKorlib) ? fileHunter.HuntFile("Mosa.Plug.Korlib.dll") : null,
-					(LauncherOptions.PlugKorlib) ? fileHunter.HuntFile("Mosa.Plug.Korlib." + LauncherOptions.PlatformType.ToString() + ".dll"): null,
+					(LauncherOptions.PlugKorlib) ? fileHunter.HuntFile($"Mosa.Plug.Korlib.{platform}.dll"): null,
 				};
 
 				compiler.CompilerOptions.AddSourceFiles(inputFiles);
@@ -183,7 +164,7 @@ namespace Mosa.Utility.Launcher
 
 				if (LauncherOptions.ImageFormat.ToUpper() == "ISO")
 				{
-					if (LauncherOptions.BootLoader == BootLoader.Grub_0_97 || LauncherOptions.BootLoader == BootLoader.Grub_2_00)
+					if (LauncherOptions.BootLoader.ToLower() == "grub0.97" || LauncherOptions.BootLoader.ToLower() == "grub2.00")
 					{
 						CreateISOImageWithGrub(CompiledFile);
 					}
@@ -229,7 +210,7 @@ namespace Mosa.Utility.Launcher
 		{
 			var bootImageOptions = new BootImageOptions();
 
-			if (LauncherOptions.BootLoader == BootLoader.Syslinux_6_03)
+			if (LauncherOptions.BootLoader.ToLower() == "syslinux6.03")
 			{
 				bootImageOptions.MBRCode = GetResource(@"syslinux\6.03", "mbr.bin");
 				bootImageOptions.FatBootCode = GetResource(@"syslinux\6.03", "ldlinux.bin");
@@ -237,7 +218,7 @@ namespace Mosa.Utility.Launcher
 				bootImageOptions.IncludeFiles.Add(new IncludeFile("ldlinux.sys", GetResource(@"syslinux\6.03", "ldlinux.sys")));
 				bootImageOptions.IncludeFiles.Add(new IncludeFile("mboot.c32", GetResource(@"syslinux\6.03", "mboot.c32")));
 			}
-			else if (LauncherOptions.BootLoader == BootLoader.Syslinux_3_72)
+			else if (LauncherOptions.BootLoader.ToLower() == "syslinux3.72")
 			{
 				bootImageOptions.MBRCode = GetResource(@"syslinux\3.72", "mbr.bin");
 				bootImageOptions.FatBootCode = GetResource(@"syslinux\3.72", "ldlinux.bin");
@@ -266,11 +247,19 @@ namespace Mosa.Utility.Launcher
 				default: break;
 			}
 
-			ImageFile = Path.Combine(LauncherOptions.DestinationDirectory, Path.GetFileNameWithoutExtension(LauncherOptions.SourceFile) + vmext);
+			ImageFile = Path.Combine(LauncherOptions.DestinationDirectory, Path.GetFileNameWithoutExtension(LauncherOptions.SourceFiles[0]) + vmext);
 
 			bootImageOptions.DiskImageFileName = ImageFile;
 			bootImageOptions.PatchSyslinuxOption = true;
-			bootImageOptions.BootLoader = LauncherOptions.BootLoader;
+
+			switch (LauncherOptions.BootLoader.ToLower())
+			{
+				case "syslinux3.72": bootImageOptions.BootLoader = BootLoader.Syslinux_3_72; break;
+				case "syslinux6.03": bootImageOptions.BootLoader = BootLoader.Syslinux_6_03; break;
+				case "grub0.97": bootImageOptions.BootLoader = BootLoader.Grub_0_97; break;
+				case "grub2.00": bootImageOptions.BootLoader = BootLoader.Grub_2_00; break;
+				default: break;
+			}
 
 			switch (LauncherOptions.ImageFormat.ToUpper())
 			{
@@ -310,7 +299,7 @@ namespace Mosa.Utility.Launcher
 			//	default: break;
 			//}
 
-			ImageFile = Path.Combine(LauncherOptions.DestinationDirectory, Path.GetFileNameWithoutExtension(LauncherOptions.SourceFile) + vmext);
+			ImageFile = Path.Combine(LauncherOptions.DestinationDirectory, Path.GetFileNameWithoutExtension(LauncherOptions.SourceFiles[0]) + vmext);
 
 			if (File.Exists(ImageFile))
 			{
@@ -318,7 +307,7 @@ namespace Mosa.Utility.Launcher
 			}
 
 			// Get Files
-			if (LauncherOptions.BootLoader == BootLoader.Syslinux_6_03)
+			if (LauncherOptions.BootLoader == "syslinux6.03")
 			{
 				mbr = GetResource(@"syslinux\6.03", "mbr.bin");
 				fatBootCode = GetResource(@"syslinux\6.03", "ldlinux.bin");
@@ -326,7 +315,7 @@ namespace Mosa.Utility.Launcher
 				files.Add(new IncludeFile("ldlinux.sys", GetResource(@"syslinux\6.03", "ldlinux.sys")));
 				files.Add(new IncludeFile("mboot.c32", GetResource(@"syslinux\6.03", "mboot.c32")));
 			}
-			else if (LauncherOptions.BootLoader == BootLoader.Syslinux_3_72)
+			else if (LauncherOptions.BootLoader == "syslinux3.72")
 			{
 				mbr = GetResource(@"syslinux\3.72", "mbr.bin");
 				fatBootCode = GetResource(@"syslinux\3.72", "ldlinux.bin");
@@ -403,14 +392,14 @@ namespace Mosa.Utility.Launcher
 
 			Directory.CreateDirectory(isoDirectory);
 
-			if (LauncherOptions.BootLoader == BootLoader.Syslinux_6_03)
+			if (LauncherOptions.BootLoader == "syslinux6.03")
 			{
 				File.WriteAllBytes(Path.Combine(isoDirectory, "isolinux.bin"), GetResource(@"syslinux\6.03", "isolinux.bin"));
 				File.WriteAllBytes(Path.Combine(isoDirectory, "mboot.c32"), GetResource(@"syslinux\6.03", "mboot.c32"));
 				File.WriteAllBytes(Path.Combine(isoDirectory, "ldlinux.c32"), GetResource(@"syslinux\6.03", "ldlinux.c32"));
 				File.WriteAllBytes(Path.Combine(isoDirectory, "libcom32.c32"), GetResource(@"syslinux\6.03", "libcom32.c32"));
 			}
-			else if (LauncherOptions.BootLoader == BootLoader.Syslinux_3_72)
+			else if (LauncherOptions.BootLoader == "Syslinux3.72")
 			{
 				File.WriteAllBytes(Path.Combine(isoDirectory, "isolinux.bin"), GetResource(@"syslinux\3.72", "isolinux.bin"));
 				File.WriteAllBytes(Path.Combine(isoDirectory, "mboot.c32"), GetResource(@"syslinux\3.72", "mboot.c32"));
@@ -425,7 +414,7 @@ namespace Mosa.Utility.Launcher
 
 			File.Copy(compiledFile, Path.Combine(isoDirectory, "main.exe"));
 
-			ImageFile = Path.Combine(LauncherOptions.DestinationDirectory, $"{Path.GetFileNameWithoutExtension(LauncherOptions.SourceFile)}.iso");
+			ImageFile = Path.Combine(LauncherOptions.DestinationDirectory, $"{Path.GetFileNameWithoutExtension(LauncherOptions.SourceFiles[0])}.iso");
 
 			string arg = $"-relaxed-filenames -J -R -o {Quote(ImageFile)} -b isolinux.bin -no-emul-boot -boot-load-size 4 -boot-info-table {Quote(isoDirectory)}";
 
@@ -448,13 +437,13 @@ namespace Mosa.Utility.Launcher
 
 			string loader = string.Empty;
 
-			if (LauncherOptions.BootLoader == BootLoader.Grub_0_97)
+			if (LauncherOptions.BootLoader.ToLower() == "grub0.97")
 			{
 				loader = "boot/grub/stage2_eltorito";
 				File.WriteAllBytes(Path.Combine(isoDirectory, "boot", "grub", "stage2_eltorito"), GetResource(@"grub\0.97", "stage2_eltorito"));
 				File.WriteAllBytes(Path.Combine(isoDirectory, "boot", "grub", "menu.lst"), GetResource(@"grub\0.97", "menu.lst"));
 			}
-			else if (LauncherOptions.BootLoader == BootLoader.Grub_2_00)
+			else if (LauncherOptions.BootLoader.ToLower() == "grub2.00")
 			{
 				loader = "boot/grub/i386-pc/eltorito.img";
 				File.WriteAllBytes(Path.Combine(isoDirectory, "boot", "grub", "grub.cfg"), GetResource(@"grub\2.00", "grub.cfg"));
@@ -476,7 +465,7 @@ namespace Mosa.Utility.Launcher
 
 			File.Copy(compiledFile, Path.Combine(isoDirectory, "boot", "main.exe"));
 
-			ImageFile = Path.Combine(LauncherOptions.DestinationDirectory, $"{Path.GetFileNameWithoutExtension(LauncherOptions.SourceFile)}.iso");
+			ImageFile = Path.Combine(LauncherOptions.DestinationDirectory, $"{Path.GetFileNameWithoutExtension(LauncherOptions.SourceFiles[0])}.iso");
 
 			string arg = $"-relaxed-filenames -J -R -o {Quote(ImageFile)} -b {Quote(loader)} -no-emul-boot -boot-load-size 4 -boot-info-table {Quote(isoDirectory)}";
 
@@ -485,7 +474,7 @@ namespace Mosa.Utility.Launcher
 
 		private void CreateVMDK()
 		{
-			var vmdkFile = Path.Combine(LauncherOptions.DestinationDirectory, $"{Path.GetFileNameWithoutExtension(LauncherOptions.SourceFile)}.vmdk");
+			var vmdkFile = Path.Combine(LauncherOptions.DestinationDirectory, $"{Path.GetFileNameWithoutExtension(LauncherOptions.SourceFiles[0])}.vmdk");
 
 			string arg = $"convert -f raw -O vmdk {Quote(ImageFile)} {Quote(vmdkFile)}";
 
@@ -503,7 +492,7 @@ namespace Mosa.Utility.Launcher
 
 			string arg = $"-b 32 -o0x{startingAddress.ToString("x")} -e0x{fileOffset.ToString("x")} {Quote(CompiledFile)}";
 
-			var nasmfile = Path.Combine(LauncherOptions.DestinationDirectory, $"{Path.GetFileNameWithoutExtension(LauncherOptions.SourceFile)}.nasm");
+			var nasmfile = Path.Combine(LauncherOptions.DestinationDirectory, $"{Path.GetFileNameWithoutExtension(LauncherOptions.SourceFiles[0])}.nasm");
 
 			var process = LaunchApplication(AppLocations.NDISASM, arg);
 
@@ -520,7 +509,7 @@ namespace Mosa.Utility.Launcher
 				IncludeBinary = true
 			};
 
-			var asmfile = Path.Combine(LauncherOptions.DestinationDirectory, Path.GetFileNameWithoutExtension(LauncherOptions.SourceFile) + ".asm");
+			var asmfile = Path.Combine(LauncherOptions.DestinationDirectory, Path.GetFileNameWithoutExtension(LauncherOptions.SourceFiles[0]) + ".asm");
 
 			var textSection = Linker.Sections[(int)SectionKind.Text];
 
@@ -552,9 +541,9 @@ namespace Mosa.Utility.Launcher
 			}
 
 			var mode = ArchitectureMode.x86_32;
-			switch (LauncherOptions.PlatformType)
+			switch (LauncherOptions.PlatformType.ToLower())
 			{
-				case PlatformType.x64:
+				case "x64":
 					mode = ArchitectureMode.x86_64;
 					break;
 			}
@@ -597,12 +586,12 @@ namespace Mosa.Utility.Launcher
 		/// <param name="platformType">Type of the platform.</param>
 		/// <returns></returns>
 		/// <exception cref="NotImplementCompilerException">Unknown or unsupported Architecture</exception>
-		private static BaseArchitecture SelectArchitecture(PlatformType platformType)
+		private static BaseArchitecture SelectArchitecture(string platformType)
 		{
-			switch (platformType)
+			switch (platformType.ToLower())
 			{
-				case PlatformType.x86: return Mosa.Platform.x86.Architecture.CreateArchitecture(Mosa.Platform.x86.ArchitectureFeatureFlags.AutoDetect);
-				case PlatformType.x64: return Mosa.Platform.x64.Architecture.CreateArchitecture(Mosa.Platform.x64.ArchitectureFeatureFlags.AutoDetect);
+				case "x86": return Mosa.Platform.x86.Architecture.CreateArchitecture(Mosa.Platform.x86.ArchitectureFeatureFlags.AutoDetect);
+				case "x64": return Mosa.Platform.x64.Architecture.CreateArchitecture(Mosa.Platform.x64.ArchitectureFeatureFlags.AutoDetect);
 				default: throw new NotImplementCompilerException("Unknown or unsupported Architecture");
 			}
 		}

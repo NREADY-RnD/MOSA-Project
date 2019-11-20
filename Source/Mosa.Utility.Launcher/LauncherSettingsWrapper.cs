@@ -1,18 +1,13 @@
 ﻿// Copyright (c) MOSA Project. Licensed under the New BSD License.
 
-using CommandLine;
 using Mosa.Compiler.Common;
 using Mosa.Compiler.Common.Configuration;
-using Mosa.Compiler.Framework;
-using Mosa.Compiler.Framework.Linker;
-using Mosa.Utility.BootImage;
-using System;
 using System.Collections.Generic;
 using System.IO;
 
 namespace Mosa.Utility.Launcher
 {
-	public class LauncherOptionsV2
+	public class LauncherSettingsWrapper
 	{
 		public Settings Settings { get; set; }
 
@@ -220,10 +215,10 @@ namespace Mosa.Utility.Launcher
 			set { Settings.SetValue("Multiboot.Depth", value); }
 		}
 
-		public long BaseAddress
+		public ulong BaseAddress
 		{
-			get { return Settings.GetValue("Compiler.BaseAddress", 0x00400000); }
-			set { Settings.SetValue("Compiler.BaseAddress", value); }
+			get { return (ulong)Settings.GetValue("Compiler.BaseAddress", 0x00400000); }
+			set { Settings.SetValue("Compiler.BaseAddress", (long)value); }
 		}
 
 		public bool EmitAllSymbols
@@ -238,10 +233,10 @@ namespace Mosa.Utility.Launcher
 			set { Settings.SetValue("Linker.EmitStaticRelocations", value); }
 		}
 
-		public string BootLoaderImage
+		public string ImageFile
 		{
-			get { return Settings.GetValue("Image.BootLoader", null); }
-			set { Settings.SetValue("Image.BootLoader", value); }
+			get { return Settings.GetValue("Image.ImageFile", null); }
+			set { Settings.SetValue("Image.ImageFile", value); }
 		}
 
 		public bool EnableQemuGDB
@@ -274,12 +269,6 @@ namespace Mosa.Utility.Launcher
 			set { Settings.SetValue("GDB.Host", value); }
 		}
 
-		public string ImageFile
-		{
-			get { return Settings.GetValue("Image.ImageFile", null); }
-			set { Settings.SetValue("Image.ImageFile", value); }
-		}
-
 		public string DebugFile
 		{
 			get { return Settings.GetValue("CompilerDebug.DebugFile.File", "%DEFAULT%"); }
@@ -306,7 +295,7 @@ namespace Mosa.Utility.Launcher
 
 		public bool EnableMethodScanner
 		{
-			get { return Settings.GetValue("Compiler.MethodScanner", true); }
+			get { return Settings.GetValue("Compiler.MethodScanner", false); }
 			set { Settings.SetValue("Compiler.MethodScanner", value); }
 		}
 
@@ -328,9 +317,17 @@ namespace Mosa.Utility.Launcher
 			set { Settings.SetValue("Image.FileSystem", value); }
 		}
 
-		public PlatformType PlatformType { get; set; }
+		public string PlatformType
+		{
+			get { return Settings.GetValue("Compiler.Platform", string.Empty); }
+			set { Settings.SetValue("Compiler.Platform", value); }
+		}
 
-		public BootLoader BootLoader { get; set; }
+		public string BootLoader
+		{
+			get { return Settings.GetValue("Image.BootLoader", string.Empty); }
+			set { Settings.SetValue("Image.BootLoader", value); }
+		}
 
 		public string SerialConnection
 		{
@@ -338,14 +335,15 @@ namespace Mosa.Utility.Launcher
 			set { Settings.SetValue("Emulator.Serial", value); }
 		}
 
-		public List<IncludeFile> IncludeFiles { get; set; }
-
 		public List<string> Paths
 		{
-			get { return Settings.GetValueList("Compiler.MethodScanner"); }
+			get { return Settings.GetValueList("SearchPaths"); }
 		}
 
-		public string SourceFile;
+		public List<string> SourceFiles
+		{
+			get { return Settings.GetValueList("Compiler.SourceFiles"); }
+		}
 
 		public bool HuntForCorLib
 		{
@@ -353,16 +351,44 @@ namespace Mosa.Utility.Launcher
 			set { Settings.SetValue("Launcher.Advance.HuntForCorLib", value); }
 		}
 
-		public LauncherOptionsV2()
+		public bool MultibootVideo
 		{
+			get { return Settings.GetValue("Multiboot.Video", false); }
+			set { Settings.SetValue("Multiboot.Video", value); }
+		}
+
+		public int MultibootVideoWidth
+		{
+			get { return Settings.GetValue("Multiboot.Video.Width", 0); }
+			set { Settings.SetValue("Multiboot.Video.Width", value); }
+		}
+
+		public int MultibootVideoHeight
+		{
+			get { return Settings.GetValue("Multiboot.Video.Height", 0); }
+			set { Settings.SetValue("Multiboot.Video.Height", value); }
+		}
+
+		public int MultibootVideoDepth
+		{
+			get { return Settings.GetValue("Multiboot.Video.Depth", 0); }
+			set { Settings.SetValue("Multiboot.Video.Depth", value); }
+		}
+
+		public List<IncludeFile> IncludeFiles { get; set; }
+
+		public LauncherSettingsWrapper(Settings settings)
+		{
+			Settings = settings;
+
 			IncludeFiles = new List<IncludeFile>();
 			DestinationDirectory = Path.Combine(Path.GetTempPath(), "MOSA");
-			BootLoader = BootLoader.Syslinux_3_72; // Can't use the Default in the attribute because it would overwrite other bootloader options
+			BootLoader = "syslinux3.72"; // Can't use the Default in the attribute because it would overwrite other bootloader options
 			SerialConnection = "None";
 			Emulator = "Qemu";
 			ImageFormat = "IMG";
 			LinkerFormat = "elf32";
-			PlatformType = PlatformType.x86;
+			PlatformType = "x86";
 			FileSystem = "FAT16";
 			BaseAddress = 0x00400000;
 			SerialConnectionHost = "127.0.0.1";

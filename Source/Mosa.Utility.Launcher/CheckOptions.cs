@@ -1,12 +1,10 @@
 ﻿// Copyright (c) MOSA Project. Licensed under the New BSD License.
 
-using Mosa.Utility.BootImage;
-
 namespace Mosa.Utility.Launcher
 {
 	public static class CheckOptions
 	{
-		public static string Verify(LauncherOptions options)
+		public static string Verify(LauncherSettingsWrapper options)
 		{
 			if (options.Emulator != null && options.Emulator.ToLower() == "qemu" && options.ImageFormat.ToUpper() == "VDI")
 			{
@@ -33,22 +31,22 @@ namespace Mosa.Utility.Launcher
 				return "VMware does not support the VHD image format";
 			}
 
-			if (options.BootLoader == BootLoader.Grub_0_97 && options.ImageFormat.ToUpper() != "ISO")
+			if (options.BootLoader.ToLower() == "grub0.97" && options.ImageFormat.ToUpper() != "ISO")
 			{
 				return "Grub boot loader does not support virtual disk formats";
 			}
 
-			if (options.BootLoader == BootLoader.Grub_2_00 && options.ImageFormat.ToUpper() != "ISO")
+			if (options.BootLoader.ToLower() == "grub2.00" && options.ImageFormat.ToUpper() != "ISO")
 			{
 				return "Grub boot loader does not support virtual disk formats";
 			}
 
-			if (options.BootLoader == BootLoader.Syslinux_6_03 && options.ImageFormat.ToUpper() != "ISO")
+			if (options.BootLoader.ToLower() == "syslinux6.03" && options.ImageFormat.ToUpper() != "ISO")
 			{
 				return "Syslinux boot loader v6.03 does not support virtual disk format";
 			}
 
-			if (options.PlatformType == PlatformType.NotSpecified)
+			if (options.PlatformType.ToLower() != "x86" && options.PlatformType.ToLower() != "x64")
 			{
 				return "Platform not supported";
 			}

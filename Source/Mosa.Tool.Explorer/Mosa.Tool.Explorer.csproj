@@ -47,7 +47,8 @@
     <ProjectReference Include="..\Mosa.Platform.x64\Mosa.Platform.x64.csproj" />
     <ProjectReference Include="..\Mosa.Platform.x86\Mosa.Platform.x86.csproj" />
     <ProjectReference Include="..\Mosa.Utility.CodeCompiler\Mosa.Utility.CodeCompiler.csproj" />
-    <ProjectReference Include="..\Mosa.Utility.Compiler\Mosa.Utility.Compiler.csproj" />
+    <ProjectReference Include="..\Mosa.Utility.Compiler\Mosa.Utility.Configuration.csproj" />
+    <ProjectReference Include="..\Mosa.Utility.Configuration\Mosa.Utility.Configuration.csproj" />
     <ProjectReference Include="..\Mosa.Utility.Launcher\Mosa.Utility.Launcher.csproj" />
   </ItemGroup>
   <ItemGroup>
@@ -55,7 +56,6 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="System.ComponentModel.Composition" Version="4.6.0" />
-    <PackageReference Include="CommandLineParser" Version="2.6.0" />
     <PackageReference Include="dnlib" Version="3.2.0" />
     <PackageReference Include="SharpDisasm" Version="1.1.11" />
   </ItemGroup>

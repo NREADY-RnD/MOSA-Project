@@ -1,8 +1,8 @@
 ﻿// Copyright (c) MOSA Project. Licensed under the New BSD License.
 
+using Mosa.Compiler.Common.Configuration;
 using Mosa.Compiler.Framework.Linker;
 using Mosa.Compiler.MosaTypeSystem;
-using Mosa.Utility.BootImage;
 using Mosa.Utility.DebugEngine;
 using Mosa.Utility.Launcher;
 using System;
@@ -17,7 +17,8 @@ namespace Mosa.Utility.UnitTests
 {
 	public class UnitTestEngine : IBuilderEvent, IStarterEvent, IDisposable
 	{
-		public LauncherOptions LauncherOptions { get; }
+		public Settings Settings { get; } = new Settings();
+		public LauncherSettingsWrapper LauncherSettingsWrapper { get; }
 		public string TestAssemblyPath { get; set; }
 		public string Platform { get; set; }
 		public string TestSuiteFile { get; set; }
@@ -55,28 +56,26 @@ namespace Mosa.Utility.UnitTests
 
 		public UnitTestEngine(bool display = false)
 		{
-			LauncherOptions = new LauncherOptions()
+			LauncherSettingsWrapper = new LauncherSettingsWrapper(Settings)
 			{
-				EnableSSA = true,
-				EnableBasicOptimizations = true,
-				EnableSparseConditionalConstantPropagation = true,
-				EnableInlineMethods = true,
-				EnableLongExpansion = true,
-				EnableValueNumbering = true,
-				TwoPassOptimizations = true,
-				EnableBitTracker = true,
-
+				EnableSSA = false,
+				EnableBasicOptimizations = false,
+				EnableSparseConditionalConstantPropagation = false,
+				EnableInlineMethods = false,
+				EnableLongExpansion = false,
+				EnableValueNumbering = false,
+				TwoPassOptimizations = false,
+				EnableBitTracker = false,
 				MultiThreading = false,
 				EnableMethodScanner = false,
-
 				Emulator = "Qemu",
 				ImageFormat = "IMG",
-				PlatformType = PlatformType.x86,
+				PlatformType = "x86",
 				EmulatorMemoryInMB = 128,
 				DestinationDirectory = Path.Combine(Path.GetTempPath(), "MOSA-UnitTest"),
 				FileSystem = "FAT16",
 				InlineMaximum = 12,
-				BootLoader = BootLoader.Syslinux_3_72,
+				BootLoader = "syslinux3.72",
 				VBEVideo = false,
 				Width = 640,
 				Height = 480,
@@ -254,16 +253,17 @@ namespace Mosa.Utility.UnitTests
 
 		public bool Compile()
 		{
-			LauncherOptions.Paths.Add(TestAssemblyPath);
-			LauncherOptions.SourceFile = Path.Combine(TestAssemblyPath, TestSuiteFile);
+			LauncherSettingsWrapper.Paths.Add(TestAssemblyPath);
+			LauncherSettingsWrapper.SourceFiles.Clear();
+			LauncherSettingsWrapper.SourceFiles.Add(Path.Combine(TestAssemblyPath, TestSuiteFile));
 
-			var builder = new Builder(LauncherOptions, AppLocations, this);
+			var builder = new Builder(LauncherSettingsWrapper.Settings, AppLocations, this);
 
 			builder.Compile();
 
 			Linker = builder.Linker;
 			TypeSystem = builder.TypeSystem;
-			ImageFile = LauncherOptions.BootLoaderImage ?? builder.ImageFile;
+			ImageFile = LauncherSettingsWrapper.ImageFile ?? builder.ImageFile;
 
 			return !builder.HasCompileError;
 		}
@@ -272,11 +272,11 @@ namespace Mosa.Utility.UnitTests
 		{
 			if (Starter == null)
 			{
-				LauncherOptions.ImageFile = ImageFile;
-				Starter = new Starter(LauncherOptions, AppLocations, this);
+				LauncherSettingsWrapper.ImageFile = ImageFile;
+				Starter = new Starter(LauncherSettingsWrapper.Settings, AppLocations, this);
 			}
 
-			LauncherOptions.SerialConnectionPort++;
+			LauncherSettingsWrapper.SerialConnectionPort++;
 
 			Process = Starter.Launch();
 
@@ -314,17 +314,17 @@ namespace Mosa.Utility.UnitTests
 
 		private void Connect()
 		{
-			if (LauncherOptions.SerialConnection == null)
+			if (LauncherSettingsWrapper.SerialConnection == null)
 				return;
 
-			if (LauncherOptions.SerialConnection.ToLower() == "tcpserver")
+			if (LauncherSettingsWrapper.SerialConnection.ToLower() == "tcpserver")
 			{
-				var client = new TcpClient(LauncherOptions.SerialConnectionHost, LauncherOptions.SerialConnectionPort);
+				var client = new TcpClient(LauncherSettingsWrapper.SerialConnectionHost, LauncherSettingsWrapper.SerialConnectionPort);
 				DebugServerEngine.Stream = new DebugNetworkStream(client.Client, true);
 			}
-			else if (LauncherOptions.SerialConnection.ToLower() == "pipe")
+			else if (LauncherSettingsWrapper.SerialConnection.ToLower() == "pipe")
 			{
-				var pipeStream = new NamedPipeClientStream(".", LauncherOptions.SerialPipeName, PipeDirection.InOut);
+				var pipeStream = new NamedPipeClientStream(".", LauncherSettingsWrapper.SerialPipeName, PipeDirection.InOut);
 				pipeStream.Connect();
 				DebugServerEngine.Stream = pipeStream;
 			}

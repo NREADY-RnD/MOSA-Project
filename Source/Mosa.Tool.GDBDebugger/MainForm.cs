@@ -1,11 +1,13 @@
 ﻿// Copyright (c) MOSA Project. Licensed under the New BSD License.
 
 using CommandLine;
+using Mosa.Compiler.Common.Configuration;
 using Mosa.Compiler.Framework;
 using Mosa.Tool.GDBDebugger.DebugData;
 using Mosa.Tool.GDBDebugger.GDB;
 using Mosa.Tool.GDBDebugger.Views;
 using Mosa.Utility.BootImage;
+using Mosa.Utility.Configuration;
 using Mosa.Utility.Launcher;
 using System;
 using System.Collections.Generic;
@@ -49,7 +51,9 @@ namespace Mosa.Tool.GDBDebugger
 		public Connector GDBConnector { get; private set; }
 		public MemoryCache MemoryCache { get; private set; }
 
-		public LauncherOptions LauncherOptions { get; } = new LauncherOptions();
+		public LauncherSettingsWrapper LauncherSettingsWrapper { get; }
+
+		public Settings Settings { get; } = new Settings();
 
 		public AppLocations AppLocations { get; } = new AppLocations();
 
@@ -90,7 +94,7 @@ namespace Mosa.Tool.GDBDebugger
 			sourceDataView = new SourceDataView(this);
 
 			AppLocations.FindApplications();
-			LauncherOptions.EnableQemuGDB = true;
+			LauncherSettingsWrapper.EnableQemuGDB = true;
 		}
 
 		private void MainForm_Load(object sender, EventArgs e)
@@ -132,15 +136,15 @@ namespace Mosa.Tool.GDBDebugger
 
 			CalculateVMHash();
 
-			LauncherOptions.SerialConnection = "TCPServer";
-			LauncherOptions.SerialConnectionPort = 1250;
+			LauncherSettingsWrapper.SerialConnection = "TCPServer";
+			LauncherSettingsWrapper.SerialConnectionPort = 1250;
 
-			if (LauncherOptions.ImageFile != null)
+			if (LauncherSettingsWrapper.ImageFile != null)
 			{
 				VMProcess = StartQEMU();
 			}
 			LoadDebugFile();
-			if (LauncherOptions.AutoStart)
+			if (LauncherSettingsWrapper.AutoStart)
 			{
 				System.Threading.Thread.Sleep(3000);
 				Connect();
@@ -164,10 +168,10 @@ namespace Mosa.Tool.GDBDebugger
 
 		private void LoadDebugFile()
 		{
-			if (LauncherOptions.DebugFile != null && File.Exists(LauncherOptions.DebugFile))
+			if (LauncherSettingsWrapper.DebugFile != null && File.Exists(LauncherSettingsWrapper.DebugFile))
 			{
 				DebugSource = new DebugSource();
-				LoadDebugData.LoadDebugInfo(LauncherOptions.DebugFile, DebugSource);
+				LoadDebugData.LoadDebugInfo(LauncherSettingsWrapper.DebugFile, DebugSource);
 			}
 		}
 
@@ -251,7 +255,7 @@ namespace Mosa.Tool.GDBDebugger
 
 		private void btnConnect_Click(object sender, EventArgs e)
 		{
-			using (var connect = new ConnectWindow(LauncherOptions))
+			using (var connect = new ConnectWindow(LauncherSettingsWrapper))
 			{
 				if (connect.ShowDialog(this) == DialogResult.OK)
 				{
@@ -268,12 +272,12 @@ namespace Mosa.Tool.GDBDebugger
 				MemoryCache = null;
 			}
 
-			if (LauncherOptions.GDBPort == 0)
+			if (LauncherSettingsWrapper.GDBPort == 0)
 			{
-				LauncherOptions.GDBPort = 1234;
+				LauncherSettingsWrapper.GDBPort = 1234;
 			}
 
-			GDBConnector = new Connector(new X86Platform(), LauncherOptions.GDBHost, LauncherOptions.GDBPort);
+			GDBConnector = new Connector(new X86Platform(), LauncherSettingsWrapper.GDBHost, LauncherSettingsWrapper.GDBPort);
 
 			GDBConnector.Connect();
 			GDBConnector.OnPause = OnPause;
@@ -457,9 +461,12 @@ namespace Mosa.Tool.GDBDebugger
 
 		public void LoadArguments(string[] args)
 		{
-			var cliParser = new Parser(config => config.HelpWriter = Console.Out);
+			//= new LauncherSettingsWrapper();
+			var arguments = Reader.ParseArguments(args, CommandLineArguments.Map);
 
-			cliParser.ParseArguments(() => LauncherOptions, args);
+			Settings.Merge(arguments);
+
+			//UpdateDisplay(Settings);
 		}
 
 		private void toolStripButton2_Click(object sender, EventArgs e)
@@ -488,37 +495,37 @@ namespace Mosa.Tool.GDBDebugger
 		{
 			if (odfVMImage.ShowDialog() == DialogResult.OK)
 			{
-				LauncherOptions.ImageFile = odfVMImage.FileName;
-				LauncherOptions.ImageFormat = GetFormat(LauncherOptions.ImageFile);
+				LauncherSettingsWrapper.ImageFile = odfVMImage.FileName;
+				LauncherSettingsWrapper.ImageFormat = GetFormat(LauncherSettingsWrapper.ImageFile);
 
 				var debugFile = Path.Combine(
-					Path.GetDirectoryName(LauncherOptions.ImageFile),
-					Path.GetFileNameWithoutExtension(LauncherOptions.ImageFile)) + ".debug";
+					Path.GetDirectoryName(LauncherSettingsWrapper.ImageFile),
+					Path.GetFileNameWithoutExtension(LauncherSettingsWrapper.ImageFile)) + ".debug";
 
 				if (File.Exists(debugFile))
 				{
-					LauncherOptions.DebugFile = debugFile;
+					LauncherSettingsWrapper.DebugFile = debugFile;
 				}
 
 				var breakpointFile = Path.Combine(
-					Path.GetDirectoryName(LauncherOptions.ImageFile),
-					Path.GetFileNameWithoutExtension(LauncherOptions.ImageFile)) + ".breakpoints";
+					Path.GetDirectoryName(LauncherSettingsWrapper.ImageFile),
+					Path.GetFileNameWithoutExtension(LauncherSettingsWrapper.ImageFile)) + ".breakpoints";
 
 				if (File.Exists(debugFile))
 				{
-					LauncherOptions.BreakpointFile = breakpointFile;
+					LauncherSettingsWrapper.BreakpointFile = breakpointFile;
 				}
 
 				var watchFile = Path.Combine(
-					Path.GetDirectoryName(LauncherOptions.ImageFile),
-					Path.GetFileNameWithoutExtension(LauncherOptions.ImageFile)) + ".watches";
+					Path.GetDirectoryName(LauncherSettingsWrapper.ImageFile),
+					Path.GetFileNameWithoutExtension(LauncherSettingsWrapper.ImageFile)) + ".watches";
 
 				if (File.Exists(watchFile))
 				{
-					LauncherOptions.WatchFile = watchFile;
+					LauncherSettingsWrapper.WatchFile = watchFile;
 				}
 
-				LauncherOptions.GDBPort++;
+				LauncherSettingsWrapper.GDBPort++;
 
 				CalculateVMHash();
 
@@ -532,7 +539,7 @@ namespace Mosa.Tool.GDBDebugger
 
 		private Process StartQEMU()
 		{
-			var starter = new Starter(LauncherOptions, AppLocations, this);
+			var starter = new Starter(LauncherSettingsWrapper.Settings, AppLocations, this);
 
 			return starter.LaunchVM();
 		}
@@ -553,19 +560,19 @@ namespace Mosa.Tool.GDBDebugger
 
 		public void LoadBreakPoints()
 		{
-			if (LauncherOptions.BreakpointFile == null || !File.Exists(LauncherOptions.BreakpointFile))
+			if (LauncherSettingsWrapper.BreakpointFile == null || !File.Exists(LauncherSettingsWrapper.BreakpointFile))
 				return;
 
 			bool remap = false;
 
-			foreach (var line in File.ReadAllLines(LauncherOptions.BreakpointFile))
+			foreach (var line in File.ReadAllLines(LauncherSettingsWrapper.BreakpointFile))
 			{
 				if (string.IsNullOrEmpty(line))
 					continue;
 
 				if (line.StartsWith("#HASH: "))
 				{
-					if (LauncherOptions.ImageFile != null && File.Exists(LauncherOptions.ImageFile))
+					if (LauncherSettingsWrapper.ImageFile != null && File.Exists(LauncherSettingsWrapper.ImageFile))
 					{
 						var hash = line.Substring(7).Trim();
 
@@ -602,19 +609,19 @@ namespace Mosa.Tool.GDBDebugger
 
 		public void LoadWatches()
 		{
-			if (LauncherOptions.WatchFile == null || !File.Exists(LauncherOptions.WatchFile))
+			if (LauncherSettingsWrapper.WatchFile == null || !File.Exists(LauncherSettingsWrapper.WatchFile))
 				return;
 
 			bool remap = false;
 
-			foreach (var line in File.ReadAllLines(LauncherOptions.WatchFile))
+			foreach (var line in File.ReadAllLines(LauncherSettingsWrapper.WatchFile))
 			{
 				if (string.IsNullOrEmpty(line))
 					continue;
 
 				if (line.StartsWith("#HASH: "))
 				{
-					if (LauncherOptions.ImageFile != null && File.Exists(LauncherOptions.ImageFile))
+					if (LauncherSettingsWrapper.ImageFile != null && File.Exists(LauncherSettingsWrapper.ImageFile))
 					{
 						var hash = line.Substring(7).Trim();
 
@@ -654,9 +661,9 @@ namespace Mosa.Tool.GDBDebugger
 		{
 			VMHash = null;
 
-			if (LauncherOptions.ImageFile != null && File.Exists(LauncherOptions.ImageFile))
+			if (LauncherSettingsWrapper.ImageFile != null && File.Exists(LauncherSettingsWrapper.ImageFile))
 			{
-				VMHash = CalculateFileHash(LauncherOptions.ImageFile);
+				VMHash = CalculateFileHash(LauncherSettingsWrapper.ImageFile);
 			}
 		}
 

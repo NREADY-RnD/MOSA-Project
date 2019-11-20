@@ -231,6 +231,9 @@ namespace Mosa.Compiler.Framework
 		/// <param name="paths">The paths.</param>
 		public void AddSearchPaths(IList<string> paths)
 		{
+			if (paths == null)
+				return;
+
 			foreach (var path in paths)
 			{
 				AddSearchPath(Path.GetDirectoryName(path));

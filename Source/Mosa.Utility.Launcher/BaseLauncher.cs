@@ -1,5 +1,6 @@
 ﻿// Copyright (c) MOSA Project. Licensed under the New BSD License.
 
+using Mosa.Compiler.Common.Configuration;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -10,13 +11,14 @@ namespace Mosa.Utility.Launcher
 	public class BaseLauncher
 	{
 		public List<string> Log { get; }
-		public LauncherOptions LauncherOptions { get; set; }
+		public LauncherSettingsWrapper LauncherOptions { get; set; }
 
 		public AppLocations AppLocations { get; set; }
 
-		public BaseLauncher(LauncherOptions options, AppLocations appLocations)
+		public BaseLauncher(Settings settings, AppLocations appLocations)
 		{
-			LauncherOptions = options;
+			LauncherOptions = new LauncherSettingsWrapper(settings.Clone());
+
 			AppLocations = appLocations;
 			Log = new List<string>();
 		}

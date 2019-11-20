@@ -239,7 +239,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mosa.Utility.FileSystem", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mosa.Tool.Mosactl", "Mosa.Tool.Mosactl\Mosa.Tool.Mosactl.csproj", "{BB0BFCBE-EC7B-4EDF-868C-9289B729C95D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mosa.Utility.Compiler", "Mosa.Utility.Compiler\Mosa.Utility.Compiler.csproj", "{48B8DD42-9E26-47B8-9EB3-16C6FFB0F4CF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mosa.Utility.Configuration", "Mosa.Utility.Configuration\Mosa.Utility.Configuration.csproj", "{48B8DD42-9E26-47B8-9EB3-16C6FFB0F4CF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

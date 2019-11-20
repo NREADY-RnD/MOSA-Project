@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Mosa.Tool.Launcher": {
+      "commandName": "Project",
+      "commandLineArgs": "Mosa.TestWorld.x86.exe"
+    }
+  }
+}

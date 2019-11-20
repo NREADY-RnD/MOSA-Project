@@ -10,6 +10,24 @@ namespace Mosa.Compiler.Common.Configuration
 		private List<Property> Properties = new List<Property>();
 		private Dictionary<string, Property> Lookups = new Dictionary<string, Property>();
 
+		public Settings Clone()
+		{
+			var settings = new Settings();
+
+			foreach (var property in Properties)
+			{
+				var copy = settings.CreateProperty(property.Name);
+				copy.Value = property.Value;
+
+				foreach (var item in property.List)
+				{
+					copy.List.Add(item);
+				}
+			}
+
+			return settings;
+		}
+
 		public void Merge(Settings updates)
 		{
 			foreach (var property in updates.Properties)
@@ -186,6 +204,10 @@ namespace Mosa.Compiler.Common.Configuration
 		public List<string> GetList(string fullname)
 		{
 			var property = GetProperty(fullname);
+
+			if (property == null)
+				return null;
+
 			return property.List;
 		}
 
