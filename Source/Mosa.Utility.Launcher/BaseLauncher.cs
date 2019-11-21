@@ -10,6 +10,8 @@ namespace Mosa.Utility.Launcher
 {
 	public class BaseLauncher
 	{
+		public Settings Settings { get; }
+
 		public List<string> Log { get; }
 		public LauncherSettingsWrapper LauncherOptions { get; set; }
 
@@ -17,7 +19,8 @@ namespace Mosa.Utility.Launcher
 
 		public BaseLauncher(Settings settings, AppLocations appLocations)
 		{
-			LauncherOptions = new LauncherSettingsWrapper(settings.Clone());
+			Settings = settings.Clone();
+			LauncherOptions = new LauncherSettingsWrapper(Settings);
 
 			AppLocations = appLocations;
 			Log = new List<string>();

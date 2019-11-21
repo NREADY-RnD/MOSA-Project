@@ -1,6 +1,7 @@
 ﻿// Copyright (c) MOSA Project. Licensed under the New BSD License.
 
 using Mosa.Compiler.Common;
+using Mosa.Compiler.Common.Configuration;
 using Mosa.Compiler.Framework.Linker;
 using System.Collections.Generic;
 using System.IO;
@@ -12,7 +13,7 @@ namespace Mosa.Compiler.Framework
 	/// </summary>
 	public class CompilerOptions
 	{
-		private readonly Dictionary<string, string> options = new Dictionary<string, string>();
+		public Settings Settings { get; } = new Settings();
 
 		#region Properties
 
@@ -116,11 +117,6 @@ namespace Mosa.Compiler.Framework
 		/// Gets or sets the type of the elf.
 		/// </summary>
 		public string LinkerFormat { get; set; }
-
-		/// <summary>
-		/// Gets or sets the multiboot specification.
-		/// </summary>
-		public string MultibootVersion { get; set; }
 
 		/// <summary>
 		/// Gets or sets a value indicating whether [emit binary].
@@ -279,83 +275,6 @@ namespace Mosa.Compiler.Framework
 		}
 
 		/// <summary>
-		/// Sets the custom option.
-		/// </summary>
-		/// <param name="name">The name.</param>
-		/// <param name="value">The value.</param>
-		public void SetCustomOption(string name, string value)
-		{
-			if (options.ContainsKey(name))
-				options.Remove(name);
-
-			options.Add(name, value);
-		}
-
-		public string GetCustomOption(string name)
-		{
-			if (options.ContainsKey(name))
-				return options[name];
-
-			return null;
-		}
-
-		/// <summary>
-		/// Gets the custom option as boolean.
-		/// </summary>
-		/// <param name="name">The name.</param>
-		/// <param name="default">if set to <c>true</c> [default].</param>
-		/// <returns></returns>
-		public bool GetCustomOptionAsBoolean(string name, bool @default = false)
-		{
-			var value = GetCustomOption(name);
-
-			if (value == null)
-				return @default;
-
-			value = value.ToLower();
-
-			return value.Contains("y") || value.Contains("t") || value.Contains("1");
-		}
-
-		/// <summary>
-		/// Gets the custom option as integer.
-		/// </summary>
-		/// <param name="name">The name.</param>
-		/// <param name="default">The default.</param>
-		/// <returns></returns>
-		public int? GetCustomOptionAsInteger(string name, int? @default = null)
-		{
-			var value = GetCustomOption(name);
-
-			if (value == null)
-				return @default;
-
-			if (int.TryParse(value, out int val))
-				return val;
-			else
-				return @default;
-		}
-
-		/// <summary>
-		/// Gets the custom option as integer.
-		/// </summary>
-		/// <param name="name">The name.</param>
-		/// <param name="default">The default.</param>
-		/// <returns></returns>
-		public int GetCustomOptionAsInteger(string name, int @default = 0)
-		{
-			var value = GetCustomOption(name);
-
-			if (value == null)
-				return @default;
-
-			if (int.TryParse(value, out int val))
-				return val;
-			else
-				return @default;
-		}
-
-		/// <summary>
 		/// Initializes a new instance of the <see cref="CompilerOptions"/> class.
 		/// </summary>
 		public CompilerOptions()
@@ -365,14 +284,10 @@ namespace Mosa.Compiler.Framework
 			BasicOptimizations = true;
 			SparseConditionalConstantPropagation = true;
 			InlineMethods = false;
-			BaseAddress = 0x00400000;
 			EmitBinary = true;
 			InlineMaximum = 12;
 			InlineAggressiveMaximum = 24;
-			EmitAllSymbols = true;
-			EmitStaticRelocations = true;
 			TwoPass = true;
-			Statistics = true;
 			LongExpansion = true;
 			ValueNumbering = true;
 			LoopInvariantCodeMotion = true;
@@ -380,9 +295,35 @@ namespace Mosa.Compiler.Framework
 			MethodScanner = false;
 			BitTracker = true;
 			EmitInline = false;
-			EmitShortSymbolNames = true;
-			EmitDrawf = false;
-			LinkerFormat = "elf32";
+			BaseAddress = 0x00400000; // todo
+			Statistics = true;  // todo
+			EmitShortSymbolNames = true; // todo
+			EmitDrawf = false; // todo
+			LinkerFormat = "elf32"; // todo
+			EmitAllSymbols = true; // todo
+			EmitStaticRelocations = true; // todo
+
+			// defaults
+			Settings.SetValue("Compiler.MethodScanner", false);
+			Settings.SetValue("Compiler.EmitBinary", true);
+			Settings.SetValue("Compiler.TraceLevel", 0);
+			Settings.SetValue("Compiler.Platform", "x86");
+			Settings.SetValue("Compiler.Multithreading", true);
+			Settings.SetValue("Optimizations.SSA", true);
+			Settings.SetValue("Optimizations.Basic", true);
+			Settings.SetValue("Optimizations.ValueNumbering", true);
+			Settings.SetValue("Optimizations.SCCP", true);
+			Settings.SetValue("Optimizations.BitTracker", true);
+			Settings.SetValue("Optimizations.LoopInvariantCodeMotion", true);
+			Settings.SetValue("Optimizations.LongExpansion", true);
+			Settings.SetValue("Optimizations.TwoPass", true);
+			Settings.SetValue("Optimizations.Platform", true);
+			Settings.SetValue("Optimizations.Inline", true);
+			Settings.SetValue("Optimizations.Inline.ExplicitOnly", false);
+			Settings.SetValue("Optimizations.Inline.Maximum", 12);
+			Settings.SetValue("Optimizations.Inline.AggressiveMaximum", 24);
+			Settings.SetValue("Multiboot.Version", "v1");
+			Settings.SetValue("Compiler.Platform", "x86");
 		}
 	}
 }

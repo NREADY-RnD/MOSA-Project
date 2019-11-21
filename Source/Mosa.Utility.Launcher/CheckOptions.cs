@@ -1,52 +1,59 @@
 ﻿// Copyright (c) MOSA Project. Licensed under the New BSD License.
 
+using Mosa.Compiler.Common.Configuration;
+
 namespace Mosa.Utility.Launcher
 {
 	public static class CheckOptions
 	{
-		public static string Verify(LauncherSettingsWrapper options)
+		public static string Verify(Settings settings)
 		{
-			if (options.Emulator != null && options.Emulator.ToLower() == "qemu" && options.ImageFormat.ToUpper() == "VDI")
+			var emulator = settings.GetValue("Emulator", string.Empty).ToLower();
+			var imageformat = settings.GetValue("Image.Format", string.Empty).ToUpper();
+			var bootloader = settings.GetValue("Image.BootLoader", string.Empty).ToLower();
+			var platform = settings.GetValue("Compiler.Platform", string.Empty);
+
+			if (emulator == "qemu" && imageformat == "VDI")
 			{
 				return "QEMU does not support the VDI image format";
 			}
 
-			if (options.Emulator != null && options.Emulator.ToLower() == "bochs" && options.ImageFormat.ToUpper() == "VDI")
+			if (emulator == "bochs" && imageformat == "VDI")
 			{
 				return "Bochs does not support the VDI image format";
 			}
 
-			if (options.Emulator != null && options.Emulator.ToLower() == "bochs" && options.ImageFormat.ToUpper() == "VMDK")
+			if (emulator == "bochs" && imageformat == "VMDK")
 			{
 				return "Bochs does not support the VMDK image format";
 			}
 
-			if (options.Emulator != null && options.Emulator.ToLower() == "vmware" && options.ImageFormat.ToUpper() == "IMG")
+			if (emulator == "vmware" && imageformat == "IMG")
 			{
 				return "VMware does not support the IMG image format";
 			}
 
-			if (options.Emulator != null && options.Emulator.ToLower() == "vmware" && options.ImageFormat.ToUpper() == "VDI")
+			if (emulator == "vmware" && imageformat == "VDI")
 			{
 				return "VMware does not support the VHD image format";
 			}
 
-			if (options.BootLoader.ToLower() == "grub0.97" && options.ImageFormat.ToUpper() != "ISO")
+			if (bootloader == "grub0.97" && imageformat != "ISO")
 			{
 				return "Grub boot loader does not support virtual disk formats";
 			}
 
-			if (options.BootLoader.ToLower() == "grub2.00" && options.ImageFormat.ToUpper() != "ISO")
+			if (bootloader == "grub2.00" && imageformat != "ISO")
 			{
 				return "Grub boot loader does not support virtual disk formats";
 			}
 
-			if (options.BootLoader.ToLower() == "syslinux6.03" && options.ImageFormat.ToUpper() != "ISO")
+			if (bootloader == "syslinux6.03" && imageformat != "ISO")
 			{
 				return "Syslinux boot loader v6.03 does not support virtual disk format";
 			}
 
-			if (options.PlatformType.ToLower() != "x86" && options.PlatformType.ToLower() != "x64")
+			if (platform != "x86" && platform != "x64")
 			{
 				return "Platform not supported";
 			}

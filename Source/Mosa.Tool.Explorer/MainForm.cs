@@ -972,8 +972,14 @@ namespace Mosa.Tool.Explorer
 			Settings.SetValue("Optimizations.Inline.ExplicitOnly", false);
 			Settings.SetValue("Optimizations.Inline.Maximum", 12);
 			Settings.SetValue("Optimizations.Inline.AggressiveMaximum", 24);
-			Settings.SetValue("Multiboot.Version", "v2");
+			Settings.SetValue("Multiboot.Version", "v1");
 			Settings.SetValue("Compiler.Platform", "x86");
+
+			Settings.SetValue("Launcher.Advance.HuntForCorLib", true);
+			Settings.SetValue("Image.BootLoader", "syslinux3.72");
+			Settings.SetValue("Multiboot.Version", "v1");
+			Settings.SetValue("Compiler.Advanced.PlugKorlib", true);
+			Settings.SetValue("Image.Destination", Path.Combine(Path.GetTempPath(), "MOSA"));
 		}
 
 		private void UpdateSettings()

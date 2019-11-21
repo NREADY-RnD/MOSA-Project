@@ -1,5 +1,6 @@
 ﻿// Copyright (c) MOSA Project. Licensed under the New BSD License.
 
+using Mosa.Compiler.Common.Configuration;
 using Mosa.Utility.Launcher;
 using System;
 using System.Windows.Forms;
@@ -8,12 +9,12 @@ namespace Mosa.Tool.GDBDebugger
 {
 	public partial class ConnectWindow : Form
 	{
-		private readonly LauncherSettingsWrapper Options;
+		private readonly Settings Settings;
 
-		public ConnectWindow(LauncherSettingsWrapper options)
+		public ConnectWindow(Settings settings)
 		{
 			InitializeComponent();
-			Options = options;
+			Settings = settings;
 		}
 
 		private void btnCancel_Click(object sender, EventArgs e)
@@ -23,8 +24,8 @@ namespace Mosa.Tool.GDBDebugger
 
 		private void btnConnect_Click(object sender, EventArgs e)
 		{
-			Options.GDBHost = tbHost.Text;
-			Options.GDBPort = (int)numPort.Value;
+			Settings.SetValue("GDB.Host", tbHost.Text);
+			Settings.SetValue("GDB.Port", (int)numPort.Value);
 
 			DialogResult = DialogResult.OK;
 		}

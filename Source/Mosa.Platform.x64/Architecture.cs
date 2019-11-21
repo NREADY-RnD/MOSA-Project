@@ -167,7 +167,7 @@ namespace Mosa.Platform.x64
 		/// <param name="pipeline">The pipeline to extend.</param>
 		public override void ExtendCompilerPipeline(Pipeline<BaseCompilerStage> pipeline, CompilerOptions compilerOptions)
 		{
-			if (compilerOptions.MultibootVersion != null && compilerOptions.MultibootVersion.ToLower() == "v1")
+			if (compilerOptions.Settings.GetValue("Multiboot.Version", string.Empty).ToLower() == "v1")
 			{
 				pipeline.InsertAfterFirst<TypeInitializerStage>(
 					new MultibootV1Stage()

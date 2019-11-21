@@ -42,6 +42,29 @@ namespace Mosa.Workspace.Experiment.Debug
 		{
 			const string platform = "x86";
 
+			var settings = new Settings();
+
+			settings.SetValue("Compiler.MethodScanner", false);
+			settings.SetValue("Compiler.EmitBinary", true);
+			settings.SetValue("Compiler.TraceLevel", 0);
+			settings.SetValue("Compiler.Platform", "x86");
+			settings.SetValue("Compiler.Multithreading", true);
+			settings.SetValue("Optimizations.SSA", true);
+			settings.SetValue("Optimizations.Basic", true);
+			settings.SetValue("Optimizations.ValueNumbering", true);
+			settings.SetValue("Optimizations.SCCP", true);
+			settings.SetValue("Optimizations.BitTracker", true);
+			settings.SetValue("Optimizations.LoopInvariantCodeMotion", true);
+			settings.SetValue("Optimizations.LongExpansion", true);
+			settings.SetValue("Optimizations.TwoPass", true);
+			settings.SetValue("Optimizations.Platform", true);
+			settings.SetValue("Optimizations.Inline", true);
+			settings.SetValue("Optimizations.Inline.ExplicitOnly", false);
+			settings.SetValue("Optimizations.Inline.Maximum", 12);
+			settings.SetValue("Optimizations.Inline.AggressiveMaximum", 24);
+			settings.SetValue("Multiboot.Version", "v1");
+			settings.SetValue("Compiler.Platform", "x86");
+
 			var compilerOptions = new CompilerOptions()
 			{
 				SSA = true,
@@ -54,7 +77,6 @@ namespace Mosa.Workspace.Experiment.Debug
 				MethodScanner = true,
 				BitTracker = true,
 
-				MultibootVersion = "v1",
 				LinkerFormat = "elf32",
 				InlineMaximum = 12,
 
@@ -67,6 +89,8 @@ namespace Mosa.Workspace.Experiment.Debug
 
 				Statistics = true,
 			};
+
+			compilerOptions.Settings.Merge(settings);
 
 			compilerOptions.Platform = SelectArchitecture(platform);
 
