@@ -52,8 +52,6 @@ namespace Mosa.Tool.GDBDebugger
 
 		public MemoryCache MemoryCache { get; private set; }
 
-		public LauncherSettingsWrapper LauncherSettingsWrapper { get; }
-
 		public Settings Settings { get; } = new Settings();
 
 		public AppLocations AppLocations { get; } = new AppLocations();
@@ -568,7 +566,7 @@ namespace Mosa.Tool.GDBDebugger
 
 		private Process StartQEMU()
 		{
-			var starter = new Starter(LauncherSettingsWrapper.Settings, AppLocations, this);
+			var starter = new Starter(Settings, AppLocations, this);
 
 			return starter.LaunchVM();
 		}

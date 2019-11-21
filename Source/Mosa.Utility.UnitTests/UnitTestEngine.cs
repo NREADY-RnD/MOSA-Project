@@ -18,7 +18,6 @@ namespace Mosa.Utility.UnitTests
 	public class UnitTestEngine : IBuilderEvent, IStarterEvent, IDisposable
 	{
 		public Settings Settings { get; } = new Settings();
-		public LauncherSettingsWrapper LauncherSettingsWrapper { get; }
 		public string TestAssemblyPath { get; set; }
 		public string Platform { get; set; }
 		public string TestSuiteFile { get; set; }
@@ -59,51 +58,51 @@ namespace Mosa.Utility.UnitTests
 			Settings.SetValue("Compiler.BaseAddress", 0x00500000);
 			Settings.SetValue("Image.Destination", Path.Combine(Path.GetTempPath(), "MOSA-UnitTest"));
 
-			LauncherSettingsWrapper = new LauncherSettingsWrapper(Settings)
-			{
-				//EnableSSA = false,
-				//EnableBasicOptimizations = false,
-				//EnableSparseConditionalConstantPropagation = false,
-				//EnableInlineMethods = false,
-				//EnableLongExpansion = false,
-				//EnableValueNumbering = false,
-				//TwoPassOptimizations = false,
-				//EnableBitTracker = false,
-				//MultiThreading = false,
-				//Emulator = "Qemu",
-				//ImageFormat = "IMG",
-				//PlatformType = "x86",
+			//LauncherSettingsWrapper = new LauncherSettingsWrapper(Settings)
+			//{
+			//EnableSSA = false,
+			//EnableBasicOptimizations = false,
+			//EnableSparseConditionalConstantPropagation = false,
+			//EnableInlineMethods = false,
+			//EnableLongExpansion = false,
+			//EnableValueNumbering = false,
+			//TwoPassOptimizations = false,
+			//EnableBitTracker = false,
+			//MultiThreading = false,
+			//Emulator = "Qemu",
+			//ImageFormat = "IMG",
+			//PlatformType = "x86",
 
-				//EmulatorMemoryInMB = 128,
-				//DestinationDirectory = Path.Combine(Path.GetTempPath(), "MOSA-UnitTest"),
+			//EmulatorMemoryInMB = 128,
+			//DestinationDirectory = Path.Combine(Path.GetTempPath(), "MOSA-UnitTest"),
 
-				//FileSystem = "FAT16",
+			//FileSystem = "FAT16",
 
-				//InlineMaximum = 12,
-				//BootLoader = "syslinux3.72",
-				//VBEVideo = false,
-				//Width = 640,
-				//Height = 480,
-				//Depth = 32,
-				//BaseAddress = 0x00500000,
-				//EmitStaticRelocations = false,
-				//EmitAllSymbols = false,
-				//SerialConnection = "tcpserver",
+			//InlineMaximum = 12,
+			//BootLoader = "syslinux3.72",
+			//VBEVideo = false,
+			//Width = 640,
+			//Height = 480,
+			//Depth = 32,
+			//BaseAddress = 0x00500000,
+			//EmitStaticRelocations = false,
+			//EmitAllSymbols = false,
+			//SerialConnection = "tcpserver",
 
-				//SerialConnectionPort = 9999,
-				//SerialConnectionHost = "127.0.0.1",
+			//SerialConnectionPort = 9999,
+			//SerialConnectionHost = "127.0.0.1",
 
-				//SerialPipeName = "MOSA",
+			//SerialPipeName = "MOSA",
 
-				//ExitOnLaunch = true,
-				//GenerateNASMFile = false,
+			//ExitOnLaunch = true,
+			//GenerateNASMFile = false,
 
-				//GenerateASMFile = true,
-				//GenerateMapFile = true,
-				//GenerateDebugFile = true,
+			//GenerateASMFile = true,
+			//GenerateMapFile = true,
+			//GenerateDebugFile = true,
 
-				//PlugKorlib = true,
-			};
+			//PlugKorlib = true,
+			//};
 
 			AppLocations = new AppLocations();
 
@@ -267,9 +266,9 @@ namespace Mosa.Utility.UnitTests
 			Settings.ClearProperty("Compiler.SourceFiles");
 			Settings.AddPropertyListValue("Compiler.SourceFiles", Path.Combine(TestAssemblyPath, TestSuiteFile));
 
-			var builder = new Builder(LauncherSettingsWrapper.Settings, AppLocations, this);
+			var builder = new Builder(Settings, AppLocations, this);
 
-			builder.Compile();
+			builder.Build();
 
 			Linker = builder.Linker;
 			TypeSystem = builder.TypeSystem;
@@ -283,7 +282,7 @@ namespace Mosa.Utility.UnitTests
 			if (Starter == null)
 			{
 				Settings.SetValue("Image.ImageFile", ImageFile);
-				Starter = new Starter(LauncherSettingsWrapper.Settings, AppLocations, this);
+				Starter = new Starter(Settings, AppLocations, this);
 			}
 
 			Settings.SetValue("Emulator.Serial.Port", Settings.GetValue("Emulator.Serial.Port", 1234) + 1);

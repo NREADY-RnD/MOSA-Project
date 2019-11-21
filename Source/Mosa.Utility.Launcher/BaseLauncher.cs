@@ -13,14 +13,12 @@ namespace Mosa.Utility.Launcher
 		public Settings Settings { get; }
 
 		public List<string> Log { get; }
-		public LauncherSettingsWrapper LauncherOptions { get; set; }
 
 		public AppLocations AppLocations { get; set; }
 
 		public BaseLauncher(Settings settings, AppLocations appLocations)
 		{
 			Settings = settings.Clone();
-			LauncherOptions = new LauncherSettingsWrapper(Settings);
 
 			AppLocations = appLocations;
 			Log = new List<string>();

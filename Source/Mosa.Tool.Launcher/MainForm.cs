@@ -1,6 +1,5 @@
 ﻿// Copyright (c) MOSA Project. Licensed under the New BSD License.
 
-using CommandLine;
 using MetroFramework.Forms;
 using Mosa.Compiler.Common;
 using Mosa.Compiler.Common.Configuration;
@@ -19,8 +18,6 @@ namespace Mosa.Tool.Launcher
 	public partial class MainForm : MetroForm, IBuilderEvent, IStarterEvent
 	{
 		private Settings Settings = new Settings();
-
-		private LauncherSettingsWrapper LauncherSettingsWrapper;
 
 		public Builder Builder;
 
@@ -49,8 +46,6 @@ namespace Mosa.Tool.Launcher
 		public MainForm()
 		{
 			InitializeComponent();
-
-			LauncherSettingsWrapper = new LauncherSettingsWrapper(Settings);
 
 			AppLocations = new AppLocations();
 
@@ -149,11 +144,6 @@ namespace Mosa.Tool.Launcher
 		{
 			Text = "MOSA Launcher v" + CompilerVersion.VersionString;
 			tbApplicationLocations.SelectedTab = tabOptions;
-
-			foreach (var includeFile in LauncherSettingsWrapper.IncludeFiles)
-			{
-				includedEntries.Add(new IncludedEntry(includeFile));
-			}
 		}
 
 		private void BtnDestination_Click(object sender, EventArgs e)
@@ -192,7 +182,14 @@ namespace Mosa.Tool.Launcher
 				{
 					Builder = new Builder(Settings, AppLocations, this);
 
-					Builder.Compile();
+					Builder.IncludeFiles.Clear();
+
+					foreach (var entry in includedEntries)
+					{
+						Builder.IncludeFiles.Add(entry.IncludeFile);
+					}
+
+					Builder.Build();
 				}
 				catch (Exception e)
 				{
@@ -236,7 +233,7 @@ namespace Mosa.Tool.Launcher
 
 				Settings.SetValue("Image.ImageFile", Settings.GetValue("Image.ImageFile", null) ?? Builder.ImageFile);
 
-				var starter = new Starter(LauncherSettingsWrapper.Settings, AppLocations, this, Builder.Linker);
+				var starter = new Starter(Settings, AppLocations, this, Builder.Linker);
 
 				starter.Launch();
 			}
@@ -460,13 +457,6 @@ namespace Mosa.Tool.Launcher
 				case 2: Settings.SetValue("Image.BootLoader", "grub0.97"); break;
 				case 3: Settings.SetValue("Image.BootLoader", "grub2.00"); break;
 				default: Settings.ClearProperty("Image.BootLoader"); break;
-			}
-
-			LauncherSettingsWrapper.IncludeFiles.Clear();
-
-			foreach (var entry in includedEntries)
-			{
-				LauncherSettingsWrapper.IncludeFiles.Add(entry.IncludeFile);
 			}
 		}
 

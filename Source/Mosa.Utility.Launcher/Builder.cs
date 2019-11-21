@@ -43,6 +43,8 @@ namespace Mosa.Utility.Launcher
 
 		public const uint MultibootHeaderLength = 3 * 16;
 
+		public List<IncludeFile> IncludeFiles = new List<IncludeFile>();
+
 		protected ITraceListener traceListener;
 
 		public Builder(Settings settings, AppLocations appLocations, IBuilderEvent builderEvent)
@@ -71,7 +73,7 @@ namespace Mosa.Utility.Launcher
 			return new List<BaseCompilerExtension>();
 		}
 
-		public void Compile()
+		public void Build()
 		{
 			Log.Clear();
 			Counters.Clear();
@@ -93,7 +95,7 @@ namespace Mosa.Utility.Launcher
 
 				CompiledFile = Path.Combine(destination, $"{Path.GetFileNameWithoutExtension(sourcefile)}.bin");
 
-				MapCompilerOptions.Set(LauncherOptions.Settings, compiler.CompilerOptions);
+				MapCompilerOptions.Set(Settings, compiler.CompilerOptions);
 
 				if (Settings.GetValue("CompilerDebug.MapFile", false))
 				{
@@ -246,7 +248,7 @@ namespace Mosa.Utility.Launcher
 
 			bootImageOptions.IncludeFiles.Add(new IncludeFile("TEST.TXT", Encoding.ASCII.GetBytes("This is a test file.")));
 
-			foreach (var include in LauncherOptions.IncludeFiles)
+			foreach (var include in IncludeFiles)
 			{
 				bootImageOptions.IncludeFiles.Add(include);
 			}
@@ -348,7 +350,7 @@ namespace Mosa.Utility.Launcher
 
 			files.Add(new IncludeFile("TEST.TXT", Encoding.ASCII.GetBytes("This is a test file.")));
 
-			foreach (var include in LauncherOptions.IncludeFiles)
+			foreach (var include in IncludeFiles)
 			{
 				files.Add(include);
 			}
@@ -431,7 +433,7 @@ namespace Mosa.Utility.Launcher
 
 			File.WriteAllBytes(Path.Combine(isoDirectory, "isolinux.cfg"), GetResource("syslinux", "syslinux.cfg"));
 
-			foreach (var include in LauncherOptions.IncludeFiles)
+			foreach (var include in IncludeFiles)
 			{
 				File.WriteAllBytes(Path.Combine(isoDirectory, include.Filename), include.Content);
 			}
@@ -487,7 +489,7 @@ namespace Mosa.Utility.Launcher
 				archive.ExtractToDirectory(Path.Combine(isoDirectory, "boot", "grub"));
 			}
 
-			foreach (var include in LauncherOptions.IncludeFiles)
+			foreach (var include in IncludeFiles)
 			{
 				File.WriteAllBytes(Path.Combine(isoDirectory, include.Filename), include.Content);
 			}
