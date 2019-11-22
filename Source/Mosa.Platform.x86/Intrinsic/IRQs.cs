@@ -14,7 +14,7 @@ namespace Mosa.Platform.x86.Intrinsic
 
 		private static void InsertIRQ(int irq, Context context, MethodCompiler methodCompiler)
 		{
-			var interruptMethodName = methodCompiler.Compiler.CompilerOptions.Settings.GetValue("X86.InterruptMethodName", DefaultInterruptMethodName);
+			var interruptMethodName = methodCompiler.Compiler.CompilerSettings.Settings.GetValue("X86.InterruptMethodName", DefaultInterruptMethodName);
 
 			if (string.IsNullOrEmpty(interruptMethodName))
 			{

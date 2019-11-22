@@ -38,7 +38,7 @@ namespace Mosa.Compiler.Framework
 			Compiler = compiler;
 			TypeSystem = compiler.TypeSystem;
 			TypeLayout = compiler.TypeLayout;
-			IsEnabled = compiler.CompilerOptions.MethodScanner;
+			IsEnabled = compiler.CompilerSettings.MethodScanner;
 
 			if (Compiler.CompilerTrace.IsTraceable(TraceLevel))
 			{
@@ -53,7 +53,7 @@ namespace Mosa.Compiler.Framework
 			if (!IsEnabled)
 				return;
 
-			if (!Compiler.CompilerOptions.Statistics)
+			if (!Compiler.CompilerSettings.Statistics)
 				return;
 
 			MoreLogInfo();

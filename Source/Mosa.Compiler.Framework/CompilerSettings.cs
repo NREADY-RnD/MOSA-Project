@@ -9,13 +9,13 @@ namespace Mosa.Compiler.Framework
 	/// <summary>
 	/// Compiler Options
 	/// </summary>
-	public class CompilerOptions
+	public class CompilerSettings
 	{
 		#region Properties
 
 		public Settings Settings { get; } = new Settings();
 
-		public BaseArchitecture Platform { get; set; }
+		public string Platform { get { return Settings.GetValue("Compiler.Platform", "x86"); } }
 
 		public ulong BaseAddress { get { return (ulong)Settings.GetValue("Compiler.BaseAddress", 0x00400000); } }
 
@@ -95,7 +95,7 @@ namespace Mosa.Compiler.Framework
 
 		#endregion Properties
 
-		public CompilerOptions(Settings settings)
+		public CompilerSettings(Settings settings)
 		{
 			// defaults
 			Settings.SetValue("Compiler.MethodScanner", false);

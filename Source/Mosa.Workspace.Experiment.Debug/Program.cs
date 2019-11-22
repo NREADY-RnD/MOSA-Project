@@ -65,11 +65,6 @@ namespace Mosa.Workspace.Experiment.Debug
 			settings.SetValue("Multiboot.Version", "v1");
 			settings.SetValue("Compiler.Platform", "x86");
 
-			//compilerOptions.AddSourceFile($"Mosa.TestWorld.{platform}.exe");
-			//compilerOptions.AddSourceFile("Mosa.Plug.Korlib.dll");
-			//compilerOptions.AddSourceFile($"Mosa.Plug.Korlib.{platform}.dll");
-			//compilerOptions.TraceLevel = 5;
-
 			var stopwatch = new Stopwatch();
 
 			var compiler = new MosaCompiler(settings);
@@ -142,14 +137,14 @@ namespace Mosa.Workspace.Experiment.Debug
 			return null;
 		}
 
-		private static BaseArchitecture SelectArchitecture(string architecture)
+		private static BaseArchitecture SelectPlatform(string platform)
 		{
-			switch (architecture.ToLower())
+			switch (platform.ToLower())
 			{
-				case "x86": return Platform.x86.Architecture.CreateArchitecture(Platform.x86.ArchitectureFeatureFlags.AutoDetect);
-				case "x64": return Platform.x64.Architecture.CreateArchitecture(Platform.x64.ArchitectureFeatureFlags.AutoDetect);
-				case "armv8a32": return Platform.ARMv8A32.Architecture.CreateArchitecture(Platform.ARMv8A32.ArchitectureFeatureFlags.AutoDetect);
-				default: throw new NotImplementCompilerException($"Unknown or unsupported Architecture {architecture}.");
+				case "x86": return new Platform.x86.Architecture();
+				case "x64": return new Platform.x64.Architecture();
+				case "armv8a32": return new Platform.ARMv8A32.Architecture();
+				default: throw new NotImplementCompilerException($"Unknown or unsupported Architecture {platform}.");
 			}
 		}
 	}

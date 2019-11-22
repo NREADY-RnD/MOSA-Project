@@ -15,7 +15,7 @@ namespace Mosa.Compiler.Framework
 
 		public CompileStage Stage { get; private set; } = CompileStage.Initial;
 
-		public CompilerOptions CompilerOptions { get; }
+		public CompilerSettings CompilerSettings { get; }
 
 		public CompilerTrace CompilerTrace { get; }
 
@@ -23,7 +23,9 @@ namespace Mosa.Compiler.Framework
 
 		public MosaTypeLayout TypeLayout { get; private set; }
 
-		public MosaLinker Linker { get; private set; }
+		public BaseArchitecture Platform { get; private set; }
+
+		public MosaLinker Linker { get { return Compiler.Linker; } }
 
 		public List<BaseCompilerExtension> CompilerExtensions { get; } = new List<BaseCompilerExtension>();
 
@@ -42,9 +44,9 @@ namespace Mosa.Compiler.Framework
 		{
 			MaxThreads = (maxThreads == 0) ? Environment.ProcessorCount * 2 : maxThreads;
 
-			CompilerOptions = new CompilerOptions(settings.Clone());
+			CompilerSettings = new CompilerSettings(settings.Clone());
 
-			CompilerTrace = new CompilerTrace(CompilerOptions.TraceLevel);
+			CompilerTrace = new CompilerTrace(CompilerSettings.TraceLevel);
 
 			if (compilerExtensions != null)
 			{
@@ -58,8 +60,8 @@ namespace Mosa.Compiler.Framework
 			{
 				var moduleLoader = new MosaModuleLoader();
 
-				moduleLoader.AddSearchPaths(CompilerOptions.SearchPaths);
-				moduleLoader.LoadModuleFromFiles(CompilerOptions.SourceFiles);
+				moduleLoader.AddSearchPaths(CompilerSettings.SearchPaths);
+				moduleLoader.LoadModuleFromFiles(CompilerSettings.SourceFiles);
 
 				var typeSystem = TypeSystem.Load(moduleLoader.CreateMetadata());
 
@@ -72,9 +74,10 @@ namespace Mosa.Compiler.Framework
 			lock (_lock)
 			{
 				TypeSystem = typeSystem;
-				TypeLayout = new MosaTypeLayout(typeSystem, CompilerOptions.Platform.NativePointerSize, CompilerOptions.Platform.NativeAlignment);
 
-				Linker = null;
+				Platform = PlatformRegistry.GetPlatform(CompilerSettings.Platform);
+				TypeLayout = new MosaTypeLayout(typeSystem, Platform.NativePointerSize, Platform.NativeAlignment);
+
 				Compiler = null;
 
 				Stage = CompileStage.Loaded;
@@ -88,7 +91,6 @@ namespace Mosa.Compiler.Framework
 				if (Stage != CompileStage.Loaded)
 					return;
 
-				Linker = new MosaLinker(CompilerOptions.BaseAddress, CompilerOptions.Platform.ElfMachineType, CompilerOptions.EmitAllSymbols, CompilerOptions.EmitStaticRelocations, CompilerOptions.EmitShortSymbolNames, CompilerOptions.LinkerFormat, CompilerOptions.CreateExtraSections, CompilerOptions.CreateExtraProgramHeaders);
 				Compiler = new Compiler(this);
 
 				Stage = CompileStage.Initialized;
@@ -145,7 +147,7 @@ namespace Mosa.Compiler.Framework
 		{
 			Setup();
 
-			if (!CompilerOptions.MethodScanner)
+			if (!CompilerSettings.MethodScanner)
 			{
 				ScheduleAll();
 			}
@@ -175,7 +177,7 @@ namespace Mosa.Compiler.Framework
 		{
 			Setup();
 
-			if (!CompilerOptions.MethodScanner)
+			if (!CompilerSettings.MethodScanner)
 			{
 				ScheduleAll();
 			}

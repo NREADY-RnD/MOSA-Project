@@ -410,7 +410,7 @@ namespace Mosa.Compiler.Framework
 
 			Symbol.SetReplacementStatus(MethodData.Inlined);
 
-			if (Compiler.CompilerOptions.Statistics)
+			if (Compiler.CompilerSettings.Statistics)
 			{
 				var log = new TraceLog(TraceType.MethodCounters, Method, string.Empty, MethodData.Version);
 				log.Log(MethodData.Counters.Export());
@@ -442,7 +442,7 @@ namespace Mosa.Compiler.Framework
 					break;
 			}
 
-			if (Compiler.CompilerOptions.Statistics)
+			if (Compiler.CompilerSettings.Statistics)
 			{
 				var lastTick = Stopwatch.ElapsedTicks;
 
@@ -546,7 +546,7 @@ namespace Mosa.Compiler.Framework
 
 			if (filename != null)
 			{
-				foreach (var path in Compiler.CompilerOptions.SearchPaths)
+				foreach (var path in Compiler.CompilerSettings.SearchPaths)
 				{
 					var src = Path.Combine(path, filename);
 

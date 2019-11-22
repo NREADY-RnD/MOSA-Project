@@ -88,12 +88,12 @@ Example: Mosa.Tool.Compiler.exe -o Mosa.HelloWorld.x86.bin -a x86 --mboot v1 --x
 				Trace.Listeners.Add(new TextWriterTraceListener(Console.Out));
 				Debug.AutoFlush = true;
 
-				if (string.IsNullOrEmpty(compiler.CompilerOptions.OutputFile))
+				if (string.IsNullOrEmpty(compiler.CompilerSettings.OutputFile))
 				{
 					throw new Exception("No output file specified.");
 				}
 
-				if (compiler.CompilerOptions.Platform == null)
+				if (compiler.CompilerSettings.Platform == null)
 				{
 					throw new Exception("No Architecture specified.");
 				}
