@@ -147,9 +147,9 @@ namespace Mosa.Compiler.Framework
 				new MetadataStage(),
 				new LinkerLayoutStage(),
 				(compilerOptions.EmitDrawf)  ? new DwarfCompilerStage() : null,
-				(compilerOptions.CompileTimeFile != null) ? new MethodCompileTimeStage() : null,
-				(compilerOptions.OutputFile != null && compilerOptions.EmitBinary) ? new LinkerEmitStage() : null,
-				(compilerOptions.MapFile != null) ? new MapFileStage() : null,
+				(!string.IsNullOrEmpty(compilerOptions.CompileTimeFile)) ? new MethodCompileTimeStage() : null,
+				(!string.IsNullOrEmpty(compilerOptions.OutputFile) && compilerOptions.EmitBinary) ? new LinkerEmitStage() : null,
+				(!string.IsNullOrEmpty(compilerOptions.MapFile)) ? new MapFileStage() : null,
 				(compilerOptions.DebugFile != null) ? new DebugFileStage() : null
 			};
 		}

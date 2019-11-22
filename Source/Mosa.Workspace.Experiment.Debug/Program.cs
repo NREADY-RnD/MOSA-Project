@@ -47,7 +47,7 @@ namespace Mosa.Workspace.Experiment.Debug
 			settings.SetValue("Compiler.MethodScanner", false);
 			settings.SetValue("Compiler.EmitBinary", true);
 			settings.SetValue("Compiler.TraceLevel", 0);
-			settings.SetValue("Compiler.Platform", "x86");
+			settings.SetValue("Compiler.Platform", platform);
 			settings.SetValue("Compiler.Multithreading", true);
 			settings.SetValue("Optimizations.SSA", true);
 			settings.SetValue("Optimizations.Basic", true);
@@ -65,43 +65,14 @@ namespace Mosa.Workspace.Experiment.Debug
 			settings.SetValue("Multiboot.Version", "v1");
 			settings.SetValue("Compiler.Platform", "x86");
 
-			var compilerOptions = new CompilerOptions()
-			{
-				SSA = true,
-				BasicOptimizations = true,
-				SparseConditionalConstantPropagation = true,
-				InlineMethods = true,
-				LongExpansion = true,
-				ValueNumbering = true,
-				TwoPass = true,
-				MethodScanner = true,
-				BitTracker = true,
-
-				LinkerFormat = "elf32",
-				InlineMaximum = 12,
-
-				BaseAddress = 0x00500000,
-				EmitStaticRelocations = false,
-				EmitAllSymbols = false,
-
-				EmitBinary = false,
-				TraceLevel = 0,
-
-				Statistics = true,
-			};
-
-			compilerOptions.Settings.Merge(settings);
-
-			compilerOptions.Platform = SelectArchitecture(platform);
-
-			compilerOptions.AddSourceFile($"Mosa.TestWorld.{platform}.exe");
-			compilerOptions.AddSourceFile("Mosa.Plug.Korlib.dll");
-			compilerOptions.AddSourceFile($"Mosa.Plug.Korlib.{platform}.dll");
-			compilerOptions.TraceLevel = 5;
+			//compilerOptions.AddSourceFile($"Mosa.TestWorld.{platform}.exe");
+			//compilerOptions.AddSourceFile("Mosa.Plug.Korlib.dll");
+			//compilerOptions.AddSourceFile($"Mosa.Plug.Korlib.{platform}.dll");
+			//compilerOptions.TraceLevel = 5;
 
 			var stopwatch = new Stopwatch();
 
-			var compiler = new MosaCompiler(compilerOptions);
+			var compiler = new MosaCompiler(settings);
 
 			compiler.Load();
 			compiler.Initialize();

@@ -1,5 +1,6 @@
 // Copyright (c) MOSA Project. Licensed under the New BSD License.
 
+using Mosa.Compiler.Common.Configuration;
 using Mosa.Compiler.Framework.Linker;
 using Mosa.Compiler.Framework.Trace;
 using Mosa.Compiler.MosaTypeSystem;
@@ -33,16 +34,17 @@ namespace Mosa.Compiler.Framework
 		private readonly object _lock = new object();
 
 		public MosaCompiler(List<BaseCompilerExtension> compilerExtensions = null, int maxThreads = 0)
-			: this(null, compilerExtensions, maxThreads)
+			: this(new Settings(), compilerExtensions, maxThreads)
 		{
 		}
 
-		public MosaCompiler(CompilerOptions compilerOptions = null, List<BaseCompilerExtension> compilerExtensions = null, int maxThreads = 0)
+		public MosaCompiler(Settings settings, List<BaseCompilerExtension> compilerExtensions = null, int maxThreads = 0)
 		{
 			MaxThreads = (maxThreads == 0) ? Environment.ProcessorCount * 2 : maxThreads;
 
-			CompilerOptions = compilerOptions ?? new CompilerOptions();
-			CompilerTrace = new CompilerTrace(CompilerOptions);
+			CompilerOptions = new CompilerOptions(settings.Clone());
+
+			CompilerTrace = new CompilerTrace(CompilerOptions.TraceLevel);
 
 			if (compilerExtensions != null)
 			{

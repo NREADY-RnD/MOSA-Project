@@ -12,7 +12,6 @@ using Mosa.Compiler.Framework.Linker;
 using Mosa.Compiler.Framework.Trace;
 using Mosa.Compiler.MosaTypeSystem;
 using Mosa.Utility.BootImage;
-using Mosa.Utility.Configuration;
 using SharpDisasm;
 using SharpDisasm.Translators;
 using System;
@@ -79,8 +78,6 @@ namespace Mosa.Utility.Launcher
 			Counters.Clear();
 			HasCompileError = true;
 
-			var compiler = new MosaCompiler(GetCompilerExtensions());
-
 			var sourcefile = Settings.GetValueList("Compiler.SourceFiles")[0];
 			var destination = Settings.GetValue("Image.Destination", null);
 
@@ -95,31 +92,25 @@ namespace Mosa.Utility.Launcher
 
 				CompiledFile = Path.Combine(destination, $"{Path.GetFileNameWithoutExtension(sourcefile)}.bin");
 
-				MapCompilerOptions.Set(Settings, compiler.CompilerOptions);
-
-				if (Settings.GetValue("CompilerDebug.MapFile", false))
+				if (Settings.GetValue("CompilerDebug.MapFile", string.Empty) == "%DEFAULT%")
 				{
-					compiler.CompilerOptions.MapFile = Path.Combine(destination, $"{Path.GetFileNameWithoutExtension(sourcefile)}.map");
+					Settings.SetValue("CompilerDebug.MapFile", Path.Combine(destination, $"{Path.GetFileNameWithoutExtension(sourcefile)}.map"));
 				}
 
-				if (Settings.GetValue("CompilerDebug.CompileTimeFile", false))
+				if (Settings.GetValue("CompilerDebug.CompileTimeFile", string.Empty) == "%DEFAULT%")
 				{
-					compiler.CompilerOptions.CompileTimeFile = Path.Combine(destination, $"{Path.GetFileNameWithoutExtension(sourcefile)}-time.txt");
+					Settings.SetValue("CompilerDebug.CompileTimeFile", Path.Combine(destination, $"{Path.GetFileNameWithoutExtension(sourcefile)}-time.txt"));
 				}
 
-				if (Settings.GetValue("CompilerDebug.DebugFile", false))
+				if (Settings.GetValue("CompilerDebug.DebugFile", string.Empty) == "%DEFAULT%")
 				{
-					var debugFile = Settings.GetValue("CompilerDebug.DebugFile.File", null) ?? Path.GetFileNameWithoutExtension(sourcefile) + ".debug";
-
-					compiler.CompilerOptions.DebugFile = Path.Combine(destination, debugFile);
+					Settings.SetValue("CompilerDebug.DebugFile", Path.Combine(destination, $"{Path.GetFileNameWithoutExtension(sourcefile)}.debug"));
 				}
 
 				if (!Directory.Exists(destination))
 				{
 					Directory.CreateDirectory(destination);
 				}
-
-				compiler.CompilerTrace.SetTraceListener(traceListener);
 
 				if (string.IsNullOrEmpty(sourcefile))
 				{
@@ -132,31 +123,47 @@ namespace Mosa.Utility.Launcher
 					return;
 				}
 
-				compiler.CompilerOptions.AddSourceFile(sourcefile);
-				compiler.CompilerOptions.AddSearchPaths(Settings.GetValueList("SearchPaths"));
-
 				var fileHunter = new FileHunter(Path.GetDirectoryName(sourcefile));
 
-				string platform = Settings.GetValue("Compiler.Platform", string.Empty).ToLower();
-
-				if (platform == "armv8a32")
-					platform = "ARMv8A32";
-
-				var inputFiles = new List<FileInfo>
+				if (Settings.GetValue("Launcher.Advance.HuntForCorLib", false))
 				{
-					(Settings.GetValue("Launcher.Advance.HuntForCorLib", false)) ? fileHunter.HuntFile("mscorlib.dll") : null,
-					(Settings.GetValue("Compiler.Advanced.PlugKorlib", false)) ? fileHunter.HuntFile("Mosa.Plug.Korlib.dll") : null,
-					(Settings.GetValue("Compiler.Advanced.PlugKorlib", false)) ? fileHunter.HuntFile($"Mosa.Plug.Korlib.{platform}.dll"): null,
-				};
+					var fileCorlib = fileHunter.HuntFile("mscorlib.dll");
 
-				compiler.CompilerOptions.AddSourceFiles(inputFiles);
-				compiler.CompilerOptions.AddSearchPaths(inputFiles);
+					if (fileCorlib != null)
+					{
+						Settings.AddPropertyListValue("Compiler.SourceFiles", fileCorlib.FullName);
+					}
+				}
+
+				if (Settings.GetValue("Compiler.Advanced.PlugKorlib", false))
+				{
+					var fileKorlib = fileHunter.HuntFile("Mosa.Plug.Korlib.dll");
+
+					if (fileKorlib != null)
+					{
+						Settings.AddPropertyListValue("Compiler.SourceFiles", fileKorlib.FullName);
+					}
+
+					string platform = Settings.GetValue("Compiler.Platform", string.Empty).ToLower();
+
+					if (platform == "armv8a32")
+						platform = "ARMv8A32";
+
+					var fileKorlibPlatform = fileHunter.HuntFile($"Mosa.Plug.Korlib.{platform}.dll");
+
+					if (fileKorlibPlatform != null)
+					{
+						Settings.AddPropertyListValue("Compiler.SourceFiles", fileKorlibPlatform.FullName);
+					}
+				}
+
+				var compiler = new MosaCompiler(Settings, GetCompilerExtensions());
+
+				compiler.CompilerTrace.SetTraceListener(traceListener);
 
 				compiler.Load();
 				compiler.Initialize();
 				compiler.Setup();
-
-				// TODO Include Unit Tests
 
 				if (Settings.GetValue("Compiler.Multithreading", false))
 				{
@@ -213,7 +220,7 @@ namespace Mosa.Utility.Launcher
 			}
 			finally
 			{
-				compiler = null;
+				//compiler = null;
 			}
 		}
 

@@ -62,10 +62,10 @@ namespace Mosa.Utility.UnitTests
 			Settings.SetValue("Compiler.Platform", "x86");
 			Settings.SetValue("Compiler.TraceLevel", 0);
 			Settings.SetValue("Compiler.Advanced.PlugKorlib", true);
-			Settings.SetValue("CompilerDebug.DebugFile", true);
-			Settings.SetValue("CompilerDebug.AsmFile", true);
-			Settings.SetValue("CompilerDebug.MapFile", true);
-			Settings.SetValue("CompilerDebug.NasmFile", false);
+			Settings.SetValue("CompilerDebug.DebugFile", "%DEFAULT%");
+			Settings.SetValue("CompilerDebug.AsmFile", "%DEFAULT%");
+			Settings.SetValue("CompilerDebug.MapFile", "%DEFAULT%");
+			Settings.SetValue("CompilerDebug.NasmFile", string.Empty);
 			Settings.SetValue("Optimizations.Basic", true);
 			Settings.SetValue("Optimizations.BitTracker", true);
 			Settings.SetValue("Optimizations.Inline", true);

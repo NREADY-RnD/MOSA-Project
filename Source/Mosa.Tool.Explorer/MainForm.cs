@@ -21,11 +21,11 @@ namespace Mosa.Tool.Explorer
 	{
 		private Settings Settings = new Settings();
 
-		private readonly CodeForm form = new CodeForm();
-
 		private DateTime compileStartTime;
 
-		public readonly MosaCompiler Compiler = new MosaCompiler(new List<BaseCompilerExtension>() { new ExplorerCompilerExtension() });
+		private MosaCompiler Compiler = null;
+
+		private readonly List<BaseCompilerExtension> Extensions = new List<BaseCompilerExtension>() { new ExplorerCompilerExtension() };
 
 		private readonly MethodStore methodStore = new MethodStore();
 
@@ -44,9 +44,6 @@ namespace Mosa.Tool.Explorer
 		private bool DirtyLogDropDown = true;
 		private bool DirtyLog = true;
 
-		private string LastAssemblyFilename = null;
-		private string LastIncludeDirectory = null;
-
 		public MainForm()
 		{
 			InitializeComponent();
@@ -63,9 +60,7 @@ namespace Mosa.Tool.Explorer
 
 			cbPlatform.SelectedIndex = 0;
 
-			ClearAllLogs();
-
-			Settings.SetValue("Compiler.Platform", "x86");
+			ClearAll();
 		}
 
 		private void ClearAllLogs()
@@ -209,30 +204,17 @@ namespace Mosa.Tool.Explorer
 		{
 			if (openFileDialog.ShowDialog() == DialogResult.OK)
 			{
-				LoadAssembly(openFileDialog.FileName);
+				UpdateSettings(openFileDialog.FileName);
+
+				LoadAssembly();
 			}
-		}
-
-		public void LoadAssembly(string filename, string includeDirectory = null)
-		{
-			LastAssemblyFilename = filename;
-			LastIncludeDirectory = includeDirectory;
-
-			ClearAllLogs();
-			methodStore.Clear();
-
-			if (filename == null)
-				return;
-
-			LoadAssembly(filename, cbPlatform.Text, includeDirectory);
-
-			CreateTree();
-
-			SetStatus("Assemblies Loaded!");
 		}
 
 		protected void CreateTree()
 		{
+			if (Compiler == null)
+				return;
+
 			if (Compiler.TypeSystem == null || Compiler.TypeLayout == null)
 			{
 				typeSystemTree = null;
@@ -358,11 +340,6 @@ namespace Mosa.Tool.Explorer
 			}
 		}
 
-		protected void UpdateTree(MosaMethod method)
-		{
-			typeSystemTree.Update(method);
-		}
-
 		private void QuitToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			Application.Exit();
@@ -414,12 +391,11 @@ namespace Mosa.Tool.Explorer
 
 		private void CompileAll()
 		{
+			if (Compiler == null)
+				return;
+
 			compileStartTime = DateTime.Now;
 
-			UpdateSettings();
-
-			MapCompilerOptions.Set(Settings, Compiler.CompilerOptions);
-			Compiler.CompilerTrace.SetTraceListener(this);
 			Compiler.ScheduleAll();
 
 			toolStrip1.Enabled = false;
@@ -642,6 +618,9 @@ namespace Mosa.Tool.Explorer
 
 		private void NodeSelected()
 		{
+			if (Compiler == null)
+				return;
+
 			tbInstructions.Text = string.Empty;
 
 			var method = CurrentMethodSelected;
@@ -651,10 +630,6 @@ namespace Mosa.Tool.Explorer
 
 			compileStartTime = DateTime.Now;
 
-			UpdateSettings();
-
-			MapCompilerOptions.Set(Settings, Compiler.CompilerOptions);
-			Compiler.CompilerTrace.SetTraceListener(this);
 			Compiler.CompileSingleMethod(method);
 		}
 
@@ -677,33 +652,21 @@ namespace Mosa.Tool.Explorer
 			UpdateDebugResults();
 		}
 
-		private void SnippetToolStripMenuItem_Click(object sender, EventArgs e)
+		public void LoadAssembly()
 		{
-			ShowCodeForm();
-		}
+			ClearAll();
 
-		private void ToolStripButton2_Click(object sender, EventArgs e)
-		{
-			ShowCodeForm();
-		}
-
-		protected void LoadAssembly(string filename, string platform, string includeDirectory = null)
-		{
 			UpdateSettings();
-			UpdateSettings(filename, platform, includeDirectory);
-			MapCompilerOptions.Set(Settings, Compiler.CompilerOptions);
+
+			Compiler = new MosaCompiler(Settings, Extensions);
+
+			Compiler.CompilerTrace.SetTraceListener(this);
 
 			Compiler.Load();
-		}
 
-		private void ShowCodeForm()
-		{
-			form.ShowDialog();
+			CreateTree();
 
-			if (form.DialogResult == DialogResult.OK && !string.IsNullOrEmpty(form.Assembly))
-			{
-				LoadAssembly(form.Assembly, AppDomain.CurrentDomain.BaseDirectory);
-			}
+			SetStatus("Assemblies Loaded!");
 		}
 
 		private void CbLabels_SelectedIndexChanged(object sender, EventArgs e)
@@ -845,13 +808,25 @@ namespace Mosa.Tool.Explorer
 
 		private void CbPlatform_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			// reload assembly
-			LoadAssembly(LastAssemblyFilename, LastIncludeDirectory);
+			ClearAll();
 		}
 
 		private void showSizesToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			CreateTree();
+		}
+
+		private void ClearAll()
+		{
+			Compiler = null;
+			typeSystemTree = null;
+
+			ClearAllLogs();
+
+			treeView.Nodes.Clear();
+			tbInstructions.Text = string.Empty;
+			tbDebugResult.Text = string.Empty;
+			methodStore.Clear();
 		}
 
 		private void padInstructions_CheckStateChanged(object sender, EventArgs e)
@@ -949,6 +924,15 @@ namespace Mosa.Tool.Explorer
 			Settings.Merge(arguments);
 
 			UpdateDisplay();
+
+			var sourcefiles = Settings.GetValueList("Compiler.SourceFiles");
+
+			if (sourcefiles != null && sourcefiles.Count >= 1)
+			{
+				UpdateSettings(sourcefiles[0]);
+
+				LoadAssembly();
+			}
 		}
 
 		private void SetDefaultSettings()
@@ -961,10 +945,10 @@ namespace Mosa.Tool.Explorer
 			Settings.SetValue("Compiler.TraceLevel", 8);
 			Settings.SetValue("Compiler.Multithreading", true);
 			Settings.SetValue("Compiler.Advanced.PlugKorlib", true);
-			Settings.SetValue("CompilerDebug.DebugFile", false);
-			Settings.SetValue("CompilerDebug.AsmFile", false);
-			Settings.SetValue("CompilerDebug.MapFile", false);
-			Settings.SetValue("CompilerDebug.NasmFile", false);
+			Settings.SetValue("CompilerDebug.DebugFile", string.Empty);
+			Settings.SetValue("CompilerDebug.AsmFile", string.Empty);
+			Settings.SetValue("CompilerDebug.MapFile", string.Empty);
+			Settings.SetValue("CompilerDebug.NasmFile", string.Empty);
 			Settings.SetValue("Optimizations.Basic", true);
 			Settings.SetValue("Optimizations.BitTracker", true);
 			Settings.SetValue("Optimizations.Inline", true);
@@ -1023,18 +1007,12 @@ namespace Mosa.Tool.Explorer
 			Settings.SetValue("Compiler.Platform", cbPlatform.Text.ToLower());
 		}
 
-		private void UpdateSettings(string filename, string platform, string includeDirectory)
+		private void UpdateSettings(string filename)
 		{
-			Compiler.CompilerOptions.SearchPaths.Clear();
-			Compiler.CompilerOptions.SourceFiles.Clear();
-
 			var sourceDirectory = Path.GetDirectoryName(filename);
 			var fileHunter = new FileHunter(sourceDirectory);
 
-			// Search Paths
-			Settings.ClearProperty("SearchPaths");
-			Settings.AddPropertyListValue("SearchPaths", includeDirectory);
-			Settings.AddPropertyListValue("SearchPaths", Path.GetDirectoryName(filename));
+			var platform = Settings.GetValue("Compiler.Platform");
 
 			// Source Files
 			Settings.ClearProperty("SourceFiles");
@@ -1042,6 +1020,10 @@ namespace Mosa.Tool.Explorer
 			Settings.AddPropertyListValue("SourceFiles", fileHunter.HuntFile("Mosa.Plug.Korlib.dll")?.FullName);
 			Settings.AddPropertyListValue("SourceFiles", fileHunter.HuntFile("Mosa.Plug.Korlib." + platform + ".dll")?.FullName);
 			Settings.AddPropertyListValue("SourceFiles", fileHunter.HuntFile("Mosa.Runtime." + platform + ".dll")?.FullName);
+
+			// Search Paths
+			Settings.ClearProperty("SearchPaths");
+			Settings.AddPropertyListValue("SearchPaths", Path.GetDirectoryName(filename));
 		}
 
 		private void UpdateDisplay()
@@ -1072,22 +1054,6 @@ namespace Mosa.Tool.Explorer
 					cbPlatform.SelectedIndex = 1;
 				else if (platform.ToLower() == "armv8a32")
 					cbPlatform.SelectedIndex = 2;
-			}
-
-			var sourceFiles = Settings.GetValueList("Compiler.SourceFiles");
-
-			if (sourceFiles != null && sourceFiles.Count == 1)
-			{
-				string file = sourceFiles[0];
-
-				if (file.IndexOf(Path.DirectorySeparatorChar) >= 0)
-				{
-					LoadAssembly(file);
-				}
-				else
-				{
-					LoadAssembly(Path.Combine(Directory.GetCurrentDirectory(), file));
-				}
 			}
 		}
 	}

@@ -19,10 +19,19 @@ namespace Mosa.Compiler.Framework.Stages
 
 		public const int MaximumCompileCount = 10;
 
+		private bool InlineExplicitOnly;
+		private int InlineAggressiveMaximum;
+		private int InlineMaximum;
+
 		protected override void Initialize()
 		{
 			Register(InlineCount);
 			Register(ReversedInlineCount);
+
+			// cache for performance
+			InlineExplicitOnly = CompilerOptions.InlineExplicitOnly;
+			InlineAggressiveMaximum = CompilerOptions.InlineAggressiveMaximum;
+			InlineMaximum = CompilerOptions.InlineMaximum;
 		}
 
 		protected override void Run()
@@ -137,8 +146,8 @@ namespace Mosa.Compiler.Framework.Stages
 
 			trace?.Log($"IRInstructionCount: {MethodData.IRInstructionCount}");
 			trace?.Log($"IRStackParameterInstructionCount: {MethodData.IRStackParameterInstructionCount}");
-			trace?.Log($"InlinedIRMaximum: {CompilerOptions.InlineMaximum}");
-			trace?.Log($"InlineExplicitOnly: {CompilerOptions.InlineExplicitOnly}");
+			trace?.Log($"InlinedIRMaximum: {InlineMaximum}");
+			trace?.Log($"InlineExplicitOnly: {InlineExplicitOnly}");
 			trace?.Log($"NonIRInstructionCount: {MethodData.NonIRInstructionCount}");
 			trace?.Log($"HasAddressOfInstruction: {MethodData.HasAddressOfInstruction}");
 			trace?.Log($"HasLoops: {MethodData.HasLoops}");
@@ -181,7 +190,7 @@ namespace Mosa.Compiler.Framework.Stages
 
 		private bool StaticCanNotInline(MethodData methodData)
 		{
-			if (CompilerOptions.InlineExplicitOnly && !methodData.HasAggressiveInliningAttribute)
+			if (InlineExplicitOnly && !methodData.HasAggressiveInliningAttribute)
 				return true;
 
 			if (methodData.HasDoNotInlineAttribute)
@@ -239,7 +248,7 @@ namespace Mosa.Compiler.Framework.Stages
 				return false;   // too many compiles - cyclic loop suspected
 
 			// methods with aggressive inline attribute will double the allow IR instruction count
-			int max = methodData.HasAggressiveInliningAttribute ? CompilerOptions.InlineAggressiveMaximum : CompilerOptions.InlineMaximum;
+			int max = methodData.HasAggressiveInliningAttribute ? InlineAggressiveMaximum : InlineMaximum;
 
 			if ((methodData.IRInstructionCount - methodData.IRStackParameterInstructionCount) > max)
 				return false;

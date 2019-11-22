@@ -44,12 +44,12 @@ namespace Mosa.Compiler.Framework.CompilerStages
 
 		protected override void Finalization()
 		{
-			if (CompilerOptions.Statistics)
-			{
-				//var log = new TraceLog(TraceType.MethodCounters, null, string.Empty);
-				//log.Log(MethodData.Counters.Export());
-				//CompilerTrace.PostTraceLog(log);
-			}
+			//if (CompilerOptions.Statistics)
+			//{
+			//	//var log = new TraceLog(TraceType.MethodCounters, null, string.Empty);
+			//	//log.Log(MethodData.Counters.Export());
+			//	//CompilerTrace.PostTraceLog(log);
+			//}
 		}
 
 		#endregion Overrides

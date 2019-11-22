@@ -14,6 +14,14 @@ namespace Mosa.Compiler.Framework.Stages
 	{
 		private Operand Constant4;
 
+		private bool SSA;
+
+		protected override void Initialize()
+		{
+			// cache for performance
+			SSA = CompilerOptions.SSA;
+		}
+
 		protected override void PopulateVisitationDictionary()
 		{
 			AddVisitation(IRInstruction.Add64, Add64);
@@ -272,7 +280,7 @@ namespace Mosa.Compiler.Framework.Stages
 				return;
 			}
 
-			if (CompilerOptions.SSA)
+			if (SSA)
 			{
 				Compareeger64x32SSA(context);
 			}

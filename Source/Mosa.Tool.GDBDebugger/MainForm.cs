@@ -80,8 +80,8 @@ namespace Mosa.Tool.GDBDebugger
 
 		public string DebugFile
 		{
-			get { return Settings.GetValue("CompilerDebug.DebugFile.File", "%DEFAULT%"); }
-			set { Settings.SetValue("CompilerDebug.DebugFile.File", value); }
+			get { return Settings.GetValue("CompilerDebug.DebugFile", "%DEFAULT%"); }
+			set { Settings.SetValue("CompilerDebug.DebugFile", value); }
 		}
 
 		public string ImageFile

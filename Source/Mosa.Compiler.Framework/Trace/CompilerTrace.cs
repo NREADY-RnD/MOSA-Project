@@ -4,17 +4,15 @@ using Mosa.Compiler.MosaTypeSystem;
 
 namespace Mosa.Compiler.Framework.Trace
 {
-	public class CompilerTrace
+	public sealed class CompilerTrace
 	{
 		private ITraceListener TraceListener;
-		private CompilerOptions CompilerOptions;
 
-		public int TraceLevel { get { return CompilerOptions.TraceLevel; } }
+		public int TraceLevel { get; }
 
-		public CompilerTrace(CompilerOptions compilerOptions)
+		public CompilerTrace(int traceLevel)
 		{
-			CompilerOptions = compilerOptions;
-
+			TraceLevel = traceLevel;
 			TraceListener = null;
 		}
 

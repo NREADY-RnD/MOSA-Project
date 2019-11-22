@@ -28,6 +28,8 @@ namespace Mosa.Compiler.Framework
 
 		private readonly Stopwatch Stopwatch;
 
+		//private bool Statistics;
+
 		#endregion Data Members
 
 		#region Properties
@@ -226,6 +228,8 @@ namespace Mosa.Compiler.Framework
 			Trace = compiler.CompilerTrace;
 			Linker = compiler.Linker;
 			MethodScanner = compiler.MethodScanner;
+
+			//Statistics = compiler.CompilerOptions.Statistics;
 
 			BasicBlocks = basicBlocks ?? new BasicBlocks();
 			LocalStack = new List<Operand>();
