@@ -18,6 +18,8 @@ namespace Mosa.Compiler.Framework.Stages
 
 		protected override void Initialize()
 		{
+			base.Initialize();
+
 			// cache for performance
 			SSA = CompilerOptions.SSA;
 		}
