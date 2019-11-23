@@ -7,9 +7,9 @@ namespace Mosa.Compiler.Framework
 {
 	public static class PlatformRegistry
 	{
-		private static Dictionary<string, BaseArchitecture> Registry = null;
+		private static Dictionary<string, BaseArchitecture> Registry = new Dictionary<string, BaseArchitecture>();
 
-		private static void Initialize()
+		public static void Register()
 		{
 			Registry = new Dictionary<string, BaseArchitecture>();
 
@@ -26,13 +26,13 @@ namespace Mosa.Compiler.Framework
 			}
 		}
 
+		public static void Add(BaseArchitecture platform)
+		{
+			Registry.Add(platform.PlatformName, platform);
+		}
+
 		public static BaseArchitecture GetPlatform(string platformName)
 		{
-			if (Registry == null)
-			{
-				Initialize();
-			}
-
 			Registry.TryGetValue(platformName, out BaseArchitecture platform);
 
 			return platform;

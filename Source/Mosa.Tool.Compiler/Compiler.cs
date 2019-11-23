@@ -59,6 +59,8 @@ Example: Mosa.Tool.Compiler.exe -o Mosa.HelloWorld.x86.bin -a x86 --mboot v1 --x
 		/// <param name="args">The command line arguments.</param>
 		public void Run(string[] args)
 		{
+			RegisterPlatforms();
+
 			// always print header with version information
 			Console.WriteLine("MOSA AOT Compiler, Version {0}.{1} '{2}'", majorVersion, minorVersion, codeName);
 			Console.WriteLine("Copyright 2019 by the MOSA Project. Licensed under the New BSD License.");
@@ -142,6 +144,13 @@ Example: Mosa.Tool.Compiler.exe -o Mosa.HelloWorld.x86.bin -a x86 --mboot v1 --x
 			sb.Append(" > Binary format: ").AppendLine(Settings.GetValue("Linker.Format", string.Empty));
 			sb.Append(" > Boot spec: ").AppendLine(Settings.GetValue("Multiboot.Version", string.Empty));
 			return sb.ToString();
+		}
+
+		private void RegisterPlatforms()
+		{
+			PlatformRegistry.Add(new Platform.x86.Architecture());
+			PlatformRegistry.Add(new Platform.x64.Architecture());
+			PlatformRegistry.Add(new Platform.ARMv8A32.Architecture());
 		}
 
 		#endregion Public Methods

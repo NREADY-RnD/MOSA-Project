@@ -544,7 +544,7 @@
 			this.tabControl.Name = "tabControl";
 			this.tabControl.Padding = new System.Drawing.Point(0, 0);
 			this.tabControl.SelectedIndex = 0;
-			this.tabControl.Size = new System.Drawing.Size(590, 403);
+			this.tabControl.Size = new System.Drawing.Size(588, 403);
 			this.tabControl.TabIndex = 38;
 			this.tabControl.SelectedIndexChanged += new System.EventHandler(this.tabControl_SelectedIndexChanged);
 			// 
@@ -559,7 +559,7 @@
 			this.tabStages.Location = new System.Drawing.Point(4, 25);
 			this.tabStages.Margin = new System.Windows.Forms.Padding(0);
 			this.tabStages.Name = "tabStages";
-			this.tabStages.Size = new System.Drawing.Size(582, 374);
+			this.tabStages.Size = new System.Drawing.Size(580, 374);
 			this.tabStages.TabIndex = 0;
 			this.tabStages.Text = "Instructions";
 			// 
@@ -612,7 +612,7 @@
 			this.tabStageDebug.Location = new System.Drawing.Point(4, 25);
 			this.tabStageDebug.Margin = new System.Windows.Forms.Padding(0);
 			this.tabStageDebug.Name = "tabStageDebug";
-			this.tabStageDebug.Size = new System.Drawing.Size(582, 374);
+			this.tabStageDebug.Size = new System.Drawing.Size(580, 374);
 			this.tabStageDebug.TabIndex = 1;
 			this.tabStageDebug.Text = "Debug";
 			// 
@@ -649,7 +649,7 @@
 			this.tabMethodCounters.Location = new System.Drawing.Point(4, 25);
 			this.tabMethodCounters.Margin = new System.Windows.Forms.Padding(0);
 			this.tabMethodCounters.Name = "tabMethodCounters";
-			this.tabMethodCounters.Size = new System.Drawing.Size(582, 374);
+			this.tabMethodCounters.Size = new System.Drawing.Size(580, 374);
 			this.tabMethodCounters.TabIndex = 6;
 			this.tabMethodCounters.Text = "Counters";
 			// 
@@ -675,7 +675,7 @@
 			this.tabLogs.Location = new System.Drawing.Point(4, 25);
 			this.tabLogs.Margin = new System.Windows.Forms.Padding(0);
 			this.tabLogs.Name = "tabLogs";
-			this.tabLogs.Size = new System.Drawing.Size(582, 374);
+			this.tabLogs.Size = new System.Drawing.Size(580, 374);
 			this.tabLogs.TabIndex = 7;
 			this.tabLogs.Text = "Logs";
 			// 
@@ -731,6 +731,7 @@
             "ARMv8A32"});
 			this.cbPlatform.Name = "cbPlatform";
 			this.cbPlatform.Size = new System.Drawing.Size(90, 25);
+			this.cbPlatform.SelectedIndexChanged += new System.EventHandler(this.cbPlatform_SelectedIndexChanged);
 			// 
 			// toolStripSeparator3
 			// 

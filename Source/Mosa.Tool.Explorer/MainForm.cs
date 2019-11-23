@@ -61,6 +61,15 @@ namespace Mosa.Tool.Explorer
 			cbPlatform.SelectedIndex = 0;
 
 			ClearAll();
+
+			RegisterPlatforms();
+		}
+
+		private void RegisterPlatforms()
+		{
+			PlatformRegistry.Add(new Platform.x86.Architecture());
+			PlatformRegistry.Add(new Platform.x64.Architecture());
+			PlatformRegistry.Add(new Platform.ARMv8A32.Architecture());
 		}
 
 		private void ClearAllLogs()
@@ -204,6 +213,8 @@ namespace Mosa.Tool.Explorer
 		{
 			if (openFileDialog.ShowDialog() == DialogResult.OK)
 			{
+				UpdateSettings();
+
 				UpdateSettings(openFileDialog.FileName);
 
 				LoadAssembly();
@@ -806,11 +817,6 @@ namespace Mosa.Tool.Explorer
 			}
 		}
 
-		private void CbPlatform_SelectedIndexChanged(object sender, EventArgs e)
-		{
-			ClearAll();
-		}
-
 		private void showSizesToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			CreateTree();
@@ -821,12 +827,12 @@ namespace Mosa.Tool.Explorer
 			Compiler = null;
 			typeSystemTree = null;
 
-			ClearAllLogs();
-
 			treeView.Nodes.Clear();
 			tbInstructions.Text = string.Empty;
 			tbDebugResult.Text = string.Empty;
 			methodStore.Clear();
+
+			ClearAllLogs();
 		}
 
 		private void padInstructions_CheckStateChanged(object sender, EventArgs e)
@@ -1004,7 +1010,6 @@ namespace Mosa.Tool.Explorer
 			Settings.SetValue("Optimizations.Inline.Maximum", 12);
 			Settings.SetValue("Optimizations.Inline.AggressiveMaximum", 24);
 			Settings.SetValue("Multiboot.Version", "v1");
-			Settings.SetValue("Compiler.Platform", cbPlatform.Text.ToLower());
 		}
 
 		private void UpdateSettings(string filename)
@@ -1015,11 +1020,11 @@ namespace Mosa.Tool.Explorer
 			var platform = Settings.GetValue("Compiler.Platform");
 
 			// Source Files
-			Settings.ClearProperty("SourceFiles");
-			Settings.AddPropertyListValue("SourceFiles", filename);
-			Settings.AddPropertyListValue("SourceFiles", fileHunter.HuntFile("Mosa.Plug.Korlib.dll")?.FullName);
-			Settings.AddPropertyListValue("SourceFiles", fileHunter.HuntFile("Mosa.Plug.Korlib." + platform + ".dll")?.FullName);
-			Settings.AddPropertyListValue("SourceFiles", fileHunter.HuntFile("Mosa.Runtime." + platform + ".dll")?.FullName);
+			Settings.ClearProperty("Compiler.SourceFiles");
+			Settings.AddPropertyListValue("Compiler.SourceFiles", filename);
+			Settings.AddPropertyListValue("Compiler.SourceFiles", fileHunter.HuntFile("Mosa.Plug.Korlib.dll")?.FullName);
+			Settings.AddPropertyListValue("Compiler.SourceFiles", fileHunter.HuntFile("Mosa.Plug.Korlib." + platform + ".dll")?.FullName);
+			Settings.AddPropertyListValue("Compiler.SourceFiles", fileHunter.HuntFile("Mosa.Runtime." + platform + ".dll")?.FullName);
 
 			// Search Paths
 			Settings.ClearProperty("SearchPaths");
@@ -1055,6 +1060,11 @@ namespace Mosa.Tool.Explorer
 				else if (platform.ToLower() == "armv8a32")
 					cbPlatform.SelectedIndex = 2;
 			}
+		}
+
+		private void cbPlatform_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			ClearAll();
 		}
 	}
 }

@@ -59,6 +59,15 @@ namespace Mosa.Tool.Launcher
 			AddOutput("Current Directory: " + Environment.CurrentDirectory);
 
 			cbBootFormat.SelectedIndex = 0;
+
+			RegisterPlatforms();
+		}
+
+		private void RegisterPlatforms()
+		{
+			PlatformRegistry.Add(new Platform.x86.Architecture());
+			PlatformRegistry.Add(new Platform.x64.Architecture());
+			PlatformRegistry.Add(new Platform.ARMv8A32.Architecture());
 		}
 
 		public void UpdateStatusLabel(string msg)
