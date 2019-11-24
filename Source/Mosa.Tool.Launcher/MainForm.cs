@@ -321,6 +321,16 @@ namespace Mosa.Tool.Launcher
 			Settings.Merge(arguments);
 
 			UpdateDisplay();
+
+			var sourcefiles = Settings.GetValueList("Compiler.SourceFiles");
+
+			if (sourcefiles != null)
+			{
+				foreach (var sourcefile in sourcefiles)
+				{
+					Settings.AddPropertyListValue("SearchPaths", Path.GetDirectoryName(sourcefile));
+				}
+			}
 		}
 
 		private void SetDefaultSettings()

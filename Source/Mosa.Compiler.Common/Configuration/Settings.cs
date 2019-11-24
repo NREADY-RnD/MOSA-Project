@@ -244,6 +244,19 @@ namespace Mosa.Compiler.Common.Configuration
 			property.List.Add(value);
 		}
 
+		public void AddPropertyListValueIfNew(string fullname, string value)
+		{
+			if (value == null)
+				return;
+
+			var property = CreateProperty(fullname);
+
+			if (property.List.Contains(value))
+				return;
+
+			property.List.Add(value);
+		}
+
 		public void ClearProperty(string fullname)
 		{
 			var property = GetProperty(fullname);
