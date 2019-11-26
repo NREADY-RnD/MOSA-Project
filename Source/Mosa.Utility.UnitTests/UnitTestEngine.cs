@@ -94,7 +94,7 @@ namespace Mosa.Utility.UnitTests
 			Settings.SetValue("Emulator.Memory", 128);
 			Settings.SetValue("Emulator.Serial", "TCPServer");
 			Settings.SetValue("Emulator.Serial.Host", "127.0.0.1");
-			Settings.SetValue("Emulator.Serial.Port", 9999);
+			Settings.SetValue("Emulator.Serial.Port", new Random().Next(11111, 22222));
 			Settings.SetValue("Emulator.Serial.Pipe", "MOSA");
 			Settings.SetValue("Emulator.Display", display);
 			Settings.SetValue("Launcher.Start", false);
@@ -279,7 +279,7 @@ namespace Mosa.Utility.UnitTests
 				Starter = new Starter(Settings, AppLocations, this);
 			}
 
-			//Settings.SetValue("Emulator.Serial.Port", Settings.GetValue("Emulator.Serial.Port", 1234) + 1);
+			//Settings.SetValue("Emulator.Serial.Port", new Random().Next(11111, 22222));
 
 			Process = Starter.Launch();
 

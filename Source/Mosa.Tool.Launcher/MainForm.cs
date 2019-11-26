@@ -371,7 +371,7 @@ namespace Mosa.Tool.Launcher
 			Settings.SetValue("Emulator.Memory", 128);
 			Settings.SetValue("Emulator.Serial", "TCPServer");
 			Settings.SetValue("Emulator.Serial.Host", "127.0.0.1");
-			Settings.SetValue("Emulator.Serial.Port", 9999);
+			Settings.SetValue("Emulator.Serial.Port", new Random().Next(11111, 22222));
 			Settings.SetValue("Emulator.Serial.Pipe", "MOSA");
 			Settings.SetValue("Emulator.Display", true);
 			Settings.SetValue("Launcher.Start", true);
@@ -517,7 +517,6 @@ namespace Mosa.Tool.Launcher
 			tbBaseAddress.Text = "0x" + Settings.GetValue("Compiler.BaseAddress", 0x00400000).ToString("x8");
 			cbRelocationTable.Checked = Settings.GetValue("Linker.EmitStaticRelocations", false);
 			cbEmitSymbolTable.Checked = Settings.GetValue("Linker.EmitAllSymbols", false);
-			tbMode.Text = Settings.GetValue("Multiboot.Width", "640") + "x" + Settings.GetValue("Multiboot.Height", "480") + "x" + Settings.GetValue("Multiboot.Depth", "32");
 			cbLongExpansion.Checked = Settings.GetValue("Optimizations.LongExpansion", true);
 			cbTwoPassOptimizations.Checked = Settings.GetValue("Optimizations.TwoPass", true);
 			cbValueNumbering.Checked = Settings.GetValue("Optimizations.ValueNumbering", true);
@@ -526,6 +525,7 @@ namespace Mosa.Tool.Launcher
 			cbBitTracker.Checked = Settings.GetValue("Optimizations.BitTracker", false);
 			cbPlatformOptimizations.Checked = Settings.GetValue("Optimizations.Platform", false);
 			cbLoopInvariantCodeMotion.Checked = Settings.GetValue("Optimizations.LoopInvariantCodeMotion", false);
+			tbMode.Text = Settings.GetValue("Multiboot.Width", "640") + "x" + Settings.GetValue("Multiboot.Height", "480") + "x" + Settings.GetValue("Multiboot.Depth", "32");
 
 			switch (Settings.GetValue("Image.Format", string.Empty).ToUpper())
 			{
