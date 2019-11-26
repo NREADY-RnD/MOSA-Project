@@ -17,12 +17,11 @@ namespace Mosa.Utility.Configuration
 		{
 			var map = new List<Argument>()
 			{
-				new Argument() { Name =  "--q", Setting = "Launcher.Exit", Value = "true"},
-				new Argument() { Name =  "--autostart", Setting = "Launcher.Start", Value = "true"},
+				new Argument() { Name =  null, Setting = "Compiler.SourceFiles", Value = null, IsList = true},
+
 				new Argument() { Name =  "--threading", Setting = "Compiler.Multithreading", Value = "true"},
 				new Argument() { Name =  "--threading-off", Setting = "Compiler.Multithreading", Value = "false"},
 				new Argument() { Name =  "--settings", Setting = "Import", Value = null, IsList = true},
-				new Argument() { Name =  null, Setting = "Compiler.SourceFiles", Value = null, IsList = true},
 
 				new Argument() { Name =  "--base", Setting = "Compiler.BaseAddress"},
 				new Argument() { Name =  "--scanner", Setting = "Compiler.MethodScanner", Value = "true"},
@@ -80,19 +79,13 @@ namespace Mosa.Utility.Configuration
 
 				new Argument() { Name =  "--interrupt-method", Setting = "X86.InterruptMethodName"},
 
-//				new Argument() { Name =  "--no-sccp", Setting = "Optimizations.SCCP", Value = "false"}, // legacy
-//				new Argument() { Name =  "--no-ssa", Setting = "Optimizations.SSA", Value = "false"},	// legacy
-//				new Argument() { Name =  "--no-sparse", Setting = "Optimizations.SCCP", Value = "false"}, // legacy
-//				new Argument() { Name =  "--no-ir-optimizations", Setting = "Optimizations.Basic", Value = "false"}, // legacy
-//				new Argument() { Name =  "--ir-optimizations-off", Setting = "Optimizations.Basic", Value = "false"}, // legacy
-//				new Argument() { Name =  "--ir-long-expansion", Setting = "Optimizations.LongExpansion", Value = "true"}, // legacy
-//				new Argument() { Name =  "--two-pass-optimizations", Setting = "Optimizations.TwoPass", Value = "true"}, // legacy
+				new Argument() { Name =  "-a", Setting = "Compiler.Platform"},	// legacy
 
-				// Linker
+				// Linker:
 				new Argument() { Name =  "--emit-all-symbols", Setting = "Linker.EmitAllSymbols", Value = "true"},
-				new Argument() { Name =  "--emit-all-symbols-false", Setting = "Linker.EmitAllSymbols", Value = "false"},
+				new Argument() { Name =  "--emit-all-symbols-off", Setting = "Linker.EmitAllSymbols", Value = "false"},
 				new Argument() { Name =  "--emit-relocations", Setting = "Linker.EmitStaticRelocations", Value = "true"},
-				new Argument() { Name =  "--emit-relocations-false", Setting = "Linker.EmitStaticRelocations", Value = "false"},
+				new Argument() { Name =  "--emit-relocations-off", Setting = "Linker.EmitStaticRelocations", Value = "false"},
 				new Argument() { Name =  "--emit-static-relocations", Setting = "Linker.EmitStaticRelocations", Value = "true"},
 				new Argument() { Name =  "--drawf", Setting = "Linker.EmitDrawf", Value = "true"},
 
@@ -100,15 +93,24 @@ namespace Mosa.Utility.Configuration
 				new Argument() { Name =  "--filter", Setting = "Explorer.Filter", Value = null},
 
 				// Launcher:
+				new Argument() { Name =  "--autoexit", Setting = "Launcher.Exit", Value = "true"},
+				new Argument() { Name =  "--autoexit-off", Setting = "Launcher.Exit", Value = "false"},
+				new Argument() { Name =  "--autostart", Setting = "Launcher.Start", Value = "true"},
+				new Argument() { Name =  "--autostart-off", Setting = "Launcher.Start", Value = "false"},
+				new Argument() { Name =  "--autolaunch", Setting = "Launcher.Launch", Value="true"},
+				new Argument() { Name =  "--autolaunch-off", Setting = "Launcher.Launch", Value="false"},
+
+				new Argument() { Name =  "--destination", Setting = "Image.Destination"},
 				new Argument() { Name =  "--dest", Setting = "Image.Destination"},
-				new Argument() { Name =  "--destination-dir", Setting = "Image.Destination"},
-				new Argument() { Name =  "--autostart", Setting = "Launcher.Start", Value="true"},
+
 				new Argument() { Name =  "--launch", Setting = "Launcher.Launch", Value="true"},
 				new Argument() { Name =  "--launch-off", Setting = "Launcher.Launch", Value="false"},
-				new Argument() { Name =  "--e", Setting = "Launcher.Exit", Value="true"},
-				new Argument() { Name =  "--q", Setting = "Launcher.Exit", Value="true"},
 
-				// Launcher - Emulator
+				//new Argument() { Name =  "--destination-dir", Setting = "Image.Destination"}, // legacy
+				//new Argument() { Name =  "--e", Setting = "Launcher.Exit", Value="true"}, // legacy
+				//new Argument() { Name =  "--q", Setting = "Launcher.Exit", Value="true"}, // legacy
+
+				// Launcher - Emulator:
 				new Argument() { Name =  "--emulator", Setting = "Emulator"},
 				new Argument() { Name =  "--qemu", Setting = "Emulator", Value="qemu"},
 				new Argument() { Name =  "--vmware", Setting = "Emulator", Value="vmware"},
@@ -117,21 +119,33 @@ namespace Mosa.Utility.Configuration
 				new Argument() { Name =  "--emulator-memory", Setting = "Emulator.Memory"},
 				new Argument() { Name =  "--qemu-gdb", Setting = "Emulator.GDB", Value="false"},
 
-				// Launcher - Image
+				// Launcher - Image:
 				new Argument() { Name =  "--vhd", Setting = "Image.Format", Value="vhd"},
 				new Argument() { Name =  "--img", Setting = "Image.Format", Value="img"},
 				new Argument() { Name =  "--vdi", Setting = "Image.Format", Value="vdi"},
 				new Argument() { Name =  "--iso", Setting = "Image.Format", Value="iso"},
 				new Argument() { Name =  "--vmdk", Setting = "Image.Format", Value="vmdk"},
 				new Argument() { Name =  "--image", Setting = "Image.ImageFile"},
-				new Argument() { Name =  "--bootloader-image", Setting = "Image.ImageFile"},
 
-				// Launcher - Boot
+				new Argument() { Name =  "--blocks", Setting = "Image.DiskBlocks"},
+				new Argument() { Name =  "--volume-label", Setting = "Image.VolumeLabel"},
+				new Argument() { Name =  "--mbr", Setting = "Image.MasterBootRecordFile"},
+				new Argument() { Name =  "--boot", Setting = "Image.BootBlockFile"},
+
+				new Argument() { Name =  "-o", Setting = "Image.ImageFile"},
+				new Argument() { Name =  "--o", Setting = "Image.ImageFile"},
+				new Argument() { Name =  "--m", Setting = "Image.MasterBootRecordFile"},
+				new Argument() { Name =  "--b", Setting = "Image.BootBlockFile"},
+
+				//new Argument() { Name =  "--bootloader-image", Setting = "Image.ImageFile"}, // legacy
+
+				// Launcher - Boot:
 				new Argument() { Name =  "--multiboot-v1", Setting = "Multiboot.Version", Value = "v1"},
 				new Argument() { Name =  "--multiboot-v2", Setting = "Multiboot.Version", Value = "v2"},
 				new Argument() { Name =  "--multiboot-none", Setting = "Multiboot.Version", Value = ""},
+				new Argument() { Name =  "--multiboot", Setting = "Multiboot.Version", Value = null},
 
-				// Launcher - Serial
+				// Launcher - Serial:
 				new Argument() { Name =  "--serial-connection", Setting = "Emulator.Serial"},
 				new Argument() { Name =  "--serial-pipe", Setting = "Emulator.Serial", Value = "pipe"},
 				new Argument() { Name =  "--serial-tcpclient", Setting = "Emulator.Serial", Value = "tcpclient"},
@@ -154,11 +168,11 @@ namespace Mosa.Utility.Configuration
 				new Argument() { Name =  "--grub", Setting = "Image.BootLoader", Value = "grub_v0.97"},
 				new Argument() { Name =  "--grub-0.97", Setting = "Image.BootLoader", Value = "grub_v0.97"},
 				new Argument() { Name =  "--grub2", Setting = "Image.BootLoader", Value = "grub_v2.00"},
-				new Argument() { Name =  "--syslinux", Setting = "Image.BootLoader", Value = "grub_v0.97"},
+				new Argument() { Name =  "--syslinux", Setting = "Image.BootLoader", Value = "syslinux_v3.72"},
 				new Argument() { Name =  "--syslinux-3.72", Setting = "Image.BootLoader", Value = "syslinux_v3.72"},
 				new Argument() { Name =  "--syslinux-6.0", Setting = "Image.BootLoader", Value = "syslinux_v6.03"},
 
-				// Launcher - Serial
+				// Launcher - Serial:
 				new Argument() { Name =  "--hunt-corlib", Setting = "Launcher.Advance.HuntForCorLib", Value = "true"},
 
 				// Advance:

@@ -240,9 +240,7 @@ namespace Mosa.Tool.Launcher
 				if (CheckKeyPressed())
 					return;
 
-				Settings.SetValue("Image.ImageFile", Settings.GetValue("Image.ImageFile", null) ?? Builder.ImageFile);
-
-				var starter = new Starter(Settings, AppLocations, this, Builder.Linker);
+				var starter = new Starter(Builder.Settings, AppLocations, this, Builder.Linker);
 
 				starter.Launch();
 			}
@@ -376,8 +374,8 @@ namespace Mosa.Tool.Launcher
 			Settings.SetValue("Emulator.Serial.Port", 9999);
 			Settings.SetValue("Emulator.Serial.Pipe", "MOSA");
 			Settings.SetValue("Launcher.Start", false);
-			Settings.SetValue("Launcher.Launch", false);
-			Settings.SetValue("Launcher.Exit", false);
+			Settings.SetValue("Launcher.Launch", true);
+			Settings.SetValue("Launcher.Exit", true);
 			Settings.SetValue("Launcher.Advance.HuntForCorLib", true);
 		}
 
@@ -421,6 +419,7 @@ namespace Mosa.Tool.Launcher
 			Settings.SetValue("Optimizations.BitTracker", cbBitTracker.Checked);
 			Settings.SetValue("Optimizations.Platform", cbPlatformOptimizations.Checked);
 			Settings.SetValue("Optimizations.LoopInvariantCodeMotion", cbLoopInvariantCodeMotion.Checked);
+			Settings.SetValue("Launcher.Launch", true);
 
 			if (Settings.GetValue("Multiboot.Video", false))
 			{
@@ -505,7 +504,7 @@ namespace Mosa.Tool.Launcher
 			cbGenerateASMFile.Checked = Settings.GetValue("CompilerDebug.AsmFile", string.Empty) == "%DEFAULT%";
 			cbGenerateMapFile.Checked = Settings.GetValue("CompilerDebug.MapFile", string.Empty) == "%DEFAULT%";
 			cbGenerateDebugInfoFile.Checked = Settings.GetValue("CompilerDebug.DebugFile", string.Empty) == "%DEFAULT%";
-			cbExitOnLaunch.Checked = Settings.GetValue("Launcher.Exit", false);
+			cbExitOnLaunch.Checked = Settings.GetValue("Launcher.Exit", true);
 			cbEnableQemuGDB.Checked = Settings.GetValue("Emulator.GDB", false);
 			cbLaunchGDB.Checked = Settings.GetValue("Launcher.Advance.LaunchGDB", false);
 			cbLaunchMosaDebugger.Checked = Settings.GetValue("Launcher.Advance.LaunchGDBDebugger", false);

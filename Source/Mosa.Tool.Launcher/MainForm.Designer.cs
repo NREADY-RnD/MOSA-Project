@@ -414,6 +414,8 @@
 			// cbExitOnLaunch
 			// 
 			this.cbExitOnLaunch.AutoSize = true;
+			this.cbExitOnLaunch.Checked = true;
+			this.cbExitOnLaunch.CheckState = System.Windows.Forms.CheckState.Checked;
 			this.cbExitOnLaunch.Location = new System.Drawing.Point(10, 142);
 			this.cbExitOnLaunch.Name = "cbExitOnLaunch";
 			this.cbExitOnLaunch.Size = new System.Drawing.Size(110, 15);

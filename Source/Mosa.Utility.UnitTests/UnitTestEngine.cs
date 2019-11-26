@@ -267,7 +267,6 @@ namespace Mosa.Utility.UnitTests
 
 			Linker = builder.Linker;
 			TypeSystem = builder.TypeSystem;
-			ImageFile = Settings.GetValue("Image.ImageFile", null) ?? builder.ImageFile;
 
 			return !builder.HasCompileError;
 		}
