@@ -17,19 +17,21 @@ namespace Mosa.Utility.UnitTests
 {
 	public class UnitTestEngine : IBuilderEvent, IStarterEvent, IDisposable
 	{
-		public Settings Settings { get; } = new Settings();
 		public string TestAssemblyPath { get; set; }
-		public string Platform { get; set; }
+
 		public string TestSuiteFile { get; set; }
+
 		public AppLocations AppLocations { get; set; }
 
 		public TypeSystem TypeSystem { get; internal set; }
+
 		public MosaLinker Linker { get; internal set; }
 
 		protected DebugServerEngine DebugServerEngine;
 		protected Starter Starter;
 		protected Process Process;
-		protected string ImageFile;
+
+		private Settings Settings = new Settings();
 
 		private readonly object _lock = new object();
 
@@ -53,7 +55,7 @@ namespace Mosa.Utility.UnitTests
 		private int SendOneCount = -1;
 		private int Errors = 0;
 
-		public UnitTestEngine(bool display = false)
+		public UnitTestEngine(bool display = true)
 		{
 			Settings.SetValue("Compiler.BaseAddress", 0x00500000);
 			Settings.SetValue("Compiler.EmitBinary", true);
@@ -94,9 +96,10 @@ namespace Mosa.Utility.UnitTests
 			Settings.SetValue("Emulator.Serial.Host", "127.0.0.1");
 			Settings.SetValue("Emulator.Serial.Port", 9999);
 			Settings.SetValue("Emulator.Serial.Pipe", "MOSA");
+			Settings.SetValue("Emulator.Display", display);
 			Settings.SetValue("Launcher.Start", false);
 			Settings.SetValue("Launcher.Launch", false);
-			Settings.SetValue("Launcher.Exit", false);
+			Settings.SetValue("Launcher.Exit", true);
 			Settings.SetValue("Launcher.Advance.HuntForCorLib", true);
 
 			AppLocations = new AppLocations();
@@ -108,11 +111,6 @@ namespace Mosa.Utility.UnitTests
 
 		private void Initialize()
 		{
-			if (Platform == null)
-			{
-				Platform = "x86";
-			}
-
 			if (TestAssemblyPath == null)
 			{
 #if __MonoCS__
@@ -124,7 +122,9 @@ namespace Mosa.Utility.UnitTests
 
 			if (TestSuiteFile == null)
 			{
-				TestSuiteFile = "Mosa.UnitTests." + Platform + ".exe";
+				var platform = Settings.GetValue("Compiler.Platform", "x86");
+
+				TestSuiteFile = $"Mosa.UnitTests.{platform}.exe";
 			}
 
 			Aborted = !Compile();
@@ -267,6 +267,7 @@ namespace Mosa.Utility.UnitTests
 
 			Linker = builder.Linker;
 			TypeSystem = builder.TypeSystem;
+			Settings = builder.Settings;
 
 			return !builder.HasCompileError;
 		}
@@ -275,11 +276,10 @@ namespace Mosa.Utility.UnitTests
 		{
 			if (Starter == null)
 			{
-				Settings.SetValue("Image.ImageFile", ImageFile);
 				Starter = new Starter(Settings, AppLocations, this);
 			}
 
-			Settings.SetValue("Emulator.Serial.Port", Settings.GetValue("Emulator.Serial.Port", 1234) + 1);
+			//Settings.SetValue("Emulator.Serial.Port", Settings.GetValue("Emulator.Serial.Port", 1234) + 1);
 
 			Process = Starter.Launch();
 
@@ -317,21 +317,24 @@ namespace Mosa.Utility.UnitTests
 
 		private void Connect()
 		{
-			if (Settings.GetValue("Emulator.Serial", null) == null)
-				return;
-
 			var serial = Settings.GetValue("Emulator.Serial", string.Empty).ToLower();
 
-			if (serial == "tcpserver")
+			switch (serial)
 			{
-				var client = new TcpClient(Settings.GetValue("Emulator.Serial.Host", "localhost"), Settings.GetValue("Emulator.Serial.Port", 1234));
-				DebugServerEngine.Stream = new DebugNetworkStream(client.Client, true);
-			}
-			else if (serial == "pipe")
-			{
-				var pipeStream = new NamedPipeClientStream(".", Settings.GetValue("Emulator.Serial.Pipe", "MOSA"), PipeDirection.InOut);
-				pipeStream.Connect();
-				DebugServerEngine.Stream = pipeStream;
+				case "tcpserver":
+					{
+						var client = new TcpClient(Settings.GetValue("Emulator.Serial.Host", "localhost"), Settings.GetValue("Emulator.Serial.Port", 1234));
+						DebugServerEngine.Stream = new DebugNetworkStream(client.Client, true);
+						break;
+					}
+
+				case "pipe":
+					{
+						var pipeStream = new NamedPipeClientStream(".", Settings.GetValue("Emulator.Serial.Pipe", "MOSA"), PipeDirection.InOut);
+						pipeStream.Connect();
+						DebugServerEngine.Stream = pipeStream;
+						break;
+					}
 			}
 		}
 
@@ -458,6 +461,9 @@ namespace Mosa.Utility.UnitTests
 					SendOneCount = 10;
 
 					Console.WriteLine("Re-starting Engine...");
+
+					//Settings.SetValue("Emulator.Serial.Port", Settings.GetValue("Emulator.Serial.Port", 1234) + 1);
+
 					StartEngine();
 				}
 			}

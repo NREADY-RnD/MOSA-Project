@@ -115,7 +115,8 @@ namespace Mosa.Utility.Configuration
 				new Argument() { Name =  "--qemu", Setting = "Emulator", Value="qemu"},
 				new Argument() { Name =  "--vmware", Setting = "Emulator", Value="vmware"},
 				new Argument() { Name =  "--bochs", Setting = "Emulator", Value="bochs"},
-				new Argument() { Name =  "--no-display", Setting = "Emulator.Display", Value = "off"},
+				new Argument() { Name =  "--display", Setting = "Emulator.Display", Value = "on"},
+				new Argument() { Name =  "--display-off", Setting = "Emulator.Display", Value = "off"},
 				new Argument() { Name =  "--emulator-memory", Setting = "Emulator.Memory"},
 				new Argument() { Name =  "--qemu-gdb", Setting = "Emulator.GDB", Value="false"},
 

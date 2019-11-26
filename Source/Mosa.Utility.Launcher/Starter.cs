@@ -81,7 +81,7 @@ namespace Mosa.Utility.Launcher
 
 			//arg = arg + " -vga vmware";
 
-			if (Settings.GetValue("Emulator.Display", false))
+			if (!Settings.GetValue("Emulator.Display", false))
 			{
 				arg += " -display none";
 			}

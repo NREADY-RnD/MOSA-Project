@@ -146,7 +146,7 @@ Example: Mosa.Tool.Compiler.exe -o Mosa.HelloWorld.x86.bin -a x86 --mboot v1 --x
 			return sb.ToString();
 		}
 
-		private void RegisterPlatforms()
+		private static void RegisterPlatforms()
 		{
 			PlatformRegistry.Add(new Platform.x86.Architecture());
 			PlatformRegistry.Add(new Platform.x64.Architecture());

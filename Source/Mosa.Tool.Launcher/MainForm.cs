@@ -373,7 +373,8 @@ namespace Mosa.Tool.Launcher
 			Settings.SetValue("Emulator.Serial.Host", "127.0.0.1");
 			Settings.SetValue("Emulator.Serial.Port", 9999);
 			Settings.SetValue("Emulator.Serial.Pipe", "MOSA");
-			Settings.SetValue("Launcher.Start", false);
+			Settings.SetValue("Emulator.Display", true);
+			Settings.SetValue("Launcher.Start", true);
 			Settings.SetValue("Launcher.Launch", true);
 			Settings.SetValue("Launcher.Exit", true);
 			Settings.SetValue("Launcher.Advance.HuntForCorLib", true);
@@ -548,6 +549,7 @@ namespace Mosa.Tool.Launcher
 			{
 				case "fat12": cbBootFileSystem.SelectedIndex = 0; break;
 				case "fat16": cbBootFileSystem.SelectedIndex = 1; break;
+				case "fat32": cbBootFileSystem.SelectedIndex = 2; break;
 				default: break;
 			}
 

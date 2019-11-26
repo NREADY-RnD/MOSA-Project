@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "Mosa.Tool.Launcher": {
-      "commandName": "Project",
-      "commandLineArgs": "--q --autostart --qemu --output-map --output-asm --output-debug Mosa.TestWorld.x86.exe"
-    }
-  }
-}

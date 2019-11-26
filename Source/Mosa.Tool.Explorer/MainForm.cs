@@ -65,7 +65,7 @@ namespace Mosa.Tool.Explorer
 			RegisterPlatforms();
 		}
 
-		private void RegisterPlatforms()
+		private static void RegisterPlatforms()
 		{
 			PlatformRegistry.Add(new Platform.x86.Architecture());
 			PlatformRegistry.Add(new Platform.x64.Architecture());
