@@ -5,8 +5,8 @@ using Mosa.Compiler.MosaTypeSystem;
 namespace Mosa.Compiler.Framework.CompilerStages
 {
 	/// <summary>
-	/// Devirtualization Stage
-	/// </remarks>
+	/// De-virtualization Stage
+	/// </summary>
 	/// <seealso cref="Mosa.Compiler.Framework.BaseCompilerStage" />
 	public sealed class DevirtualizationStage : BaseCompilerStage
 	{
@@ -18,7 +18,7 @@ namespace Mosa.Compiler.Framework.CompilerStages
 		{
 			foreach (var type in TypeSystem.AllTypes)
 			{
-				// If type has an interface - don't consider either type for devirtualization
+				// If type has an interface - don't consider either type for de-virtualization
 				// FUTURE: be more specific and check each method
 				if (HasInterface(type))
 					continue;

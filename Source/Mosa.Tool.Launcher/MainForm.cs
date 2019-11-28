@@ -256,23 +256,6 @@ namespace Mosa.Tool.Launcher
 			return ((ModifierKeys & Keys.Shift) != 0) || ((ModifierKeys & Keys.Control) != 0);
 		}
 
-		private void Btn1_Click(object sender, EventArgs e)
-		{
-			UpdateSettings();
-
-			var result = CheckOptions.Verify(Settings);
-
-			if (result == null)
-			{
-				CompileBuildAndStart();
-			}
-			else
-			{
-				UpdateStatusLabel("ERROR: " + result);
-				AddOutput(result);
-			}
-		}
-
 		private void CbVBEVideo_CheckedChanged(object sender, EventArgs e)
 		{
 			tbMode.Enabled = cbVBEVideo.Checked;
@@ -345,6 +328,7 @@ namespace Mosa.Tool.Launcher
 			Settings.SetValue("CompilerDebug.AsmFile", string.Empty);
 			Settings.SetValue("CompilerDebug.MapFile", string.Empty);
 			Settings.SetValue("CompilerDebug.NasmFile", string.Empty);
+			Settings.SetValue("CompilerDebug.InlineFile", string.Empty);
 			Settings.SetValue("Optimizations.Basic", true);
 			Settings.SetValue("Optimizations.BitTracker", true);
 			Settings.SetValue("Optimizations.Inline", true);
@@ -400,6 +384,7 @@ namespace Mosa.Tool.Launcher
 			Settings.SetValue("CompilerDebug.AsmFile", cbGenerateASMFile.Checked ? "%DEFAULT%" : string.Empty);
 			Settings.SetValue("CompilerDebug.MapFile", cbGenerateMapFile.Checked ? "%DEFAULT%" : string.Empty);
 			Settings.SetValue("CompilerDebug.DebugFile", cbGenerateDebugInfoFile.Checked ? "%DEFAULT%" : string.Empty);
+			Settings.SetValue("CompilerDebug.InlinedFile", cbGenerateInlineFile.Checked ? "%DEFAULT%" : string.Empty);
 			Settings.SetValue("Launcher.Exit", cbExitOnLaunch.Checked);
 			Settings.SetValue("Emulator.GDB", cbEnableQemuGDB.Checked);
 			Settings.SetValue("Launcher.Advance.LaunchGDB", cbLaunchGDB.Checked);
@@ -505,6 +490,7 @@ namespace Mosa.Tool.Launcher
 			cbGenerateASMFile.Checked = Settings.GetValue("CompilerDebug.AsmFile", string.Empty) == "%DEFAULT%";
 			cbGenerateMapFile.Checked = Settings.GetValue("CompilerDebug.MapFile", string.Empty) == "%DEFAULT%";
 			cbGenerateDebugInfoFile.Checked = Settings.GetValue("CompilerDebug.DebugFile", string.Empty) == "%DEFAULT%";
+			cbGenerateInlineFile.Checked = Settings.GetValue("CompilerDebug.InlinedFile", string.Empty) == "%DEFAULT%";
 			cbExitOnLaunch.Checked = Settings.GetValue("Launcher.Exit", true);
 			cbEnableQemuGDB.Checked = Settings.GetValue("Emulator.GDB", false);
 			cbLaunchGDB.Checked = Settings.GetValue("Launcher.Advance.LaunchGDB", false);
@@ -587,6 +573,23 @@ namespace Mosa.Tool.Launcher
 
 			//lbSourceDirectory.Text = (filename != null) ? Path.GetDirectoryName(filename) : string.Empty;
 			lbSource.Text = (filename != null) ? Path.GetFileName(filename) : string.Empty;
+		}
+
+		private void btnCompileAndRun_Click(object sender, EventArgs e)
+		{
+			UpdateSettings();
+
+			var result = CheckOptions.Verify(Settings);
+
+			if (result == null)
+			{
+				CompileBuildAndStart();
+			}
+			else
+			{
+				UpdateStatusLabel("ERROR: " + result);
+				AddOutput(result);
+			}
 		}
 	}
 }

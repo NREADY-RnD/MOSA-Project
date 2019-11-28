@@ -63,6 +63,7 @@ namespace Mosa.Utility.UnitTests
 			Settings.SetValue("CompilerDebug.DebugFile", "%DEFAULT%");
 			Settings.SetValue("CompilerDebug.AsmFile", "%DEFAULT%");
 			Settings.SetValue("CompilerDebug.MapFile", "%DEFAULT%");
+			Settings.SetValue("CompilerDebug.InlinedFile", "%DEFAULT%");
 			Settings.SetValue("CompilerDebug.NasmFile", string.Empty);
 
 			Settings.SetValue("Optimizations.Basic", true);

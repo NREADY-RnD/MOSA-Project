@@ -35,12 +35,25 @@
 			this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
 			this.tbApplicationLocations = new MetroFramework.Controls.MetroTabControl();
 			this.tabOptions = new MetroFramework.Controls.MetroTabPage();
+			this.cbExitOnLaunch = new MetroFramework.Controls.MetroCheckBox();
+			this.btnCompileAndRun = new MetroFramework.Controls.MetroButton();
+			this.groupBox17 = new System.Windows.Forms.GroupBox();
+			this.metroLabel2 = new MetroFramework.Controls.MetroLabel();
+			this.label6 = new MetroFramework.Controls.MetroLabel();
+			this.nmMemory = new System.Windows.Forms.NumericUpDown();
+			this.cbEmulator = new MetroFramework.Controls.MetroComboBox();
+			this.cbImageFormat = new MetroFramework.Controls.MetroComboBox();
+			this.label3 = new MetroFramework.Controls.MetroLabel();
+			this.label5 = new MetroFramework.Controls.MetroLabel();
+			this.cbPlatform = new MetroFramework.Controls.MetroComboBox();
 			this.groupBox12 = new System.Windows.Forms.GroupBox();
 			this.cbEnableMethodScanner = new MetroFramework.Controls.MetroCheckBox();
 			this.cbCompilerUsesMultipleThreads = new MetroFramework.Controls.MetroCheckBox();
 			this.statusStrip1 = new System.Windows.Forms.StatusStrip();
 			this.tsStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
 			this.groupBox2 = new System.Windows.Forms.GroupBox();
+			this.cbGenerateInlineFile = new MetroFramework.Controls.MetroCheckBox();
+			this.cbGenerateNASMFile = new MetroFramework.Controls.MetroCheckBox();
 			this.cbGenerateCompilerTime = new MetroFramework.Controls.MetroCheckBox();
 			this.cbGenerateDebugInfoFile = new MetroFramework.Controls.MetroCheckBox();
 			this.cbGenerateASMFile = new MetroFramework.Controls.MetroCheckBox();
@@ -65,6 +78,8 @@
 			this.cbInline = new MetroFramework.Controls.MetroCheckBox();
 			this.tabAdvanced = new MetroFramework.Controls.MetroTabPage();
 			this.groupBox5 = new System.Windows.Forms.GroupBox();
+			this.tbMode = new MetroFramework.Controls.MetroTextBox();
+			this.cbVBEVideo = new MetroFramework.Controls.MetroCheckBox();
 			this.cbBootLoader = new MetroFramework.Controls.MetroComboBox();
 			this.label1 = new MetroFramework.Controls.MetroLabel();
 			this.label4 = new MetroFramework.Controls.MetroLabel();
@@ -117,22 +132,10 @@
 			this.rtbOutput = new System.Windows.Forms.RichTextBox();
 			this.openFileDialog2 = new System.Windows.Forms.OpenFileDialog();
 			this.timer1 = new System.Windows.Forms.Timer(this.components);
-			this.tbMode = new MetroFramework.Controls.MetroTextBox();
-			this.cbVBEVideo = new MetroFramework.Controls.MetroCheckBox();
-			this.groupBox17 = new System.Windows.Forms.GroupBox();
-			this.label5 = new MetroFramework.Controls.MetroLabel();
-			this.cbPlatform = new MetroFramework.Controls.MetroComboBox();
-			this.cbImageFormat = new MetroFramework.Controls.MetroComboBox();
-			this.label3 = new MetroFramework.Controls.MetroLabel();
-			this.cbEmulator = new MetroFramework.Controls.MetroComboBox();
-			this.label6 = new MetroFramework.Controls.MetroLabel();
-			this.nmMemory = new System.Windows.Forms.NumericUpDown();
-			this.metroLabel2 = new MetroFramework.Controls.MetroLabel();
-			this.button1 = new MetroFramework.Controls.MetroButton();
-			this.cbExitOnLaunch = new MetroFramework.Controls.MetroCheckBox();
-			this.cbGenerateNASMFile = new MetroFramework.Controls.MetroCheckBox();
 			this.tbApplicationLocations.SuspendLayout();
 			this.tabOptions.SuspendLayout();
+			this.groupBox17.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.nmMemory)).BeginInit();
 			this.groupBox12.SuspendLayout();
 			this.statusStrip1.SuspendLayout();
 			this.groupBox2.SuspendLayout();
@@ -155,8 +158,6 @@
 			this.groupBox7.SuspendLayout();
 			this.tabCounters.SuspendLayout();
 			this.tabOutput.SuspendLayout();
-			this.groupBox17.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.nmMemory)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// openFileDialog1
@@ -204,7 +205,7 @@
 			// 
 			this.tabOptions.BackColor = System.Drawing.SystemColors.Control;
 			this.tabOptions.Controls.Add(this.cbExitOnLaunch);
-			this.tabOptions.Controls.Add(this.button1);
+			this.tabOptions.Controls.Add(this.btnCompileAndRun);
 			this.tabOptions.Controls.Add(this.groupBox17);
 			this.tabOptions.Controls.Add(this.groupBox12);
 			this.tabOptions.Controls.Add(this.statusStrip1);
@@ -224,6 +225,180 @@
 			this.tabOptions.VerticalScrollbarBarColor = true;
 			this.tabOptions.VerticalScrollbarHighlightOnWheel = false;
 			this.tabOptions.VerticalScrollbarSize = 10;
+			// 
+			// cbExitOnLaunch
+			// 
+			this.cbExitOnLaunch.AutoSize = true;
+			this.cbExitOnLaunch.Checked = true;
+			this.cbExitOnLaunch.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.cbExitOnLaunch.Location = new System.Drawing.Point(452, 324);
+			this.cbExitOnLaunch.Name = "cbExitOnLaunch";
+			this.cbExitOnLaunch.Size = new System.Drawing.Size(101, 15);
+			this.cbExitOnLaunch.Style = MetroFramework.MetroColorStyle.Blue;
+			this.cbExitOnLaunch.TabIndex = 40;
+			this.cbExitOnLaunch.Text = "Exit on Launch";
+			this.cbExitOnLaunch.UseCustomBackColor = true;
+			this.cbExitOnLaunch.UseSelectable = true;
+			// 
+			// btnCompileAndRun
+			// 
+			this.btnCompileAndRun.Location = new System.Drawing.Point(452, 345);
+			this.btnCompileAndRun.Name = "btnCompileAndRun";
+			this.btnCompileAndRun.Size = new System.Drawing.Size(168, 23);
+			this.btnCompileAndRun.TabIndex = 39;
+			this.btnCompileAndRun.Text = "Compile and Run (F5)";
+			this.btnCompileAndRun.UseSelectable = true;
+			this.btnCompileAndRun.Click += new System.EventHandler(this.btnCompileAndRun_Click);
+			// 
+			// groupBox17
+			// 
+			this.groupBox17.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.groupBox17.BackColor = System.Drawing.SystemColors.ControlLightLight;
+			this.groupBox17.Controls.Add(this.metroLabel2);
+			this.groupBox17.Controls.Add(this.label6);
+			this.groupBox17.Controls.Add(this.nmMemory);
+			this.groupBox17.Controls.Add(this.cbEmulator);
+			this.groupBox17.Controls.Add(this.cbImageFormat);
+			this.groupBox17.Controls.Add(this.label3);
+			this.groupBox17.Controls.Add(this.label5);
+			this.groupBox17.Controls.Add(this.cbPlatform);
+			this.groupBox17.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.groupBox17.Location = new System.Drawing.Point(428, 125);
+			this.groupBox17.Name = "groupBox17";
+			this.groupBox17.Size = new System.Drawing.Size(215, 146);
+			this.groupBox17.TabIndex = 33;
+			this.groupBox17.TabStop = false;
+			this.groupBox17.Text = "Target:";
+			// 
+			// metroLabel2
+			// 
+			this.metroLabel2.AutoSize = true;
+			this.metroLabel2.FontSize = MetroFramework.MetroLabelSize.Small;
+			this.metroLabel2.FontWeight = MetroFramework.MetroLabelWeight.Regular;
+			this.metroLabel2.Location = new System.Drawing.Point(6, 86);
+			this.metroLabel2.Name = "metroLabel2";
+			this.metroLabel2.Size = new System.Drawing.Size(58, 15);
+			this.metroLabel2.TabIndex = 38;
+			this.metroLabel2.Text = "Emulator:";
+			this.metroLabel2.UseCustomBackColor = true;
+			// 
+			// label6
+			// 
+			this.label6.AutoSize = true;
+			this.label6.FontSize = MetroFramework.MetroLabelSize.Small;
+			this.label6.FontWeight = MetroFramework.MetroLabelWeight.Regular;
+			this.label6.Location = new System.Drawing.Point(6, 113);
+			this.label6.Name = "label6";
+			this.label6.Size = new System.Drawing.Size(55, 15);
+			this.label6.TabIndex = 37;
+			this.label6.Text = "Memory:";
+			this.label6.UseCustomBackColor = true;
+			// 
+			// nmMemory
+			// 
+			this.nmMemory.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.nmMemory.Location = new System.Drawing.Point(97, 113);
+			this.nmMemory.Maximum = new decimal(new int[] {
+            2048,
+            0,
+            0,
+            0});
+			this.nmMemory.Minimum = new decimal(new int[] {
+            64,
+            0,
+            0,
+            0});
+			this.nmMemory.Name = "nmMemory";
+			this.nmMemory.Size = new System.Drawing.Size(56, 20);
+			this.nmMemory.TabIndex = 36;
+			this.nmMemory.Value = new decimal(new int[] {
+            128,
+            0,
+            0,
+            0});
+			// 
+			// cbEmulator
+			// 
+			this.cbEmulator.BackColor = System.Drawing.SystemColors.ButtonFace;
+			this.cbEmulator.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.cbEmulator.FontSize = MetroFramework.MetroComboBoxSize.Small;
+			this.cbEmulator.FormattingEnabled = true;
+			this.cbEmulator.ItemHeight = 19;
+			this.cbEmulator.Items.AddRange(new object[] {
+            "QEMU",
+            "Bochs",
+            "VMware"});
+			this.cbEmulator.Location = new System.Drawing.Point(97, 81);
+			this.cbEmulator.Name = "cbEmulator";
+			this.cbEmulator.Size = new System.Drawing.Size(109, 25);
+			this.cbEmulator.Style = MetroFramework.MetroColorStyle.Blue;
+			this.cbEmulator.TabIndex = 35;
+			this.cbEmulator.UseCustomBackColor = true;
+			this.cbEmulator.UseSelectable = true;
+			// 
+			// cbImageFormat
+			// 
+			this.cbImageFormat.BackColor = System.Drawing.SystemColors.ButtonFace;
+			this.cbImageFormat.FontSize = MetroFramework.MetroComboBoxSize.Small;
+			this.cbImageFormat.FormattingEnabled = true;
+			this.cbImageFormat.ItemHeight = 19;
+			this.cbImageFormat.Items.AddRange(new object[] {
+            "IMG (.img)",
+            "ISO Image (.iso)",
+            "Microsoft (.vhd)",
+            "Virtual Box (.vdi)",
+            "VMware (.vmdk)"});
+			this.cbImageFormat.Location = new System.Drawing.Point(97, 49);
+			this.cbImageFormat.Name = "cbImageFormat";
+			this.cbImageFormat.Size = new System.Drawing.Size(109, 25);
+			this.cbImageFormat.Style = MetroFramework.MetroColorStyle.Blue;
+			this.cbImageFormat.TabIndex = 34;
+			this.cbImageFormat.UseCustomBackColor = true;
+			this.cbImageFormat.UseSelectable = true;
+			// 
+			// label3
+			// 
+			this.label3.AutoSize = true;
+			this.label3.FontSize = MetroFramework.MetroLabelSize.Small;
+			this.label3.FontWeight = MetroFramework.MetroLabelWeight.Regular;
+			this.label3.Location = new System.Drawing.Point(6, 54);
+			this.label3.Name = "label3";
+			this.label3.Size = new System.Drawing.Size(84, 15);
+			this.label3.TabIndex = 33;
+			this.label3.Text = "Image Format:";
+			this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			this.label3.UseCustomBackColor = true;
+			// 
+			// label5
+			// 
+			this.label5.AutoSize = true;
+			this.label5.FontSize = MetroFramework.MetroLabelSize.Small;
+			this.label5.FontWeight = MetroFramework.MetroLabelWeight.Regular;
+			this.label5.Location = new System.Drawing.Point(6, 23);
+			this.label5.Name = "label5";
+			this.label5.Size = new System.Drawing.Size(56, 15);
+			this.label5.TabIndex = 32;
+			this.label5.Text = "Platform:";
+			this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			this.label5.UseCustomBackColor = true;
+			// 
+			// cbPlatform
+			// 
+			this.cbPlatform.BackColor = System.Drawing.SystemColors.ButtonFace;
+			this.cbPlatform.FontSize = MetroFramework.MetroComboBoxSize.Small;
+			this.cbPlatform.FormattingEnabled = true;
+			this.cbPlatform.ItemHeight = 19;
+			this.cbPlatform.Items.AddRange(new object[] {
+            "x86",
+            "ARMv6"});
+			this.cbPlatform.Location = new System.Drawing.Point(97, 18);
+			this.cbPlatform.Name = "cbPlatform";
+			this.cbPlatform.Size = new System.Drawing.Size(109, 25);
+			this.cbPlatform.Style = MetroFramework.MetroColorStyle.Blue;
+			this.cbPlatform.TabIndex = 31;
+			this.cbPlatform.UseCustomBackColor = true;
+			this.cbPlatform.UseSelectable = true;
 			// 
 			// groupBox12
 			// 
@@ -287,6 +462,7 @@
 			// groupBox2
 			// 
 			this.groupBox2.BackColor = System.Drawing.SystemColors.ControlLightLight;
+			this.groupBox2.Controls.Add(this.cbGenerateInlineFile);
 			this.groupBox2.Controls.Add(this.cbGenerateNASMFile);
 			this.groupBox2.Controls.Add(this.cbGenerateCompilerTime);
 			this.groupBox2.Controls.Add(this.cbGenerateDebugInfoFile);
@@ -300,10 +476,34 @@
 			this.groupBox2.TabStop = false;
 			this.groupBox2.Text = "Diagnostic Output:";
 			// 
+			// cbGenerateInlineFile
+			// 
+			this.cbGenerateInlineFile.AutoSize = true;
+			this.cbGenerateInlineFile.Location = new System.Drawing.Point(6, 102);
+			this.cbGenerateInlineFile.Name = "cbGenerateInlineFile";
+			this.cbGenerateInlineFile.Size = new System.Drawing.Size(73, 15);
+			this.cbGenerateInlineFile.Style = MetroFramework.MetroColorStyle.Blue;
+			this.cbGenerateInlineFile.TabIndex = 51;
+			this.cbGenerateInlineFile.Text = "Inline File";
+			this.cbGenerateInlineFile.UseCustomBackColor = true;
+			this.cbGenerateInlineFile.UseSelectable = true;
+			// 
+			// cbGenerateNASMFile
+			// 
+			this.cbGenerateNASMFile.AutoSize = true;
+			this.cbGenerateNASMFile.Location = new System.Drawing.Point(6, 60);
+			this.cbGenerateNASMFile.Name = "cbGenerateNASMFile";
+			this.cbGenerateNASMFile.Size = new System.Drawing.Size(78, 15);
+			this.cbGenerateNASMFile.Style = MetroFramework.MetroColorStyle.Blue;
+			this.cbGenerateNASMFile.TabIndex = 50;
+			this.cbGenerateNASMFile.Text = "NASM File";
+			this.cbGenerateNASMFile.UseCustomBackColor = true;
+			this.cbGenerateNASMFile.UseSelectable = true;
+			// 
 			// cbGenerateCompilerTime
 			// 
 			this.cbGenerateCompilerTime.AutoSize = true;
-			this.cbGenerateCompilerTime.Location = new System.Drawing.Point(6, 102);
+			this.cbGenerateCompilerTime.Location = new System.Drawing.Point(6, 123);
 			this.cbGenerateCompilerTime.Name = "cbGenerateCompilerTime";
 			this.cbGenerateCompilerTime.Size = new System.Drawing.Size(118, 15);
 			this.cbGenerateCompilerTime.Style = MetroFramework.MetroColorStyle.Blue;
@@ -379,7 +579,7 @@
 			this.lbSource.FontSize = MetroFramework.MetroLabelSize.Small;
 			this.lbSource.Location = new System.Drawing.Point(119, 21);
 			this.lbSource.Name = "lbSource";
-			this.lbSource.Size = new System.Drawing.Size(57, 19);
+			this.lbSource.Size = new System.Drawing.Size(47, 15);
 			this.lbSource.TabIndex = 17;
 			this.lbSource.Text = "{Source}";
 			this.lbSource.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -416,7 +616,7 @@
 			this.lbDestinationDirectory.FontSize = MetroFramework.MetroLabelSize.Small;
 			this.lbDestinationDirectory.Location = new System.Drawing.Point(119, 20);
 			this.lbDestinationDirectory.Name = "lbDestinationDirectory";
-			this.lbDestinationDirectory.Size = new System.Drawing.Size(139, 19);
+			this.lbDestinationDirectory.Size = new System.Drawing.Size(118, 15);
 			this.lbDestinationDirectory.TabIndex = 14;
 			this.lbDestinationDirectory.Text = "{Destination Directory}";
 			this.lbDestinationDirectory.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -636,6 +836,50 @@
 			this.groupBox5.TabIndex = 50;
 			this.groupBox5.TabStop = false;
 			this.groupBox5.Text = "Image:";
+			// 
+			// tbMode
+			// 
+			// 
+			// 
+			// 
+			this.tbMode.CustomButton.Image = null;
+			this.tbMode.CustomButton.Location = new System.Drawing.Point(80, 2);
+			this.tbMode.CustomButton.Name = "";
+			this.tbMode.CustomButton.Size = new System.Drawing.Size(15, 15);
+			this.tbMode.CustomButton.Style = MetroFramework.MetroColorStyle.Blue;
+			this.tbMode.CustomButton.TabIndex = 1;
+			this.tbMode.CustomButton.Theme = MetroFramework.MetroThemeStyle.Light;
+			this.tbMode.CustomButton.UseSelectable = true;
+			this.tbMode.CustomButton.Visible = false;
+			this.tbMode.Enabled = false;
+			this.tbMode.Lines = new string[] {
+        "{Mode}"};
+			this.tbMode.Location = new System.Drawing.Point(26, 193);
+			this.tbMode.MaxLength = 32767;
+			this.tbMode.Name = "tbMode";
+			this.tbMode.PasswordChar = '\0';
+			this.tbMode.ScrollBars = System.Windows.Forms.ScrollBars.None;
+			this.tbMode.SelectedText = "";
+			this.tbMode.SelectionLength = 0;
+			this.tbMode.SelectionStart = 0;
+			this.tbMode.ShortcutsEnabled = true;
+			this.tbMode.Size = new System.Drawing.Size(98, 20);
+			this.tbMode.TabIndex = 58;
+			this.tbMode.Text = "{Mode}";
+			this.tbMode.UseSelectable = true;
+			this.tbMode.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
+			this.tbMode.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
+			// 
+			// cbVBEVideo
+			// 
+			this.cbVBEVideo.AutoSize = true;
+			this.cbVBEVideo.Location = new System.Drawing.Point(7, 175);
+			this.cbVBEVideo.Name = "cbVBEVideo";
+			this.cbVBEVideo.Size = new System.Drawing.Size(117, 15);
+			this.cbVBEVideo.TabIndex = 57;
+			this.cbVBEVideo.Text = "Enable VBE Video:";
+			this.cbVBEVideo.UseCustomBackColor = true;
+			this.cbVBEVideo.UseSelectable = true;
 			// 
 			// cbBootLoader
 			// 
@@ -983,7 +1227,7 @@
 			this.tabFiles.Controls.Add(this.panelAdditionalFiles);
 			this.tabFiles.Location = new System.Drawing.Point(4, 22);
 			this.tabFiles.Name = "tabFiles";
-			this.tabFiles.Size = new System.Drawing.Size(653, 446);
+			this.tabFiles.Size = new System.Drawing.Size(653, 404);
 			this.tabFiles.TabIndex = 5;
 			this.tabFiles.Text = "Included Files";
 			// 
@@ -995,7 +1239,7 @@
 			this.panelAdditionalFiles.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.panelAdditionalFiles.Location = new System.Drawing.Point(0, 0);
 			this.panelAdditionalFiles.Name = "panelAdditionalFiles";
-			this.panelAdditionalFiles.Size = new System.Drawing.Size(653, 446);
+			this.panelAdditionalFiles.Size = new System.Drawing.Size(653, 404);
 			this.panelAdditionalFiles.TabIndex = 23;
 			// 
 			// dataGridView1
@@ -1012,7 +1256,7 @@
 			// btnRemoveFiles
 			// 
 			this.btnRemoveFiles.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btnRemoveFiles.Location = new System.Drawing.Point(626, 68);
+			this.btnRemoveFiles.Location = new System.Drawing.Point(626, 26);
 			this.btnRemoveFiles.Name = "btnRemoveFiles";
 			this.btnRemoveFiles.Size = new System.Drawing.Size(25, 25);
 			this.btnRemoveFiles.TabIndex = 30;
@@ -1023,7 +1267,7 @@
 			// btnAddFiles
 			// 
 			this.btnAddFiles.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btnAddFiles.Location = new System.Drawing.Point(626, 37);
+			this.btnAddFiles.Location = new System.Drawing.Point(626, -5);
 			this.btnAddFiles.Name = "btnAddFiles";
 			this.btnAddFiles.Size = new System.Drawing.Size(25, 25);
 			this.btnAddFiles.TabIndex = 29;
@@ -1044,7 +1288,7 @@
 			this.tabApplicationLocations.Location = new System.Drawing.Point(4, 22);
 			this.tabApplicationLocations.Name = "tabApplicationLocations";
 			this.tabApplicationLocations.Padding = new System.Windows.Forms.Padding(3);
-			this.tabApplicationLocations.Size = new System.Drawing.Size(653, 446);
+			this.tabApplicationLocations.Size = new System.Drawing.Size(653, 404);
 			this.tabApplicationLocations.TabIndex = 3;
 			this.tabApplicationLocations.Text = "Application Locations";
 			this.tabApplicationLocations.UseVisualStyleBackColor = true;
@@ -1285,7 +1529,7 @@
 			this.tabCounters.Location = new System.Drawing.Point(4, 22);
 			this.tabCounters.Name = "tabCounters";
 			this.tabCounters.Padding = new System.Windows.Forms.Padding(3);
-			this.tabCounters.Size = new System.Drawing.Size(653, 446);
+			this.tabCounters.Size = new System.Drawing.Size(653, 404);
 			this.tabCounters.TabIndex = 2;
 			this.tabCounters.Text = "Counters";
 			this.tabCounters.UseVisualStyleBackColor = true;
@@ -1316,7 +1560,7 @@
 			this.tabOutput.Location = new System.Drawing.Point(4, 22);
 			this.tabOutput.Name = "tabOutput";
 			this.tabOutput.Padding = new System.Windows.Forms.Padding(3);
-			this.tabOutput.Size = new System.Drawing.Size(653, 446);
+			this.tabOutput.Size = new System.Drawing.Size(653, 404);
 			this.tabOutput.TabIndex = 1;
 			this.tabOutput.Text = "Output";
 			this.tabOutput.UseVisualStyleBackColor = true;
@@ -1349,235 +1593,6 @@
 			this.timer1.Enabled = true;
 			this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
 			// 
-			// tbMode
-			// 
-			// 
-			// 
-			// 
-			this.tbMode.CustomButton.Image = null;
-			this.tbMode.CustomButton.Location = new System.Drawing.Point(80, 2);
-			this.tbMode.CustomButton.Name = "";
-			this.tbMode.CustomButton.Size = new System.Drawing.Size(15, 15);
-			this.tbMode.CustomButton.Style = MetroFramework.MetroColorStyle.Blue;
-			this.tbMode.CustomButton.TabIndex = 1;
-			this.tbMode.CustomButton.Theme = MetroFramework.MetroThemeStyle.Light;
-			this.tbMode.CustomButton.UseSelectable = true;
-			this.tbMode.CustomButton.Visible = false;
-			this.tbMode.Enabled = false;
-			this.tbMode.Lines = new string[] {
-        "{Mode}"};
-			this.tbMode.Location = new System.Drawing.Point(26, 193);
-			this.tbMode.MaxLength = 32767;
-			this.tbMode.Name = "tbMode";
-			this.tbMode.PasswordChar = '\0';
-			this.tbMode.ScrollBars = System.Windows.Forms.ScrollBars.None;
-			this.tbMode.SelectedText = "";
-			this.tbMode.SelectionLength = 0;
-			this.tbMode.SelectionStart = 0;
-			this.tbMode.ShortcutsEnabled = true;
-			this.tbMode.Size = new System.Drawing.Size(98, 20);
-			this.tbMode.TabIndex = 58;
-			this.tbMode.Text = "{Mode}";
-			this.tbMode.UseSelectable = true;
-			this.tbMode.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
-			this.tbMode.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
-			// 
-			// cbVBEVideo
-			// 
-			this.cbVBEVideo.AutoSize = true;
-			this.cbVBEVideo.Location = new System.Drawing.Point(7, 175);
-			this.cbVBEVideo.Name = "cbVBEVideo";
-			this.cbVBEVideo.Size = new System.Drawing.Size(117, 15);
-			this.cbVBEVideo.TabIndex = 57;
-			this.cbVBEVideo.Text = "Enable VBE Video:";
-			this.cbVBEVideo.UseCustomBackColor = true;
-			this.cbVBEVideo.UseSelectable = true;
-			// 
-			// groupBox17
-			// 
-			this.groupBox17.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.groupBox17.BackColor = System.Drawing.SystemColors.ControlLightLight;
-			this.groupBox17.Controls.Add(this.metroLabel2);
-			this.groupBox17.Controls.Add(this.label6);
-			this.groupBox17.Controls.Add(this.nmMemory);
-			this.groupBox17.Controls.Add(this.cbEmulator);
-			this.groupBox17.Controls.Add(this.cbImageFormat);
-			this.groupBox17.Controls.Add(this.label3);
-			this.groupBox17.Controls.Add(this.label5);
-			this.groupBox17.Controls.Add(this.cbPlatform);
-			this.groupBox17.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.groupBox17.Location = new System.Drawing.Point(428, 125);
-			this.groupBox17.Name = "groupBox17";
-			this.groupBox17.Size = new System.Drawing.Size(215, 146);
-			this.groupBox17.TabIndex = 33;
-			this.groupBox17.TabStop = false;
-			this.groupBox17.Text = "Target:";
-			// 
-			// label5
-			// 
-			this.label5.AutoSize = true;
-			this.label5.FontSize = MetroFramework.MetroLabelSize.Small;
-			this.label5.FontWeight = MetroFramework.MetroLabelWeight.Regular;
-			this.label5.Location = new System.Drawing.Point(6, 23);
-			this.label5.Name = "label5";
-			this.label5.Size = new System.Drawing.Size(56, 15);
-			this.label5.TabIndex = 32;
-			this.label5.Text = "Platform:";
-			this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			this.label5.UseCustomBackColor = true;
-			// 
-			// cbPlatform
-			// 
-			this.cbPlatform.BackColor = System.Drawing.SystemColors.ButtonFace;
-			this.cbPlatform.FontSize = MetroFramework.MetroComboBoxSize.Small;
-			this.cbPlatform.FormattingEnabled = true;
-			this.cbPlatform.ItemHeight = 19;
-			this.cbPlatform.Items.AddRange(new object[] {
-            "x86",
-            "ARMv6"});
-			this.cbPlatform.Location = new System.Drawing.Point(97, 18);
-			this.cbPlatform.Name = "cbPlatform";
-			this.cbPlatform.Size = new System.Drawing.Size(109, 25);
-			this.cbPlatform.Style = MetroFramework.MetroColorStyle.Blue;
-			this.cbPlatform.TabIndex = 31;
-			this.cbPlatform.UseCustomBackColor = true;
-			this.cbPlatform.UseSelectable = true;
-			// 
-			// cbImageFormat
-			// 
-			this.cbImageFormat.BackColor = System.Drawing.SystemColors.ButtonFace;
-			this.cbImageFormat.FontSize = MetroFramework.MetroComboBoxSize.Small;
-			this.cbImageFormat.FormattingEnabled = true;
-			this.cbImageFormat.ItemHeight = 19;
-			this.cbImageFormat.Items.AddRange(new object[] {
-            "IMG (.img)",
-            "ISO Image (.iso)",
-            "Microsoft (.vhd)",
-            "Virtual Box (.vdi)",
-            "VMware (.vmdk)"});
-			this.cbImageFormat.Location = new System.Drawing.Point(97, 49);
-			this.cbImageFormat.Name = "cbImageFormat";
-			this.cbImageFormat.Size = new System.Drawing.Size(109, 25);
-			this.cbImageFormat.Style = MetroFramework.MetroColorStyle.Blue;
-			this.cbImageFormat.TabIndex = 34;
-			this.cbImageFormat.UseCustomBackColor = true;
-			this.cbImageFormat.UseSelectable = true;
-			// 
-			// label3
-			// 
-			this.label3.AutoSize = true;
-			this.label3.FontSize = MetroFramework.MetroLabelSize.Small;
-			this.label3.FontWeight = MetroFramework.MetroLabelWeight.Regular;
-			this.label3.Location = new System.Drawing.Point(6, 54);
-			this.label3.Name = "label3";
-			this.label3.Size = new System.Drawing.Size(84, 15);
-			this.label3.TabIndex = 33;
-			this.label3.Text = "Image Format:";
-			this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			this.label3.UseCustomBackColor = true;
-			// 
-			// cbEmulator
-			// 
-			this.cbEmulator.BackColor = System.Drawing.SystemColors.ButtonFace;
-			this.cbEmulator.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.cbEmulator.FontSize = MetroFramework.MetroComboBoxSize.Small;
-			this.cbEmulator.FormattingEnabled = true;
-			this.cbEmulator.ItemHeight = 19;
-			this.cbEmulator.Items.AddRange(new object[] {
-            "QEMU",
-            "Bochs",
-            "VMware"});
-			this.cbEmulator.Location = new System.Drawing.Point(97, 81);
-			this.cbEmulator.Name = "cbEmulator";
-			this.cbEmulator.Size = new System.Drawing.Size(109, 25);
-			this.cbEmulator.Style = MetroFramework.MetroColorStyle.Blue;
-			this.cbEmulator.TabIndex = 35;
-			this.cbEmulator.UseCustomBackColor = true;
-			this.cbEmulator.UseSelectable = true;
-			// 
-			// label6
-			// 
-			this.label6.AutoSize = true;
-			this.label6.FontSize = MetroFramework.MetroLabelSize.Small;
-			this.label6.FontWeight = MetroFramework.MetroLabelWeight.Regular;
-			this.label6.Location = new System.Drawing.Point(6, 113);
-			this.label6.Name = "label6";
-			this.label6.Size = new System.Drawing.Size(55, 15);
-			this.label6.TabIndex = 37;
-			this.label6.Text = "Memory:";
-			this.label6.UseCustomBackColor = true;
-			// 
-			// nmMemory
-			// 
-			this.nmMemory.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.nmMemory.Location = new System.Drawing.Point(97, 113);
-			this.nmMemory.Maximum = new decimal(new int[] {
-            2048,
-            0,
-            0,
-            0});
-			this.nmMemory.Minimum = new decimal(new int[] {
-            64,
-            0,
-            0,
-            0});
-			this.nmMemory.Name = "nmMemory";
-			this.nmMemory.Size = new System.Drawing.Size(56, 20);
-			this.nmMemory.TabIndex = 36;
-			this.nmMemory.Value = new decimal(new int[] {
-            128,
-            0,
-            0,
-            0});
-			// 
-			// metroLabel2
-			// 
-			this.metroLabel2.AutoSize = true;
-			this.metroLabel2.FontSize = MetroFramework.MetroLabelSize.Small;
-			this.metroLabel2.FontWeight = MetroFramework.MetroLabelWeight.Regular;
-			this.metroLabel2.Location = new System.Drawing.Point(6, 86);
-			this.metroLabel2.Name = "metroLabel2";
-			this.metroLabel2.Size = new System.Drawing.Size(58, 15);
-			this.metroLabel2.TabIndex = 38;
-			this.metroLabel2.Text = "Emulator:";
-			this.metroLabel2.UseCustomBackColor = true;
-			// 
-			// button1
-			// 
-			this.button1.Location = new System.Drawing.Point(452, 345);
-			this.button1.Name = "button1";
-			this.button1.Size = new System.Drawing.Size(168, 23);
-			this.button1.TabIndex = 39;
-			this.button1.Text = "Compile and Run (F5)";
-			this.button1.UseSelectable = true;
-			// 
-			// cbExitOnLaunch
-			// 
-			this.cbExitOnLaunch.AutoSize = true;
-			this.cbExitOnLaunch.Checked = true;
-			this.cbExitOnLaunch.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.cbExitOnLaunch.Location = new System.Drawing.Point(452, 324);
-			this.cbExitOnLaunch.Name = "cbExitOnLaunch";
-			this.cbExitOnLaunch.Size = new System.Drawing.Size(101, 15);
-			this.cbExitOnLaunch.Style = MetroFramework.MetroColorStyle.Blue;
-			this.cbExitOnLaunch.TabIndex = 40;
-			this.cbExitOnLaunch.Text = "Exit on Launch";
-			this.cbExitOnLaunch.UseCustomBackColor = true;
-			this.cbExitOnLaunch.UseSelectable = true;
-			// 
-			// cbGenerateNASMFile
-			// 
-			this.cbGenerateNASMFile.AutoSize = true;
-			this.cbGenerateNASMFile.Location = new System.Drawing.Point(6, 60);
-			this.cbGenerateNASMFile.Name = "cbGenerateNASMFile";
-			this.cbGenerateNASMFile.Size = new System.Drawing.Size(78, 15);
-			this.cbGenerateNASMFile.Style = MetroFramework.MetroColorStyle.Blue;
-			this.cbGenerateNASMFile.TabIndex = 50;
-			this.cbGenerateNASMFile.Text = "NASM File";
-			this.cbGenerateNASMFile.UseCustomBackColor = true;
-			this.cbGenerateNASMFile.UseSelectable = true;
-			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1597,6 +1612,9 @@
 			this.tbApplicationLocations.ResumeLayout(false);
 			this.tabOptions.ResumeLayout(false);
 			this.tabOptions.PerformLayout();
+			this.groupBox17.ResumeLayout(false);
+			this.groupBox17.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.nmMemory)).EndInit();
 			this.groupBox12.ResumeLayout(false);
 			this.groupBox12.PerformLayout();
 			this.statusStrip1.ResumeLayout(false);
@@ -1634,9 +1652,6 @@
 			this.groupBox7.PerformLayout();
 			this.tabCounters.ResumeLayout(false);
 			this.tabOutput.ResumeLayout(false);
-			this.groupBox17.ResumeLayout(false);
-			this.groupBox17.PerformLayout();
-			((System.ComponentModel.ISupportInitialize)(this.nmMemory)).EndInit();
 			this.ResumeLayout(false);
 
 		}
@@ -1738,11 +1753,12 @@
 		private MetroFramework.Controls.MetroTextBox tbMode;
 		private MetroFramework.Controls.MetroCheckBox cbVBEVideo;
 		private MetroFramework.Controls.MetroCheckBox cbExitOnLaunch;
-		private MetroFramework.Controls.MetroButton button1;
+		private MetroFramework.Controls.MetroButton btnCompileAndRun;
 		private MetroFramework.Controls.MetroLabel metroLabel2;
 		private MetroFramework.Controls.MetroLabel label6;
 		private System.Windows.Forms.NumericUpDown nmMemory;
 		private MetroFramework.Controls.MetroComboBox cbEmulator;
 		private MetroFramework.Controls.MetroCheckBox cbGenerateNASMFile;
+		private MetroFramework.Controls.MetroCheckBox cbGenerateInlineFile;
 	}
 }

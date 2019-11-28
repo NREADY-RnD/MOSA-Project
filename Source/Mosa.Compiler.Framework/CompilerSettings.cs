@@ -27,6 +27,8 @@ namespace Mosa.Compiler.Framework
 
 		public string DebugFile { get { return Settings.GetValue("CompilerDebug.DebugFile", null); } }
 
+		public string InlinedFile { get { return Settings.GetValue("CompilerDebug.InlinedFile", null); } }
+
 		public bool SSA { get { return Settings.GetValue("Launcher.SSA", true); } }
 
 		public bool BasicOptimizations { get { return Settings.GetValue("Optimizations.Basic", true); } }

@@ -1,4 +1,4 @@
 
 cd ..\bin
 
-Mosa.Utility.UnitTests.exe --settings mosa-test-base.config
+Mosa.Utility.UnitTests.exe --settings UnitTest.settings

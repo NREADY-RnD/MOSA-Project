@@ -138,6 +138,7 @@ namespace Mosa.Compiler.Framework
 		private static List<BaseCompilerStage> GetDefaultCompilerPipeline(CompilerSettings compilerSettings, bool is64BitPlatform)
 		{
 			return new List<BaseCompilerStage> {
+				new InlinedSetupStage(),
 				new UnitTestStage(),
 				new TypeInitializerStage(),
 				new DevirtualizationStage(),
@@ -150,7 +151,8 @@ namespace Mosa.Compiler.Framework
 				(!string.IsNullOrEmpty(compilerSettings.CompileTimeFile)) ? new MethodCompileTimeStage() : null,
 				(!string.IsNullOrEmpty(compilerSettings.OutputFile) && compilerSettings.EmitBinary) ? new LinkerEmitStage() : null,
 				(!string.IsNullOrEmpty(compilerSettings.MapFile)) ? new MapFileStage() : null,
-				(compilerSettings.DebugFile != null) ? new DebugFileStage() : null
+				(!string.IsNullOrEmpty(compilerSettings.DebugFile)) ? new DebugFileStage() : null,
+				(!string.IsNullOrEmpty(compilerSettings.InlinedFile)) ? new InlinedFileStage() : null,
 			};
 		}
 

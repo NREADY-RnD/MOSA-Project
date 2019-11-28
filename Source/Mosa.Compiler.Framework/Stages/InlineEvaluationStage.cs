@@ -49,6 +49,7 @@ namespace Mosa.Compiler.Framework.Stages
 			trace?.Log($"HasProtectedRegions: {MethodData.HasProtectedRegions}");
 			trace?.Log($"HasDoNotInlineAttribute: {MethodData.HasDoNotInlineAttribute}");
 			trace?.Log($"HasAggressiveInliningAttribute: {MethodData.HasAggressiveInliningAttribute}");
+			trace?.Log($"AggressiveInlineRequested: {MethodData.AggressiveInlineRequested}");
 			trace?.Log($"IsMethodImplementationReplaced (Plugged): {MethodData.IsMethodImplementationReplaced}");
 			trace?.Log($"CompileCount: {MethodData.Version}");
 
@@ -56,7 +57,7 @@ namespace Mosa.Compiler.Framework.Stages
 			{
 				SetInlinedBasicBlocks(null);
 
-				trace?.Log($"** Staticly Evaluated");
+				trace?.Log($"** Statically Evaluated");
 				trace?.Log($"Inlined: {MethodData.Inlined}");
 
 				//Debug.WriteLine($">Inlined: No"); //DEBUGREMOVE
@@ -248,7 +249,7 @@ namespace Mosa.Compiler.Framework.Stages
 				return false;   // too many compiles - cyclic loop suspected
 
 			// methods with aggressive inline attribute will double the allow IR instruction count
-			int max = methodData.HasAggressiveInliningAttribute ? InlineAggressiveMaximum : InlineMaximum;
+			int max = methodData.HasAggressiveInliningAttribute || MethodData.AggressiveInlineRequested ? InlineAggressiveMaximum : InlineMaximum;
 
 			if ((methodData.IRInstructionCount - methodData.IRStackParameterInstructionCount) > max)
 				return false;

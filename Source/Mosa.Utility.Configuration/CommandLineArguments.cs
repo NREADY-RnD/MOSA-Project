@@ -65,12 +65,14 @@ namespace Mosa.Utility.Configuration
 				new Argument() { Name =  "--optimizations-off", Setting = "Optimizations.ValueNumbering", Value = "false"},
 				new Argument() { Name =  "--optimizations-off", Setting = "Optimizations.TwoPass", Value = "false"},
 
-				new Argument() { Name =  "--output-nasm", Setting = "CompilerDebug.NasmFile", Value = "true"},
-				new Argument() { Name =  "--output-asm", Setting = "CompilerDebug.AsmFile", Value = "true"},
-				new Argument() { Name =  "--output-map", Setting = "CompilerDebug.MapFile", Value = "true"},
-				new Argument() { Name =  "--output-time", Setting = "CompilerDebug.CompilerTimeFile", Value = "true"},
-				new Argument() { Name =  "--output-debug", Setting = "CompilerDebug.DebugFile", Value = "true"},
-				new Argument() { Name =  "--debugfile", Setting = "CompilerDebug.DebugFile.File"},
+				new Argument() { Name =  "--output-nasm", Setting = "CompilerDebug.NasmFile", Value = "%DEFAULT%"},
+				new Argument() { Name =  "--output-asm", Setting = "CompilerDebug.AsmFile", Value = "%DEFAULT%"},
+				new Argument() { Name =  "--output-map", Setting = "CompilerDebug.MapFile", Value = "%DEFAULT%"},
+				new Argument() { Name =  "--output-time", Setting = "CompilerDebug.CompilerTimeFile", Value = "%DEFAULT%"},
+				new Argument() { Name =  "--output-debug", Setting = "CompilerDebug.DebugFile", Value = "%DEFAULT%"},
+				new Argument() { Name =  "--output-inlined", Setting = "CompilerDebug.InlinedFile", Value = "%DEFAULT%"},
+
+				new Argument() { Name =  "--debugfile", Setting = "CompilerDebug.DebugFile", Value = "%DEFAULT%"}, // legacy
 
 				new Argument() { Name =  "--platform", Setting = "Compiler.Platform"},
 				new Argument() { Name =  "--x86", Setting = "Compiler.Platform", Value = "x86"},

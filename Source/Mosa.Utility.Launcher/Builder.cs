@@ -98,7 +98,7 @@ namespace Mosa.Utility.Launcher
 
 				if (Settings.GetValue("CompilerDebug.MapFile", string.Empty) == "%DEFAULT%")
 				{
-					Settings.SetValue("CompilerDebug.MapFile", Path.Combine(destination, $"{Path.GetFileNameWithoutExtension(sourcefile)}.map"));
+					Settings.SetValue("CompilerDebug.MapFile", Path.Combine(destination, $"{Path.GetFileNameWithoutExtension(sourcefile)}-map.txt"));
 				}
 
 				if (Settings.GetValue("CompilerDebug.CompileTimeFile", string.Empty) == "%DEFAULT%")
@@ -109,6 +109,11 @@ namespace Mosa.Utility.Launcher
 				if (Settings.GetValue("CompilerDebug.DebugFile", string.Empty) == "%DEFAULT%")
 				{
 					Settings.SetValue("CompilerDebug.DebugFile", Path.Combine(destination, $"{Path.GetFileNameWithoutExtension(sourcefile)}.debug"));
+				}
+
+				if (Settings.GetValue("CompilerDebug.InlinedFile", string.Empty) == "%DEFAULT%")
+				{
+					Settings.SetValue("CompilerDebug.InlinedFile", Path.Combine(destination, $"{Path.GetFileNameWithoutExtension(sourcefile)}-inlined.txt"));
 				}
 
 				if (imagefile == null || imagefile == "%DEFAULT")
