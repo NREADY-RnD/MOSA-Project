@@ -55,19 +55,16 @@ namespace Mosa.Utility.UnitTests
 		private int SendOneCount = -1;
 		private int Errors = 0;
 
-		public UnitTestEngine(bool display = true)
+		public UnitTestEngine(Settings settings)
 		{
-			Settings.SetValue("Compiler.BaseAddress", 0x00500000);
-			Settings.SetValue("Compiler.EmitBinary", true);
 			Settings.SetValue("Compiler.MethodScanner", false);
 			Settings.SetValue("Compiler.Multithreading", true);
 			Settings.SetValue("Compiler.Platform", "x86");
-			Settings.SetValue("Compiler.TraceLevel", 0);
-			Settings.SetValue("Compiler.Advanced.PlugKorlib", true);
 			Settings.SetValue("CompilerDebug.DebugFile", "%DEFAULT%");
 			Settings.SetValue("CompilerDebug.AsmFile", "%DEFAULT%");
 			Settings.SetValue("CompilerDebug.MapFile", "%DEFAULT%");
 			Settings.SetValue("CompilerDebug.NasmFile", string.Empty);
+
 			Settings.SetValue("Optimizations.Basic", true);
 			Settings.SetValue("Optimizations.BitTracker", true);
 			Settings.SetValue("Optimizations.Inline", true);
@@ -81,26 +78,34 @@ namespace Mosa.Utility.UnitTests
 			Settings.SetValue("Optimizations.SSA", true);
 			Settings.SetValue("Optimizations.TwoPass", true);
 			Settings.SetValue("Optimizations.ValueNumbering", true);
-			Settings.SetValue("Image.BootLoader", "syslinux3.72");
-			Settings.SetValue("Image.Destination", Path.Combine(Path.GetTempPath(), "MOSA-UnitTest"));
-			Settings.SetValue("Image.Format", "IMG");
-			Settings.SetValue("Image.FileSystem", "FAT16");
-			Settings.SetValue("Multiboot.Version", "v1");
+
 			Settings.SetValue("Multiboot.Video", false);
 			Settings.SetValue("Multiboot.Video.Width", 640);
 			Settings.SetValue("Multiboot.Video.Height", 480);
 			Settings.SetValue("Multiboot.Video.Depth", 32);
+			Settings.SetValue("Emulator.Display", true);
+
+			Settings.Merge(settings);
+
+			Settings.SetValue("Compiler.BaseAddress", 0x00500000);
+			Settings.SetValue("Compiler.EmitBinary", true);
+			Settings.SetValue("Compiler.TraceLevel", 0);
+			Settings.SetValue("Compiler.Advanced.PlugKorlib", true);
+			Settings.SetValue("Multiboot.Version", "v1");
 			Settings.SetValue("Emulator", "Qemu");
 			Settings.SetValue("Emulator.Memory", 128);
 			Settings.SetValue("Emulator.Serial", "TCPServer");
 			Settings.SetValue("Emulator.Serial.Host", "127.0.0.1");
 			Settings.SetValue("Emulator.Serial.Port", new Random().Next(11111, 22222));
 			Settings.SetValue("Emulator.Serial.Pipe", "MOSA");
-			Settings.SetValue("Emulator.Display", display);
 			Settings.SetValue("Launcher.Start", false);
 			Settings.SetValue("Launcher.Launch", false);
 			Settings.SetValue("Launcher.Exit", true);
 			Settings.SetValue("Launcher.Advance.HuntForCorLib", true);
+			Settings.SetValue("Image.BootLoader", "syslinux3.72");
+			Settings.SetValue("Image.Destination", Path.Combine(Path.GetTempPath(), "MOSA-UnitTest"));
+			Settings.SetValue("Image.Format", "IMG");
+			Settings.SetValue("Image.FileSystem", "FAT16");
 
 			AppLocations = new AppLocations();
 

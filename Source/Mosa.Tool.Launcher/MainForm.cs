@@ -588,10 +588,5 @@ namespace Mosa.Tool.Launcher
 			//lbSourceDirectory.Text = (filename != null) ? Path.GetDirectoryName(filename) : string.Empty;
 			lbSource.Text = (filename != null) ? Path.GetFileName(filename) : string.Empty;
 		}
-
-		private void lbSourceDirectory_Click(object sender, EventArgs e)
-		{
-
-		}
 	}
 }

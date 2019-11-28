@@ -21,7 +21,7 @@ namespace Mosa.Utility.Configuration
 
 				new Argument() { Name =  "--threading", Setting = "Compiler.Multithreading", Value = "true"},
 				new Argument() { Name =  "--threading-off", Setting = "Compiler.Multithreading", Value = "false"},
-				new Argument() { Name =  "--settings", Setting = "Import", Value = null, IsList = true},
+				new Argument() { Name =  "--settings", Setting = "Settings", Value = null, IsList = true},
 
 				new Argument() { Name =  "--base", Setting = "Compiler.BaseAddress"},
 				new Argument() { Name =  "--scanner", Setting = "Compiler.MethodScanner", Value = "true"},

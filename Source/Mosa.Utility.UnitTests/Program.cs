@@ -13,7 +13,7 @@ namespace Mosa.Utility.UnitTests
 			{
 				RegisterPlatforms();
 
-				if (UnitTestSystem.Start(args.Length > 0) == 0)
+				if (UnitTestSystem.Start(args) == 0)
 				{
 					Environment.Exit(0);
 				}

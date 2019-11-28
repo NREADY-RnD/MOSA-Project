@@ -1419,7 +1419,7 @@
 			this.label5.AutoSize = true;
 			this.label5.FontSize = MetroFramework.MetroLabelSize.Small;
 			this.label5.FontWeight = MetroFramework.MetroLabelWeight.Regular;
-			this.label5.Location = new System.Drawing.Point(9, 23);
+			this.label5.Location = new System.Drawing.Point(6, 23);
 			this.label5.Name = "label5";
 			this.label5.Size = new System.Drawing.Size(56, 15);
 			this.label5.TabIndex = 32;
@@ -1436,7 +1436,7 @@
 			this.cbPlatform.Items.AddRange(new object[] {
             "x86",
             "ARMv6"});
-			this.cbPlatform.Location = new System.Drawing.Point(100, 18);
+			this.cbPlatform.Location = new System.Drawing.Point(97, 18);
 			this.cbPlatform.Name = "cbPlatform";
 			this.cbPlatform.Size = new System.Drawing.Size(109, 25);
 			this.cbPlatform.Style = MetroFramework.MetroColorStyle.Blue;
@@ -1456,7 +1456,7 @@
             "Microsoft (.vhd)",
             "Virtual Box (.vdi)",
             "VMware (.vmdk)"});
-			this.cbImageFormat.Location = new System.Drawing.Point(100, 49);
+			this.cbImageFormat.Location = new System.Drawing.Point(97, 49);
 			this.cbImageFormat.Name = "cbImageFormat";
 			this.cbImageFormat.Size = new System.Drawing.Size(109, 25);
 			this.cbImageFormat.Style = MetroFramework.MetroColorStyle.Blue;
@@ -1469,7 +1469,7 @@
 			this.label3.AutoSize = true;
 			this.label3.FontSize = MetroFramework.MetroLabelSize.Small;
 			this.label3.FontWeight = MetroFramework.MetroLabelWeight.Regular;
-			this.label3.Location = new System.Drawing.Point(9, 54);
+			this.label3.Location = new System.Drawing.Point(6, 54);
 			this.label3.Name = "label3";
 			this.label3.Size = new System.Drawing.Size(84, 15);
 			this.label3.TabIndex = 33;
@@ -1488,7 +1488,7 @@
             "QEMU",
             "Bochs",
             "VMware"});
-			this.cbEmulator.Location = new System.Drawing.Point(100, 81);
+			this.cbEmulator.Location = new System.Drawing.Point(97, 81);
 			this.cbEmulator.Name = "cbEmulator";
 			this.cbEmulator.Size = new System.Drawing.Size(109, 25);
 			this.cbEmulator.Style = MetroFramework.MetroColorStyle.Blue;
@@ -1501,7 +1501,7 @@
 			this.label6.AutoSize = true;
 			this.label6.FontSize = MetroFramework.MetroLabelSize.Small;
 			this.label6.FontWeight = MetroFramework.MetroLabelWeight.Regular;
-			this.label6.Location = new System.Drawing.Point(9, 113);
+			this.label6.Location = new System.Drawing.Point(6, 113);
 			this.label6.Name = "label6";
 			this.label6.Size = new System.Drawing.Size(55, 15);
 			this.label6.TabIndex = 37;
@@ -1511,7 +1511,7 @@
 			// nmMemory
 			// 
 			this.nmMemory.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.nmMemory.Location = new System.Drawing.Point(100, 113);
+			this.nmMemory.Location = new System.Drawing.Point(97, 113);
 			this.nmMemory.Maximum = new decimal(new int[] {
             2048,
             0,
@@ -1536,7 +1536,7 @@
 			this.metroLabel2.AutoSize = true;
 			this.metroLabel2.FontSize = MetroFramework.MetroLabelSize.Small;
 			this.metroLabel2.FontWeight = MetroFramework.MetroLabelWeight.Regular;
-			this.metroLabel2.Location = new System.Drawing.Point(9, 86);
+			this.metroLabel2.Location = new System.Drawing.Point(6, 86);
 			this.metroLabel2.Name = "metroLabel2";
 			this.metroLabel2.Size = new System.Drawing.Size(58, 15);
 			this.metroLabel2.TabIndex = 38;
