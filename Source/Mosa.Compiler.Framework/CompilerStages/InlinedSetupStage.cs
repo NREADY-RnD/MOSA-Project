@@ -29,52 +29,60 @@ namespace Mosa.Compiler.Framework.CompilerStages
 
 					var name = InlinedSetupStage.RemoveReturnValue(method.FullName);
 
-					foreach (var exclude in excludeList)
+					if (excludeList != null)
 					{
-						var match = false;
-
-						if (name == exclude)
+						foreach (var exclude in excludeList)
 						{
-							match = true;
-						}
-						else
-						{
-							match = Regex.Match(name, exclude).Success;
+							var match = false;
+
+							if (name == exclude)
+							{
+								match = true;
+							}
+
+							//else
+							//{
+							//	match = Regex.Match(name, exclude).Success;
+							//}
+
+							if (match)
+							{
+								var methodData = Compiler.GetMethodData(method);
+								methodData.DoNotInline = true;
+
+								excluded = true;
+								break;
+							}
 						}
 
-						if (match)
-						{
-							var methodData = Compiler.GetMethodData(method);
-							methodData.DoNotInline = true;
-
-							excluded = true;
-							break;
-						}
+						if (excluded)
+							continue;
 					}
 
-					if (excluded)
-						continue;
-
-					foreach (var aggressive in aggressiveList)
+					if (aggressiveList != null)
 					{
-						var match = false;
-
-						if (name == aggressive)
+						foreach (var aggressive in aggressiveList)
 						{
-							match = true;
-						}
-						else
-						{
-							match = Regex.Match(name, aggressive).Success;
-						}
+							var match = false;
 
-						if (match)
-						{
-							var methodData = Compiler.GetMethodData(method);
-							methodData.AggressiveInlineRequested = true;
+							if (name == aggressive)
+							{
+								match = true;
+							}
 
-							excluded = true;
-							break;
+							//else
+							//{
+							//	match = Regex.Match(name, aggressive).Success;
+							//}
+
+							if (match)
+							{
+								var methodData = Compiler.GetMethodData(method);
+								methodData.AggressiveInlineRequested = true;
+
+								excluded = true;
+								break;
+							}
 						}
 					}
 				}
