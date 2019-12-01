@@ -35,7 +35,7 @@ namespace Mosa.Compiler.Framework.CompilerStages
 
 		protected override void Finalization()
 		{
-			Generate(CompilerOptions.PreLinkHashFile);
+			Generate(CompilerSettings.PreLinkHashFile);
 		}
 
 		protected void Generate(string filename)
@@ -68,8 +68,6 @@ namespace Mosa.Compiler.Framework.CompilerStages
 				{
 					if (symbol.SectionKind != kind)
 						continue;
-
-					//symbol.Stream.Length = 0;
 
 					info.Add(new HashInfo()
 					{

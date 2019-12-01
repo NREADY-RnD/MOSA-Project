@@ -89,16 +89,6 @@ namespace Mosa.Compiler.Framework
 
 		public List<string> InlineExcludeList { get { return Settings.GetValueList("Optimizations.Inline.Exclude"); } }
 
-		/// <summary>
-		/// Adds additional sections to the Elf-File.
-		/// </summary>
-		public MosaLinker.CreateExtraSectionsDelegate CreateExtraSections { get; set; }
-
-		/// <summary>
-		/// Adds additional program headers to the Elf-File.
-		/// </summary>
-		public MosaLinker.CreateExtraProgramHeaderDelegate CreateExtraProgramHeaders { get; set; }
-
 		#endregion Properties
 
 		public CompilerSettings(Settings settings)

@@ -230,7 +230,7 @@ namespace Mosa.Compiler.Framework
 			CompilerTrace = mosaCompiler.CompilerTrace;
 			Architecture = mosaCompiler.Platform;
 
-			Linker = new MosaLinker(CompilerSettings.BaseAddress, Architecture.ElfMachineType, CompilerSettings.EmitAllSymbols, CompilerSettings.EmitStaticRelocations, CompilerSettings.EmitShortSymbolNames, CompilerSettings.LinkerFormat, CompilerSettings.CreateExtraSections, CompilerSettings.CreateExtraProgramHeaders);
+			Linker = new MosaLinker(CompilerSettings.Settings, Architecture.ElfMachineType);
 
 			StackFrame = Operand.CreateCPURegister(TypeSystem.BuiltIn.Pointer, Architecture.StackFrameRegister);
 			StackPointer = Operand.CreateCPURegister(TypeSystem.BuiltIn.Pointer, Architecture.StackPointerRegister);

@@ -21,7 +21,7 @@ namespace Mosa.Compiler.Framework.Stages
 			base.Initialize();
 
 			// cache for performance
-			SSA = CompilerOptions.SSA;
+			SSA = CompilerSettings.SSA;
 		}
 
 		protected override void PopulateVisitationDictionary()

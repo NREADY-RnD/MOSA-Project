@@ -29,9 +29,9 @@ namespace Mosa.Compiler.Framework.Stages
 			Register(ReversedInlineCount);
 
 			// cache for performance
-			InlineExplicitOnly = CompilerOptions.InlineExplicitOnly;
-			InlineAggressiveMaximum = CompilerOptions.InlineAggressiveMaximum;
-			InlineMaximum = CompilerOptions.InlineMaximum;
+			InlineExplicitOnly = CompilerSettings.InlineExplicitOnly;
+			InlineAggressiveMaximum = CompilerSettings.InlineAggressiveMaximum;
+			InlineMaximum = CompilerSettings.InlineMaximum;
 		}
 
 		protected override void Run()

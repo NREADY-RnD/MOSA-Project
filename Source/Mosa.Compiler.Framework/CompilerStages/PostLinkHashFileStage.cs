@@ -16,7 +16,7 @@ namespace Mosa.Compiler.Framework.CompilerStages
 	{
 		protected override void Finalization()
 		{
-			Generate(CompilerOptions.PostLinkHashFile);
+			Generate(CompilerSettings.PostLinkHashFile);
 		}
 	}
 }

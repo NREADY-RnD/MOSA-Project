@@ -1,6 +1,7 @@
 ﻿// Copyright (c) MOSA Project. Licensed under the New BSD License.
 
 using Mosa.Compiler.Common;
+using Mosa.Compiler.Common.Configuration;
 using Mosa.Compiler.Common.Exceptions;
 using Mosa.Compiler.Framework.Linker.Elf;
 using System;
@@ -15,10 +16,6 @@ namespace Mosa.Compiler.Framework.Linker
 	/// </summary>
 	public sealed class MosaLinker
 	{
-		public delegate List<Section> CreateExtraSectionsDelegate();
-
-		public delegate List<ProgramHeader> CreateExtraProgramHeaderDelegate();
-
 		public List<LinkerSymbol> Symbols { get; } = new List<LinkerSymbol>();
 
 		public LinkerSection[] Sections { get; } = new LinkerSection[4];
@@ -26,8 +23,6 @@ namespace Mosa.Compiler.Framework.Linker
 		public LinkerSymbol EntryPoint { get; set; }
 
 		public MachineType MachineType { get; }
-
-		public ulong BaseAddress { get; }
 
 		public uint SectionAlignment { get; set; }
 
@@ -50,19 +45,28 @@ namespace Mosa.Compiler.Framework.Linker
 		private readonly object _lock = new object();
 		private readonly object _cacheLock = new object();
 
+		public LinkerSettings LinkerSettings;
+
+		public delegate List<Section> CreateExtraSectionsDelegate();
+
+		public delegate List<ProgramHeader> CreateExtraProgramHeaderDelegate();
+
 		public CreateExtraSectionsDelegate CreateExtraSections { get; set; }
 		public CreateExtraProgramHeaderDelegate CreateExtraProgramHeaders { get; set; }
 
-		public MosaLinker(ulong baseAddress, MachineType machineType, bool emitAllSymbols, bool emitStaticRelocations, bool emitShortSymbolName, string linkerFormat, CreateExtraSectionsDelegate createExtraSections, CreateExtraProgramHeaderDelegate createExtraProgramHeaders)
+		public MosaLinker(Settings settings, MachineType machineType)
 		{
-			BaseAddress = baseAddress;
+			LinkerSettings = new LinkerSettings(settings);
+
 			MachineType = machineType;
-			EmitAllSymbols = emitAllSymbols;
-			EmitStaticRelocations = emitStaticRelocations;
-			EmitShortSymbolName = emitShortSymbolName;
-			LinkerFormatType = linkerFormat.ToLower() == "elf64" ? LinkerFormatType.Elf64 : LinkerFormatType.Elf32;
-			CreateExtraSections = createExtraSections;
-			CreateExtraProgramHeaders = createExtraProgramHeaders;
+			LinkerFormatType = LinkerSettings.LinkerFormat.ToLower() == "elf64" ? LinkerFormatType.Elf64 : LinkerFormatType.Elf32;
+
+			// Cache for faster performance
+			EmitAllSymbols = LinkerSettings.EmitAllSymbols;
+			EmitShortSymbolName = LinkerSettings.EmitShortSymbolNames;
+
+			//CreateExtraSections = createExtraSections;
+			//CreateExtraProgramHeaders = createExtraProgramHeaders;
 
 			elfLinker = new ElfLinker(this, LinkerFormatType);
 
@@ -177,7 +181,7 @@ namespace Mosa.Compiler.Framework.Linker
 
 		private void LayoutObjectsAndSections()
 		{
-			ulong virtualAddress = BaseAddress;
+			ulong virtualAddress = LinkerSettings.BaseAddress;
 			uint fileOffset = BaseFileOffset;
 
 			foreach (var section in Sections)

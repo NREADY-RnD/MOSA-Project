@@ -63,7 +63,7 @@ namespace Mosa.Compiler.Framework
 		/// <summary>
 		/// Gets the compiler options.
 		/// </summary>
-		protected CompilerSettings CompilerOptions { get; private set; }
+		protected CompilerSettings CompilerSettings { get; private set; }
 
 		/// <summary>
 		/// Holds the native pointer size
@@ -208,7 +208,7 @@ namespace Mosa.Compiler.Framework
 			TypeSystem = compiler.TypeSystem;
 			TypeLayout = compiler.TypeLayout;
 			MethodScheduler = compiler.MethodScheduler;
-			CompilerOptions = compiler.CompilerSettings;
+			CompilerSettings = compiler.CompilerSettings;
 			MethodScanner = compiler.MethodScanner;
 
 			NativePointerSize = Architecture.NativePointerSize;

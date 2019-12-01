@@ -42,7 +42,7 @@ namespace Mosa.Compiler.Framework
 		/// <summary>
 		/// Holds the compiler options
 		/// </summary>
-		protected CompilerSettings CompilerOptions { get { return Compiler.CompilerSettings; } }
+		protected CompilerSettings CompilerSettings { get { return Compiler.CompilerSettings; } }
 
 		/// <summary>
 		/// Holds the compiler trace

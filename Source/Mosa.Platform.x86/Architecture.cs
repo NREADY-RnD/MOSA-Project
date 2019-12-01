@@ -132,7 +132,7 @@ namespace Mosa.Platform.x86
 		/// Extends the compiler pipeline with x86 compiler stages.
 		/// </summary>
 		/// <param name="pipeline">The pipeline to extend.</param>
-		public override void ExtendCompilerPipeline(Pipeline<BaseCompilerStage> pipeline, CompilerSettings compilerSettings)
+		public override void ExtendCompilerPipeline(Pipeline<BaseCompilerStage> pipeline, LinkerSettings compilerSettings)
 		{
 			if (compilerSettings.Settings.GetValue("Multiboot.Version", string.Empty).ToLower() == "v1")
 			{
@@ -149,7 +149,7 @@ namespace Mosa.Platform.x86
 		/// </summary>
 		/// <param name="pipeline">The method compiler pipeline to extend.</param>
 		/// <param name="compilerSettings">The compiler options.</param>
-		public override void ExtendMethodCompilerPipeline(Pipeline<BaseMethodCompilerStage> pipeline, CompilerSettings compilerSettings)
+		public override void ExtendMethodCompilerPipeline(Pipeline<BaseMethodCompilerStage> pipeline, LinkerSettings compilerSettings)
 		{
 			pipeline.InsertBefore<CallStage>(
 				new Stages.RuntimeCallStage()

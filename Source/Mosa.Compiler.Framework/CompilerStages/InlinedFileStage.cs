@@ -14,12 +14,12 @@ namespace Mosa.Compiler.Framework.CompilerStages
 	{
 		protected override void Finalization()
 		{
-			if (string.IsNullOrEmpty(CompilerOptions.InlinedFile))
+			if (string.IsNullOrEmpty(CompilerSettings.InlinedFile))
 				return;
 
 			var methods = GetAndSortMethodData();
 
-			using (var writer = new StreamWriter(CompilerOptions.InlinedFile))
+			using (var writer = new StreamWriter(CompilerSettings.InlinedFile))
 			{
 				writer.WriteLine("Method\tCompilations");
 

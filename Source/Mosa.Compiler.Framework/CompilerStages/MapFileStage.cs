@@ -18,17 +18,17 @@ namespace Mosa.Compiler.Framework.CompilerStages
 
 		protected override void Finalization()
 		{
-			if (string.IsNullOrEmpty(CompilerOptions.MapFile))
+			if (string.IsNullOrEmpty(CompilerSettings.MapFile))
 				return;
 
-			using (var writer = new StreamWriter(CompilerOptions.MapFile))
+			using (var writer = new StreamWriter(CompilerSettings.MapFile))
 			{
 				// Emit map file header
-				writer.WriteLine(CompilerOptions.OutputFile);
+				writer.WriteLine(CompilerSettings.OutputFile);
 				writer.WriteLine();
 				writer.WriteLine("Timestamp is {0}", DateTime.Now);
 				writer.WriteLine();
-				writer.WriteLine("Preferred load address is {0:x16}", (object)Linker.BaseAddress);
+				writer.WriteLine("Preferred load address is {0:x16}", (object)Linker.LinkerSettings.BaseAddress);
 				writer.WriteLine();
 
 				// Emit the sections

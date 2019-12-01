@@ -24,10 +24,10 @@ namespace Mosa.Compiler.Framework.CompilerStages
 
 		protected override void Finalization()
 		{
-			if (string.IsNullOrEmpty(CompilerOptions.DebugFile))
+			if (string.IsNullOrEmpty(CompilerSettings.DebugFile))
 				return;
 
-			using (writer = new StreamWriter(CompilerOptions.DebugFile))
+			using (writer = new StreamWriter(CompilerSettings.DebugFile))
 			{
 				EmitSections();
 				EmitSymbols();
