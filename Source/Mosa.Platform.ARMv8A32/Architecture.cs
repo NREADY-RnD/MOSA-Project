@@ -119,7 +119,7 @@ namespace Mosa.Platform.ARMv8A32
 		/// Extends the compiler pipeline with ARMv8A32 specific stages.
 		/// </summary>
 		/// <param name="pipeline">The pipeline to extend.</param>
-		public override void ExtendCompilerPipeline(Pipeline<BaseCompilerStage> pipeline, LinkerSettings compilerSettings)
+		public override void ExtendCompilerPipeline(Pipeline<BaseCompilerStage> pipeline, CompilerSettings compilerSettings)
 		{
 		}
 
@@ -128,7 +128,7 @@ namespace Mosa.Platform.ARMv8A32
 		/// </summary>
 		/// <param name="pipeline">The method compiler pipeline to extend.</param>
 		/// <param name="compilerSettings">The compiler options.</param>
-		public override void ExtendMethodCompilerPipeline(Pipeline<BaseMethodCompilerStage> pipeline, LinkerSettings compilerSettings)
+		public override void ExtendMethodCompilerPipeline(Pipeline<BaseMethodCompilerStage> pipeline, CompilerSettings compilerSettings)
 		{
 			pipeline.InsertBefore<GreedyRegisterAllocatorStage>(
 				new StopStage()

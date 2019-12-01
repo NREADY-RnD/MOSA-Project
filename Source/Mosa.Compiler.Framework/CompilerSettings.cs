@@ -17,8 +17,6 @@ namespace Mosa.Compiler.Framework
 
 		public string Platform { get { return Settings.GetValue("Compiler.Platform", "x86"); } }
 
-		public ulong BaseAddress { get { return (ulong)Settings.GetValue("Compiler.BaseAddress", 0x00400000); } }
-
 		public string OutputFile { get { return Settings.GetValue("Compiler.OutputFile", "_main.exe"); } }
 
 		public string MapFile { get { return Settings.GetValue("CompilerDebug.MapFile", null); } }
@@ -62,12 +60,6 @@ namespace Mosa.Compiler.Framework
 		public string LinkerFormat { get { return Settings.GetValue("Linker.Format", "elf32"); } }
 
 		public bool EmitBinary { get { return Settings.GetValue("Compiler.EmitBinary", true); } }
-
-		public bool EmitAllSymbols { get { return Settings.GetValue("Linker.EmitAllSymbols", false); } }
-
-		public bool EmitStaticRelocations { get { return Settings.GetValue("Linker.EmitStaticRelocations", false); } }
-
-		public bool EmitShortSymbolNames { get { return Settings.GetValue("Linker.EmitShortSymbolNames", false); } }
 
 		public bool EmitDrawf { get { return Settings.GetValue("Linker.EmitDrawf", false); } }
 

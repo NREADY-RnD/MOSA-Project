@@ -149,7 +149,8 @@ namespace Mosa.Compiler.Framework
 				(!string.IsNullOrEmpty(compilerSettings.PreLinkHashFile)) ? new PreLinkHashFileStage() : null,
 				new LinkerLayoutStage(),
 				(!string.IsNullOrEmpty(compilerSettings.PostLinkHashFile)) ? new PostLinkHashFileStage() : null,
-				(compilerSettings.EmitDrawf)  ? new DwarfCompilerStage() : null,
+
+				//(compilerSettings.EmitDrawf)  ? new DwarfCompilerStage() : null,
 				(!string.IsNullOrEmpty(compilerSettings.CompileTimeFile)) ? new MethodCompileTimeStage() : null,
 				(!string.IsNullOrEmpty(compilerSettings.OutputFile) && compilerSettings.EmitBinary) ? new LinkerEmitStage() : null,
 				(!string.IsNullOrEmpty(compilerSettings.MapFile)) ? new MapFileStage() : null,
