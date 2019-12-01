@@ -385,6 +385,8 @@ namespace Mosa.Tool.Launcher
 			Settings.SetValue("CompilerDebug.MapFile", cbGenerateMapFile.Checked ? "%DEFAULT%" : string.Empty);
 			Settings.SetValue("CompilerDebug.DebugFile", cbGenerateDebugInfoFile.Checked ? "%DEFAULT%" : string.Empty);
 			Settings.SetValue("CompilerDebug.InlinedFile", cbGenerateInlineFile.Checked ? "%DEFAULT%" : string.Empty);
+			Settings.SetValue("CompilerDebug.PrelinkHashFile", cbGenerateHashFiles.Checked ? "%DEFAULT%" : string.Empty);
+			Settings.SetValue("CompilerDebug.PostlinkHashFile", cbGenerateHashFiles.Checked ? "%DEFAULT%" : string.Empty);
 			Settings.SetValue("Launcher.Exit", cbExitOnLaunch.Checked);
 			Settings.SetValue("Emulator.GDB", cbEnableQemuGDB.Checked);
 			Settings.SetValue("Launcher.Advance.LaunchGDB", cbLaunchGDB.Checked);
@@ -491,6 +493,7 @@ namespace Mosa.Tool.Launcher
 			cbGenerateMapFile.Checked = Settings.GetValue("CompilerDebug.MapFile", string.Empty) == "%DEFAULT%";
 			cbGenerateDebugInfoFile.Checked = Settings.GetValue("CompilerDebug.DebugFile", string.Empty) == "%DEFAULT%";
 			cbGenerateInlineFile.Checked = Settings.GetValue("CompilerDebug.InlinedFile", string.Empty) == "%DEFAULT%";
+			cbGenerateHashFiles.Checked = Settings.GetValue("CompilerDebug.PrelinkHashFile", string.Empty) == "%DEFAULT%";
 			cbExitOnLaunch.Checked = Settings.GetValue("Launcher.Exit", true);
 			cbEnableQemuGDB.Checked = Settings.GetValue("Emulator.GDB", false);
 			cbLaunchGDB.Checked = Settings.GetValue("Launcher.Advance.LaunchGDB", false);

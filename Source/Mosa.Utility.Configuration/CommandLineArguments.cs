@@ -71,6 +71,8 @@ namespace Mosa.Utility.Configuration
 				new Argument() { Name =  "--output-time", Setting = "CompilerDebug.CompilerTimeFile", Value = "%DEFAULT%"},
 				new Argument() { Name =  "--output-debug", Setting = "CompilerDebug.DebugFile", Value = "%DEFAULT%"},
 				new Argument() { Name =  "--output-inlined", Setting = "CompilerDebug.InlinedFile", Value = "%DEFAULT%"},
+				new Argument() { Name =  "--output-hash", Setting = "CompilerDebug.PrelinkHashFile", Value = "%DEFAULT%"},
+				new Argument() { Name =  "--output-hash", Setting = "CompilerDebug.PostlinkHashFile", Value = "%DEFAULT%"},
 
 				new Argument() { Name =  "--debugfile", Setting = "CompilerDebug.DebugFile", Value = "%DEFAULT%"}, // legacy
 

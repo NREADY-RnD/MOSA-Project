@@ -12,15 +12,6 @@ namespace Mosa.Compiler.Framework.CompilerStages
 	/// <seealso cref="Mosa.Compiler.Framework.BaseCompilerStage" />
 	public sealed class MapFileStage : BaseCompilerStage
 	{
-		#region Data Members
-
-		/// <summary>
-		/// Holds the text writer used to emit the map file.
-		/// </summary>
-		private TextWriter writer;
-
-		#endregion Data Members
-
 		protected override void Initialization()
 		{
 		}
@@ -30,7 +21,7 @@ namespace Mosa.Compiler.Framework.CompilerStages
 			if (string.IsNullOrEmpty(CompilerOptions.MapFile))
 				return;
 
-			using (writer = new StreamWriter(CompilerOptions.MapFile))
+			using (var writer = new StreamWriter(CompilerOptions.MapFile))
 			{
 				// Emit map file header
 				writer.WriteLine(CompilerOptions.OutputFile);
@@ -41,11 +32,11 @@ namespace Mosa.Compiler.Framework.CompilerStages
 				writer.WriteLine();
 
 				// Emit the sections
-				EmitSections();
+				EmitSections(writer);
 				writer.WriteLine();
 
 				// Emit all symbols
-				EmitSymbols();
+				EmitSymbols(writer);
 
 				writer.Close();
 			}
@@ -56,7 +47,7 @@ namespace Mosa.Compiler.Framework.CompilerStages
 		/// <summary>
 		/// Emits all the section created in the binary file.
 		/// </summary>
-		private void EmitSections()
+		private void EmitSections(TextWriter writer)
 		{
 			writer.WriteLine("Offset           Virtual          Length           Name                             Class");
 			foreach (var linkerSection in Linker.Sections)
@@ -68,7 +59,7 @@ namespace Mosa.Compiler.Framework.CompilerStages
 		/// <summary>
 		/// Emits all symbols emitted in the binary file.
 		/// </summary>
-		private void EmitSymbols()
+		private void EmitSymbols(TextWriter writer)
 		{
 			writer.WriteLine("Virtual          Offset           Length           Symbol");
 

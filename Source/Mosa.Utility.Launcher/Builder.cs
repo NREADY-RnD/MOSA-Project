@@ -116,6 +116,16 @@ namespace Mosa.Utility.Launcher
 					Settings.SetValue("CompilerDebug.InlinedFile", Path.Combine(destination, $"{Path.GetFileNameWithoutExtension(sourcefile)}-inlined.txt"));
 				}
 
+				if (Settings.GetValue("CompilerDebug.PrelinkHashFile", string.Empty) == "%DEFAULT%")
+				{
+					Settings.SetValue("CompilerDebug.PrelinkHashFile", Path.Combine(destination, $"{Path.GetFileNameWithoutExtension(sourcefile)}-prelink-hash.txt"));
+				}
+
+				if (Settings.GetValue("CompilerDebug.PostlinkHashFile", string.Empty) == "%DEFAULT%")
+				{
+					Settings.SetValue("CompilerDebug.PostlinkHashFile", Path.Combine(destination, $"{Path.GetFileNameWithoutExtension(sourcefile)}-postlink-hash.txt"));
+				}
+
 				if (imagefile == null || imagefile == "%DEFAULT")
 				{
 					var vmext = GetImageFileExtension(imageformat);

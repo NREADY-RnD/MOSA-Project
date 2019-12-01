@@ -132,6 +132,7 @@
 			this.rtbOutput = new System.Windows.Forms.RichTextBox();
 			this.openFileDialog2 = new System.Windows.Forms.OpenFileDialog();
 			this.timer1 = new System.Windows.Forms.Timer(this.components);
+			this.cbGenerateHashFiles = new MetroFramework.Controls.MetroCheckBox();
 			this.tbApplicationLocations.SuspendLayout();
 			this.tabOptions.SuspendLayout();
 			this.groupBox17.SuspendLayout();
@@ -264,9 +265,9 @@
 			this.groupBox17.Controls.Add(this.label5);
 			this.groupBox17.Controls.Add(this.cbPlatform);
 			this.groupBox17.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.groupBox17.Location = new System.Drawing.Point(428, 125);
+			this.groupBox17.Location = new System.Drawing.Point(428, 122);
 			this.groupBox17.Name = "groupBox17";
-			this.groupBox17.Size = new System.Drawing.Size(215, 146);
+			this.groupBox17.Size = new System.Drawing.Size(215, 149);
 			this.groupBox17.TabIndex = 33;
 			this.groupBox17.TabStop = false;
 			this.groupBox17.Text = "Target:";
@@ -406,9 +407,9 @@
 			this.groupBox12.Controls.Add(this.cbEnableMethodScanner);
 			this.groupBox12.Controls.Add(this.cbCompilerUsesMultipleThreads);
 			this.groupBox12.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.groupBox12.Location = new System.Drawing.Point(264, 277);
+			this.groupBox12.Location = new System.Drawing.Point(264, 300);
 			this.groupBox12.Name = "groupBox12";
-			this.groupBox12.Size = new System.Drawing.Size(158, 100);
+			this.groupBox12.Size = new System.Drawing.Size(158, 77);
 			this.groupBox12.TabIndex = 30;
 			this.groupBox12.TabStop = false;
 			this.groupBox12.Text = "Misc Options:";
@@ -462,6 +463,7 @@
 			// groupBox2
 			// 
 			this.groupBox2.BackColor = System.Drawing.SystemColors.ControlLightLight;
+			this.groupBox2.Controls.Add(this.cbGenerateHashFiles);
 			this.groupBox2.Controls.Add(this.cbGenerateInlineFile);
 			this.groupBox2.Controls.Add(this.cbGenerateNASMFile);
 			this.groupBox2.Controls.Add(this.cbGenerateCompilerTime);
@@ -469,9 +471,9 @@
 			this.groupBox2.Controls.Add(this.cbGenerateASMFile);
 			this.groupBox2.Controls.Add(this.cbGenerateMapFile);
 			this.groupBox2.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.groupBox2.Location = new System.Drawing.Point(264, 125);
+			this.groupBox2.Location = new System.Drawing.Point(264, 122);
 			this.groupBox2.Name = "groupBox2";
-			this.groupBox2.Size = new System.Drawing.Size(158, 146);
+			this.groupBox2.Size = new System.Drawing.Size(158, 172);
 			this.groupBox2.TabIndex = 29;
 			this.groupBox2.TabStop = false;
 			this.groupBox2.Text = "Diagnostic Output:";
@@ -481,10 +483,10 @@
 			this.cbGenerateInlineFile.AutoSize = true;
 			this.cbGenerateInlineFile.Location = new System.Drawing.Point(6, 102);
 			this.cbGenerateInlineFile.Name = "cbGenerateInlineFile";
-			this.cbGenerateInlineFile.Size = new System.Drawing.Size(73, 15);
+			this.cbGenerateInlineFile.Size = new System.Drawing.Size(101, 15);
 			this.cbGenerateInlineFile.Style = MetroFramework.MetroColorStyle.Blue;
 			this.cbGenerateInlineFile.TabIndex = 51;
-			this.cbGenerateInlineFile.Text = "Inline File";
+			this.cbGenerateInlineFile.Text = "Inlined List File";
 			this.cbGenerateInlineFile.UseCustomBackColor = true;
 			this.cbGenerateInlineFile.UseSelectable = true;
 			// 
@@ -637,9 +639,9 @@
 			this.groupBox1.Controls.Add(this.cbEnableSSA);
 			this.groupBox1.Controls.Add(this.cbInline);
 			this.groupBox1.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.groupBox1.Location = new System.Drawing.Point(5, 125);
+			this.groupBox1.Location = new System.Drawing.Point(5, 122);
 			this.groupBox1.Name = "groupBox1";
-			this.groupBox1.Size = new System.Drawing.Size(253, 252);
+			this.groupBox1.Size = new System.Drawing.Size(253, 255);
 			this.groupBox1.TabIndex = 22;
 			this.groupBox1.TabStop = false;
 			this.groupBox1.Text = "Optimizations:";
@@ -1593,6 +1595,18 @@
 			this.timer1.Enabled = true;
 			this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
 			// 
+			// cbGenerateHashFiles
+			// 
+			this.cbGenerateHashFiles.AutoSize = true;
+			this.cbGenerateHashFiles.Location = new System.Drawing.Point(6, 144);
+			this.cbGenerateHashFiles.Name = "cbGenerateHashFiles";
+			this.cbGenerateHashFiles.Size = new System.Drawing.Size(76, 15);
+			this.cbGenerateHashFiles.Style = MetroFramework.MetroColorStyle.Blue;
+			this.cbGenerateHashFiles.TabIndex = 52;
+			this.cbGenerateHashFiles.Text = "Hash Files";
+			this.cbGenerateHashFiles.UseCustomBackColor = true;
+			this.cbGenerateHashFiles.UseSelectable = true;
+			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1760,5 +1774,6 @@
 		private MetroFramework.Controls.MetroComboBox cbEmulator;
 		private MetroFramework.Controls.MetroCheckBox cbGenerateNASMFile;
 		private MetroFramework.Controls.MetroCheckBox cbGenerateInlineFile;
+		private MetroFramework.Controls.MetroCheckBox cbGenerateHashFiles;
 	}
 }
