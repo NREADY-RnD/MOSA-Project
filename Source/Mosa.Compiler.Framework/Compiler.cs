@@ -149,8 +149,6 @@ namespace Mosa.Compiler.Framework
 				(!string.IsNullOrEmpty(compilerSettings.PreLinkHashFile)) ? new PreLinkHashFileStage() : null,
 				new LinkerLayoutStage(),
 				(!string.IsNullOrEmpty(compilerSettings.PostLinkHashFile)) ? new PostLinkHashFileStage() : null,
-
-				//(compilerSettings.EmitDrawf)  ? new DwarfCompilerStage() : null,
 				(!string.IsNullOrEmpty(compilerSettings.CompileTimeFile)) ? new MethodCompileTimeStage() : null,
 				(!string.IsNullOrEmpty(compilerSettings.OutputFile) && compilerSettings.EmitBinary) ? new LinkerEmitStage() : null,
 				(!string.IsNullOrEmpty(compilerSettings.MapFile)) ? new MapFileStage() : null,
@@ -231,7 +229,7 @@ namespace Mosa.Compiler.Framework
 			CompilerTrace = mosaCompiler.CompilerTrace;
 			Architecture = mosaCompiler.Platform;
 
-			Linker = new MosaLinker(CompilerSettings.Settings, Architecture.ElfMachineType);
+			Linker = new MosaLinker(this);
 
 			StackFrame = Operand.CreateCPURegister(TypeSystem.BuiltIn.Pointer, Architecture.StackFrameRegister);
 			StackPointer = Operand.CreateCPURegister(TypeSystem.BuiltIn.Pointer, Architecture.StackPointerRegister);

@@ -54,11 +54,12 @@ namespace Mosa.Compiler.Framework.Linker
 		public CreateExtraSectionsDelegate CreateExtraSections { get; set; }
 		public CreateExtraProgramHeaderDelegate CreateExtraProgramHeaders { get; set; }
 
-		public MosaLinker(Settings settings, MachineType machineType)
+		public MosaLinker(Compiler compiler)
 		{
-			LinkerSettings = new LinkerSettings(settings);
+			LinkerSettings = new LinkerSettings(compiler.CompilerSettings.Settings);
 
-			MachineType = machineType;
+			MachineType = compiler.Architecture.ElfMachineType;
+
 			LinkerFormatType = LinkerSettings.LinkerFormat.ToLower() == "elf64" ? LinkerFormatType.Elf64 : LinkerFormatType.Elf32;
 
 			// Cache for faster performance

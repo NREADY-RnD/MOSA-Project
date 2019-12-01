@@ -82,7 +82,9 @@ namespace Mosa.Compiler.Framework.Linker.Dwarf
 		private void EmitDebugAbbrev(BinaryWriter wr)
 		{
 			foreach (var abbr in AbbrevList)
+			{
 				EmitDebugAbbrev(wr, abbr);
+			}
 
 			wr.WriteULEB128(DwarfConstants.NullTag);
 		}
@@ -92,6 +94,7 @@ namespace Mosa.Compiler.Framework.Linker.Dwarf
 			wr.WriteULEB128(abbr.Number);
 			wr.WriteULEB128((uint)abbr.Tag);
 			wr.WriteByte(abbr.HasChildren ? DwarfConstants.DW_CHILDREN_yes : DwarfConstants.DW_CHILDREN_no);
+
 			foreach (var attr in abbr.Attributes)
 			{
 				wr.WriteULEB128((uint)attr.Attribute);

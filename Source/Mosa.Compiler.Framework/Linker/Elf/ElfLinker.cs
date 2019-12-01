@@ -13,7 +13,7 @@ namespace Mosa.Compiler.Framework.Linker.Elf
 	{
 		#region Data Members
 
-		private readonly MosaLinker Linkner;
+		private readonly MosaLinker Linker;
 
 		private readonly LinkerFormatType LinkerFormatType;
 		private readonly ElfHeader elfheader = new ElfHeader();
@@ -45,7 +45,7 @@ namespace Mosa.Compiler.Framework.Linker.Elf
 
 		public ElfLinker(MosaLinker linker, LinkerFormatType linkerFormatType)
 		{
-			Linkner = linker;
+			Linker = linker;
 			LinkerFormatType = linkerFormatType;
 
 			sectionHeaderStringTable.Add((byte)'\0');
@@ -101,7 +101,7 @@ namespace Mosa.Compiler.Framework.Linker.Elf
 				max = Math.Max(max, sec.Offset + sec.Size);
 			}
 
-			section.Offset = Alignment.AlignUp(max, Linkner.SectionAlignment);
+			section.Offset = Alignment.AlignUp(max, Linker.SectionAlignment);
 		}
 
 		#endregion Helpers
@@ -124,6 +124,200 @@ namespace Mosa.Compiler.Framework.Linker.Elf
 
 			// Write ELF header
 			WriteElfHeader();
+		}
+
+		private void CreateSections()
+		{
+			CreateNullSection();
+
+			CreateStandardSections();
+
+			CreateSymbolSection();
+
+			CreateStringSection();
+
+			// FIXME: set by condition
+			CreateRelocationSections();
+
+			CreateExtraSections();
+
+			CreateSectionHeaderStringSection();
+		}
+
+		private void CreateStandardSections()
+		{
+			var previous = nullSection;
+
+			foreach (var linkerSection in Linker.Sections)
+			{
+				if (linkerSection.Size == 0 && linkerSection.SectionKind != SectionKind.BSS)
+					continue;
+
+				var section = new Section()
+				{
+					Name = LinkerSectionNames[(int)linkerSection.SectionKind],
+					Address = linkerSection.VirtualAddress,
+					Offset = linkerSection.FileOffset,
+					Size = linkerSection.AlignedSize,
+					AddressAlignment = linkerSection.SectionAlignment,
+					EmitMethod = WriteLinkerSection,
+					SectionKind = linkerSection.SectionKind
+				};
+
+				switch (linkerSection.SectionKind)
+				{
+					case SectionKind.Text:
+						section.Type = SectionType.ProgBits;
+						section.Flags = SectionAttribute.AllocExecute;
+						break;
+
+					case SectionKind.Data:
+						section.Type = SectionType.ProgBits;
+						section.Flags = SectionAttribute.Alloc | SectionAttribute.Write;
+						break;
+
+					case SectionKind.ROData:
+						section.Type = SectionType.ProgBits;
+						section.Flags = SectionAttribute.Alloc;
+						break;
+
+					case SectionKind.BSS:
+						section.Type = SectionType.NoBits;
+						section.Flags = SectionAttribute.Alloc | SectionAttribute.Write;
+						break;
+				}
+
+				section.AddDependency(previous);
+
+				AddSection(section);
+
+				previous = section;
+			}
+		}
+
+		private void CreateExtraSections()
+		{
+			if (Linker.CreateExtraSections == null)
+				return;
+
+			foreach (var section in Linker.CreateExtraSections())
+			{
+				AddSection(section);
+			}
+		}
+
+		private void CreateNullSection()
+		{
+			nullSection = new Section()
+			{
+				Name = null,
+				Type = SectionType.Null
+			};
+			AddSection(nullSection);
+		}
+
+		private void CreateSectionHeaderStringSection()
+		{
+			sectionHeaderStringSection.Name = ".shstrtab";
+			sectionHeaderStringSection.Type = SectionType.StringTable;
+			sectionHeaderStringSection.AddressAlignment = Linker.SectionAlignment;
+			sectionHeaderStringSection.EmitMethod = WriteSectionHeaderStringSection;
+
+			AddSection(sectionHeaderStringSection);
+		}
+
+		private void CreateStringSection()
+		{
+			stringSection.Name = ".strtab";
+			stringSection.Type = SectionType.StringTable;
+			stringSection.AddressAlignment = Linker.SectionAlignment;
+			stringSection.EmitMethod = WriteStringSection;
+
+			AddSection(stringSection);
+
+			sectionHeaderStringSection.AddDependency(stringSection);
+		}
+
+		private void CreateSymbolSection()
+		{
+			symbolSection.Name = ".symtab";
+			symbolSection.Type = SectionType.SymbolTable;
+			symbolSection.AddressAlignment = Linker.SectionAlignment;
+			symbolSection.EntrySize = SymbolEntry.GetEntrySize(LinkerFormatType);
+			symbolSection.Link = stringSection;
+			symbolSection.EmitMethod = WriteSymbolSection;
+
+			AddSection(symbolSection);
+
+			stringSection.AddDependency(symbolSection);
+			sectionHeaderStringSection.AddDependency(symbolSection);
+		}
+
+		private void CreateRelocationSections()
+		{
+			foreach (var kind in MosaLinker.SectionKinds)
+			{
+				bool reloc = false;
+				bool relocAddend = false;
+
+				foreach (var symbol in Linker.Symbols)
+				{
+					if (symbol.SectionKind != kind)
+						continue;
+
+					if (symbol.IsExternalSymbol)
+						continue;
+
+					foreach (var patch in symbol.LinkRequests)
+					{
+						if (patch.LinkType == LinkType.Size)
+							continue;
+
+						if (!patch.ReferenceSymbol.IsExternalSymbol)
+							continue;
+
+						if (patch.ReferenceOffset == 0)
+							reloc = true;
+						else
+							relocAddend = true;
+
+						if (reloc && relocAddend)
+							break;
+					}
+
+					if (reloc && relocAddend)
+						break;
+				}
+
+				if (reloc)
+				{
+					CreateRelocationSection(kind, false);
+				}
+
+				if (relocAddend)
+				{
+					CreateRelocationSection(kind, true);
+				}
+			}
+		}
+
+		private void CreateRelocationSection(SectionKind kind, bool addend)
+		{
+			var relocationSection = new Section()
+			{
+				Name = (addend ? ".rela" : ".rel") + LinkerSectionNames[(int)kind],
+				Type = addend ? SectionType.RelocationA : SectionType.Relocation,
+				Link = symbolSection,
+				Info = GetSection(kind),
+				AddressAlignment = Linker.SectionAlignment,
+				EntrySize = addend ? RelocationAddendEntry.GetEntrySize(LinkerFormatType) : RelocationEntry.GetEntrySize(LinkerFormatType),
+				EmitMethod = WriteRelocationSections
+			};
+
+			AddSection(relocationSection);
+
+			relocationSection.AddDependency(symbolSection);
+			relocationSection.AddDependency(GetSection(kind));
 		}
 
 		private void WriteSections()
@@ -173,7 +367,8 @@ namespace Mosa.Compiler.Framework.Linker.Elf
 
 			ResolveSectionOffset(section);
 			writer.SetPosition(section.Offset);
-			section.EmitMethod?.Invoke(section, writer);
+
+			section.EmitMethod.Invoke(section, writer);
 		}
 
 		private void WriteElfHeader()
@@ -181,8 +376,8 @@ namespace Mosa.Compiler.Framework.Linker.Elf
 			writer.SetPosition(0);
 
 			elfheader.Type = FileType.Executable;
-			elfheader.Machine = Linkner.MachineType;
-			elfheader.EntryAddress = (uint)Linkner.EntryPoint.VirtualAddress;
+			elfheader.Machine = Linker.MachineType;
+			elfheader.EntryAddress = (uint)Linker.EntryPoint.VirtualAddress;
 			elfheader.CreateIdent((LinkerFormatType == LinkerFormatType.Elf32) ? IdentClass.Class32 : IdentClass.Class64, IdentData.Data2LSB);
 			elfheader.SectionHeaderNumber = (ushort)sections.Count;
 			elfheader.SectionHeaderStringIndex = sectionHeaderStringSection.Index;
@@ -198,7 +393,7 @@ namespace Mosa.Compiler.Framework.Linker.Elf
 
 			elfheader.ProgramHeaderNumber = 0;
 
-			foreach (var linkerSection in Linkner.Sections)
+			foreach (var linkerSection in Linker.Sections)
 			{
 				if (linkerSection.Size == 0 && linkerSection.SectionKind != SectionKind.BSS)
 					continue;
@@ -222,9 +417,9 @@ namespace Mosa.Compiler.Framework.Linker.Elf
 				elfheader.ProgramHeaderNumber++;
 			}
 
-			if (Linkner.CreateExtraProgramHeaders != null)
+			if (Linker.CreateExtraProgramHeaders != null)
 			{
-				foreach (var programHeader in Linkner.CreateExtraProgramHeaders())
+				foreach (var programHeader in Linker.CreateExtraProgramHeaders())
 				{
 					if (programHeader.FileSize == 0)
 						continue;
@@ -233,86 +428,6 @@ namespace Mosa.Compiler.Framework.Linker.Elf
 
 					elfheader.ProgramHeaderNumber++;
 				}
-			}
-		}
-
-		private void CreateSections()
-		{
-			CreateNullSection();
-
-			var previous = nullSection;
-
-			foreach (var linkerSection in Linkner.Sections)
-			{
-				if (linkerSection.Size == 0 && linkerSection.SectionKind != SectionKind.BSS)
-					continue;
-
-				var section = new Section()
-				{
-					Name = LinkerSectionNames[(int)linkerSection.SectionKind],
-					Address = linkerSection.VirtualAddress,
-					Offset = linkerSection.FileOffset,
-					Size = linkerSection.AlignedSize,
-					AddressAlignment = linkerSection.SectionAlignment,
-					EmitMethod = WriteLinkerSection,
-					SectionKind = linkerSection.SectionKind
-				};
-
-				switch (linkerSection.SectionKind)
-				{
-					case SectionKind.Text:
-						section.Type = SectionType.ProgBits;
-						section.Flags = SectionAttribute.AllocExecute;
-						break;
-
-					case SectionKind.Data:
-						section.Type = SectionType.ProgBits;
-						section.Flags = SectionAttribute.Alloc | SectionAttribute.Write;
-						break;
-
-					case SectionKind.ROData:
-						section.Type = SectionType.ProgBits;
-						section.Flags = SectionAttribute.Alloc;
-						break;
-
-					case SectionKind.BSS:
-						section.Type = SectionType.NoBits;
-						section.Flags = SectionAttribute.Alloc | SectionAttribute.Write;
-						break;
-				}
-
-				section.AddDependency(previous);
-
-				AddSection(section);
-
-				previous = section;
-			}
-
-			CreateSymbolSection();
-
-			CreateStringSection();
-
-			CreateRelocationSections();
-
-			CreatePluginSecttions();
-
-			CreateExtraSections();
-
-			CreateSectionHeaderStringSection();
-		}
-
-		private void CreatePluginSecttions()
-		{
-		}
-
-		private void CreateExtraSections()
-		{
-			if (Linkner.CreateExtraSections == null)
-				return;
-
-			foreach (var section in Linkner.CreateExtraSections())
-			{
-				AddSection(section);
 			}
 		}
 
@@ -330,30 +445,10 @@ namespace Mosa.Compiler.Framework.Linker.Elf
 
 		private void WriteLinkerSection(Section section, BinaryWriter writer)
 		{
-			var linkerSection = Linkner.Sections[(int)section.SectionKind];
+			var linkerSection = Linker.Sections[(int)section.SectionKind];
 
 			writer.SetPosition(section.Offset);
-			Linkner.WriteTo(writer.BaseStream, linkerSection);
-		}
-
-		private void CreateNullSection()
-		{
-			nullSection = new Section()
-			{
-				Name = null,
-				Type = SectionType.Null
-			};
-			AddSection(nullSection);
-		}
-
-		private void CreateSectionHeaderStringSection()
-		{
-			sectionHeaderStringSection.Name = ".shstrtab";
-			sectionHeaderStringSection.Type = SectionType.StringTable;
-			sectionHeaderStringSection.AddressAlignment = Linkner.SectionAlignment;
-			sectionHeaderStringSection.EmitMethod = WriteSectionHeaderStringSection;
-
-			AddSection(sectionHeaderStringSection);
+			Linker.WriteTo(writer.BaseStream, linkerSection);
 		}
 
 		private void WriteSectionHeaderStringSection(Section section, BinaryWriter writer)
@@ -362,35 +457,6 @@ namespace Mosa.Compiler.Framework.Linker.Elf
 
 			section.Size = (uint)sectionHeaderStringTable.Count;
 			writer.Write(sectionHeaderStringTable.ToArray());
-		}
-
-		private uint AddToSectionHeaderStringTable(string text)
-		{
-			if (text.Length == 0)
-				return 0;
-
-			uint index = (uint)sectionHeaderStringTable.Count;
-
-			foreach (char c in text)
-			{
-				sectionHeaderStringTable.Add((byte)c);
-			}
-
-			sectionHeaderStringTable.Add((byte)'\0');
-
-			return index;
-		}
-
-		private void CreateStringSection()
-		{
-			stringSection.Name = ".strtab";
-			stringSection.Type = SectionType.StringTable;
-			stringSection.AddressAlignment = Linkner.SectionAlignment;
-			stringSection.EmitMethod = WriteStringSection;
-
-			AddSection(stringSection);
-
-			sectionHeaderStringSection.AddDependency(stringSection);
 		}
 
 		private void WriteStringSection(Section section, BinaryWriter writer)
@@ -402,38 +468,6 @@ namespace Mosa.Compiler.Framework.Linker.Elf
 			section.Size = (uint)stringTable.Count;
 		}
 
-		private uint AddToStringTable(string text)
-		{
-			if (text.Length == 0)
-				return 0;
-
-			uint index = (uint)stringTable.Count;
-
-			foreach (char c in text)
-			{
-				stringTable.Add((byte)c);
-			}
-
-			stringTable.Add((byte)'\0');
-
-			return index;
-		}
-
-		private void CreateSymbolSection()
-		{
-			symbolSection.Name = ".symtab";
-			symbolSection.Type = SectionType.SymbolTable;
-			symbolSection.AddressAlignment = Linkner.SectionAlignment;
-			symbolSection.EntrySize = SymbolEntry.GetEntrySize(LinkerFormatType);
-			symbolSection.Link = stringSection;
-			symbolSection.EmitMethod = WriteSymbolSection;
-
-			AddSection(symbolSection);
-
-			stringSection.AddDependency(symbolSection);
-			sectionHeaderStringSection.AddDependency(symbolSection);
-		}
-
 		private void WriteSymbolSection(Section section, BinaryWriter writer)
 		{
 			Debug.Assert(section == symbolSection);
@@ -443,14 +477,14 @@ namespace Mosa.Compiler.Framework.Linker.Elf
 
 			uint count = 1;
 
-			foreach (var symbol in Linkner.Symbols)
+			foreach (var symbol in Linker.Symbols)
 			{
 				if (symbol.SectionKind == SectionKind.Unknown && symbol.LinkRequests.Count == 0)
 					continue;
 
 				Debug.Assert(symbol.SectionKind != SectionKind.Unknown, "symbol.SectionKind != SectionKind.Unknown");
 
-				if (!(symbol.IsExternalSymbol || Linkner.EmitAllSymbols))
+				if (!(symbol.IsExternalSymbol || Linker.EmitAllSymbols))
 					continue;
 
 				if (symbol.VirtualAddress == 0)
@@ -478,106 +512,7 @@ namespace Mosa.Compiler.Framework.Linker.Elf
 			section.Size = count * SymbolEntry.GetEntrySize(LinkerFormatType);
 		}
 
-		private string GetFinalSymboName(LinkerSymbol symbol)
-		{
-			if (symbol.ExternalSymbolName != null)
-				return symbol.ExternalSymbolName;
-
-			if (symbol.SectionKind != SectionKind.Text)
-				return symbol.Name;
-
-			if (!Linkner.EmitShortSymbolName)
-				return symbol.Name;
-
-			int pos = symbol.Name.LastIndexOf(") ");
-
-			if (pos < 0)
-				return symbol.Name;
-
-			var shortname = symbol.Name.Substring(0, pos + 1);
-
-			return shortname;
-		}
-
-		private void CreateRelocationSections()
-		{
-			foreach (var kind in MosaLinker.SectionKinds)
-			{
-				bool reloc = false;
-				bool relocAddend = false;
-
-				foreach (var symbol in Linkner.Symbols)
-				{
-					if (symbol.SectionKind != kind)
-						continue;
-
-					if (symbol.IsExternalSymbol)
-						continue;
-
-					foreach (var patch in symbol.LinkRequests)
-					{
-						if (patch.LinkType == LinkType.Size)
-							continue;
-
-						if (!patch.ReferenceSymbol.IsExternalSymbol)
-							continue;
-
-						if (patch.ReferenceOffset == 0)
-							reloc = true;
-						else
-							relocAddend = true;
-
-						if (reloc && relocAddend)
-							break;
-					}
-
-					if (reloc && relocAddend)
-						break;
-				}
-
-				if (reloc)
-				{
-					CreateRelocationSection(kind, false);
-				}
-
-				if (relocAddend)
-				{
-					CreateRelocationSection(kind, true);
-				}
-			}
-		}
-
-		private void CreateRelocationSection(SectionKind kind, bool addend)
-		{
-			var relocationSection = new Section()
-			{
-				Name = (addend ? ".rela" : ".rel") + LinkerSectionNames[(int)kind],
-				Type = addend ? SectionType.RelocationA : SectionType.Relocation,
-				Link = symbolSection,
-				Info = GetSection(kind),
-				AddressAlignment = Linkner.SectionAlignment,
-				EntrySize = addend ? RelocationAddendEntry.GetEntrySize(LinkerFormatType) : RelocationEntry.GetEntrySize(LinkerFormatType),
-				EmitMethod = WriteRelocationSection
-			};
-
-			AddSection(relocationSection);
-
-			relocationSection.AddDependency(symbolSection);
-			relocationSection.AddDependency(GetSection(kind));
-		}
-
-		private bool ContainsKind(SectionKind kind)
-		{
-			foreach (var symbol in Linkner.Symbols)
-			{
-				if (symbol.SectionKind == kind)
-					return true;
-			}
-
-			return false;
-		}
-
-		private void WriteRelocationSection(Section section, BinaryWriter writer)
+		private void WriteRelocationSections(Section section, BinaryWriter writer)
 		{
 			if (section.SectionKind == SectionKind.BSS)
 				return;
@@ -587,19 +522,19 @@ namespace Mosa.Compiler.Framework.Linker.Elf
 
 			if (section.Type == SectionType.Relocation)
 			{
-				EmitRelocation(section, writer);
+				WriteRelocationSection(section, writer);
 			}
 			else if (section.Type == SectionType.RelocationA)
 			{
-				EmitRelocationAddend(section, writer);
+				WriteRelocationAddendSection(section, writer);
 			}
 		}
 
-		private void EmitRelocation(Section section, BinaryWriter writer)
+		private void WriteRelocationSection(Section section, BinaryWriter writer)
 		{
 			int count = 0;
 
-			foreach (var symbol in Linkner.Symbols)
+			foreach (var symbol in Linker.Symbols)
 			{
 				if (symbol.IsExternalSymbol)
 					continue;
@@ -622,7 +557,7 @@ namespace Mosa.Compiler.Framework.Linker.Elf
 
 					var relocationEntry = new RelocationEntry()
 					{
-						RelocationType = ConvertType(Linkner.MachineType, patch.LinkType, patch.PatchType),
+						RelocationType = ConvertType(Linker.MachineType, patch.LinkType, patch.PatchType),
 						Symbol = symbolTableOffset[patch.ReferenceSymbol],
 						Offset = (ulong)(symbol.SectionOffset + patch.PatchOffset),
 					};
@@ -635,11 +570,11 @@ namespace Mosa.Compiler.Framework.Linker.Elf
 			}
 		}
 
-		private void EmitRelocationAddend(Section section, BinaryWriter writer)
+		private void WriteRelocationAddendSection(Section section, BinaryWriter writer)
 		{
 			int count = 0;
 
-			foreach (var symbol in Linkner.Symbols)
+			foreach (var symbol in Linker.Symbols)
 			{
 				//if (symbol.SectionKind != section.SectionKind)
 				//	continue;
@@ -663,7 +598,7 @@ namespace Mosa.Compiler.Framework.Linker.Elf
 
 					var relocationAddendEntry = new RelocationAddendEntry()
 					{
-						RelocationType = ConvertType(Linkner.MachineType, patch.LinkType, patch.PatchType),
+						RelocationType = ConvertType(Linker.MachineType, patch.LinkType, patch.PatchType),
 						Symbol = symbolTableOffset[patch.ReferenceSymbol],
 						Offset = (ulong)(symbol.SectionOffset + patch.PatchOffset),
 						Addend = (ulong)patch.ReferenceOffset,
@@ -676,6 +611,72 @@ namespace Mosa.Compiler.Framework.Linker.Elf
 			}
 
 			section.Size = (uint)(count * RelocationAddendEntry.GetEntrySize(LinkerFormatType));
+		}
+
+		private uint AddToStringTable(string text)
+		{
+			if (text.Length == 0)
+				return 0;
+
+			uint index = (uint)stringTable.Count;
+
+			foreach (char c in text)
+			{
+				stringTable.Add((byte)c);
+			}
+
+			stringTable.Add((byte)'\0');
+
+			return index;
+		}
+
+		private uint AddToSectionHeaderStringTable(string text)
+		{
+			if (text.Length == 0)
+				return 0;
+
+			uint index = (uint)sectionHeaderStringTable.Count;
+
+			foreach (char c in text)
+			{
+				sectionHeaderStringTable.Add((byte)c);
+			}
+
+			sectionHeaderStringTable.Add((byte)'\0');
+
+			return index;
+		}
+
+		private string GetFinalSymboName(LinkerSymbol symbol)
+		{
+			if (symbol.ExternalSymbolName != null)
+				return symbol.ExternalSymbolName;
+
+			if (symbol.SectionKind != SectionKind.Text)
+				return symbol.Name;
+
+			if (!Linker.EmitShortSymbolName)
+				return symbol.Name;
+
+			int pos = symbol.Name.LastIndexOf(") ");
+
+			if (pos < 0)
+				return symbol.Name;
+
+			var shortname = symbol.Name.Substring(0, pos + 1);
+
+			return shortname;
+		}
+
+		private bool ContainsKind(SectionKind kind)
+		{
+			foreach (var symbol in Linker.Symbols)
+			{
+				if (symbol.SectionKind == kind)
+					return true;
+			}
+
+			return false;
 		}
 
 		private static RelocationType ConvertType(MachineType machineType, LinkType linkType, PatchType patchType)
