@@ -89,7 +89,7 @@ namespace Mosa.Utility.UnitTests
 			Settings.Merge(settings);
 
 			Settings.SetValue("Compiler.BaseAddress", 0x00500000);
-			Settings.SetValue("Compiler.EmitBinary", true);
+			Settings.SetValue("Compiler.Binary", true);
 			Settings.SetValue("Compiler.TraceLevel", 0);
 			Settings.SetValue("Compiler.Advanced.PlugKorlib", true);
 			Settings.SetValue("Multiboot.Version", "v1");

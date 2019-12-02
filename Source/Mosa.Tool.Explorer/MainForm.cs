@@ -944,7 +944,7 @@ namespace Mosa.Tool.Explorer
 		private void SetDefaultSettings()
 		{
 			Settings.SetValue("Compiler.BaseAddress", 0x00400000);
-			Settings.SetValue("Compiler.EmitBinary", true);
+			Settings.SetValue("Compiler.Binary", true);
 			Settings.SetValue("Compiler.MethodScanner", false);
 			Settings.SetValue("Compiler.Multithreading", true);
 			Settings.SetValue("Compiler.Platform", "x86");
@@ -992,7 +992,7 @@ namespace Mosa.Tool.Explorer
 		private void UpdateSettings()
 		{
 			Settings.SetValue("Compiler.MethodScanner", cbEnableMethodScanner.Checked);
-			Settings.SetValue("Compiler.EmitBinary", cbEnableBinaryCodeGeneration.Checked);
+			Settings.SetValue("Compiler.Binary", cbEnableBinaryCodeGeneration.Checked);
 			Settings.SetValue("Compiler.TraceLevel", 8);
 			Settings.SetValue("Compiler.Platform", cbPlatform.Text);
 			Settings.SetValue("Compiler.Multithreading", CBEnableMultithreading.Checked);
@@ -1044,7 +1044,7 @@ namespace Mosa.Tool.Explorer
 			cbLoopInvariantCodeMotion.Checked = Settings.GetValue("Optimizations.LoopInvariantCodeMotion", cbLoopInvariantCodeMotion.Checked);
 			cbEnableValueNumbering.Checked = Settings.GetValue("Optimizations.ValueNumbering", cbEnableValueNumbering.Checked);
 			cbEnableBitTracker.Checked = Settings.GetValue("Optimizations.BitTracker", cbEnableBitTracker.Checked);
-			cbEnableBinaryCodeGeneration.Checked = Settings.GetValue("Compiler.EmitBinary", cbEnableBinaryCodeGeneration.Checked);
+			cbEnableBinaryCodeGeneration.Checked = Settings.GetValue("Compiler.Binary", cbEnableBinaryCodeGeneration.Checked);
 			cbEnableMethodScanner.Checked = Settings.GetValue("Compiler.MethodScanner", cbEnableMethodScanner.Checked);
 
 			tbFilter.Text = Settings.GetValue("Explorer.Filter", tbFilter.Text);

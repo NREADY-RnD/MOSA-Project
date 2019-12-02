@@ -365,6 +365,7 @@ namespace Mosa.Compiler.Framework.Linker.Elf
 			if (section.EmitMethod == null)
 				return;
 
+			// Set the next available offset
 			ResolveSectionOffset(section);
 			writer.SetPosition(section.Offset);
 
@@ -448,7 +449,7 @@ namespace Mosa.Compiler.Framework.Linker.Elf
 			var linkerSection = Linker.Sections[(int)section.SectionKind];
 
 			writer.SetPosition(section.Offset);
-			Linker.WriteTo(writer.BaseStream, linkerSection);
+			Linker.WriteLinkerSectionTo(writer.BaseStream, linkerSection);
 		}
 
 		private void WriteSectionHeaderStringSection(Section section, BinaryWriter writer)

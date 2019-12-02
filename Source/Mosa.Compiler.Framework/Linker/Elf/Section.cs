@@ -44,6 +44,8 @@ namespace Mosa.Compiler.Framework.Linker.Elf
 
 		public SectionKind SectionKind { get; set; }
 
+		public Stream Stream { get; set; }
+
 		public Section()
 		{
 			IsEmitted = false;

@@ -317,7 +317,7 @@ namespace Mosa.Tool.Launcher
 		private void SetDefaultSettings()
 		{
 			Settings.SetValue("Compiler.BaseAddress", 0x00400000);
-			Settings.SetValue("Compiler.EmitBinary", true);
+			Settings.SetValue("Compiler.Binary", true);
 			Settings.SetValue("Compiler.MethodScanner", false);
 			Settings.SetValue("Compiler.Multithreading", true);
 			Settings.SetValue("Compiler.Platform", "x86");
@@ -400,8 +400,8 @@ namespace Mosa.Tool.Launcher
 			Settings.SetValue("Optimizations.TwoPass", cbTwoPassOptimizations.Checked);
 			Settings.SetValue("Optimizations.ValueNumbering", cbValueNumbering.Checked);
 			Settings.SetValue("Compiler.BaseAddress", (uint)tbBaseAddress.Text.ParseHexOrInteger());
-			Settings.SetValue("Linker.EmitAllSymbols", cbEmitSymbolTable.Checked);
-			Settings.SetValue("Linker.EmitStaticRelocations", cbRelocationTable.Checked);
+			Settings.SetValue("Linker.Symbols", cbEmitSymbolTable.Checked);
+			Settings.SetValue("Linker.StaticRelocations", cbRelocationTable.Checked);
 			Settings.SetValue("Compiler.MethodScanner", cbEnableMethodScanner.Checked);
 			Settings.SetValue("CompilerDebug.CompileTimeFile", cbGenerateCompilerTime.Checked);
 			Settings.SetValue("Optimizations.BitTracker", cbBitTracker.Checked);
@@ -504,8 +504,8 @@ namespace Mosa.Tool.Launcher
 			nmMemory.Value = Settings.GetValue("Emulator.Memory", 128);
 			cbVBEVideo.Checked = Settings.GetValue("Multiboot.Video", false);
 			tbBaseAddress.Text = "0x" + Settings.GetValue("Compiler.BaseAddress", 0x00400000).ToString("x8");
-			cbRelocationTable.Checked = Settings.GetValue("Linker.EmitStaticRelocations", false);
-			cbEmitSymbolTable.Checked = Settings.GetValue("Linker.EmitAllSymbols", false);
+			cbRelocationTable.Checked = Settings.GetValue("Linker.StaticRelocations", false);
+			cbEmitSymbolTable.Checked = Settings.GetValue("Linker.Symbols", false);
 			cbLongExpansion.Checked = Settings.GetValue("Optimizations.LongExpansion", true);
 			cbTwoPassOptimizations.Checked = Settings.GetValue("Optimizations.TwoPass", true);
 			cbValueNumbering.Checked = Settings.GetValue("Optimizations.ValueNumbering", true);

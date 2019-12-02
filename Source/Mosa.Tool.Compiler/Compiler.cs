@@ -169,7 +169,7 @@ Example: Mosa.Tool.Compiler.exe -o Mosa.HelloWorld.x86.bin -a x86 --mboot v1 --x
 		private void SetDefaultSettings()
 		{
 			Settings.SetValue("Compiler.BaseAddress", 0x00400000);
-			Settings.SetValue("Compiler.EmitBinary", true);
+			Settings.SetValue("Compiler.Binary", true);
 			Settings.SetValue("Compiler.MethodScanner", false);
 			Settings.SetValue("Compiler.Multithreading", true);
 			Settings.SetValue("Compiler.Platform", "x86");

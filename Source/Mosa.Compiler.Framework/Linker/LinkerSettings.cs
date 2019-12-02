@@ -21,17 +21,17 @@ namespace Mosa.Compiler.Framework.Linker
 
 		public string LinkerFormat { get { return Settings.GetValue("Linker.Format", "elf32"); } }
 
-		public bool EmitBinary { get { return Settings.GetValue("Compiler.EmitBinary", true); } }
+		public bool Binary { get { return Settings.GetValue("Compiler.Binary", true); } }
 
-		public bool EmitAllSymbols { get { return Settings.GetValue("Linker.EmitAllSymbols", false); } }
+		public bool Symbols { get { return Settings.GetValue("Linker.Symbols", false); } }
 
-		public bool EmitStaticRelocations { get { return Settings.GetValue("Linker.EmitStaticRelocations", false); } }
+		public bool StaticRelocations { get { return Settings.GetValue("Linker.StaticRelocations", false); } }
 
-		public bool EmitShortSymbolNames { get { return Settings.GetValue("Linker.EmitShortSymbolNames", false); } }
+		public bool ShortSymbolNames { get { return Settings.GetValue("Linker.ShortSymbolNames", false); } }
 
-		public bool EmitDrawf { get { return Settings.GetValue("Linker.EmitDrawf", false); } }
+		public bool Drawf { get { return Settings.GetValue("Linker.Drawf", false); } }
 
-		public bool Statistics { get { return Settings.GetValue("CompilerDebug.EnableStatistics", true); } }
+		public bool Statistics { get { return Settings.GetValue("CompilerDebug.Statistics", true); } }
 
 		public int TraceLevel { get { return Settings.GetValue("Compiler.TraceLevel", 0); } }
 
@@ -43,7 +43,7 @@ namespace Mosa.Compiler.Framework.Linker
 		{
 			// defaults
 
-			Settings.SetValue("Compiler.EmitBinary", true);
+			Settings.SetValue("Compiler.Binary", true);
 			Settings.SetValue("Compiler.TraceLevel", 0);
 			Settings.SetValue("Compiler.Platform", "x86");
 			Settings.SetValue("Compiler.Multithreading", true);

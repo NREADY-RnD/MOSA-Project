@@ -63,8 +63,8 @@ namespace Mosa.Compiler.Framework.Linker
 			LinkerFormatType = LinkerSettings.LinkerFormat.ToLower() == "elf64" ? LinkerFormatType.Elf64 : LinkerFormatType.Elf32;
 
 			// Cache for faster performance
-			EmitAllSymbols = LinkerSettings.EmitAllSymbols;
-			EmitShortSymbolName = LinkerSettings.EmitShortSymbolNames;
+			EmitAllSymbols = LinkerSettings.Symbols;
+			EmitShortSymbolName = LinkerSettings.ShortSymbolNames;
 
 			//CreateExtraSections = createExtraSections;
 			//CreateExtraProgramHeaders = createExtraProgramHeaders;
@@ -282,7 +282,7 @@ namespace Mosa.Compiler.Framework.Linker
 			section.IsResolved = true;
 		}
 
-		internal void WriteTo(Stream stream, LinkerSection section)
+		internal void WriteLinkerSectionTo(Stream stream, LinkerSection section)
 		{
 			foreach (var symbol in Symbols)
 			{

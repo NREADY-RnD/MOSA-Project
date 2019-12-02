@@ -45,7 +45,7 @@ namespace Mosa.Workspace.Experiment.Debug
 			var settings = new Settings();
 
 			settings.SetValue("Compiler.MethodScanner", false);
-			settings.SetValue("Compiler.EmitBinary", true);
+			settings.SetValue("Compiler.Binary", true);
 			settings.SetValue("Compiler.TraceLevel", 0);
 			settings.SetValue("Compiler.Platform", platform);
 			settings.SetValue("Compiler.Multithreading", true);

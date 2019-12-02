@@ -25,7 +25,7 @@ namespace Mosa.Utility.Configuration
 
 				new Argument() { Name =  "--base", Setting = "Compiler.BaseAddress"},
 				new Argument() { Name =  "--scanner", Setting = "Compiler.MethodScanner", Value = "true"},
-				new Argument() { Name =  "--no-code", Setting = "Compiler.EmitBinary", Value = "false"},
+				new Argument() { Name =  "--no-code", Setting = "Compiler.Binary", Value = "false"},
 				new Argument() { Name =  "--path", Setting = "SearchPaths", IsList = true},
 
 				new Argument() { Name =  "--inline", Setting = "Optimizations.Inline", Value = "true"},
@@ -86,12 +86,12 @@ namespace Mosa.Utility.Configuration
 				new Argument() { Name =  "-a", Setting = "Compiler.Platform"},	// legacy
 
 				// Linker:
-				new Argument() { Name =  "--emit-all-symbols", Setting = "Linker.EmitAllSymbols", Value = "true"},
-				new Argument() { Name =  "--emit-all-symbols-off", Setting = "Linker.EmitAllSymbols", Value = "false"},
-				new Argument() { Name =  "--emit-relocations", Setting = "Linker.EmitStaticRelocations", Value = "true"},
-				new Argument() { Name =  "--emit-relocations-off", Setting = "Linker.EmitStaticRelocations", Value = "false"},
-				new Argument() { Name =  "--emit-static-relocations", Setting = "Linker.EmitStaticRelocations", Value = "true"},
-				new Argument() { Name =  "--drawf", Setting = "Linker.EmitDrawf", Value = "true"},
+				new Argument() { Name =  "--emit-all-symbols", Setting = "Linker.Symbols", Value = "true"},
+				new Argument() { Name =  "--emit-all-symbols-off", Setting = "Linker.Symbols", Value = "false"},
+				new Argument() { Name =  "--emit-relocations", Setting = "Linker.StaticRelocations", Value = "true"},
+				new Argument() { Name =  "--emit-relocations-off", Setting = "Linker.StaticRelocations", Value = "false"},
+				new Argument() { Name =  "--emit-static-relocations", Setting = "Linker.StaticRelocations", Value = "true"},
+				new Argument() { Name =  "--drawf", Setting = "Linker.Drawf", Value = "true"},
 
 				// Explorer:
 				new Argument() { Name =  "--filter", Setting = "Explorer.Filter", Value = null},
