@@ -1,12 +1,16 @@
 // Copyright (c) MOSA Project. Licensed under the New BSD License.
 
 using CommandLine;
+using Mosa.Compiler.Common.Configuration;
 using Mosa.Compiler.Common.Exceptions;
 using Mosa.Compiler.Framework;
+using Mosa.Compiler.Framework.Linker.Elf.Dwarf;
 using Mosa.Compiler.Framework.Trace.BuiltIn;
+using Mosa.Utility.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Text;
 
 namespace Mosa.Tool.Compiler
@@ -20,10 +24,7 @@ namespace Mosa.Tool.Compiler
 
 		protected MosaCompiler compiler;
 
-		/// <summary>
-		/// Holds a reference to the Options parsed from the arguments.
-		/// </summary>
-		private Options options;
+		protected Settings Settings = new Settings();
 
 		private readonly int majorVersion = 1;
 		private readonly int minorVersion = 4;
@@ -43,19 +44,12 @@ namespace Mosa.Tool.Compiler
 		/// </summary>
 		public Compiler()
 		{
-			usageString = @"Usage: Mosa.Tool.Compiler.exe -o outputfile --achitecture=[x86|x64|ARMv6] --format=[ELF32|ELF64] {--boot=[mb0.7]} {additional options} inputfiles.
+			usageString = @"Usage: Mosa.Tool.Compiler.exe -o outputfile --achitecture=[x86|x64] --format=[ELF32|ELF64] {--boot=[mb0.7]} {additional options} inputfiles.
 
 Example: Mosa.Tool.Compiler.exe -o Mosa.HelloWorld.x86.bin -a x86 --mboot v1 --x86-irq-methods --base-address 0x00500000 Mosa.HelloWorld.x86.exe mscorlib.dll Mosa.Plug.Korlib.dll Mosa.Plug.Korlib.x86.dll";
 		}
 
 		#endregion Constructors
-
-		private List<BaseCompilerExtension> GetCompilerExtensions()
-		{
-			var list = new List<BaseCompilerExtension>();
-			list.Add(new Mosa.Compiler.Extensions.Dwarf.DwarfCompilerExtension());
-			return list;
-		}
 
 		#region Public Methods
 
@@ -65,6 +59,8 @@ Example: Mosa.Tool.Compiler.exe -o Mosa.HelloWorld.x86.bin -a x86 --mboot v1 --x
 		/// <param name="args">The command line arguments.</param>
 		public void Run(string[] args)
 		{
+			RegisterPlatforms();
+
 			// always print header with version information
 			Console.WriteLine("MOSA AOT Compiler, Version {0}.{1} '{2}'", majorVersion, minorVersion, codeName);
 			Console.WriteLine("Copyright 2019 by the MOSA Project. Licensed under the New BSD License.");
@@ -74,38 +70,32 @@ Example: Mosa.Tool.Compiler.exe -o Mosa.HelloWorld.x86.bin -a x86 --mboot v1 --x
 
 			try
 			{
-				options = ParseOptions(args);
-				if (options == null)
-				{
-					ShowShortHelp();
-					return;
-				}
+				LoadArguments(args);
 
-				if (options.InputFiles.Count == 0)
+				//if (options == null)
+				//{
+				//	ShowShortHelp();
+				//	return;
+				//}
+
+				var sourceFiles = Settings.GetValueList("Compiler.SourceFiles");
+
+				if (sourceFiles == null && sourceFiles.Count == 0)
 				{
 					throw new Exception("No input file(s) specified.");
 				}
 
-				compiler = new MosaCompiler(options.CompilerOptions, GetCompilerExtensions());
+				compiler = new MosaCompiler(Settings);
 
 				Trace.Listeners.Add(new TextWriterTraceListener(Console.Out));
 				Debug.AutoFlush = true;
 
-				// Process boot format:
-				// Boot format only matters if it's an executable
-				// Process this only now, because input files must be known
-				if (!options.IsInputExecutable)
-				{
-					Console.WriteLine("Warning: Ignoring boot format, because target is not an executable.");
-					Console.WriteLine();
-				}
-
-				if (string.IsNullOrEmpty(compiler.CompilerOptions.OutputFile))
+				if (string.IsNullOrEmpty(compiler.CompilerSettings.OutputFile))
 				{
 					throw new Exception("No output file specified.");
 				}
 
-				if (compiler.CompilerOptions.Architecture == null)
+				if (compiler.CompilerSettings.Platform == null)
 				{
 					throw new Exception("No Architecture specified.");
 				}
@@ -141,18 +131,6 @@ Example: Mosa.Tool.Compiler.exe -o Mosa.HelloWorld.x86.bin -a x86 --mboot v1 --x
 			Console.WriteLine("Compilation time: " + time);
 		}
 
-		private static Options ParseOptions(string[] args)
-		{
-			ParserResult<Options> result = new Parser(config => config.HelpWriter = Console.Out).ParseArguments<Options>(args);
-
-			if (result.Tag == ParserResultType.NotParsed)
-			{
-				return null;
-			}
-
-			return ((Parsed<Options>)result).Value;
-		}
-
 		/// <summary>
 		/// Returns a string representation of the current options.
 		/// </summary>
@@ -160,37 +138,89 @@ Example: Mosa.Tool.Compiler.exe -o Mosa.HelloWorld.x86.bin -a x86 --mboot v1 --x
 		public override string ToString()
 		{
 			var sb = new StringBuilder();
-			sb.Append(" > Output file: ").AppendLine(compiler.CompilerOptions.OutputFile);
-			sb.Append(" > Input file(s): ").AppendLine(string.Join(", ", new List<string>(GetInputFileNames()).ToArray()));
-			sb.Append(" > Architecture: ").AppendLine(compiler.CompilerOptions.Architecture.GetType().FullName);
-			sb.Append(" > Binary format: ").AppendLine(compiler.CompilerOptions.LinkerFormatType.ToString());
-			sb.Append(" > Boot spec: ").AppendLine(compiler.CompilerOptions.MultibootSpecification.ToString());
-			sb.Append(" > Is executable: ").AppendLine(options.IsInputExecutable.ToString());
+			sb.Append(" > Output file: ").AppendLine(Settings.GetValue("Compiler.OutputFile", string.Empty));
+			sb.Append(" > Input file(s): ").AppendLine(string.Join(", ", new List<string>(Settings.GetValueList("Compiler.SourceFiles").ToArray())));
+			sb.Append(" > Platform: ").AppendLine(Settings.GetValue("Compiler.Platform", string.Empty));
+			sb.Append(" > Binary format: ").AppendLine(Settings.GetValue("Linker.Format", string.Empty));
+			sb.Append(" > Boot spec: ").AppendLine(Settings.GetValue("Multiboot.Version", string.Empty));
 			return sb.ToString();
+		}
+
+		private static void RegisterPlatforms()
+		{
+			PlatformRegistry.Add(new Platform.x86.Architecture());
+			PlatformRegistry.Add(new Platform.x64.Architecture());
+			PlatformRegistry.Add(new Platform.ARMv8A32.Architecture());
 		}
 
 		#endregion Public Methods
 
 		#region Private Methods
 
+		private void LoadArguments(string[] args)
+		{
+			SetDefaultSettings();
+
+			var arguments = SettingsLoader.RecursiveReader(args);
+
+			Settings.Merge(arguments);
+		}
+
+		private void SetDefaultSettings()
+		{
+			Settings.SetValue("Compiler.BaseAddress", 0x00400000);
+			Settings.SetValue("Compiler.Binary", true);
+			Settings.SetValue("Compiler.MethodScanner", false);
+			Settings.SetValue("Compiler.Multithreading", true);
+			Settings.SetValue("Compiler.Platform", "x86");
+			Settings.SetValue("Compiler.TraceLevel", 0);
+			Settings.SetValue("Compiler.Multithreading", true);
+			Settings.SetValue("Compiler.Advanced.PlugKorlib", true);
+			Settings.SetValue("CompilerDebug.DebugFile", string.Empty);
+			Settings.SetValue("CompilerDebug.AsmFile", string.Empty);
+			Settings.SetValue("CompilerDebug.MapFile", string.Empty);
+			Settings.SetValue("CompilerDebug.NasmFile", string.Empty);
+			Settings.SetValue("Optimizations.Basic", true);
+			Settings.SetValue("Optimizations.BitTracker", true);
+			Settings.SetValue("Optimizations.Inline", true);
+			Settings.SetValue("Optimizations.Inline.AggressiveMaximum", 24);
+			Settings.SetValue("Optimizations.Inline.ExplicitOnly", false);
+			Settings.SetValue("Optimizations.Inline.Maximum", 12);
+			Settings.SetValue("Optimizations.LongExpansion", true);
+			Settings.SetValue("Optimizations.LoopInvariantCodeMotion", true);
+			Settings.SetValue("Optimizations.Platform", true);
+			Settings.SetValue("Optimizations.SCCP", true);
+			Settings.SetValue("Optimizations.SSA", true);
+			Settings.SetValue("Optimizations.TwoPass", true);
+			Settings.SetValue("Optimizations.ValueNumbering", true);
+			Settings.SetValue("Image.BootLoader", "syslinux3.72");
+			Settings.SetValue("Image.Destination", Path.Combine(Path.GetTempPath(), "MOSA"));
+			Settings.SetValue("Image.Format", "IMG");
+			Settings.SetValue("Image.FileSystem", "FAT16");
+			Settings.SetValue("Multiboot.Version", "v1");
+			Settings.SetValue("Multiboot.Video", false);
+			Settings.SetValue("Multiboot.Video.Width", 640);
+			Settings.SetValue("Multiboot.Video.Height", 480);
+			Settings.SetValue("Multiboot.Video.Depth", 32);
+			Settings.SetValue("Emulator", "Qemu");
+			Settings.SetValue("Emulator.Memory", 128);
+			Settings.SetValue("Emulator.Serial", "TCPServer");
+			Settings.SetValue("Emulator.Serial.Host", "127.0.0.1");
+			Settings.SetValue("Emulator.Serial.Port", 9999);
+			Settings.SetValue("Emulator.Serial.Pipe", "MOSA");
+			Settings.SetValue("Launcher.Start", false);
+			Settings.SetValue("Launcher.Launch", false);
+			Settings.SetValue("Launcher.Exit", false);
+			Settings.SetValue("Launcher.Advance.HuntForCorLib", true);
+		}
+
 		private void Compile()
 		{
 			compiler.CompilerTrace.SetTraceListener(new ConsoleEventListener());
 
-			compiler.CompilerOptions.AddSourceFiles(options.InputFiles);
-
 			compiler.Load();
 
 			compiler.ThreadedCompile();
-		}
-
-		/// <summary>
-		/// Gets a list of input file names.
-		/// </summary>
-		private IEnumerable<string> GetInputFileNames()
-		{
-			foreach (var file in options.InputFiles)
-				yield return file.FullName;
 		}
 
 		/// <summary>

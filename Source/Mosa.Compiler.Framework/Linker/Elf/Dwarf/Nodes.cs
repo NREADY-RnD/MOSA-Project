@@ -2,7 +2,7 @@
 
 using System.Collections.Generic;
 
-namespace Mosa.Compiler.Extensions.Dwarf
+namespace Mosa.Compiler.Framework.Linker.Elf.Dwarf
 {
 	public class DwarfDebugInformationEntry
 	{

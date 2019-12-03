@@ -27,6 +27,8 @@ namespace Mosa.Compiler.Framework
 
 		public bool HasAggressiveInliningAttribute { get; set; }
 
+		public bool AggressiveInlineRequested { get; set; }
+
 		public bool IsMethodImplementationReplaced { get; set; }
 
 		public bool HasLoops { get; set; }
@@ -86,6 +88,7 @@ namespace Mosa.Compiler.Framework
 			HasMethodPointerReferenced = false;
 			HasCode = false;
 			IsInvoked = false;
+			AggressiveInlineRequested = false;
 		}
 
 		#region Methods

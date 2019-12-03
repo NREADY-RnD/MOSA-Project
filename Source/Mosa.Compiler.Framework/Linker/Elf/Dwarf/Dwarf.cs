@@ -1,38 +1,47 @@
 ﻿// Copyright (c) MOSA Project. Licensed under the New BSD License.
 
 using Mosa.Compiler.Common;
-using Mosa.Compiler.Framework;
-using Mosa.Compiler.Framework.Linker;
 using Mosa.Compiler.Framework.Linker.Elf;
 using Mosa.Compiler.Framework.Source;
-using Mosa.Compiler.Framework.Trace;
+using Mosa.Compiler.MosaTypeSystem;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace Mosa.Compiler.Extensions.Dwarf
+namespace Mosa.Compiler.Framework.Linker.Elf.Dwarf
 {
-	internal class DwarfCompilerStage : BaseCompilerStage
+	internal sealed class Dwarf
 	{
-		protected override void Finalization()
+		private Compiler Compiler { get; }
+		private MosaLinker Linker { get; }
+		private TypeSystem TypeSystem { get; }
+
+		public Dwarf(Compiler compiler)
 		{
-			if (Linker.CreateExtraSections == null)
-			{
-				Linker.CreateExtraSections = CreateExtraSections;
-			}
-			else
-			{
-				var sectionsOldDelegate = Linker.CreateExtraSections;
-				Linker.CreateExtraSections = () =>
-				{
-					var sections = new List<Section>();
-					sections.AddRange(sectionsOldDelegate());
-					sections.AddRange(CreateExtraSections());
-					return sections;
-				};
-			}
+			Compiler = compiler;
+			Linker = compiler.Linker;
+			TypeSystem = compiler.TypeSystem;
 		}
+
+		//protected override void Finalization()
+		//{
+		//	if (Linker.CreateExtraSections == null)
+		//	{
+		//		Linker.CreateExtraSections = CreateExtraSections;
+		//	}
+		//	else
+		//	{
+		//		var sectionsOldDelegate = Linker.CreateExtraSections;
+		//		Linker.CreateExtraSections = () =>
+		//		{
+		//			var sections = new List<Section>();
+		//			sections.AddRange(sectionsOldDelegate());
+		//			sections.AddRange(CreateExtraSections());
+		//			return sections;
+		//		};
+		//	}
+		//}
 
 		private readonly List<DwarfAbbrev> AbbrevList = new List<DwarfAbbrev>();
 
@@ -49,7 +58,7 @@ namespace Mosa.Compiler.Extensions.Dwarf
 
 			var context = new DwarfWriteContext { Writer = wr, AbbrevList = AbbrevList };
 
-			var textSection = Compiler.Linker.Sections[(int)SectionKind.Text];
+			var textSection = Linker.Sections[(int)SectionKind.Text];
 
 			// Debugging Information Entry
 			var cu = new DwarfCompilationUnit
@@ -66,15 +75,16 @@ namespace Mosa.Compiler.Extensions.Dwarf
 			wr.SetPosition(wr.BaseStream.Length);
 		}
 
-		public
-		void EmitDebugInfoCompilationUnitHeader(BinaryWriter wr)
+		public void EmitDebugInfoCompilationUnitHeader(BinaryWriter wr)
 		{
 		}
 
 		private void EmitDebugAbbrev(BinaryWriter wr)
 		{
 			foreach (var abbr in AbbrevList)
+			{
 				EmitDebugAbbrev(wr, abbr);
+			}
 
 			wr.WriteULEB128(DwarfConstants.NullTag);
 		}
@@ -84,6 +94,7 @@ namespace Mosa.Compiler.Extensions.Dwarf
 			wr.WriteULEB128(abbr.Number);
 			wr.WriteULEB128((uint)abbr.Tag);
 			wr.WriteByte(abbr.HasChildren ? DwarfConstants.DW_CHILDREN_yes : DwarfConstants.DW_CHILDREN_no);
+
 			foreach (var attr in abbr.Attributes)
 			{
 				wr.WriteULEB128((uint)attr.Attribute);
@@ -322,8 +333,9 @@ namespace Mosa.Compiler.Extensions.Dwarf
 						uint pcDiff = newPc - pc;
 
 						int lineDiff = loc.StartLine - (int)line;
-						if (Math.Abs(lineDiff) > 100000)
-							PostCompilerTraceEvent(CompilerEvent.Warning, $"Warning Line Numbers wrong: Location={loc} Method={method} lineDiff={lineDiff}");
+
+						//if (Math.Abs(lineDiff) > 100000)
+						//	PostCompilerTraceEvent(CompilerEvent.Warning, $"Warning Line Numbers wrong: Location={loc} Method={method} lineDiff={lineDiff}");
 
 						var newFile = FileHash[loc.Filename].FileNum;
 

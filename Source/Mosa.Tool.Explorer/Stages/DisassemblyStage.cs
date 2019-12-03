@@ -11,7 +11,7 @@ namespace Mosa.Tool.Explorer.Stages
 	{
 		protected override void Run()
 		{
-			if (!CompilerOptions.EmitBinary)
+			if (!CompilerSettings.EmitBinary)
 				return;
 
 			TraceDisassembly();

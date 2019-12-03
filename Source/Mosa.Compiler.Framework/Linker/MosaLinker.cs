@@ -15,69 +15,51 @@ namespace Mosa.Compiler.Framework.Linker
 	/// </summary>
 	public sealed class MosaLinker
 	{
-		public delegate List<Section> CreateExtraSectionsDelegate();
-
-		public delegate List<ProgramHeader> CreateExtraProgramHeaderDelegate();
+		public LinkerSettings LinkerSettings;
 
 		public List<LinkerSymbol> Symbols { get; } = new List<LinkerSymbol>();
 
-		public LinkerSection[] Sections { get; } = new LinkerSection[4];
+		private readonly Dictionary<string, LinkerSymbol> symbolLookup = new Dictionary<string, LinkerSymbol>();
 
 		public LinkerSymbol EntryPoint { get; set; }
 
-		public MachineType MachineType { get; }
+		private readonly ElfLinker ElfLinker;
 
-		public ulong BaseAddress { get; }
+		public uint SectionAlignment { get { return ElfLinker.SectionAlignment; } }
 
-		public uint SectionAlignment { get; set; }
-
-		public uint BaseFileOffset { get; set; }
-
-		public bool EmitAllSymbols { get; set; }
-
-		public bool EmitStaticRelocations { get; set; }
+		public uint BaseFileOffset { get { return ElfLinker.BaseFileOffset; } }
 
 		public bool EmitShortSymbolName { get; set; }
 
 		public LinkerFormatType LinkerFormatType { get; }
 
-		private readonly ElfLinker elfLinker;
+		public LinkerSection[] Sections { get; } = new LinkerSection[4];
 
 		public static readonly SectionKind[] SectionKinds = new[] { SectionKind.Text, SectionKind.Data, SectionKind.ROData, SectionKind.BSS };
-
-		private readonly Dictionary<string, LinkerSymbol> symbolLookup = new Dictionary<string, LinkerSymbol>();
 
 		private readonly object _lock = new object();
 		private readonly object _cacheLock = new object();
 
-		public CreateExtraSectionsDelegate CreateExtraSections { get; set; }
-		public CreateExtraProgramHeaderDelegate CreateExtraProgramHeaders { get; set; }
-
-		public MosaLinker(ulong baseAddress, MachineType machineType, bool emitAllSymbols, bool emitStaticRelocations, bool emitShortSymbolName, LinkerFormatType linkerFormatType, CreateExtraSectionsDelegate createExtraSections, CreateExtraProgramHeaderDelegate createExtraProgramHeaders)
+		public MosaLinker(Compiler compiler)
 		{
-			BaseAddress = baseAddress;
-			MachineType = machineType;
-			EmitAllSymbols = emitAllSymbols;
-			EmitStaticRelocations = emitStaticRelocations;
-			EmitShortSymbolName = emitShortSymbolName;
-			LinkerFormatType = linkerFormatType;
-			CreateExtraSections = createExtraSections;
-			CreateExtraProgramHeaders = createExtraProgramHeaders;
+			LinkerSettings = new LinkerSettings(compiler.CompilerSettings.Settings);
 
-			elfLinker = new ElfLinker(this, LinkerFormatType);
+			LinkerFormatType = LinkerSettings.LinkerFormat.ToLower() == "elf64" ? LinkerFormatType.Elf64 : LinkerFormatType.Elf32;
 
-			BaseFileOffset = elfLinker.BaseFileOffset;
-			SectionAlignment = elfLinker.SectionAlignment;
+			ElfLinker = new ElfLinker(this, LinkerFormatType, compiler.Architecture.ElfMachineType);
 
-			AddSection(new LinkerSection(SectionKind.Text, SectionAlignment));
-			AddSection(new LinkerSection(SectionKind.Data, SectionAlignment));
-			AddSection(new LinkerSection(SectionKind.ROData, SectionAlignment));
-			AddSection(new LinkerSection(SectionKind.BSS, SectionAlignment));
+			// Cache for faster performance
+			EmitShortSymbolName = LinkerSettings.ShortSymbolNames;
+
+			AddSection(new LinkerSection(SectionKind.Text));
+			AddSection(new LinkerSection(SectionKind.Data));
+			AddSection(new LinkerSection(SectionKind.ROData));
+			AddSection(new LinkerSection(SectionKind.BSS));
 		}
 
 		public void Emit(Stream stream)
 		{
-			elfLinker.Emit(stream);
+			ElfLinker.Emit(stream);
 		}
 
 		private void AddSection(LinkerSection linkerSection)
@@ -172,25 +154,26 @@ namespace Mosa.Compiler.Framework.Linker
 		public void FinalizeLayout()
 		{
 			LayoutObjectsAndSections();
+
 			ApplyPatches();
 		}
 
 		private void LayoutObjectsAndSections()
 		{
-			ulong virtualAddress = BaseAddress;
-			uint fileOffset = BaseFileOffset;
+			var virtualAddress = LinkerSettings.BaseAddress;
 
-			foreach (var section in Sections)
+			foreach (var section in SectionKinds)
 			{
-				if (!section.IsResolved)
-				{
-					ResolveSectionLayout(section, fileOffset, virtualAddress);
-				}
+				var size = ResolveSymbolLocation(section, virtualAddress);
 
-				uint size = section.AlignedSize;
+				var linkerSection = Sections[(int)section];
 
-				virtualAddress = section.VirtualAddress + size;
-				fileOffset += size;
+				linkerSection.VirtualAddress = virtualAddress;
+				linkerSection.Size = size;
+
+				size = Alignment.AlignUp(size, SectionAlignment);
+
+				virtualAddress += size;
 			}
 		}
 
@@ -248,37 +231,35 @@ namespace Mosa.Compiler.Framework.Linker
 			throw new CompilerException($"unknown patch type: {patchType}");
 		}
 
-		private void ResolveSectionLayout(LinkerSection section, uint fileOffset, ulong virtualAddress)
+		private uint ResolveSymbolLocation(SectionKind section, ulong VirtualAddress)
 		{
-			section.VirtualAddress = virtualAddress;
-			section.FileOffset = fileOffset;
-			section.Size = 0;
+			var virtualAddress = VirtualAddress;
+			uint size = 0;
 
 			foreach (var symbol in Symbols)
 			{
 				if (symbol.IsReplaced)
 					continue;
 
-				if (symbol.SectionKind != section.SectionKind)
+				if (symbol.SectionKind != section)
 					continue;
 
 				if (symbol.IsResolved)
 					continue;
 
-				//if (symbol.IsExternalSymbol)
-				//	continue;
+				symbol.SectionOffset = size;
+				symbol.VirtualAddress = virtualAddress + size;
 
-				symbol.SectionOffset = section.Size;
-				symbol.VirtualAddress = section.VirtualAddress + section.Size;
-				section.Size += symbol.Size;
+				size += symbol.Size;
 			}
 
-			section.Size = Alignment.AlignUp(section.Size, SectionAlignment);
-			section.IsResolved = true;
+			return size;
 		}
 
-		internal void WriteTo(Stream stream, LinkerSection section)
+		internal void WriteLinkerSectionTo(Stream stream, LinkerSection section, uint fileOffset)
 		{
+			//var fileOffset = section.FileOffset;
+
 			foreach (var symbol in Symbols)
 			{
 				if (symbol.IsReplaced)
@@ -290,7 +271,7 @@ namespace Mosa.Compiler.Framework.Linker
 				if (!symbol.IsResolved)
 					continue;
 
-				stream.Seek(section.FileOffset + symbol.SectionOffset, SeekOrigin.Begin);
+				stream.Seek(fileOffset + symbol.SectionOffset, SeekOrigin.Begin);
 
 				if (symbol.IsDataAvailable)
 				{
@@ -299,7 +280,36 @@ namespace Mosa.Compiler.Framework.Linker
 				}
 			}
 
-			stream.WriteZeroBytes((int)(section.FileOffset + section.AlignedSize - stream.Position));
+			stream.WriteZeroBytes((int)(fileOffset + Alignment.AlignUp(section.Size, SectionAlignment) - stream.Position));
+		}
+
+		internal Stream WriteLinkerSection(LinkerSection section)
+		{
+			var stream = new MemoryStream();
+
+			foreach (var symbol in Symbols)
+			{
+				if (symbol.IsReplaced)
+					continue;
+
+				if (symbol.SectionKind != section.SectionKind)
+					continue;
+
+				if (!symbol.IsResolved)
+					continue;
+
+				stream.Seek(symbol.SectionOffset, SeekOrigin.Begin);
+
+				if (symbol.IsDataAvailable)
+				{
+					symbol.Stream.Position = 0;
+					symbol.Stream.WriteTo(stream);
+				}
+			}
+
+			stream.WriteZeroBytes((int)Alignment.AlignUp((uint)stream.Position, SectionAlignment));
+
+			return stream;
 		}
 
 		#region Cache Methods

@@ -2,7 +2,7 @@
 
 using System.IO;
 
-namespace Mosa.Compiler.Extensions.Dwarf
+namespace Mosa.Compiler.Framework.Linker.Elf.Dwarf
 {
 	public static class WriterExtensions
 	{

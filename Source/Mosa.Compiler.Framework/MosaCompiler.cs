@@ -1,5 +1,6 @@
 // Copyright (c) MOSA Project. Licensed under the New BSD License.
 
+using Mosa.Compiler.Common.Configuration;
 using Mosa.Compiler.Framework.Linker;
 using Mosa.Compiler.Framework.Trace;
 using Mosa.Compiler.MosaTypeSystem;
@@ -14,7 +15,7 @@ namespace Mosa.Compiler.Framework
 
 		public CompileStage Stage { get; private set; } = CompileStage.Initial;
 
-		public CompilerOptions CompilerOptions { get; }
+		public CompilerSettings CompilerSettings { get; }
 
 		public CompilerTrace CompilerTrace { get; }
 
@@ -22,7 +23,9 @@ namespace Mosa.Compiler.Framework
 
 		public MosaTypeLayout TypeLayout { get; private set; }
 
-		public MosaLinker Linker { get; private set; }
+		public BaseArchitecture Platform { get; private set; }
+
+		public MosaLinker Linker { get { return Compiler.Linker; } }
 
 		public List<BaseCompilerExtension> CompilerExtensions { get; } = new List<BaseCompilerExtension>();
 
@@ -33,16 +36,17 @@ namespace Mosa.Compiler.Framework
 		private readonly object _lock = new object();
 
 		public MosaCompiler(List<BaseCompilerExtension> compilerExtensions = null, int maxThreads = 0)
-			: this(null, compilerExtensions, maxThreads)
+			: this(new Settings(), compilerExtensions, maxThreads)
 		{
 		}
 
-		public MosaCompiler(CompilerOptions compilerOptions = null, List<BaseCompilerExtension> compilerExtensions = null, int maxThreads = 0)
+		public MosaCompiler(Settings settings, List<BaseCompilerExtension> compilerExtensions = null, int maxThreads = 0)
 		{
 			MaxThreads = (maxThreads == 0) ? Environment.ProcessorCount * 2 : maxThreads;
 
-			CompilerOptions = compilerOptions ?? new CompilerOptions();
-			CompilerTrace = new CompilerTrace(CompilerOptions);
+			CompilerSettings = new CompilerSettings(settings.Clone());
+
+			CompilerTrace = new CompilerTrace(CompilerSettings.TraceLevel);
 
 			if (compilerExtensions != null)
 			{
@@ -56,8 +60,8 @@ namespace Mosa.Compiler.Framework
 			{
 				var moduleLoader = new MosaModuleLoader();
 
-				moduleLoader.AddSearchPaths(CompilerOptions.SearchPaths);
-				moduleLoader.LoadModuleFromFiles(CompilerOptions.SourceFiles);
+				moduleLoader.AddSearchPaths(CompilerSettings.SearchPaths);
+				moduleLoader.LoadModuleFromFiles(CompilerSettings.SourceFiles);
 
 				var typeSystem = TypeSystem.Load(moduleLoader.CreateMetadata());
 
@@ -70,9 +74,10 @@ namespace Mosa.Compiler.Framework
 			lock (_lock)
 			{
 				TypeSystem = typeSystem;
-				TypeLayout = new MosaTypeLayout(typeSystem, CompilerOptions.Architecture.NativePointerSize, CompilerOptions.Architecture.NativeAlignment);
 
-				Linker = null;
+				Platform = PlatformRegistry.GetPlatform(CompilerSettings.Platform);
+				TypeLayout = new MosaTypeLayout(typeSystem, Platform.NativePointerSize, Platform.NativeAlignment);
+
 				Compiler = null;
 
 				Stage = CompileStage.Loaded;
@@ -86,7 +91,6 @@ namespace Mosa.Compiler.Framework
 				if (Stage != CompileStage.Loaded)
 					return;
 
-				Linker = new MosaLinker(CompilerOptions.BaseAddress, CompilerOptions.Architecture.ElfMachineType, CompilerOptions.EmitAllSymbols, CompilerOptions.EmitStaticRelocations, CompilerOptions.EmitShortSymbolNames, CompilerOptions.LinkerFormatType, CompilerOptions.CreateExtraSections, CompilerOptions.CreateExtraProgramHeaders);
 				Compiler = new Compiler(this);
 
 				Stage = CompileStage.Initialized;
@@ -143,7 +147,7 @@ namespace Mosa.Compiler.Framework
 		{
 			Setup();
 
-			if (!CompilerOptions.EnableMethodScanner)
+			if (!CompilerSettings.MethodScanner)
 			{
 				ScheduleAll();
 			}
@@ -173,7 +177,7 @@ namespace Mosa.Compiler.Framework
 		{
 			Setup();
 
-			if (!CompilerOptions.EnableMethodScanner)
+			if (!CompilerSettings.MethodScanner)
 			{
 				ScheduleAll();
 			}

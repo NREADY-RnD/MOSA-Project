@@ -1,10 +1,11 @@
 ﻿// Copyright (c) MOSA Project. Licensed under the New BSD License.
 
+using Mosa.Compiler.Common.Configuration;
 using Mosa.Compiler.Common.Exceptions;
 using Mosa.Compiler.Framework;
-using Mosa.Compiler.Framework.Linker;
 using Mosa.Compiler.MosaTypeSystem;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace Mosa.Workspace.Experiment.Debug
@@ -13,49 +14,60 @@ namespace Mosa.Workspace.Experiment.Debug
 	{
 		private static void Main()
 		{
-			Compile();
+			//Compile();
+
+			var args = new string[] { "--q", "--autostart", "--output-map", "--output-asm", "--output-debug", "--threading-off", "--inline-off", "Mosa.CoolWorld.x86.exe" };
+
+			List<Argument> map = new List<Argument>()
+			{
+				new Argument(){ Name = "--q", Setting = "Launcher.Exit", Value = "true"},
+				new Argument(){ Name = "--autostart", Setting = "Launcher.Start", Value = "true"},
+				new Argument(){ Name = "--output-map", Setting = "CompilerDebug.Emit.Map", Value = "true"},
+				new Argument(){ Name = "--output-asm", Setting = "CompilerDebug.Emit.Asm", Value = "true"},
+				new Argument(){ Name = "--output-debug", Setting = "CompilerDebug.Emit.Debug", Value = "true"},
+				new Argument(){ Name = "--threading-off", Setting = "Compiler.Multithreading", Value = "false"},
+				new Argument(){ Name = "--inline-off", Setting = "Optimizations.Inline", Value = "false"},
+				new Argument(){ Name = null, Setting = "Compiler.SourceFile", Value = null},
+				new Argument(){ Name = "--settings", Setting = "Import", Value = null, IsList = true},
+			};
+
+			var argumentSettings = Reader.ParseArguments(args, map);
+
+			var fileSettings = Reader.Import(@".mosa-global.txt");
+
+			var settings = Settings.Merge(fileSettings, argumentSettings);
 		}
 
 		private static void Compile()
 		{
 			const string platform = "x86";
 
-			var compilerOptions = new CompilerOptions()
-			{
-				EnableSSA = true,
-				EnableBasicOptimizations = true,
-				EnableSparseConditionalConstantPropagation = true,
-				EnableInlineMethods = true,
-				EnableLongExpansion = true,
-				EnableValueNumbering = true,
-				TwoPassOptimizations = true,
-				EnableMethodScanner = true,
-				EnableBitTracker = true,
+			var settings = new Settings();
 
-				MultibootSpecification = MultibootSpecification.V1,
-				LinkerFormatType = LinkerFormatType.Elf32,
-				InlineMaximum = 12,
-
-				BaseAddress = 0x00500000,
-				EmitStaticRelocations = false,
-				EmitAllSymbols = false,
-
-				EmitBinary = false,
-				TraceLevel = 0,
-
-				EnableStatistics = true,
-			};
-
-			compilerOptions.Architecture = SelectArchitecture(platform);
-
-			compilerOptions.AddSourceFile($"Mosa.TestWorld.{platform}.exe");
-			compilerOptions.AddSourceFile("Mosa.Plug.Korlib.dll");
-			compilerOptions.AddSourceFile($"Mosa.Plug.Korlib.{platform}.dll");
-			compilerOptions.TraceLevel = 5;
+			settings.SetValue("Compiler.MethodScanner", false);
+			settings.SetValue("Compiler.Binary", true);
+			settings.SetValue("Compiler.TraceLevel", 0);
+			settings.SetValue("Compiler.Platform", platform);
+			settings.SetValue("Compiler.Multithreading", true);
+			settings.SetValue("Optimizations.SSA", true);
+			settings.SetValue("Optimizations.Basic", true);
+			settings.SetValue("Optimizations.ValueNumbering", true);
+			settings.SetValue("Optimizations.SCCP", true);
+			settings.SetValue("Optimizations.BitTracker", true);
+			settings.SetValue("Optimizations.LoopInvariantCodeMotion", true);
+			settings.SetValue("Optimizations.LongExpansion", true);
+			settings.SetValue("Optimizations.TwoPass", true);
+			settings.SetValue("Optimizations.Platform", true);
+			settings.SetValue("Optimizations.Inline", true);
+			settings.SetValue("Optimizations.Inline.ExplicitOnly", false);
+			settings.SetValue("Optimizations.Inline.Maximum", 12);
+			settings.SetValue("Optimizations.Inline.AggressiveMaximum", 24);
+			settings.SetValue("Multiboot.Version", "v1");
+			settings.SetValue("Compiler.Platform", "x86");
 
 			var stopwatch = new Stopwatch();
 
-			var compiler = new MosaCompiler(compilerOptions);
+			var compiler = new MosaCompiler(settings);
 
 			compiler.Load();
 			compiler.Initialize();
@@ -125,14 +137,14 @@ namespace Mosa.Workspace.Experiment.Debug
 			return null;
 		}
 
-		private static BaseArchitecture SelectArchitecture(string architecture)
+		private static BaseArchitecture SelectPlatform(string platform)
 		{
-			switch (architecture.ToLower())
+			switch (platform.ToLower())
 			{
-				case "x86": return Platform.x86.Architecture.CreateArchitecture(Platform.x86.ArchitectureFeatureFlags.AutoDetect);
-				case "x64": return Platform.x64.Architecture.CreateArchitecture(Platform.x64.ArchitectureFeatureFlags.AutoDetect);
-				case "armv8a32": return Platform.ARMv8A32.Architecture.CreateArchitecture(Platform.ARMv8A32.ArchitectureFeatureFlags.AutoDetect);
-				default: throw new NotImplementCompilerException($"Unknown or unsupported Architecture {architecture}.");
+				case "x86": return new Platform.x86.Architecture();
+				case "x64": return new Platform.x64.Architecture();
+				case "armv8a32": return new Platform.ARMv8A32.Architecture();
+				default: throw new NotImplementCompilerException($"Unknown or unsupported Architecture {platform}.");
 			}
 		}
 	}

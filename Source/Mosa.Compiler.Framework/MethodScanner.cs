@@ -38,7 +38,7 @@ namespace Mosa.Compiler.Framework
 			Compiler = compiler;
 			TypeSystem = compiler.TypeSystem;
 			TypeLayout = compiler.TypeLayout;
-			IsEnabled = compiler.CompilerOptions.EnableMethodScanner;
+			IsEnabled = compiler.CompilerSettings.MethodScanner;
 
 			if (Compiler.CompilerTrace.IsTraceable(TraceLevel))
 			{
@@ -53,7 +53,7 @@ namespace Mosa.Compiler.Framework
 			if (!IsEnabled)
 				return;
 
-			if (!Compiler.CompilerOptions.EnableStatistics)
+			if (!Compiler.CompilerSettings.Statistics)
 				return;
 
 			MoreLogInfo();
@@ -355,11 +355,6 @@ namespace Mosa.Compiler.Framework
 			{
 				if (scheduledMethods.Contains(method))
 					return;
-
-				if (method.FullName.Contains("Mosa.UnitTests.GenericInterfaceTestClass`1<System.Int32>::Mosa.UnitTests.IInterfaceBB<T>.Get"))
-				{
-					trace?.Log("TEST");
-				}
 
 				scheduledMethods.Add(method);
 
