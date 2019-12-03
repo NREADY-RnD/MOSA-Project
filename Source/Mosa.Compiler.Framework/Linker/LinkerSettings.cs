@@ -47,6 +47,7 @@ namespace Mosa.Compiler.Framework.Linker
 			Settings.SetValue("Compiler.TraceLevel", 0);
 			Settings.SetValue("Compiler.Platform", "x86");
 			Settings.SetValue("Compiler.Multithreading", true);
+			Settings.SetValue("CompilerDebug.Statistics", true);
 
 			Settings.Merge(settings);
 		}

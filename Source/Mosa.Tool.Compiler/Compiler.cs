@@ -4,7 +4,7 @@ using CommandLine;
 using Mosa.Compiler.Common.Configuration;
 using Mosa.Compiler.Common.Exceptions;
 using Mosa.Compiler.Framework;
-using Mosa.Compiler.Framework.Linker.Dwarf;
+using Mosa.Compiler.Framework.Linker.Elf.Dwarf;
 using Mosa.Compiler.Framework.Trace.BuiltIn;
 using Mosa.Utility.Configuration;
 using System;

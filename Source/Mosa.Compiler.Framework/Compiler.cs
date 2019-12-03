@@ -3,7 +3,7 @@
 using Mosa.Compiler.Common.Exceptions;
 using Mosa.Compiler.Framework.CompilerStages;
 using Mosa.Compiler.Framework.Linker;
-using Mosa.Compiler.Framework.Linker.Dwarf;
+using Mosa.Compiler.Framework.Linker.Elf.Dwarf;
 using Mosa.Compiler.Framework.Stages;
 using Mosa.Compiler.Framework.Trace;
 using Mosa.Compiler.MosaTypeSystem;

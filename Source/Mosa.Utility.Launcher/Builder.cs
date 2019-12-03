@@ -543,12 +543,11 @@ namespace Mosa.Utility.Launcher
 			var sourcefile = Settings.GetValueList("Compiler.SourceFiles")[0];
 			var imagefile = Settings.GetValue("Image.ImageFile", null);
 			var output = Settings.GetValue("Compiler.OutputFile", null);
+			var baseaddress = Settings.GetValue("Compiler.BaseAddress", 0x00400000);
 
-			var textSection = Linker.Sections[(int)SectionKind.Text];
-
-			const uint multibootHeaderLength = MultibootHeaderLength;
-			ulong startingAddress = textSection.VirtualAddress + multibootHeaderLength;
-			uint fileOffset = textSection.FileOffset + multibootHeaderLength;
+			//var textSection = Linker.Sections[(int)SectionKind.Text];
+			var startingAddress = baseaddress + MultibootHeaderLength;
+			var fileOffset = Linker.BaseFileOffset + MultibootHeaderLength;
 
 			string arg = $"-b 32 -o0x{startingAddress.ToString("x")} -e0x{fileOffset.ToString("x")} {Quote(output)}";
 
@@ -567,6 +566,7 @@ namespace Mosa.Utility.Launcher
 			var sourcefile = Settings.GetValueList("Compiler.SourceFiles")[0];
 			var imagefile = Settings.GetValue("Image.ImageFile", null);
 			var output = Settings.GetValue("Compiler.OutputFile", null);
+			var baseaddress = Settings.GetValue("Compiler.BaseAddress", 0x00400000);
 
 			var translator = new IntelTranslator()
 			{
@@ -575,8 +575,6 @@ namespace Mosa.Utility.Launcher
 			};
 
 			var asmfile = Path.Combine(destination, Path.GetFileNameWithoutExtension(sourcefile) + ".asm");
-
-			var textSection = Linker.Sections[(int)SectionKind.Text];
 
 			var map = new Dictionary<ulong, List<string>>();
 
@@ -591,10 +589,10 @@ namespace Mosa.Utility.Launcher
 				list.Add(symbol.Name);
 			}
 
-			const uint multibootHeaderLength = MultibootHeaderLength;
-			ulong startingAddress = textSection.VirtualAddress + multibootHeaderLength;
-			uint fileOffset = textSection.FileOffset + multibootHeaderLength;
-			uint length = textSection.Size;
+			var textSection = Linker.Sections[(int)SectionKind.Text];
+			var startingAddress = textSection.VirtualAddress + MultibootHeaderLength;
+			var fileOffset = Linker.BaseFileOffset + MultibootHeaderLength;
+			var length = textSection.Size;
 
 			var code2 = File.ReadAllBytes(output);
 

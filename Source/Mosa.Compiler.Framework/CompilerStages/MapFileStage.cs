@@ -49,10 +49,10 @@ namespace Mosa.Compiler.Framework.CompilerStages
 		/// </summary>
 		private void EmitSections(TextWriter writer)
 		{
-			writer.WriteLine("Offset           Virtual          Length           Name                             Class");
+			writer.WriteLine("Virtual          Length           Name");
 			foreach (var linkerSection in Linker.Sections)
 			{
-				writer.WriteLine("{0:x16} {1:x16} {2:x16} {3} {4}", linkerSection.FileOffset, linkerSection.VirtualAddress, linkerSection.Size, linkerSection.Name.PadRight(32), linkerSection.SectionKind);
+				writer.WriteLine("{0:x16} {1:x16} {2}", linkerSection.VirtualAddress, linkerSection.Size, linkerSection.Name);
 			}
 		}
 
@@ -61,7 +61,7 @@ namespace Mosa.Compiler.Framework.CompilerStages
 		/// </summary>
 		private void EmitSymbols(TextWriter writer)
 		{
-			writer.WriteLine("Virtual          Offset           Length           Symbol");
+			writer.WriteLine("Virtual          Offset           Length           Section Symbol");
 
 			foreach (var kind in MosaLinker.SectionKinds)
 			{
@@ -70,7 +70,7 @@ namespace Mosa.Compiler.Framework.CompilerStages
 					if (symbol.SectionKind != kind)
 						continue;
 
-					writer.WriteLine("{0:x16} {1:x16} {2:x16} {3} {4}", symbol.VirtualAddress, symbol.SectionOffset, symbol.Size, symbol.SectionKind.ToString().PadRight(7), symbol.Name);
+					writer.WriteLine("{0:x16} {1:x16} {2:x16} {3} {4}", symbol.VirtualAddress, symbol.SectionOffset, symbol.Size, symbol.SectionKind.ToString().PadRight(8), symbol.Name);
 				}
 			}
 
@@ -79,7 +79,8 @@ namespace Mosa.Compiler.Framework.CompilerStages
 			{
 				writer.WriteLine();
 				writer.WriteLine("Entry point is {0}", entryPoint.Name);
-				writer.WriteLine("\tat Offset {0:x16}", entryPoint.SectionOffset); // TODO! add section offset too?
+
+				//writer.WriteLine("\tat Offset {0:x16}", entryPoint.SectionOffset); // TODO! add section offset too?
 				writer.WriteLine("\tat virtual address {0:x16}", entryPoint.VirtualAddress);
 			}
 		}

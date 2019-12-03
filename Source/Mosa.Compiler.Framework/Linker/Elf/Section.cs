@@ -32,7 +32,7 @@ namespace Mosa.Compiler.Framework.Linker.Elf
 
 		public Section Info { get; set; }
 
-		public ulong AddressAlignment { get; set; }
+		public ulong AddressAlignment { get; set; } = 0x1000;
 
 		public uint EntrySize { get; set; }
 
@@ -42,9 +42,11 @@ namespace Mosa.Compiler.Framework.Linker.Elf
 
 		public EmitSectionMethod EmitMethod { get; set; }
 
+		public SectionEmitter Emitter { get; set; }
+
 		public SectionKind SectionKind { get; set; }
 
-		public Stream Stream { get; set; }
+		public Stream Stream { get; set; }  // FUTURE
 
 		public Section()
 		{
