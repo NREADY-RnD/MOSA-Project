@@ -15,8 +15,6 @@ namespace Mosa.Compiler.Framework.Linker
 
 		public ulong VirtualAddress { get; set; }
 
-		public uint FileOffset { get; set; }
-
 		public uint Size { get; set; }
 
 		public LinkerSection(SectionKind sectionKind)

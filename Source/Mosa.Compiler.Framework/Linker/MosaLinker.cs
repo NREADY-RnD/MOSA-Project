@@ -40,12 +40,6 @@ namespace Mosa.Compiler.Framework.Linker
 		private readonly object _lock = new object();
 		private readonly object _cacheLock = new object();
 
-		//public delegate List<Section> CreateExtraSectionsDelegate();
-		//public delegate List<ProgramHeader> CreateExtraProgramHeaderDelegate();
-
-		//public CreateExtraSectionsDelegate CreateExtraSections { get; set; }
-		//public CreateExtraProgramHeaderDelegate CreateExtraProgramHeaders { get; set; }
-
 		public MosaLinker(Compiler compiler)
 		{
 			LinkerSettings = new LinkerSettings(compiler.CompilerSettings.Settings);
@@ -56,9 +50,6 @@ namespace Mosa.Compiler.Framework.Linker
 
 			// Cache for faster performance
 			EmitShortSymbolName = LinkerSettings.ShortSymbolNames;
-
-			//CreateExtraSections = createExtraSections;
-			//CreateExtraProgramHeaders = createExtraProgramHeaders;
 
 			AddSection(new LinkerSection(SectionKind.Text));
 			AddSection(new LinkerSection(SectionKind.Data));
@@ -163,22 +154,26 @@ namespace Mosa.Compiler.Framework.Linker
 		public void FinalizeLayout()
 		{
 			LayoutObjectsAndSections();
+
 			ApplyPatches();
 		}
 
 		private void LayoutObjectsAndSections()
 		{
-			ulong virtualAddress = LinkerSettings.BaseAddress;
-			uint fileOffset = BaseFileOffset;
+			var virtualAddress = LinkerSettings.BaseAddress;
 
-			foreach (var section in Sections)
+			foreach (var section in SectionKinds)
 			{
-				ResolveSectionLayout(section, fileOffset, virtualAddress);
+				var size = ResolveSymbolLocation(section, virtualAddress);
 
-				uint size = Alignment.AlignUp(section.Size, SectionAlignment);
+				var linkerSection = Sections[(int)section];
 
-				virtualAddress = section.VirtualAddress + size;
-				fileOffset += size;
+				linkerSection.VirtualAddress = virtualAddress;
+				linkerSection.Size = size;
+
+				size = Alignment.AlignUp(size, SectionAlignment);
+
+				virtualAddress += size;
 			}
 		}
 
@@ -236,81 +231,7 @@ namespace Mosa.Compiler.Framework.Linker
 			throw new CompilerException($"unknown patch type: {patchType}");
 		}
 
-		private void ResolveSectionLayout(LinkerSection section, uint fileOffset, ulong virtualAddress)
-		{
-			section.VirtualAddress = virtualAddress;
-			section.FileOffset = fileOffset;
-			section.Size = 0;
-
-			foreach (var symbol in Symbols)
-			{
-				if (symbol.IsReplaced)
-					continue;
-
-				if (symbol.SectionKind != section.SectionKind)
-					continue;
-
-				if (symbol.IsResolved)
-					continue;
-
-				//if (symbol.IsExternalSymbol)
-				//	continue;
-
-				symbol.SectionOffset = section.Size;
-				symbol.VirtualAddress = section.VirtualAddress + section.Size;
-				section.Size += symbol.Size;
-			}
-
-			section.Size = Alignment.AlignUp(section.Size, SectionAlignment);
-		}
-
-		internal void WriteLinkerSectionTo(Stream stream, LinkerSection section, uint fileOffset2)
-		{
-			var fileOffset = section.FileOffset;
-
-			foreach (var symbol in Symbols)
-			{
-				if (symbol.IsReplaced)
-					continue;
-
-				if (symbol.SectionKind != section.SectionKind)
-					continue;
-
-				if (!symbol.IsResolved)
-					continue;
-
-				stream.Seek(fileOffset + symbol.SectionOffset, SeekOrigin.Begin);
-
-				if (symbol.IsDataAvailable)
-				{
-					symbol.Stream.Position = 0;
-					symbol.Stream.WriteTo(stream);
-				}
-			}
-
-			stream.WriteZeroBytes((int)(fileOffset + Alignment.AlignUp(section.Size, SectionAlignment) - stream.Position));
-		}
-
-		private void LayoutObjectsAndSectionsV2()
-		{
-			var virtualAddress = LinkerSettings.BaseAddress;
-
-			foreach (var section in SectionKinds)
-			{
-				var size = ResolveSymbolLocationV2(section, virtualAddress);
-
-				var linkerSection = Sections[(int)section];
-
-				linkerSection.VirtualAddress = virtualAddress;
-				linkerSection.Size = size;
-
-				size = Alignment.AlignUp(size, SectionAlignment);
-
-				virtualAddress += size;
-			}
-		}
-
-		private uint ResolveSymbolLocationV2(SectionKind section, ulong VirtualAddress)
+		private uint ResolveSymbolLocation(SectionKind section, ulong VirtualAddress)
 		{
 			var virtualAddress = VirtualAddress;
 			uint size = 0;
@@ -333,6 +254,33 @@ namespace Mosa.Compiler.Framework.Linker
 			}
 
 			return size;
+		}
+
+		internal void WriteLinkerSectionTo(Stream stream, LinkerSection section, uint fileOffset)
+		{
+			//var fileOffset = section.FileOffset;
+
+			foreach (var symbol in Symbols)
+			{
+				if (symbol.IsReplaced)
+					continue;
+
+				if (symbol.SectionKind != section.SectionKind)
+					continue;
+
+				if (!symbol.IsResolved)
+					continue;
+
+				stream.Seek(fileOffset + symbol.SectionOffset, SeekOrigin.Begin);
+
+				if (symbol.IsDataAvailable)
+				{
+					symbol.Stream.Position = 0;
+					symbol.Stream.WriteTo(stream);
+				}
+			}
+
+			stream.WriteZeroBytes((int)(fileOffset + Alignment.AlignUp(section.Size, SectionAlignment) - stream.Position));
 		}
 
 		internal Stream WriteLinkerSection(LinkerSection section)

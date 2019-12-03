@@ -74,8 +74,6 @@ namespace Mosa.Compiler.Framework.Linker.Elf
 
 			sections.Add(section);
 
-			//sectionToIndex.Add(section, index);
-
 			if (section.Name != null)
 			{
 				sectionByName.Add(section.Name, section);
@@ -152,8 +150,6 @@ namespace Mosa.Compiler.Framework.Linker.Elf
 			// FIXME: set by condition
 			CreateRelocationSections();
 
-			//CreateExtraSections();
-
 			CreateSectionHeaderStringSection();
 		}
 
@@ -170,7 +166,6 @@ namespace Mosa.Compiler.Framework.Linker.Elf
 				{
 					Name = SectionNames[(int)linkerSection.SectionKind],
 					Address = linkerSection.VirtualAddress,
-					Offset = linkerSection.FileOffset,
 					Size = Alignment.AlignUp(linkerSection.Size, SectionAlignment),
 					AddressAlignment = SectionAlignment,
 					EmitMethod = WriteLinkerSection,
@@ -207,17 +202,6 @@ namespace Mosa.Compiler.Framework.Linker.Elf
 				previous = section;
 			}
 		}
-
-		//private void CreateExtraSections()
-		//{
-		//	if (Linker.CreateExtraSections == null)
-		//		return;
-
-		//	foreach (var section in Linker.CreateExtraSections())
-		//	{
-		//		AddSection(section);
-		//	}
-		//}
 
 		private void CreateNullSection()
 		{
@@ -407,44 +391,32 @@ namespace Mosa.Compiler.Framework.Linker.Elf
 
 			elfheader.ProgramHeaderNumber = 0;
 
-			foreach (var linkerSection in Linker.Sections)
+			foreach (var section in sections)
 			{
-				if (linkerSection.Size == 0 && linkerSection.SectionKind != SectionKind.BSS)
+				if (section.SectionKind == SectionKind.Unknown)
 					continue;
 
-				var section = GetSection(SectionNames[(int)linkerSection.SectionKind]);
+				if (section.Size == 0 && section.SectionKind != SectionKind.BSS)
+					continue;
 
 				var programHeader = new ProgramHeader
 				{
 					Alignment = SectionAlignment,
-					FileSize = Alignment.AlignUp(linkerSection.Size, SectionAlignment),
-					MemorySize = Alignment.AlignUp(linkerSection.Size, SectionAlignment),
-					Offset = linkerSection.FileOffset, // section.Offset,
-					VirtualAddress = linkerSection.VirtualAddress,
-					PhysicalAddress = linkerSection.VirtualAddress,
+					FileSize = Alignment.AlignUp(section.Size, SectionAlignment),
+					MemorySize = Alignment.AlignUp(section.Size, SectionAlignment),
+					Offset = section.Offset,
+					VirtualAddress = section.Address,
+					PhysicalAddress = section.Address,
 					Type = ProgramHeaderType.Load,
 					Flags =
-						(linkerSection.SectionKind == SectionKind.Text) ? ProgramHeaderFlags.Read | ProgramHeaderFlags.Execute :
-						(linkerSection.SectionKind == SectionKind.ROData) ? ProgramHeaderFlags.Read : ProgramHeaderFlags.Read | ProgramHeaderFlags.Write
+						(section.SectionKind == SectionKind.Text) ? ProgramHeaderFlags.Read | ProgramHeaderFlags.Execute :
+						(section.SectionKind == SectionKind.ROData) ? ProgramHeaderFlags.Read : ProgramHeaderFlags.Read | ProgramHeaderFlags.Write
 				};
 
 				programHeader.Write(LinkerFormatType, writer);
 
 				elfheader.ProgramHeaderNumber++;
 			}
-
-			//if (Linker.CreateExtraProgramHeaders != null)
-			//{
-			//	foreach (var programHeader in Linker.CreateExtraProgramHeaders())
-			//	{
-			//		if (programHeader.FileSize == 0)
-			//			continue;
-
-			//		programHeader.Write(LinkerFormatType, writer);
-
-			//		elfheader.ProgramHeaderNumber++;
-			//	}
-			//}
 		}
 
 		private void WriteSectionHeaders()
@@ -583,7 +555,7 @@ namespace Mosa.Compiler.Framework.Linker.Elf
 					if (!patch.ReferenceSymbol.IsExternalSymbol) // FUTURE: include relocations for static symbols, if option selected
 						continue;
 
-					Debug.Assert(symbolTableOffset.ContainsKey(patch.ReferenceSymbol));
+					//Debug.Assert(symbolTableOffset.ContainsKey(patch.ReferenceSymbol));
 
 					var relocationEntry = new RelocationEntry()
 					{
