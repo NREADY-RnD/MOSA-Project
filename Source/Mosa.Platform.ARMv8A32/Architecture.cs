@@ -30,10 +30,10 @@ namespace Mosa.Platform.ARMv8A32
 		/// </summary>
 		private static readonly PhysicalRegister[] registers = new PhysicalRegister[]
 		{
-   			////////////////////////////////////////////////////////
-            // 32-bit general purpose registers
-   			////////////////////////////////////////////////////////
-            GeneralPurposeRegister.R0,
+			////////////////////////////////////////////////////////
+			// 32-bit general purpose registers
+			////////////////////////////////////////////////////////
+			GeneralPurposeRegister.R0,
 			GeneralPurposeRegister.R1,
 			GeneralPurposeRegister.R2,
 			GeneralPurposeRegister.R3,

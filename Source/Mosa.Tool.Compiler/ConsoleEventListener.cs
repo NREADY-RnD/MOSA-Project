@@ -1,9 +1,10 @@
 ﻿// Copyright (c) MOSA Project. Licensed under the New BSD License.
 
+using Mosa.Compiler.Framework.Trace;
 using Mosa.Compiler.MosaTypeSystem;
 using System;
 
-namespace Mosa.Compiler.Framework.Trace.BuiltIn
+namespace Mosa.Tool.Compiler
 {
 	public sealed class ConsoleEventListener : ITraceListener
 	{

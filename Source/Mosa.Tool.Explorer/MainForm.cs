@@ -370,11 +370,6 @@ namespace Mosa.Tool.Explorer
 
 		private void SubmitTraceEvent(CompilerEvent compilerEvent, string message, int threadID)
 		{
-			if (compilerEvent == CompilerEvent.StatusUpdate)
-			{
-				return;
-			}
-
 			var log = CreateTimeStampedLog(compilerEvent, message, threadID);
 
 			lock (compilerStageLock)

@@ -13,8 +13,10 @@ namespace Mosa.Compiler.Framework
 	/// <summary>
 	/// Basic base class for method compiler pipeline stages
 	/// </summary>
-	public abstract class BaseMethodCompilerStage : ITraceFactory
+	public abstract class BaseMethodCompilerStage
 	{
+		public delegate TraceLog CreateTraceHandler(string name, int tracelevel);
+
 		#region Data Members
 
 		protected string formattedStageName;
@@ -676,15 +678,6 @@ namespace Mosa.Compiler.Framework
 		}
 
 		#endregion Protected Region Methods
-
-		#region ITraceSectionFactory
-
-		TraceLog ITraceFactory.CreateTraceLog(string section, int traceLevel)
-		{
-			return CreateTraceLog(section, traceLevel);
-		}
-
-		#endregion ITraceSectionFactory
 
 		#region Trace Helper Methods
 

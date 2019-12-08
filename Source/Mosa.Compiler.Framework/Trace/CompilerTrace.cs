@@ -28,10 +28,7 @@ namespace Mosa.Compiler.Framework.Trace
 
 		public void PostMethodCompiled(MosaMethod method)
 		{
-			if (TraceListener == null)
-				return;
-
-			TraceListener.OnMethodCompiled(method);
+			TraceListener?.OnMethodCompiled(method);
 		}
 
 		public void PostTraceLog(TraceLog traceLog, bool signalStatusUpdate = false)
@@ -39,31 +36,17 @@ namespace Mosa.Compiler.Framework.Trace
 			if (traceLog == null)
 				return;
 
-			if (TraceListener == null)
-				return;
-
-			TraceListener.OnTraceLog(traceLog);
-
-			if (signalStatusUpdate)
-			{
-				TraceListener.OnCompilerEvent(CompilerEvent.StatusUpdate, string.Empty, 0);
-			}
+			TraceListener?.OnTraceLog(traceLog);
 		}
 
 		public void PostCompilerTraceEvent(CompilerEvent compilerEvent, string message, int threadID)
 		{
-			if (TraceListener == null)
-				return;
-
-			TraceListener.OnCompilerEvent(compilerEvent, message, threadID);
+			TraceListener?.OnCompilerEvent(compilerEvent, message, threadID);
 		}
 
 		public void UpdatedCompilerProgress(int totalMethods, int completedMethods)
 		{
-			if (TraceListener == null)
-				return;
-
-			TraceListener.OnProgress(totalMethods, completedMethods);
+			TraceListener?.OnProgress(totalMethods, completedMethods);
 		}
 	}
 }
