@@ -95,8 +95,11 @@ namespace Mosa.Compiler.Framework.Linker.Elf
 
 		private void ResolveSectionOffset(Section section)
 		{
-			if (section.Type == SectionType.NoBits || section.Type == SectionType.Null)
+			if (section.Type == SectionType.Null)
 				return;
+
+			//if (section.Type == SectionType.NoBits)
+			//	return;
 
 			// Already resolved?
 			if (section.Offset != 0)
@@ -128,10 +131,10 @@ namespace Mosa.Compiler.Framework.Linker.Elf
 			WriteSections();
 
 			// Write program headers -- must be called before writing Elf header
-			WriteProgramHeaders();
+			WriteProgramHeader();
 
 			// Write section headers
-			WriteSectionHeaders();
+			WriteSectionHeader();
 
 			// Write ELF header
 			WriteElfHeader();
@@ -356,14 +359,18 @@ namespace Mosa.Compiler.Framework.Linker.Elf
 
 		private void WriteSection(Section section)
 		{
-			if (section.Type == SectionType.NoBits || section.Type == SectionType.Null)
+			if (section.Type == SectionType.Null)
+				return;
+
+			// Set the next available offset
+			ResolveSectionOffset(section);
+
+			if (section.Type == SectionType.NoBits)
 				return;
 
 			if (section.EmitMethod == null)
 				return;
 
-			// Set the next available offset
-			ResolveSectionOffset(section);
 			writer.SetPosition(section.Offset);
 
 			section.EmitMethod.Invoke(section, writer);
@@ -383,7 +390,7 @@ namespace Mosa.Compiler.Framework.Linker.Elf
 			elfheader.Write(LinkerFormatType, writer);
 		}
 
-		private void WriteProgramHeaders()
+		private void WriteProgramHeader()
 		{
 			elfheader.ProgramHeaderOffset = ElfHeader.GetEntrySize(LinkerFormatType);
 
@@ -393,10 +400,13 @@ namespace Mosa.Compiler.Framework.Linker.Elf
 
 			foreach (var section in sections)
 			{
-				if (section.Address == 0 || section.SectionKind == SectionKind.Unknown)
+				if (section.SectionKind == SectionKind.Unknown)
 					continue;
 
 				if (section.Size == 0 && section.SectionKind != SectionKind.BSS)
+					continue;
+
+				if (section.Address == 0)
 					continue;
 
 				var programHeader = new ProgramHeader
@@ -419,7 +429,7 @@ namespace Mosa.Compiler.Framework.Linker.Elf
 			}
 		}
 
-		private void WriteSectionHeaders()
+		private void WriteSectionHeader()
 		{
 			elfheader.SectionHeaderOffset = elfheader.ProgramHeaderOffset + (ProgramHeader.GetEntrySize(LinkerFormatType) * elfheader.ProgramHeaderNumber);
 
