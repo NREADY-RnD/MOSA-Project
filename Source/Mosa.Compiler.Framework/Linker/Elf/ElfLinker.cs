@@ -393,7 +393,7 @@ namespace Mosa.Compiler.Framework.Linker.Elf
 
 			foreach (var section in sections)
 			{
-				if (section.SectionKind == SectionKind.Unknown)
+				if (section.Address == 0 || section.SectionKind == SectionKind.Unknown)
 					continue;
 
 				if (section.Size == 0 && section.SectionKind != SectionKind.BSS)
