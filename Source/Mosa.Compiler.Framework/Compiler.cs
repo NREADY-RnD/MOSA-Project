@@ -1,9 +1,9 @@
 // Copyright (c) MOSA Project. Licensed under the New BSD License.
 
 using Mosa.Compiler.Common.Exceptions;
+using Mosa.Compiler.Framework.API;
 using Mosa.Compiler.Framework.CompilerStages;
 using Mosa.Compiler.Framework.Linker;
-using Mosa.Compiler.Framework.Linker.Elf.Dwarf;
 using Mosa.Compiler.Framework.Stages;
 using Mosa.Compiler.Framework.Trace;
 using Mosa.Compiler.MosaTypeSystem;
@@ -102,11 +102,6 @@ namespace Mosa.Compiler.Framework
 		public CompilerData CompilerData { get; } = new CompilerData();
 
 		/// <summary>
-		/// Gets the compiler extensions.
-		/// </summary>
-		private List<BaseCompilerExtension> CompilerExtensions { get; } = new List<BaseCompilerExtension>();
-
-		/// <summary>
 		/// Gets or sets a value indicating whether [all stop].
 		/// </summary>
 		public bool IsStopped { get; private set; }
@@ -130,6 +125,8 @@ namespace Mosa.Compiler.Framework
 		/// The ;eave target register
 		/// </summary>
 		public Operand LeaveTargetRegister { get; }
+
+		public CompilerHook CompilerHook { get; }
 
 		#endregion Properties
 
@@ -228,6 +225,7 @@ namespace Mosa.Compiler.Framework
 			CompilerSettings = mosaCompiler.CompilerSettings;
 			CompilerTrace = mosaCompiler.CompilerTrace;
 			Architecture = mosaCompiler.Platform;
+			CompilerHook = mosaCompiler.CompilerHook;
 
 			Linker = new MosaLinker(this);
 
@@ -237,8 +235,6 @@ namespace Mosa.Compiler.Framework
 			LeaveTargetRegister = Operand.CreateCPURegister(TypeSystem.BuiltIn.Object, Architecture.LeaveTargetRegister);
 
 			PostCompilerTraceEvent(CompilerEvent.CompilerStart);
-
-			CompilerExtensions.AddRange(mosaCompiler.CompilerExtensions);
 
 			MethodStagePipelines = new Pipeline<BaseMethodCompilerStage>[mosaCompiler.MaxThreads + 1];
 
@@ -273,10 +269,8 @@ namespace Mosa.Compiler.Framework
 			// Build the default compiler pipeline
 			CompilerPipeline.Add(GetDefaultCompilerPipeline(CompilerSettings, Architecture.Is64BitPlatform));
 
-			foreach (var extension in CompilerExtensions)
-			{
-				extension.ExtendCompilerPipeline(CompilerPipeline);
-			}
+			// Call hook to allow for the extension of the pipeline
+			CompilerHook?.ExtendCompilerPipeline(CompilerPipeline);
 
 			Architecture.ExtendCompilerPipeline(CompilerPipeline, CompilerSettings);
 
@@ -320,10 +314,8 @@ namespace Mosa.Compiler.Framework
 
 				pipeline.Add(GetDefaultMethodPipeline(CompilerSettings, Architecture.Is64BitPlatform));
 
-				foreach (var extension in CompilerExtensions)
-				{
-					extension.ExtendMethodCompilerPipeline(pipeline);
-				}
+				// Call hook to allow for the extension of the pipeline
+				CompilerHook?.ExtendMethodCompilerPipeline(pipeline);
 
 				Architecture.ExtendMethodCompilerPipeline(pipeline, CompilerSettings);
 

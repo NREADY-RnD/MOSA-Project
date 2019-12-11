@@ -3,9 +3,12 @@
 using Mosa.Compiler.Common;
 using Mosa.Compiler.Common.Configuration;
 using Mosa.Compiler.Framework;
+using Mosa.Compiler.Framework.API;
+using Mosa.Compiler.Framework.CompilerStages;
 using Mosa.Compiler.Framework.Linker;
 using Mosa.Compiler.Framework.Trace;
 using Mosa.Compiler.MosaTypeSystem;
+using Mosa.Tool.Explorer.Stages;
 using Mosa.Utility.Configuration;
 using Mosa.Utility.Launcher;
 using System;
@@ -24,8 +27,6 @@ namespace Mosa.Tool.Explorer
 		private DateTime compileStartTime;
 
 		private MosaCompiler Compiler = null;
-
-		private readonly List<BaseCompilerExtension> Extensions = new List<BaseCompilerExtension>() { new ExplorerCompilerExtension() };
 
 		private readonly MethodStore methodStore = new MethodStore();
 
@@ -658,13 +659,48 @@ namespace Mosa.Tool.Explorer
 			UpdateDebugResults();
 		}
 
+		private void ExtendCompilerPipeline(Pipeline<BaseCompilerStage> pipeline)
+		{
+			pipeline.InsertAfterFirst<TypeInitializerStage>(
+					new ExplorerMethodCompileTimeStage()
+			);
+		}
+
+		private void ExtendMethodCompilerPipeline(Pipeline<BaseMethodCompilerStage> pipeline)
+		{
+			pipeline.Add(new DisassemblyStage());
+			pipeline.Add(new DebugInfoStage());
+
+			//pipeline.InsertBefore<GreedyRegisterAllocatorStage>(new StopStage());
+
+			//pipeline.InsertBefore<EnterSSAStage>(new DominanceOutputStage());
+			//pipeline.InsertBefore<EnterSSAStage>(new GraphVizStage());
+		}
+
+		private CompilerHook CreateCompilerHook()
+		{
+			var compilerHook = new CompilerHook();
+
+			compilerHook.ExtendCompilerPipeline = ExtendCompilerPipeline;
+			compilerHook.ExtendMethodCompilerPipeline = ExtendMethodCompilerPipeline;
+
+			compilerHook.CompilerProgress += OnCompilerProgress;
+			compilerHook.CompilerEvent += OnCompilerEvent;
+			compilerHook.CompilerTraceLog += OnCompilerTraceLog;
+			compilerHook.MethodCompiled += OnMethodCompiled;
+
+			return compilerHook;
+		}
+
 		public void LoadAssembly()
 		{
 			ClearAll();
 
 			UpdateSettings();
 
-			Compiler = new MosaCompiler(Settings, Extensions);
+			var compilerHooks = CreateCompilerHook();
+
+			Compiler = new MosaCompiler(Settings, compilerHooks);
 
 			Compiler.CompilerTrace.SetTraceListener(this);
 
@@ -716,7 +752,25 @@ namespace Mosa.Tool.Explorer
 			SubmitTraceEvent(compilerEvent, message, threadID);
 		}
 
+		private void OnCompilerEvent(CompilerEvent compilerEvent, string message, int threadID)
+		{
+			var status = compilerEvent.ToText() + ": " + message;
+
+			lock (_statusLock)
+			{
+				Status = status;
+			}
+
+			SubmitTraceEvent(compilerEvent, message, threadID);
+		}
+
 		void ITraceListener.OnProgress(int totalMethods, int completedMethods)
+		{
+			TotalMethods = totalMethods;
+			CompletedMethods = completedMethods;
+		}
+
+		private void OnCompilerProgress(int totalMethods, int completedMethods)
 		{
 			TotalMethods = totalMethods;
 			CompletedMethods = completedMethods;
@@ -750,7 +804,43 @@ namespace Mosa.Tool.Explorer
 			}
 		}
 
+		private void OnCompilerTraceLog(TraceLog traceLog)
+		{
+			if (traceLog.Type == TraceType.MethodDebug)
+			{
+				if (traceLog.Lines.Count == 0)
+					return;
+
+				var stagesection = traceLog.Stage;
+
+				if (traceLog.Section != null)
+					stagesection = stagesection + "-" + traceLog.Section;
+
+				methodStore.SetDebugStageInformation(traceLog.Method, stagesection, traceLog.Lines, traceLog.Version);
+			}
+			else if (traceLog.Type == TraceType.MethodCounters)
+			{
+				methodStore.SetMethodCounterInformation(traceLog.Method, traceLog.Lines, traceLog.Version);
+			}
+			else if (traceLog.Type == TraceType.MethodInstructions)
+			{
+				methodStore.SetInstructionTraceInformation(traceLog.Method, traceLog.Stage, traceLog.Lines, traceLog.Version);
+			}
+			else if (traceLog.Type == TraceType.GlobalDebug)
+			{
+				UpdateLog(traceLog.Section, traceLog.Lines);
+			}
+		}
+
 		void ITraceListener.OnMethodCompiled(MosaMethod method)
+		{
+			if (method == CurrentMethodSelected)
+			{
+				Invoke((MethodInvoker)(() => UpdateMethodInformation(method)));
+			}
+		}
+
+		private void OnMethodCompiled(MosaMethod method)
 		{
 			if (method == CurrentMethodSelected)
 			{

@@ -63,11 +63,6 @@ namespace Mosa.Utility.Launcher
 			Counters.Add(data);
 		}
 
-		private List<BaseCompilerExtension> GetCompilerExtensions()
-		{
-			return new List<BaseCompilerExtension>();
-		}
-
 		public void Build()
 		{
 			Log.Clear();
@@ -183,7 +178,7 @@ namespace Mosa.Utility.Launcher
 					}
 				}
 
-				var compiler = new MosaCompiler(Settings, GetCompilerExtensions());
+				var compiler = new MosaCompiler(Settings);
 
 				compiler.CompilerTrace.SetTraceListener(traceListener);
 

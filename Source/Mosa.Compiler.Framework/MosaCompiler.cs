@@ -1,20 +1,16 @@
 // Copyright (c) MOSA Project. Licensed under the New BSD License.
 
 using Mosa.Compiler.Common.Configuration;
+using Mosa.Compiler.Framework.API;
 using Mosa.Compiler.Framework.Linker;
 using Mosa.Compiler.Framework.Trace;
 using Mosa.Compiler.MosaTypeSystem;
 using System;
-using System.Collections.Generic;
 
 namespace Mosa.Compiler.Framework
 {
-	public class MosaCompiler
+	public sealed class MosaCompiler
 	{
-		public enum CompileStage { Initial, Loaded, Initialized, Ready, Executing, Completed }
-
-		public CompileStage Stage { get; private set; } = CompileStage.Initial;
-
 		public CompilerSettings CompilerSettings { get; }
 
 		public CompilerTrace CompilerTrace { get; }
@@ -27,31 +23,27 @@ namespace Mosa.Compiler.Framework
 
 		public MosaLinker Linker { get { return Compiler.Linker; } }
 
-		public List<BaseCompilerExtension> CompilerExtensions { get; } = new List<BaseCompilerExtension>();
+		public CompilerHook CompilerHook { get; }
 
 		public int MaxThreads { get; }
 
-		protected Compiler Compiler { get; private set; }
+		private enum CompileStage { Initial, Loaded, Initialized, Ready, Executing, Completed }
+
+		private CompileStage Stage = CompileStage.Initial;
+
+		private Compiler Compiler;
 
 		private readonly object _lock = new object();
 
-		public MosaCompiler(List<BaseCompilerExtension> compilerExtensions = null, int maxThreads = 0)
-			: this(new Settings(), compilerExtensions, maxThreads)
+		public MosaCompiler(Settings settings, CompilerHook compilerHook = null, int maxThreads = 0)
 		{
-		}
-
-		public MosaCompiler(Settings settings, List<BaseCompilerExtension> compilerExtensions = null, int maxThreads = 0)
-		{
-			MaxThreads = (maxThreads == 0) ? Environment.ProcessorCount * 2 : maxThreads;
-
 			CompilerSettings = new CompilerSettings(settings.Clone());
 
-			CompilerTrace = new CompilerTrace(CompilerSettings.TraceLevel);
+			CompilerHook = compilerHook ?? new CompilerHook();
 
-			if (compilerExtensions != null)
-			{
-				CompilerExtensions.AddRange(compilerExtensions);
-			}
+			MaxThreads = (maxThreads == 0) ? Environment.ProcessorCount : maxThreads;
+
+			CompilerTrace = new CompilerTrace(CompilerSettings.TraceLevel);
 		}
 
 		public void Load()

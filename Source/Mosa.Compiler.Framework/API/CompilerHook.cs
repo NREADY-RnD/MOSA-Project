@@ -2,13 +2,11 @@
 
 using Mosa.Compiler.Framework.Trace;
 using Mosa.Compiler.MosaTypeSystem;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Mosa.Compiler.Framework.API
 {
-	public class CompilerHooks
+	public class CompilerHook
 	{
 		#region Delegates definitions
 
@@ -25,6 +23,10 @@ namespace Mosa.Compiler.Framework.API
 		public delegate IList<CustomProgramHeader> CustomProgramHeadersHandler();
 
 		public delegate CompilerTraceLogHandler MethodInstructionTraceHandler(MosaMethod method);
+
+		public delegate void ExtendCompilerPipelineHandler(Pipeline<BaseCompilerStage> pipeline);
+
+		public delegate void ExtendMethodCompilerPipelineHandler(Pipeline<BaseMethodCompilerStage> pipeline);
 
 		#endregion Delegates definitions
 
@@ -45,5 +47,9 @@ namespace Mosa.Compiler.Framework.API
 		public CustomProgramHeadersHandler CustomProgramHeaders;
 
 		public MethodInstructionTraceHandler MethodInstructionTrace;
+
+		public ExtendCompilerPipelineHandler ExtendCompilerPipeline;
+
+		public ExtendMethodCompilerPipelineHandler ExtendMethodCompilerPipeline;
 	}
 }
