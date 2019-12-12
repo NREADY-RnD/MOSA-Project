@@ -1,6 +1,7 @@
 ﻿// Copyright (c) MOSA Project. Licensed under the New BSD License.
 
 using Mosa.Compiler.Common.Configuration;
+using Mosa.Compiler.Framework.API;
 using Mosa.Compiler.Framework.Linker;
 using System;
 using System.Diagnostics;
@@ -11,26 +12,22 @@ namespace Mosa.Utility.Launcher
 {
 	public class Starter : BaseLauncher
 	{
-		public IStarterEvent LauncherEvent { get; }
-
 		public MosaLinker Linker { get; }
 
-		public Starter(Settings settings, AppLocations appLocations, IStarterEvent launcherEvent)
-			: base(settings, appLocations)
+		public Starter(Settings settings, CompilerHook compilerHook, AppLocations appLocations)
+			: base(settings, compilerHook, appLocations)
 		{
-			LauncherEvent = launcherEvent;
 		}
 
-		public Starter(Settings settings, AppLocations appLocations, IStarterEvent launcherEvent, MosaLinker linker)
-			: base(settings, appLocations)
+		public Starter(Settings settings, CompilerHook compilerHook, AppLocations appLocations, MosaLinker linker)
+			: base(settings, compilerHook, appLocations)
 		{
-			LauncherEvent = launcherEvent;
 			Linker = linker;
 		}
 
 		protected override void OutputEvent(string status)
 		{
-			LauncherEvent?.NewStatus(status);
+			CompilerHook?.NotifyStatus(status);
 		}
 
 		public Process Launch()

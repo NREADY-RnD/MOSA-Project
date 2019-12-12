@@ -4,6 +4,7 @@ using MetroFramework.Forms;
 using Mosa.Compiler.Common;
 using Mosa.Compiler.Common.Configuration;
 using Mosa.Compiler.Framework;
+using Mosa.Compiler.Framework.API;
 using Mosa.Utility.BootImage;
 using Mosa.Utility.Configuration;
 using Mosa.Utility.Launcher;
@@ -15,7 +16,7 @@ using System.Windows.Forms;
 
 namespace Mosa.Tool.Launcher
 {
-	public partial class MainForm : MetroForm, IBuilderEvent, IStarterEvent
+	public partial class MainForm : MetroForm
 	{
 		private Settings Settings = new Settings();
 
@@ -80,12 +81,7 @@ namespace Mosa.Tool.Launcher
 			AddOutput(info);
 		}
 
-		void IBuilderEvent.NewStatus(string status)
-		{
-			Invoke((MethodInvoker)(() => NewStatus(status)));
-		}
-
-		void IStarterEvent.NewStatus(string status)
+		private void NotifyStatus(string status)
 		{
 			Invoke((MethodInvoker)(() => NewStatus(status)));
 		}
@@ -96,7 +92,7 @@ namespace Mosa.Tool.Launcher
 			progressBar1.Value = CompletedMethods;
 		}
 
-		void IBuilderEvent.UpdateProgress(int total, int at)
+		private void NotifyProgress(int total, int at)
 		{
 			TotalMethods = total;
 			CompletedMethods = at;
@@ -175,6 +171,16 @@ namespace Mosa.Tool.Launcher
 			return base.ProcessCmdKey(ref msg, keyData);
 		}
 
+		private CompilerHook CreateCompilerHook()
+		{
+			var compilerHook = new CompilerHook();
+
+			compilerHook.NotifyProgress = NotifyProgress;
+			compilerHook.NotifyStatus = NotifyStatus;
+
+			return compilerHook;
+		}
+
 		private void CompileBuildAndStart()
 		{
 			rtbOutput.Clear();
@@ -189,7 +195,9 @@ namespace Mosa.Tool.Launcher
 			{
 				try
 				{
-					Builder = new Builder(Settings, AppLocations, this);
+					var compilerHook = CreateCompilerHook();
+
+					Builder = new Builder(Settings, AppLocations, compilerHook);
 
 					Builder.IncludeFiles.Clear();
 
@@ -240,7 +248,9 @@ namespace Mosa.Tool.Launcher
 				if (CheckKeyPressed())
 					return;
 
-				var starter = new Starter(Builder.Settings, AppLocations, this, Builder.Linker);
+				var compilerHooks = CreateCompilerHook();
+
+				var starter = new Starter(Builder.Settings, compilerHooks, AppLocations, Builder.Linker);
 
 				starter.Launch();
 			}

@@ -10,19 +10,21 @@ namespace Mosa.Compiler.Framework.API
 	{
 		#region Delegates definitions
 
-		public delegate void CompilerProgressHandler(int totalMethods, int completedMethods);
+		public delegate void NotifyStatusHandler(string status);
 
-		public delegate void CompilerEventHandler(CompilerEvent compilerEvent, string message, int threadID);
+		public delegate void NotifyProgressHandler(int totalMethods, int completedMethods);
 
-		public delegate void CompilerTraceLogHandler(TraceLog traceLog);
+		public delegate void NotifyEventHandler(CompilerEvent compilerEvent, string message, int threadID);
 
-		public delegate void MethodCompiledHandler(MosaMethod method);
+		public delegate void NotifyTraceLogHandler(TraceLog traceLog);
+
+		public delegate void NotifyMethodCompiledHandler(MosaMethod method);
 
 		public delegate IList<CustomELFSection> CustomElfSectionsHandler();
 
 		public delegate IList<CustomProgramHeader> CustomProgramHeadersHandler();
 
-		public delegate CompilerTraceLogHandler MethodInstructionTraceHandler(MosaMethod method);
+		public delegate NotifyTraceLogHandler MethodInstructionTraceHandler(MosaMethod method);
 
 		public delegate void ExtendCompilerPipelineHandler(Pipeline<BaseCompilerStage> pipeline);
 
@@ -30,17 +32,15 @@ namespace Mosa.Compiler.Framework.API
 
 		#endregion Delegates definitions
 
-		#region Events
+		public NotifyStatusHandler NotifyStatus;
 
-		public event CompilerProgressHandler CompilerProgress;
+		public NotifyProgressHandler NotifyProgress;
 
-		public event CompilerEventHandler CompilerEvent;
+		public NotifyEventHandler NotifyEvent;
 
-		public event CompilerTraceLogHandler CompilerTraceLog;
+		public NotifyTraceLogHandler NotifyTraceLog;
 
-		public event MethodCompiledHandler MethodCompiled;
-
-		#endregion Events
+		public NotifyMethodCompiledHandler NotifyMethodCompiled;
 
 		public CustomElfSectionsHandler CustomElfSections;
 

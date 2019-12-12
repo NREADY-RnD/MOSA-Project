@@ -21,11 +21,6 @@ namespace Mosa.Compiler.Framework.Trace
 			return TraceLevel != 0 && TraceLevel >= traceLevel;
 		}
 
-		public void SetTraceListener(ITraceListener traceListener)
-		{
-			TraceListener = traceListener;
-		}
-
 		public void PostMethodCompiled(MosaMethod method)
 		{
 			TraceListener?.OnMethodCompiled(method);

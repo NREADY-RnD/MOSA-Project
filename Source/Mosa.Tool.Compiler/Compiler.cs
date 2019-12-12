@@ -215,8 +215,6 @@ Example: Mosa.Tool.Compiler.exe -o Mosa.HelloWorld.x86.bin -a x86 --mboot v1 --x
 
 		private void Compile()
 		{
-			compiler.CompilerTrace.SetTraceListener(new ConsoleEventListener());
-
 			compiler.Load();
 
 			compiler.ThreadedCompile();

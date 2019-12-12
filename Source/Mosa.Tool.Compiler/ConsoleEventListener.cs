@@ -6,7 +6,7 @@ using System;
 
 namespace Mosa.Tool.Compiler
 {
-	public sealed class ConsoleEventListener : ITraceListener
+	public sealed class ConsoleEventListener
 	{
 		public bool Quiet = true;
 
@@ -95,23 +95,6 @@ namespace Mosa.Tool.Compiler
 
 				default: break;
 			}
-		}
-
-		void ITraceListener.OnCompilerEvent(CompilerEvent compilerEvent, string message, int threadID)
-		{
-			TraceEvent(compilerEvent, message);
-		}
-
-		void ITraceListener.OnProgress(int totalMethods, int completedMethods)
-		{
-		}
-
-		void ITraceListener.OnTraceLog(TraceLog traceLog)
-		{
-		}
-
-		void ITraceListener.OnMethodCompiled(MosaMethod method)
-		{
 		}
 
 		private void OnCompilerEvent(CompilerEvent compilerEvent, string message, int threadID)

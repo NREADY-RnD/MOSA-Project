@@ -8,6 +8,7 @@ using Mosa.Compiler.Common;
 using Mosa.Compiler.Common.Configuration;
 using Mosa.Compiler.Common.Exceptions;
 using Mosa.Compiler.Framework;
+using Mosa.Compiler.Framework.API;
 using Mosa.Compiler.Framework.Linker;
 using Mosa.Compiler.Framework.Trace;
 using Mosa.Compiler.MosaTypeSystem;
@@ -28,8 +29,6 @@ namespace Mosa.Utility.Launcher
 
 		public DateTime CompileStartTime { get; private set; }
 
-		public IBuilderEvent BuilderEvent { get; }
-
 		public bool HasCompileError { get; private set; }
 
 		public MosaLinker Linker { get; private set; }
@@ -40,19 +39,15 @@ namespace Mosa.Utility.Launcher
 
 		public List<IncludeFile> IncludeFiles = new List<IncludeFile>();
 
-		protected ITraceListener traceListener;
-
-		public Builder(Settings settings, AppLocations appLocations, IBuilderEvent builderEvent)
-			: base(settings, appLocations)
+		public Builder(Settings settings, AppLocations appLocations, CompilerHook compilerHook)
+			: base(settings, compilerHook, appLocations)
 		{
 			Counters = new List<string>();
-			traceListener = new BuilderEventListener(this);
-			BuilderEvent = builderEvent;
 		}
 
 		protected override void OutputEvent(string status)
 		{
-			BuilderEvent?.NewStatus(status);
+			CompilerHook?.NotifyStatus(status);
 		}
 
 		public void AddCounters(string data)
@@ -179,8 +174,6 @@ namespace Mosa.Utility.Launcher
 				}
 
 				var compiler = new MosaCompiler(Settings);
-
-				compiler.CompilerTrace.SetTraceListener(traceListener);
 
 				compiler.Load();
 				compiler.Initialize();

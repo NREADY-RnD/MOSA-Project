@@ -299,7 +299,7 @@ namespace Mosa.Compiler.Framework
 
 			PostCompilerTraceEvent(CompilerEvent.MethodCompileEnd, method.FullName, threadID);
 
-			CompilerTrace.PostMethodCompiled(method);
+			CompilerHook.NotifyMethodCompiled(method);
 		}
 
 		private Pipeline<BaseMethodCompilerStage> GetOrCreateMethodStagePipeline(int threadID)

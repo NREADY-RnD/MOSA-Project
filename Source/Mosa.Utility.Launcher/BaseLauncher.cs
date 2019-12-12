@@ -1,6 +1,7 @@
 ﻿// Copyright (c) MOSA Project. Licensed under the New BSD License.
 
 using Mosa.Compiler.Common.Configuration;
+using Mosa.Compiler.Framework.API;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -12,12 +13,15 @@ namespace Mosa.Utility.Launcher
 	{
 		public Settings Settings { get; }
 
+		public CompilerHook CompilerHook { get; }
+
 		public List<string> Log { get; }
 
 		public AppLocations AppLocations { get; set; }
 
-		public BaseLauncher(Settings settings, AppLocations appLocations)
+		public BaseLauncher(Settings settings, CompilerHook compilerHook, AppLocations appLocations)
 		{
+			CompilerHook = compilerHook;
 			Settings = settings.Clone();
 
 			AppLocations = appLocations;

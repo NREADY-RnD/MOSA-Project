@@ -20,7 +20,7 @@ using System.Windows.Forms;
 
 namespace Mosa.Tool.Explorer
 {
-	public partial class MainForm : Form, ITraceListener
+	public partial class MainForm : Form
 	{
 		private Settings Settings = new Settings();
 
@@ -684,10 +684,10 @@ namespace Mosa.Tool.Explorer
 			compilerHook.ExtendCompilerPipeline = ExtendCompilerPipeline;
 			compilerHook.ExtendMethodCompilerPipeline = ExtendMethodCompilerPipeline;
 
-			compilerHook.CompilerProgress += OnCompilerProgress;
-			compilerHook.CompilerEvent += OnCompilerEvent;
-			compilerHook.CompilerTraceLog += OnCompilerTraceLog;
-			compilerHook.MethodCompiled += OnMethodCompiled;
+			compilerHook.NotifyProgress = NotifyProgress;
+			compilerHook.NotifyEvent = NotifyEvent;
+			compilerHook.NotifyTraceLog = NotifyTraceLog;
+			compilerHook.NotifyMethodCompiled = NotifyMethodCompiled;
 
 			return compilerHook;
 		}
@@ -701,8 +701,6 @@ namespace Mosa.Tool.Explorer
 			var compilerHooks = CreateCompilerHook();
 
 			Compiler = new MosaCompiler(Settings, compilerHooks);
-
-			Compiler.CompilerTrace.SetTraceListener(this);
 
 			Compiler.Load();
 
@@ -742,17 +740,7 @@ namespace Mosa.Tool.Explorer
 			toolStripProgressBar1.Value = CompletedMethods;
 		}
 
-		void ITraceListener.OnCompilerEvent(CompilerEvent compilerEvent, string message, int threadID)
-		{
-			lock (_statusLock)
-			{
-				Status = compilerEvent.ToText() + ": " + message;
-			}
-
-			SubmitTraceEvent(compilerEvent, message, threadID);
-		}
-
-		private void OnCompilerEvent(CompilerEvent compilerEvent, string message, int threadID)
+		private void NotifyEvent(CompilerEvent compilerEvent, string message, int threadID)
 		{
 			var status = compilerEvent.ToText() + ": " + message;
 
@@ -764,19 +752,13 @@ namespace Mosa.Tool.Explorer
 			SubmitTraceEvent(compilerEvent, message, threadID);
 		}
 
-		void ITraceListener.OnProgress(int totalMethods, int completedMethods)
+		private void NotifyProgress(int totalMethods, int completedMethods)
 		{
 			TotalMethods = totalMethods;
 			CompletedMethods = completedMethods;
 		}
 
-		private void OnCompilerProgress(int totalMethods, int completedMethods)
-		{
-			TotalMethods = totalMethods;
-			CompletedMethods = completedMethods;
-		}
-
-		void ITraceListener.OnTraceLog(TraceLog traceLog)
+		private void NotifyTraceLog(TraceLog traceLog)
 		{
 			if (traceLog.Type == TraceType.MethodDebug)
 			{
@@ -804,43 +786,7 @@ namespace Mosa.Tool.Explorer
 			}
 		}
 
-		private void OnCompilerTraceLog(TraceLog traceLog)
-		{
-			if (traceLog.Type == TraceType.MethodDebug)
-			{
-				if (traceLog.Lines.Count == 0)
-					return;
-
-				var stagesection = traceLog.Stage;
-
-				if (traceLog.Section != null)
-					stagesection = stagesection + "-" + traceLog.Section;
-
-				methodStore.SetDebugStageInformation(traceLog.Method, stagesection, traceLog.Lines, traceLog.Version);
-			}
-			else if (traceLog.Type == TraceType.MethodCounters)
-			{
-				methodStore.SetMethodCounterInformation(traceLog.Method, traceLog.Lines, traceLog.Version);
-			}
-			else if (traceLog.Type == TraceType.MethodInstructions)
-			{
-				methodStore.SetInstructionTraceInformation(traceLog.Method, traceLog.Stage, traceLog.Lines, traceLog.Version);
-			}
-			else if (traceLog.Type == TraceType.GlobalDebug)
-			{
-				UpdateLog(traceLog.Section, traceLog.Lines);
-			}
-		}
-
-		void ITraceListener.OnMethodCompiled(MosaMethod method)
-		{
-			if (method == CurrentMethodSelected)
-			{
-				Invoke((MethodInvoker)(() => UpdateMethodInformation(method)));
-			}
-		}
-
-		private void OnMethodCompiled(MosaMethod method)
+		private void NotifyMethodCompiled(MosaMethod method)
 		{
 			if (method == CurrentMethodSelected)
 			{
