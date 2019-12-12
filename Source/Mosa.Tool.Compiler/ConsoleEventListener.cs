@@ -113,5 +113,10 @@ namespace Mosa.Tool.Compiler
 		void ITraceListener.OnMethodCompiled(MosaMethod method)
 		{
 		}
+
+		private void OnCompilerEvent(CompilerEvent compilerEvent, string message, int threadID)
+		{
+			TraceEvent(compilerEvent, message);
+		}
 	}
 }
