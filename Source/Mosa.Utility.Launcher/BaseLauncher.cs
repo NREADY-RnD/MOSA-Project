@@ -40,6 +40,7 @@ namespace Mosa.Utility.Launcher
 
 		protected virtual void OutputEvent(string status)
 		{
+			CompilerHook.NotifyStatus?.Invoke(status);
 		}
 
 		static protected byte[] GetResource(string path, string name)

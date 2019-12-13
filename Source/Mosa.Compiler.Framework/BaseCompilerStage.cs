@@ -45,11 +45,6 @@ namespace Mosa.Compiler.Framework
 		protected CompilerSettings CompilerSettings { get { return Compiler.CompilerSettings; } }
 
 		/// <summary>
-		/// Holds the compiler trace
-		/// </summary>
-		protected CompilerTrace CompilerTrace { get { return Compiler.CompilerTrace; } }
-
-		/// <summary>
 		/// Holds the compiler scheduler
 		/// </summary>
 		protected MethodScheduler CompilationScheduler { get { return Compiler.MethodScheduler; } }
@@ -131,15 +126,12 @@ namespace Mosa.Compiler.Framework
 
 		protected void PostCompilerTraceEvent(CompilerEvent compilerEvent, string message)
 		{
-			CompilerTrace.PostCompilerTraceEvent(compilerEvent, message, 0);
+			Compiler.PostEvent(compilerEvent, message, 0);
 		}
 
-		protected void PostTrace(TraceLog traceLog)
+		protected void PostTraceLog(TraceLog traceLog)
 		{
-			if (traceLog == null)
-				return;
-
-			CompilerTrace.PostTraceLog(traceLog);
+			Compiler.PostTraceLog(traceLog);
 		}
 
 		#endregion Helper Methods

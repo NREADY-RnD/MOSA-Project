@@ -40,7 +40,7 @@ namespace Mosa.Compiler.Framework
 			TypeLayout = compiler.TypeLayout;
 			IsEnabled = compiler.CompilerSettings.MethodScanner;
 
-			if (Compiler.CompilerTrace.IsTraceable(TraceLevel))
+			if (Compiler.IsTraceable(TraceLevel))
 			{
 				trace = new TraceLog(TraceType.GlobalDebug, null, null, "MethodScanner");
 			}
@@ -88,7 +88,7 @@ namespace Mosa.Compiler.Framework
 			Compiler.GlobalCounters.Update("MethodScanner.AccessedFields", accessedFields.Count);
 			Compiler.GlobalCounters.Update("MethodScanner.InvokedInterfaceType", invokedInteraceTypes.Count);
 
-			Compiler.PostTrace(trace);
+			Compiler.PostTraceLog(trace);
 		}
 
 		private void MarkMethodInvoked(MosaMethod method)

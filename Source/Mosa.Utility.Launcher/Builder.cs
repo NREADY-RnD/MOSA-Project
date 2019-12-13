@@ -43,11 +43,11 @@ namespace Mosa.Utility.Launcher
 			: base(settings, compilerHook, appLocations)
 		{
 			Counters = new List<string>();
-		}
 
-		protected override void OutputEvent(string status)
-		{
-			CompilerHook?.NotifyStatus(status);
+			if (CompilerHook.NotifyEvent == null)
+			{
+				CompilerHook.NotifyEvent = NotifyEvent;
+			}
 		}
 
 		public void AddCounters(string data)
@@ -173,7 +173,7 @@ namespace Mosa.Utility.Launcher
 					}
 				}
 
-				var compiler = new MosaCompiler(Settings);
+				var compiler = new MosaCompiler(Settings, CompilerHook);
 
 				compiler.Load();
 				compiler.Initialize();
@@ -628,6 +628,32 @@ namespace Mosa.Utility.Launcher
 							break;
 					}
 				}
+			}
+		}
+
+		private void NotifyEvent(CompilerEvent compilerEvent, string message, int threadID)
+		{
+			if (compilerEvent == CompilerEvent.CompilerStart
+				|| compilerEvent == CompilerEvent.CompilerEnd
+				|| compilerEvent == CompilerEvent.CompilingMethods
+				|| compilerEvent == CompilerEvent.CompilingMethodsCompleted
+				|| compilerEvent == CompilerEvent.InlineMethodsScheduled
+				|| compilerEvent == CompilerEvent.LinkingStart
+				|| compilerEvent == CompilerEvent.LinkingEnd
+				|| compilerEvent == CompilerEvent.Warning
+				|| compilerEvent == CompilerEvent.Error
+				|| compilerEvent == CompilerEvent.Exception)
+			{
+				string status = $"Compiling: {$"{(DateTime.Now - CompileStartTime).TotalSeconds:0.00}"} secs: {compilerEvent.ToText()}";
+
+				if (!string.IsNullOrEmpty(message))
+					status += $"- { message}";
+
+				AddOutput(status);
+			}
+			else if (compilerEvent == CompilerEvent.Counter)
+			{
+				AddCounters(message);
 			}
 		}
 	}

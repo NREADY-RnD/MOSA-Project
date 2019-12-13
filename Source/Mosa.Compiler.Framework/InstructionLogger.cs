@@ -16,7 +16,7 @@ namespace Mosa.Compiler.Framework.Trace
 		public static void Run(MethodCompiler methodCompiler, BaseMethodCompilerStage stage)
 		{
 			Run(
-				methodCompiler.Trace,
+				methodCompiler.Compiler,
 				stage.FormattedStageName,
 				methodCompiler.Method,
 				methodCompiler.BasicBlocks,
@@ -24,9 +24,9 @@ namespace Mosa.Compiler.Framework.Trace
 			);
 		}
 
-		public static void Run(CompilerTrace compilerTrace, string stage, MosaMethod method, BasicBlocks basicBlocks, int version)
+		public static void Run(Compiler compiler, string stage, MosaMethod method, BasicBlocks basicBlocks, int version)
 		{
-			if (!compilerTrace.IsTraceable(TraceLevel))
+			if (compiler.CompilerSettings.TraceLevel < TraceLevel)
 				return;
 
 			var traceLog = new TraceLog(TraceType.MethodInstructions, method, stage, version);
@@ -52,7 +52,7 @@ namespace Mosa.Compiler.Framework.Trace
 				traceLog?.Log("No instructions.");
 			}
 
-			compilerTrace.PostTraceLog(traceLog);
+			compiler.PostTraceLog(traceLog);
 		}
 
 		private static string ListBlocks(IList<BasicBlock> blocks)

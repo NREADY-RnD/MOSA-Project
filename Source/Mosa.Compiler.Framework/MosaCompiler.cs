@@ -13,8 +13,6 @@ namespace Mosa.Compiler.Framework
 	{
 		public CompilerSettings CompilerSettings { get; }
 
-		public CompilerTrace CompilerTrace { get; }
-
 		public TypeSystem TypeSystem { get; private set; }
 
 		public MosaTypeLayout TypeLayout { get; private set; }
@@ -42,8 +40,6 @@ namespace Mosa.Compiler.Framework
 			CompilerHook = compilerHook ?? new CompilerHook();
 
 			MaxThreads = (maxThreads == 0) ? Environment.ProcessorCount : maxThreads;
-
-			CompilerTrace = new CompilerTrace(CompilerSettings.TraceLevel);
 		}
 
 		public void Load()

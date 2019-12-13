@@ -52,11 +52,6 @@ namespace Mosa.Compiler.Framework
 		public MosaTypeLayout TypeLayout { get; }
 
 		/// <summary>
-		/// Gets the compiler trace.
-		/// </summary>
-		public CompilerTrace CompilerTrace { get; }
-
-		/// <summary>
 		/// Gets the compiler options.
 		/// </summary>
 		public CompilerSettings CompilerSettings { get; }
@@ -127,6 +122,8 @@ namespace Mosa.Compiler.Framework
 		public Operand LeaveTargetRegister { get; }
 
 		public CompilerHook CompilerHook { get; }
+
+		public int TraceLevel { get; }
 
 		#endregion Properties
 
@@ -223,9 +220,9 @@ namespace Mosa.Compiler.Framework
 			TypeSystem = mosaCompiler.TypeSystem;
 			TypeLayout = mosaCompiler.TypeLayout;
 			CompilerSettings = mosaCompiler.CompilerSettings;
-			CompilerTrace = mosaCompiler.CompilerTrace;
 			Architecture = mosaCompiler.Platform;
 			CompilerHook = mosaCompiler.CompilerHook;
+			TraceLevel = CompilerSettings.TraceLevel;
 
 			Linker = new MosaLinker(this);
 
@@ -234,7 +231,7 @@ namespace Mosa.Compiler.Framework
 			ExceptionRegister = Operand.CreateCPURegister(TypeSystem.BuiltIn.Object, Architecture.ExceptionRegister);
 			LeaveTargetRegister = Operand.CreateCPURegister(TypeSystem.BuiltIn.Object, Architecture.LeaveTargetRegister);
 
-			PostCompilerTraceEvent(CompilerEvent.CompilerStart);
+			PostEvent(CompilerEvent.CompilerStart);
 
 			MethodStagePipelines = new Pipeline<BaseMethodCompilerStage>[mosaCompiler.MaxThreads + 1];
 
@@ -270,7 +267,7 @@ namespace Mosa.Compiler.Framework
 			CompilerPipeline.Add(GetDefaultCompilerPipeline(CompilerSettings, Architecture.Is64BitPlatform));
 
 			// Call hook to allow for the extension of the pipeline
-			CompilerHook?.ExtendCompilerPipeline(CompilerPipeline);
+			CompilerHook.ExtendCompilerPipeline?.Invoke(CompilerPipeline);
 
 			Architecture.ExtendCompilerPipeline(CompilerPipeline, CompilerSettings);
 
@@ -286,7 +283,7 @@ namespace Mosa.Compiler.Framework
 		/// <param name="threadID">The thread identifier.</param>
 		public void CompileMethod(MosaMethod method, BasicBlocks basicBlocks, int threadID = 0)
 		{
-			PostCompilerTraceEvent(CompilerEvent.MethodCompileStart, method.FullName, threadID);
+			PostEvent(CompilerEvent.MethodCompileStart, method.FullName, threadID);
 
 			var pipeline = GetOrCreateMethodStagePipeline(threadID);
 
@@ -297,9 +294,9 @@ namespace Mosa.Compiler.Framework
 
 			methodCompiler.Compile();
 
-			PostCompilerTraceEvent(CompilerEvent.MethodCompileEnd, method.FullName, threadID);
+			PostEvent(CompilerEvent.MethodCompileEnd, method.FullName, threadID);
 
-			CompilerHook.NotifyMethodCompiled(method);
+			CompilerHook.NotifyMethodCompiled?.Invoke(method);
 		}
 
 		private Pipeline<BaseMethodCompilerStage> GetOrCreateMethodStagePipeline(int threadID)
@@ -315,7 +312,7 @@ namespace Mosa.Compiler.Framework
 				pipeline.Add(GetDefaultMethodPipeline(CompilerSettings, Architecture.Is64BitPlatform));
 
 				// Call hook to allow for the extension of the pipeline
-				CompilerHook?.ExtendMethodCompilerPipeline(pipeline);
+				CompilerHook.ExtendMethodCompilerPipeline?.Invoke(pipeline);
 
 				Architecture.ExtendMethodCompilerPipeline(pipeline, CompilerSettings);
 
@@ -347,7 +344,7 @@ namespace Mosa.Compiler.Framework
 		/// </remarks>
 		internal void Setup()
 		{
-			PostCompilerTraceEvent(CompilerEvent.SetupStart);
+			PostEvent(CompilerEvent.SetupStart);
 
 			foreach (var stage in CompilerPipeline)
 			{
@@ -356,20 +353,20 @@ namespace Mosa.Compiler.Framework
 
 			foreach (var stage in CompilerPipeline)
 			{
-				PostCompilerTraceEvent(CompilerEvent.SetupStageStart, stage.Name);
+				PostEvent(CompilerEvent.SetupStageStart, stage.Name);
 
 				// Execute stage
 				stage.ExecuteSetup();
 
-				PostCompilerTraceEvent(CompilerEvent.SetupStageEnd, stage.Name);
+				PostEvent(CompilerEvent.SetupStageEnd, stage.Name);
 			}
 
-			PostCompilerTraceEvent(CompilerEvent.SetupEnd);
+			PostEvent(CompilerEvent.SetupEnd);
 		}
 
 		public void ExecuteCompile()
 		{
-			PostCompilerTraceEvent(CompilerEvent.CompilingMethods);
+			PostEvent(CompilerEvent.CompilingMethods);
 
 			while (true)
 			{
@@ -380,7 +377,7 @@ namespace Mosa.Compiler.Framework
 					break;
 			}
 
-			PostCompilerTraceEvent(CompilerEvent.CompilingMethodsCompleted);
+			PostEvent(CompilerEvent.CompilingMethodsCompleted);
 		}
 
 		private MosaMethod ProcessQueue(int threadID = 0)
@@ -417,20 +414,18 @@ namespace Mosa.Compiler.Framework
 				CompileMethod(method, null, threadID);
 			}
 
-			CompilerTrace.UpdatedCompilerProgress(
-				MethodScheduler.TotalMethods,
-				MethodScheduler.TotalMethods - MethodScheduler.TotalQueuedMethods);
+			CompilerHook.NotifyProgress?.Invoke(MethodScheduler.TotalMethods, MethodScheduler.TotalMethods - MethodScheduler.TotalQueuedMethods);
 
 			return method;
 		}
 
 		public void ExecuteThreadedCompile(int threads)
 		{
-			PostCompilerTraceEvent(CompilerEvent.CompilingMethods);
+			PostEvent(CompilerEvent.CompilingMethods);
 
 			ExecuteThreadedCompilePass(threads);
 
-			PostCompilerTraceEvent(CompilerEvent.CompilingMethodsCompleted);
+			PostEvent(CompilerEvent.CompilingMethodsCompleted);
 		}
 
 		private int WorkIncrement()
@@ -503,16 +498,16 @@ namespace Mosa.Compiler.Framework
 		/// </remarks>
 		internal void Finalization()
 		{
-			PostCompilerTraceEvent(CompilerEvent.FinalizationStart);
+			PostEvent(CompilerEvent.FinalizationStart);
 
 			foreach (BaseCompilerStage stage in CompilerPipeline)
 			{
-				PostCompilerTraceEvent(CompilerEvent.FinalizationStageStart, stage.Name);
+				PostEvent(CompilerEvent.FinalizationStageStart, stage.Name);
 
 				// Execute stage
 				stage.ExecuteFinalization();
 
-				PostCompilerTraceEvent(CompilerEvent.FinalizationStageEnd, stage.Name);
+				PostEvent(CompilerEvent.FinalizationStageEnd, stage.Name);
 			}
 
 			MethodScanner.Complete();
@@ -525,13 +520,13 @@ namespace Mosa.Compiler.Framework
 
 			EmitCounters();
 
-			PostCompilerTraceEvent(CompilerEvent.FinalizationEnd);
-			PostCompilerTraceEvent(CompilerEvent.CompilerEnd);
+			PostEvent(CompilerEvent.FinalizationEnd);
+			PostEvent(CompilerEvent.CompilerEnd);
 		}
 
 		public void Stop()
 		{
-			PostCompilerTraceEvent(CompilerEvent.Stopped);
+			PostEvent(CompilerEvent.Stopped);
 			IsStopped = true;
 		}
 
@@ -546,7 +541,7 @@ namespace Mosa.Compiler.Framework
 		{
 			foreach (var counter in GlobalCounters.Export())
 			{
-				PostCompilerTraceEvent(CompilerEvent.Counter, counter);
+				PostEvent(CompilerEvent.Counter, counter);
 			}
 		}
 
@@ -558,27 +553,17 @@ namespace Mosa.Compiler.Framework
 
 		#region Helper Methods
 
-		public void PostTrace(TraceLog traceLog)
+		public bool IsTraceable(int traceLevel)
+		{
+			return TraceLevel != 0 && TraceLevel <= traceLevel;
+		}
+
+		public void PostTraceLog(TraceLog traceLog)
 		{
 			if (traceLog == null)
 				return;
 
-			CompilerTrace.PostTraceLog(traceLog);
-		}
-
-		public void PostCompilerTraceEvent(CompilerEvent compilerEvent)
-		{
-			CompilerTrace.PostCompilerTraceEvent(compilerEvent, string.Empty, 0);
-		}
-
-		/// <summary>
-		/// Traces the specified compiler event.
-		/// </summary>
-		/// <param name="compilerEvent">The compiler event.</param>
-		/// <param name="message">The message.</param>
-		public void PostCompilerTraceEvent(CompilerEvent compilerEvent, string message)
-		{
-			CompilerTrace.PostCompilerTraceEvent(compilerEvent, message, 0);
+			CompilerHook.NotifyTraceLog?.Invoke(traceLog);
 		}
 
 		/// <summary>
@@ -587,9 +572,9 @@ namespace Mosa.Compiler.Framework
 		/// <param name="compilerEvent">The compiler event.</param>
 		/// <param name="message">The message.</param>
 		/// <param name="threadID">The thread identifier.</param>
-		public void PostCompilerTraceEvent(CompilerEvent compilerEvent, string message, int threadID)
+		public void PostEvent(CompilerEvent compilerEvent, string message = null, int threadID = 0)
 		{
-			CompilerTrace.PostCompilerTraceEvent(compilerEvent, message, threadID);
+			CompilerHook.NotifyEvent?.Invoke(compilerEvent, message ?? string.Empty, threadID);
 		}
 
 		private MosaType GetPlatformInternalRuntimeType()

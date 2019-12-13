@@ -25,11 +25,6 @@ namespace Mosa.Utility.Launcher
 			Linker = linker;
 		}
 
-		protected override void OutputEvent(string status)
-		{
-			CompilerHook?.NotifyStatus(status);
-		}
-
 		public Process Launch()
 		{
 			var process = LaunchVM();

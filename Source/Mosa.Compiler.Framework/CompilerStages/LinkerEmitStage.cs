@@ -19,7 +19,7 @@ namespace Mosa.Compiler.Framework.CompilerStages
 			if (string.IsNullOrEmpty(CompilerSettings.OutputFile))
 				return;
 
-			Compiler.PostCompilerTraceEvent(CompilerEvent.LinkingStart);
+			Compiler.PostEvent(CompilerEvent.LinkingStart);
 
 			File.Delete(CompilerSettings.OutputFile);
 
@@ -28,7 +28,7 @@ namespace Mosa.Compiler.Framework.CompilerStages
 				Linker.Emit(file);
 			}
 
-			Compiler.PostCompilerTraceEvent(CompilerEvent.LinkingEnd);
+			Compiler.PostEvent(CompilerEvent.LinkingEnd);
 		}
 	}
 }

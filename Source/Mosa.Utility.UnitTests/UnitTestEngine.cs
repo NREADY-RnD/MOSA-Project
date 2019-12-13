@@ -1,6 +1,7 @@
 ﻿// Copyright (c) MOSA Project. Licensed under the New BSD License.
 
 using Mosa.Compiler.Common.Configuration;
+using Mosa.Compiler.Framework.API;
 using Mosa.Compiler.Framework.Linker;
 using Mosa.Compiler.MosaTypeSystem;
 using Mosa.Utility.DebugEngine;
@@ -15,7 +16,7 @@ using System.Threading;
 
 namespace Mosa.Utility.UnitTests
 {
-	public class UnitTestEngine : IBuilderEvent, IStarterEvent, IDisposable
+	public class UnitTestEngine : IDisposable
 	{
 		public string TestAssemblyPath { get; set; }
 
@@ -267,7 +268,9 @@ namespace Mosa.Utility.UnitTests
 			Settings.ClearProperty("Compiler.SourceFiles");
 			Settings.AddPropertyListValue("Compiler.SourceFiles", Path.Combine(TestAssemblyPath, TestSuiteFile));
 
-			var builder = new Builder(Settings, AppLocations, this);
+			var compilerHook = CreateCompilerHook();
+
+			var builder = new Builder(Settings, AppLocations, compilerHook);
 
 			builder.Build();
 
@@ -278,11 +281,20 @@ namespace Mosa.Utility.UnitTests
 			return !builder.HasCompileError;
 		}
 
+		private CompilerHook CreateCompilerHook()
+		{
+			var compilerHook = new CompilerHook();
+
+			return compilerHook;
+		}
+
 		public bool LaunchVirtualMachine()
 		{
 			if (Starter == null)
 			{
-				Starter = new Starter(Settings, AppLocations, this);
+				var compilerHook = CreateCompilerHook();
+
+				Starter = new Starter(Settings, compilerHook, AppLocations);
 			}
 
 			//Settings.SetValue("Emulator.Serial.Port", new Random().Next(11111, 22222));
@@ -530,20 +542,6 @@ namespace Mosa.Utility.UnitTests
 
 				//Console.WriteLine("RECD: " + unitTest.MethodTypeName + "." + unitTest.MethodName);
 			}
-		}
-
-		void IBuilderEvent.NewStatus(string status)
-		{
-			//Console.WriteLine(status);
-		}
-
-		void IBuilderEvent.UpdateProgress(int total, int at)
-		{
-		}
-
-		void IStarterEvent.NewStatus(string status)
-		{
-			//Console.WriteLine(status);
 		}
 
 		void IDisposable.Dispose()

@@ -258,7 +258,7 @@ namespace Mosa.Compiler.Framework
 			catch (Exception ex)
 			{
 				MethodCompiler.Stop();
-				PostCompilerTraceEvent(CompilerEvent.Exception, $"Method: {Method} -> {ex}");
+				PostEvent(CompilerEvent.Exception, $"Method: {Method} -> {ex}");
 				MethodCompiler.Compiler.Stop();
 			}
 
@@ -683,7 +683,7 @@ namespace Mosa.Compiler.Framework
 
 		public bool IsTraceable(int traceLevel)
 		{
-			return MethodCompiler.Trace.IsTraceable(traceLevel);
+			return MethodCompiler.IsTraceable(traceLevel);
 		}
 
 		protected TraceLog CreateTraceLog(int traceLevel = 0)
@@ -700,12 +700,12 @@ namespace Mosa.Compiler.Framework
 
 		public TraceLog CreateTraceLog(string section)
 		{
-			return CreateTraceLog(section, 0);
+			return CreateTraceLog(section, -1);
 		}
 
 		public TraceLog CreateTraceLog(string section, int traceLevel)
 		{
-			if (!IsTraceable(traceLevel))
+			if (traceLevel >= 0 && !IsTraceable(traceLevel))
 				return null;
 
 			var traceLog = new TraceLog(TraceType.MethodDebug, MethodCompiler.Method, FormattedStageName, section, MethodData.Version);
@@ -717,7 +717,7 @@ namespace Mosa.Compiler.Framework
 
 		private void PostTraceLog(TraceLog traceLog)
 		{
-			MethodCompiler.Trace.PostTraceLog(traceLog);
+			MethodCompiler.Compiler.PostTraceLog(traceLog);
 		}
 
 		private void PostTraceLogs(List<TraceLog> traceLogs)
@@ -734,9 +734,9 @@ namespace Mosa.Compiler.Framework
 			}
 		}
 
-		protected void PostCompilerTraceEvent(CompilerEvent compileEvent, string message)
+		protected void PostEvent(CompilerEvent compileEvent, string message)
 		{
-			MethodCompiler.Trace.PostCompilerTraceEvent(compileEvent, message, MethodCompiler.ThreadID);
+			MethodCompiler.Compiler.PostEvent(compileEvent, message, MethodCompiler.ThreadID);
 		}
 
 		#endregion Trace Helper Methods

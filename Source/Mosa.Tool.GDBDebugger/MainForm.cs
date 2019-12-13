@@ -3,6 +3,7 @@
 using CommandLine;
 using Mosa.Compiler.Common.Configuration;
 using Mosa.Compiler.Framework;
+using Mosa.Compiler.Framework.API;
 using Mosa.Tool.GDBDebugger.DebugData;
 using Mosa.Tool.GDBDebugger.GDB;
 using Mosa.Tool.GDBDebugger.Views;
@@ -20,7 +21,7 @@ using WeifenLuo.WinFormsUI.Docking;
 
 namespace Mosa.Tool.GDBDebugger
 {
-	public partial class MainForm : Form, IStarterEvent
+	public partial class MainForm : Form
 	{
 		public readonly OutputView outputView;
 
@@ -180,16 +181,14 @@ namespace Mosa.Tool.GDBDebugger
 			LoadWatches();
 		}
 
-		void IStarterEvent.NewStatus(string status)
+		private void NotifyStatus(string status)
 		{
-			MethodInvoker method = () => NewStatus(status);
-
-			Invoke(method);
+			Invoke((MethodInvoker)(() => NewStatus(status)));
 		}
 
 		private void NewStatus(string info)
 		{
-			AddOutput(info);
+			outputView.AddOutput(info);
 		}
 
 		private void LoadDebugFile()
@@ -199,11 +198,6 @@ namespace Mosa.Tool.GDBDebugger
 				DebugSource = new DebugSource();
 				LoadDebugData.LoadDebugInfo(DebugFile, DebugSource);
 			}
-		}
-
-		public void AddOutput(string line)
-		{
-			outputView.AddOutput(line);
 		}
 
 		private void OnPause()
@@ -564,9 +558,20 @@ namespace Mosa.Tool.GDBDebugger
 			}
 		}
 
+		private CompilerHook CreateCompilerHook()
+		{
+			var compilerHook = new CompilerHook();
+
+			compilerHook.NotifyStatus = NotifyStatus;
+
+			return compilerHook;
+		}
+
 		private Process StartQEMU()
 		{
-			var starter = new Starter(Settings, AppLocations, this);
+			var compilerHook = CreateCompilerHook();
+
+			var starter = new Starter(Settings, compilerHook, AppLocations);
 
 			return starter.LaunchVM();
 		}
