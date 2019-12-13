@@ -555,7 +555,7 @@ namespace Mosa.Compiler.Framework
 
 		public bool IsTraceable(int traceLevel)
 		{
-			return TraceLevel != 0 && TraceLevel <= traceLevel;
+			return TraceLevel >= traceLevel;
 		}
 
 		public void PostTraceLog(TraceLog traceLog)
