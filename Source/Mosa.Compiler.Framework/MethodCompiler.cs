@@ -5,6 +5,7 @@ using Mosa.Compiler.Framework.Analysis;
 using Mosa.Compiler.Framework.Linker;
 using Mosa.Compiler.Framework.Trace;
 using Mosa.Compiler.MosaTypeSystem;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -27,6 +28,8 @@ namespace Mosa.Compiler.Framework
 		private static readonly Operand[] emptyOperandList = new Operand[0];
 
 		private readonly Stopwatch Stopwatch;
+
+		//private bool Statistics;
 
 		#endregion Data Members
 
@@ -75,12 +78,6 @@ namespace Mosa.Compiler.Framework
 		/// </summary>
 		/// <value>The type layout.</value>
 		public MosaTypeLayout TypeLayout { get; }
-
-		/// <summary>
-		/// Gets the compiler trace handle
-		/// </summary>
-		/// <value>The log.</value>
-		public CompilerTrace Trace { get; }
 
 		/// <summary>
 		/// Gets the local variables.
@@ -223,9 +220,10 @@ namespace Mosa.Compiler.Framework
 			Architecture = compiler.Architecture;
 			TypeSystem = compiler.TypeSystem;
 			TypeLayout = compiler.TypeLayout;
-			Trace = compiler.CompilerTrace;
 			Linker = compiler.Linker;
 			MethodScanner = compiler.MethodScanner;
+
+			//Statistics = compiler.CompilerOptions.Statistics;
 
 			BasicBlocks = basicBlocks ?? new BasicBlocks();
 			LocalStack = new List<Operand>();
@@ -406,11 +404,12 @@ namespace Mosa.Compiler.Framework
 
 			Symbol.SetReplacementStatus(MethodData.Inlined);
 
-			if (Compiler.CompilerOptions.EnableStatistics)
+			if (Compiler.CompilerSettings.Statistics)
 			{
 				var log = new TraceLog(TraceType.MethodCounters, Method, string.Empty, MethodData.Version);
 				log.Log(MethodData.Counters.Export());
-				Trace.PostTraceLog(log);
+
+				Compiler.PostTraceLog(log);
 			}
 		}
 
@@ -438,7 +437,7 @@ namespace Mosa.Compiler.Framework
 					break;
 			}
 
-			if (Compiler.CompilerOptions.EnableStatistics)
+			if (Compiler.CompilerSettings.Statistics)
 			{
 				var lastTick = Stopwatch.ElapsedTicks;
 
@@ -470,7 +469,7 @@ namespace Mosa.Compiler.Framework
 
 				executionTimeLog.Log($"{"****Total Time".PadRight(57)}({lastTick})");
 
-				Trace.PostTraceLog(executionTimeLog);
+				PostTraceLog(executionTimeLog);
 			}
 		}
 
@@ -490,12 +489,23 @@ namespace Mosa.Compiler.Framework
 			IsExecutePipeline = false;
 			IsStackFrameRequired = false;
 
-			if (Trace.IsTraceable(5))
+			if (IsTraceable(5))
 			{
 				var traceLog = new TraceLog(TraceType.MethodInstructions, Method, "XX-Plugged Method", MethodData.Version);
 				traceLog?.Log($"Plugged by {plugMethod.FullName}");
-				Trace.PostTraceLog(traceLog);
+
+				PostTraceLog(traceLog);
 			}
+		}
+
+		public bool IsTraceable(int tracelevel)
+		{
+			return Compiler.IsTraceable(tracelevel);
+		}
+
+		private void PostTraceLog(TraceLog traceLog)
+		{
+			Compiler.PostTraceLog(traceLog);
 		}
 
 		private void PatchDelegate()
@@ -512,11 +522,11 @@ namespace Mosa.Compiler.Framework
 			IsCILDecodeRequired = false;
 			IsExecutePipeline = true;
 
-			if (Trace.IsTraceable(5))
+			if (IsTraceable(5))
 			{
 				var traceLog = new TraceLog(TraceType.MethodDebug, Method, "XX-Delegate Patched", MethodData.Version);
 				traceLog?.Log("This delegate method was patched");
-				Trace.PostTraceLog(traceLog);
+				PostTraceLog(traceLog);
 			}
 		}
 
@@ -542,7 +552,7 @@ namespace Mosa.Compiler.Framework
 
 			if (filename != null)
 			{
-				foreach (var path in Compiler.CompilerOptions.SearchPaths)
+				foreach (var path in Compiler.CompilerSettings.SearchPaths)
 				{
 					var src = Path.Combine(path, filename);
 
@@ -560,11 +570,11 @@ namespace Mosa.Compiler.Framework
 				// CompilerException.FileNotFound
 			}
 
-			if (Trace.IsTraceable(5))
+			if (IsTraceable(5))
 			{
 				var traceLog = new TraceLog(TraceType.MethodInstructions, Method, "XX-External Method", MethodData.Version);
 				traceLog?.Log($"This method is external linked: {Method.ExternMethodName}");
-				Trace.PostTraceLog(traceLog);
+				PostTraceLog(traceLog);
 			}
 		}
 
@@ -577,11 +587,11 @@ namespace Mosa.Compiler.Framework
 			IsExecutePipeline = false;
 			IsStackFrameRequired = false;
 
-			if (Trace.IsTraceable(5))
+			if (IsTraceable(5))
 			{
 				var traceLog = new TraceLog(TraceType.MethodInstructions, Method, "XX-External Method", MethodData.Version);
 				traceLog?.Log($"This method is an internal method");
-				Trace.PostTraceLog(traceLog);
+				PostTraceLog(traceLog);
 			}
 		}
 

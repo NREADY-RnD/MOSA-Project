@@ -1,6 +1,7 @@
 // Copyright (c) MOSA Project. Licensed under the New BSD License.
 
 using Mosa.Compiler.Common.Exceptions;
+using Mosa.Compiler.Framework.API;
 using Mosa.Compiler.Framework.CompilerStages;
 using Mosa.Compiler.Framework.Linker;
 using Mosa.Compiler.Framework.Stages;
@@ -22,7 +23,7 @@ namespace Mosa.Compiler.Framework
 
 		private readonly Pipeline<BaseMethodCompilerStage>[] MethodStagePipelines;
 
-		private Dictionary<string, InstrinsicMethodDelegate> InternalIntrinsicMethods { get; } = new Dictionary<string, InstrinsicMethodDelegate>();
+		private Dictionary<string, IntrinsicMethodDelegate> InternalIntrinsicMethods { get; } = new Dictionary<string, IntrinsicMethodDelegate>();
 
 		private volatile int WorkCount;
 
@@ -51,14 +52,9 @@ namespace Mosa.Compiler.Framework
 		public MosaTypeLayout TypeLayout { get; }
 
 		/// <summary>
-		/// Gets the compiler trace.
-		/// </summary>
-		public CompilerTrace CompilerTrace { get; }
-
-		/// <summary>
 		/// Gets the compiler options.
 		/// </summary>
-		public CompilerOptions CompilerOptions { get; }
+		public CompilerSettings CompilerSettings { get; }
 
 		/// <summary>
 		/// Gets the method scanner.
@@ -101,11 +97,6 @@ namespace Mosa.Compiler.Framework
 		public CompilerData CompilerData { get; } = new CompilerData();
 
 		/// <summary>
-		/// Gets the compiler extensions.
-		/// </summary>
-		private List<BaseCompilerExtension> CompilerExtensions { get; } = new List<BaseCompilerExtension>();
-
-		/// <summary>
 		/// Gets or sets a value indicating whether [all stop].
 		/// </summary>
 		public bool IsStopped { get; private set; }
@@ -130,13 +121,18 @@ namespace Mosa.Compiler.Framework
 		/// </summary>
 		public Operand LeaveTargetRegister { get; }
 
+		public CompilerHook CompilerHook { get; }
+
+		public int TraceLevel { get; }
+
 		#endregion Properties
 
 		#region Static Methods
 
-		private static List<BaseCompilerStage> GetDefaultCompilerPipeline(CompilerOptions compilerOptions)
+		private static List<BaseCompilerStage> GetDefaultCompilerPipeline(CompilerSettings compilerSettings, bool is64BitPlatform)
 		{
 			return new List<BaseCompilerStage> {
+				new InlinedSetupStage(),
 				new UnitTestStage(),
 				new TypeInitializerStage(),
 				new DevirtualizationStage(),
@@ -144,15 +140,18 @@ namespace Mosa.Compiler.Framework
 				new MethodTableStage(),
 				new ExceptionTableStage(),
 				new MetadataStage(),
+				(!string.IsNullOrEmpty(compilerSettings.PreLinkHashFile)) ? new PreLinkHashFileStage() : null,
 				new LinkerLayoutStage(),
-				(compilerOptions.CompileTimeFile != null) ? new MethodCompileTimeStage() : null,
-				(compilerOptions.OutputFile != null && compilerOptions.EmitBinary) ? new LinkerEmitStage() : null,
-				(compilerOptions.MapFile != null) ? new MapFileStage() : null,
-				(compilerOptions.DebugFile != null) ? new DebugFileStage() : null
+				(!string.IsNullOrEmpty(compilerSettings.PostLinkHashFile)) ? new PostLinkHashFileStage() : null,
+				(!string.IsNullOrEmpty(compilerSettings.CompileTimeFile)) ? new MethodCompileTimeStage() : null,
+				(!string.IsNullOrEmpty(compilerSettings.OutputFile) && compilerSettings.EmitBinary) ? new LinkerEmitStage() : null,
+				(!string.IsNullOrEmpty(compilerSettings.MapFile)) ? new MapFileStage() : null,
+				(!string.IsNullOrEmpty(compilerSettings.DebugFile)) ? new DebugFileStage() : null,
+				(!string.IsNullOrEmpty(compilerSettings.InlinedFile)) ? new InlinedFileStage() : null,
 			};
 		}
 
-		private static List<BaseMethodCompilerStage> GetDefaultMethodPipeline(CompilerOptions compilerOptions)
+		private static List<BaseMethodCompilerStage> GetDefaultMethodPipeline(CompilerSettings compilerSettings, bool is64BitPlatform)
 		{
 			return new List<BaseMethodCompilerStage>() {
 				new CILDecodingStage(),
@@ -166,32 +165,32 @@ namespace Mosa.Compiler.Framework
 				new PlugStage(),
 				new UnboxValueTypeStage(),
 				new RuntimeCallStage(),
-				(compilerOptions.EnableInlineMethods) ? new InlineStage() : null,
-				(compilerOptions.EnableInlineMethods) ? new BlockMergeStage() : null,
-				(compilerOptions.EnableInlineMethods) ? new DeadBlockStage() : null,
+				(compilerSettings.InlineMethods) ? new InlineStage() : null,
+				(compilerSettings.InlineMethods) ? new BlockMergeStage() : null,
+				(compilerSettings.InlineMethods) ? new DeadBlockStage() : null,
 				new PromoteTemporaryVariables(),
 				new StaticLoadOptimizationStage(),
-				(compilerOptions.EnableBasicOptimizations) ? new OptimizationStage() : null,
-				(compilerOptions.EnableSSA) ? new EdgeSplitStage() : null,
-				(compilerOptions.EnableSSA) ? new EnterSSAStage() : null,
-				(compilerOptions.EnableBasicOptimizations && compilerOptions.EnableSSA) ? new OptimizationStage() : null,
-				(compilerOptions.EnableValueNumbering && compilerOptions.EnableSSA) ? new ValueNumberingStage() : null,
-				(compilerOptions.EnableLoopInvariantCodeMotion && compilerOptions.EnableSSA) ? new LoopInvariantCodeMotionStage() : null,
-				(compilerOptions.EnableSparseConditionalConstantPropagation && compilerOptions.EnableSSA) ? new SparseConditionalConstantPropagationStage() : null,
-				(compilerOptions.EnableBasicOptimizations && compilerOptions.EnableSSA) ? new OptimizationStage() : null,
-				(compilerOptions.EnableLongExpansion && compilerOptions.Architecture.NativePointerSize == 4) ? new LongExpansionStage() : null,
-				(compilerOptions.EnableBasicOptimizations && compilerOptions.EnableLongExpansion && compilerOptions.Architecture.NativePointerSize == 4) ? new OptimizationStage() : null,
-				(compilerOptions.EnableBitTracker) ? new BitTrackerStage() : null,
-				(compilerOptions.TwoPassOptimizations && compilerOptions.EnableValueNumbering && compilerOptions.EnableSSA) ? new ValueNumberingStage() : null,
-				(compilerOptions.TwoPassOptimizations && compilerOptions.EnableLoopInvariantCodeMotion && compilerOptions.EnableSSA) ? new LoopInvariantCodeMotionStage() : null,
-				(compilerOptions.TwoPassOptimizations && compilerOptions.EnableSparseConditionalConstantPropagation && compilerOptions.EnableSSA) ? new SparseConditionalConstantPropagationStage() : null,
-				(compilerOptions.TwoPassOptimizations && compilerOptions.EnableBasicOptimizations && compilerOptions.EnableSSA) ? new OptimizationStage() : null,
-				(compilerOptions.EnableSSA) ? new ExitSSAStage() : null,
+				(compilerSettings.BasicOptimizations) ? new OptimizationStage() : null,
+				(compilerSettings.SSA) ? new EdgeSplitStage() : null,
+				(compilerSettings.SSA) ? new EnterSSAStage() : null,
+				(compilerSettings.BasicOptimizations && compilerSettings.SSA) ? new OptimizationStage() : null,
+				(compilerSettings.ValueNumbering && compilerSettings.SSA) ? new ValueNumberingStage() : null,
+				(compilerSettings.LoopInvariantCodeMotion && compilerSettings.SSA) ? new LoopInvariantCodeMotionStage() : null,
+				(compilerSettings.SparseConditionalConstantPropagation && compilerSettings.SSA) ? new SparseConditionalConstantPropagationStage() : null,
+				(compilerSettings.BasicOptimizations && compilerSettings.SSA) ? new OptimizationStage() : null,
+				(compilerSettings.LongExpansion && !is64BitPlatform) ? new LongExpansionStage() : null,
+				(compilerSettings.BasicOptimizations && compilerSettings.LongExpansion && !is64BitPlatform) ? new OptimizationStage() : null,
+				(compilerSettings.BitTracker) ? new BitTrackerStage() : null,
+				(compilerSettings.TwoPass && compilerSettings.ValueNumbering && compilerSettings.SSA) ? new ValueNumberingStage() : null,
+				(compilerSettings.TwoPass && compilerSettings.LoopInvariantCodeMotion && compilerSettings.SSA) ? new LoopInvariantCodeMotionStage() : null,
+				(compilerSettings.TwoPass && compilerSettings.SparseConditionalConstantPropagation && compilerSettings.SSA) ? new SparseConditionalConstantPropagationStage() : null,
+				(compilerSettings.TwoPass && compilerSettings.BasicOptimizations && compilerSettings.SSA) ? new OptimizationStage() : null,
+				(compilerSettings.SSA) ? new ExitSSAStage() : null,
 				new DeadBlockStage(),
 				new BlockMergeStage(),
 				new IRCleanupStage(),
 				new NewObjectIRStage(),
-				(compilerOptions.EnableInlineMethods) ? new InlineEvaluationStage() : null,
+				(compilerSettings.InlineMethods) ? new InlineEvaluationStage() : null,
 
 				//new StopStage(),
 
@@ -207,8 +206,8 @@ namespace Mosa.Compiler.Framework
 
 				//new PreciseGCStage(),
 
-				new CodeGenerationStage(compilerOptions.EmitBinary),
-				(compilerOptions.EmitBinary) ? new ProtectedRegionLayoutStage() : null,
+				new CodeGenerationStage(compilerSettings.EmitBinary),
+				(compilerSettings.EmitBinary) ? new ProtectedRegionLayoutStage() : null,
 			};
 		}
 
@@ -220,19 +219,19 @@ namespace Mosa.Compiler.Framework
 		{
 			TypeSystem = mosaCompiler.TypeSystem;
 			TypeLayout = mosaCompiler.TypeLayout;
-			CompilerOptions = mosaCompiler.CompilerOptions;
-			Linker = mosaCompiler.Linker;
-			CompilerTrace = mosaCompiler.CompilerTrace;
-			Architecture = CompilerOptions.Architecture;
+			CompilerSettings = mosaCompiler.CompilerSettings;
+			Architecture = mosaCompiler.Platform;
+			CompilerHook = mosaCompiler.CompilerHook;
+			TraceLevel = CompilerSettings.TraceLevel;
+
+			Linker = new MosaLinker(this);
 
 			StackFrame = Operand.CreateCPURegister(TypeSystem.BuiltIn.Pointer, Architecture.StackFrameRegister);
 			StackPointer = Operand.CreateCPURegister(TypeSystem.BuiltIn.Pointer, Architecture.StackPointerRegister);
 			ExceptionRegister = Operand.CreateCPURegister(TypeSystem.BuiltIn.Object, Architecture.ExceptionRegister);
 			LeaveTargetRegister = Operand.CreateCPURegister(TypeSystem.BuiltIn.Object, Architecture.LeaveTargetRegister);
 
-			PostCompilerTraceEvent(CompilerEvent.CompilerStart);
-
-			CompilerExtensions.AddRange(mosaCompiler.CompilerExtensions);
+			PostEvent(CompilerEvent.CompilerStart);
 
 			MethodStagePipelines = new Pipeline<BaseMethodCompilerStage>[mosaCompiler.MaxThreads + 1];
 
@@ -251,7 +250,7 @@ namespace Mosa.Compiler.Framework
 
 					for (int i = 0; i < attributes.Length; i++)
 					{
-						var d = (InstrinsicMethodDelegate)Delegate.CreateDelegate(typeof(InstrinsicMethodDelegate), method);
+						var d = (IntrinsicMethodDelegate)Delegate.CreateDelegate(typeof(IntrinsicMethodDelegate), method);
 
 						// Finally add the dictionary entry mapping the target name and the delegate
 						InternalIntrinsicMethods.Add(attributes[i].Target, d);
@@ -265,14 +264,12 @@ namespace Mosa.Compiler.Framework
 			InternalRuntimeType = GeInternalRuntimeType();
 
 			// Build the default compiler pipeline
-			CompilerPipeline.Add(GetDefaultCompilerPipeline(CompilerOptions));
+			CompilerPipeline.Add(GetDefaultCompilerPipeline(CompilerSettings, Architecture.Is64BitPlatform));
 
-			foreach (var extension in CompilerExtensions)
-			{
-				extension.ExtendCompilerPipeline(CompilerPipeline);
-			}
+			// Call hook to allow for the extension of the pipeline
+			CompilerHook.ExtendCompilerPipeline?.Invoke(CompilerPipeline);
 
-			Architecture.ExtendCompilerPipeline(CompilerPipeline, CompilerOptions);
+			Architecture.ExtendCompilerPipeline(CompilerPipeline, CompilerSettings);
 
 			IsStopped = false;
 			WorkCount = 0;
@@ -286,7 +283,7 @@ namespace Mosa.Compiler.Framework
 		/// <param name="threadID">The thread identifier.</param>
 		public void CompileMethod(MosaMethod method, BasicBlocks basicBlocks, int threadID = 0)
 		{
-			PostCompilerTraceEvent(CompilerEvent.MethodCompileStart, method.FullName, threadID);
+			PostEvent(CompilerEvent.MethodCompileStart, method.FullName, threadID);
 
 			var pipeline = GetOrCreateMethodStagePipeline(threadID);
 
@@ -297,9 +294,9 @@ namespace Mosa.Compiler.Framework
 
 			methodCompiler.Compile();
 
-			PostCompilerTraceEvent(CompilerEvent.MethodCompileEnd, method.FullName, threadID);
+			PostEvent(CompilerEvent.MethodCompileEnd, method.FullName, threadID);
 
-			CompilerTrace.PostMethodCompiled(method);
+			CompilerHook.NotifyMethodCompiled?.Invoke(method);
 		}
 
 		private Pipeline<BaseMethodCompilerStage> GetOrCreateMethodStagePipeline(int threadID)
@@ -312,14 +309,12 @@ namespace Mosa.Compiler.Framework
 
 				MethodStagePipelines[threadID] = pipeline;
 
-				pipeline.Add(GetDefaultMethodPipeline(CompilerOptions));
+				pipeline.Add(GetDefaultMethodPipeline(CompilerSettings, Architecture.Is64BitPlatform));
 
-				foreach (var extension in CompilerExtensions)
-				{
-					extension.ExtendMethodCompilerPipeline(pipeline);
-				}
+				// Call hook to allow for the extension of the pipeline
+				CompilerHook.ExtendMethodCompilerPipeline?.Invoke(pipeline);
 
-				Architecture.ExtendMethodCompilerPipeline(pipeline, CompilerOptions);
+				Architecture.ExtendMethodCompilerPipeline(pipeline, CompilerSettings);
 
 				foreach (var stage in pipeline)
 				{
@@ -349,7 +344,7 @@ namespace Mosa.Compiler.Framework
 		/// </remarks>
 		internal void Setup()
 		{
-			PostCompilerTraceEvent(CompilerEvent.SetupStart);
+			PostEvent(CompilerEvent.SetupStart);
 
 			foreach (var stage in CompilerPipeline)
 			{
@@ -358,20 +353,20 @@ namespace Mosa.Compiler.Framework
 
 			foreach (var stage in CompilerPipeline)
 			{
-				PostCompilerTraceEvent(CompilerEvent.SetupStageStart, stage.Name);
+				PostEvent(CompilerEvent.SetupStageStart, stage.Name);
 
 				// Execute stage
 				stage.ExecuteSetup();
 
-				PostCompilerTraceEvent(CompilerEvent.SetupStageEnd, stage.Name);
+				PostEvent(CompilerEvent.SetupStageEnd, stage.Name);
 			}
 
-			PostCompilerTraceEvent(CompilerEvent.SetupEnd);
+			PostEvent(CompilerEvent.SetupEnd);
 		}
 
 		public void ExecuteCompile()
 		{
-			PostCompilerTraceEvent(CompilerEvent.CompilingMethods);
+			PostEvent(CompilerEvent.CompilingMethods);
 
 			while (true)
 			{
@@ -382,7 +377,7 @@ namespace Mosa.Compiler.Framework
 					break;
 			}
 
-			PostCompilerTraceEvent(CompilerEvent.CompilingMethodsCompleted);
+			PostEvent(CompilerEvent.CompilingMethodsCompleted);
 		}
 
 		private MosaMethod ProcessQueue(int threadID = 0)
@@ -419,20 +414,18 @@ namespace Mosa.Compiler.Framework
 				CompileMethod(method, null, threadID);
 			}
 
-			CompilerTrace.UpdatedCompilerProgress(
-				MethodScheduler.TotalMethods,
-				MethodScheduler.TotalMethods - MethodScheduler.TotalQueuedMethods);
+			CompilerHook.NotifyProgress?.Invoke(MethodScheduler.TotalMethods, MethodScheduler.TotalMethods - MethodScheduler.TotalQueuedMethods);
 
 			return method;
 		}
 
 		public void ExecuteThreadedCompile(int threads)
 		{
-			PostCompilerTraceEvent(CompilerEvent.CompilingMethods);
+			PostEvent(CompilerEvent.CompilingMethods);
 
 			ExecuteThreadedCompilePass(threads);
 
-			PostCompilerTraceEvent(CompilerEvent.CompilingMethodsCompleted);
+			PostEvent(CompilerEvent.CompilingMethodsCompleted);
 		}
 
 		private int WorkIncrement()
@@ -505,16 +498,16 @@ namespace Mosa.Compiler.Framework
 		/// </remarks>
 		internal void Finalization()
 		{
-			PostCompilerTraceEvent(CompilerEvent.FinalizationStart);
+			PostEvent(CompilerEvent.FinalizationStart);
 
 			foreach (BaseCompilerStage stage in CompilerPipeline)
 			{
-				PostCompilerTraceEvent(CompilerEvent.FinalizationStageStart, stage.Name);
+				PostEvent(CompilerEvent.FinalizationStageStart, stage.Name);
 
 				// Execute stage
 				stage.ExecuteFinalization();
 
-				PostCompilerTraceEvent(CompilerEvent.FinalizationStageEnd, stage.Name);
+				PostEvent(CompilerEvent.FinalizationStageEnd, stage.Name);
 			}
 
 			MethodScanner.Complete();
@@ -527,19 +520,19 @@ namespace Mosa.Compiler.Framework
 
 			EmitCounters();
 
-			PostCompilerTraceEvent(CompilerEvent.FinalizationEnd);
-			PostCompilerTraceEvent(CompilerEvent.CompilerEnd);
+			PostEvent(CompilerEvent.FinalizationEnd);
+			PostEvent(CompilerEvent.CompilerEnd);
 		}
 
 		public void Stop()
 		{
-			PostCompilerTraceEvent(CompilerEvent.Stopped);
+			PostEvent(CompilerEvent.Stopped);
 			IsStopped = true;
 		}
 
-		public InstrinsicMethodDelegate GetInstrincMethod(string name)
+		public IntrinsicMethodDelegate GetInstrincMethod(string name)
 		{
-			InternalIntrinsicMethods.TryGetValue(name, out InstrinsicMethodDelegate value);
+			InternalIntrinsicMethods.TryGetValue(name, out IntrinsicMethodDelegate value);
 
 			return value;
 		}
@@ -548,7 +541,7 @@ namespace Mosa.Compiler.Framework
 		{
 			foreach (var counter in GlobalCounters.Export())
 			{
-				PostCompilerTraceEvent(CompilerEvent.Counter, counter);
+				PostEvent(CompilerEvent.Counter, counter);
 			}
 		}
 
@@ -560,27 +553,17 @@ namespace Mosa.Compiler.Framework
 
 		#region Helper Methods
 
-		public void PostTrace(TraceLog traceLog)
+		public bool IsTraceable(int traceLevel)
+		{
+			return TraceLevel >= traceLevel;
+		}
+
+		public void PostTraceLog(TraceLog traceLog)
 		{
 			if (traceLog == null)
 				return;
 
-			CompilerTrace.PostTraceLog(traceLog);
-		}
-
-		public void PostCompilerTraceEvent(CompilerEvent compilerEvent)
-		{
-			CompilerTrace.PostCompilerTraceEvent(compilerEvent, string.Empty, 0);
-		}
-
-		/// <summary>
-		/// Traces the specified compiler event.
-		/// </summary>
-		/// <param name="compilerEvent">The compiler event.</param>
-		/// <param name="message">The message.</param>
-		public void PostCompilerTraceEvent(CompilerEvent compilerEvent, string message)
-		{
-			CompilerTrace.PostCompilerTraceEvent(compilerEvent, message, 0);
+			CompilerHook.NotifyTraceLog?.Invoke(traceLog);
 		}
 
 		/// <summary>
@@ -589,9 +572,9 @@ namespace Mosa.Compiler.Framework
 		/// <param name="compilerEvent">The compiler event.</param>
 		/// <param name="message">The message.</param>
 		/// <param name="threadID">The thread identifier.</param>
-		public void PostCompilerTraceEvent(CompilerEvent compilerEvent, string message, int threadID)
+		public void PostEvent(CompilerEvent compilerEvent, string message = null, int threadID = 0)
 		{
-			CompilerTrace.PostCompilerTraceEvent(compilerEvent, message, threadID);
+			CompilerHook.NotifyEvent?.Invoke(compilerEvent, message ?? string.Empty, threadID);
 		}
 
 		private MosaType GetPlatformInternalRuntimeType()

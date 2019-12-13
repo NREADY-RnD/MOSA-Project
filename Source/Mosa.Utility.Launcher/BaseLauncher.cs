@@ -1,5 +1,7 @@
 ﻿// Copyright (c) MOSA Project. Licensed under the New BSD License.
 
+using Mosa.Compiler.Common.Configuration;
+using Mosa.Compiler.Framework.API;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -9,14 +11,19 @@ namespace Mosa.Utility.Launcher
 {
 	public class BaseLauncher
 	{
+		public Settings Settings { get; }
+
+		public CompilerHook CompilerHook { get; }
+
 		public List<string> Log { get; }
-		public LauncherOptions LauncherOptions { get; set; }
 
 		public AppLocations AppLocations { get; set; }
 
-		public BaseLauncher(LauncherOptions options, AppLocations appLocations)
+		public BaseLauncher(Settings settings, CompilerHook compilerHook, AppLocations appLocations)
 		{
-			LauncherOptions = options;
+			CompilerHook = compilerHook;
+			Settings = settings.Clone();
+
 			AppLocations = appLocations;
 			Log = new List<string>();
 		}
@@ -33,6 +40,7 @@ namespace Mosa.Utility.Launcher
 
 		protected virtual void OutputEvent(string status)
 		{
+			CompilerHook.NotifyStatus?.Invoke(status);
 		}
 
 		static protected byte[] GetResource(string path, string name)

@@ -1,0 +1,104 @@
+Import:
+	#'.mosa-global.txt'
+
+Compiler:
+	Platform: x86						# Platform: x86, x64, ArmARMv8A32
+	BaseAddress: 0x00400000				# Base address
+	EnableStatistics: false				# Enable statistics gathering
+	TraceLevel: 0						# Trace level for debugging
+	MethodScanner: false				# Experimental option to enable the method scanner
+	Multithreading: true				# Enable multithreading compile
+	EmitInline: false					# Emit all inlined methods
+	EmitBinary: true					# Emit Binary
+	#OutputFile:
+	#SourceFiles:
+
+SearchPaths:
+
+Linker:
+	EmitAllSymbols: false
+	EmitStaticRelocations: false
+	EmitDrawf: false
+
+CompilerDebug:
+	DebugFile: false
+		File: %DEFAULT%
+	MapFile: false
+		File: %DEFAULT%
+	CompileTimeFile: false
+		File: %DEFAULT%
+	AsmFile: false
+		File: %DEFAULT%
+	NasmFile: false
+		File: %DEFAULT%
+
+Optimizations:
+	Basic: true
+	SSA: true
+	SCCP: true
+	ValueNumbering: true
+	LongExpansion: true
+	BitTracker: true
+	LoopInvariantCodeMotion: true
+	Platform: true
+	Inline: true
+		Maximum: 12
+		AggressiveMaximum: 24
+		ExplicitOnly: true
+	TwoPass: false
+
+X86:
+	InterruptMethodName: Mosa.Kernel.x86.IDT::ProcessInterrupt
+
+Optimizations.Inline.Aggressive:		# Aggressively inline methods
+	'Mosa.Runtime.Pointer::*'	
+
+Optimizations.Inline.Exclude:
+	'Mosa.UnitTests::*'					# Don't inline the unit tests methods
+
+Explorer:
+	Filter:
+
+Launcher:
+	Start: yes							# Immediately start the compiler
+	Launch: yes							# Launch VM after compile
+	Exit: yes							# Exit immediately after launch
+
+	Advance:
+		HuntForCorLib: true				# Hunts for CoreLib in various directories
+		LaunchGDB: false				# Launch the GDB application after VM launch
+		LaunchGDBDebugger: false		# Launch the MOSA GDB debugger application after VM launch
+
+Image:
+	Format: img							# Image Format: BIN, IMG, VHD, VDI, ISO, VMDK
+	FileSystem:	fat12					# File System: FAT12, FAT16, FAT32, ISO????
+	BootLoader:							# Grub_v0.97, Grub_v2.00, Syslinux_v6.03, Syslinux_v3.72
+	Destination:						# Destination Directory
+	ImageFile:							# Image File Name
+
+Emulator: qemu							# Emulator: Qemu, VMware, Bochs
+	Memory: 128							# Emulator Memory in MB
+	Display: on							# Show video display
+	GDB: false							# Enable GDB within emulator
+	Serial: none						# Serial Emulation type: None, Pipe, TCPServer, TCPClient
+		Host: localhost					# Serial Host
+		Port: 1234						# Serial Port
+		Pipe:							# Serial Pipename
+
+GDB:
+	Host: localhost						# Host IP or Name for GDB
+	Port: 1234							# Port Number for GDB
+
+Multiboot:
+	Version:							# Multiboot version: None, V1, V2
+	Video: off					
+		Width:							# Video Width
+		Height:							# Video Height
+		Depth:							# Video Depth
+
+Debugger:
+	#WatchFile:
+	#BreakpointFile:
+
+Advanced:
+	PlugKorlib: true

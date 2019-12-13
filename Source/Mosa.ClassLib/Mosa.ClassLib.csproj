@@ -21,4 +21,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Mosa.Korlib\Mosa.Korlib.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+  </ItemGroup>
 </Project>

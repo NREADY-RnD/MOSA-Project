@@ -24,10 +24,10 @@ namespace Mosa.Compiler.Framework.CompilerStages
 
 		protected override void Finalization()
 		{
-			if (string.IsNullOrEmpty(CompilerOptions.DebugFile))
+			if (string.IsNullOrEmpty(CompilerSettings.DebugFile))
 				return;
 
-			using (writer = new StreamWriter(CompilerOptions.DebugFile))
+			using (writer = new StreamWriter(CompilerSettings.DebugFile))
 			{
 				EmitSections();
 				EmitSymbols();
@@ -53,7 +53,7 @@ namespace Mosa.Compiler.Framework.CompilerStages
 				writer.WriteLine(
 					"{0:x8}\t{1}\t{2}\t{3}\t{4}",
 					linkerSection.VirtualAddress,
-					linkerSection.FileOffset,
+					0, //linkerSection.FileOffset,
 					linkerSection.Size,
 					linkerSection.SectionKind.ToString(),
 					linkerSection.Name);
