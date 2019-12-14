@@ -24,7 +24,7 @@ namespace Mosa.Compiler.Framework.API
 
 		public delegate IList<CustomProgramHeader> CustomProgramHeadersHandler();
 
-		public delegate NotifyTraceLogHandler MethodInstructionTraceHandler(MosaMethod method);
+		public delegate NotifyTraceLogHandler NotifyMethodInstructionTraceHandler(MosaMethod method);
 
 		public delegate void ExtendCompilerPipelineHandler(Pipeline<BaseCompilerStage> pipeline);
 
@@ -46,7 +46,7 @@ namespace Mosa.Compiler.Framework.API
 
 		public CustomProgramHeadersHandler CustomProgramHeaders;
 
-		public MethodInstructionTraceHandler MethodInstructionTrace;
+		public NotifyMethodInstructionTraceHandler NotifyMethodInstructionTrace;
 
 		public ExtendCompilerPipelineHandler ExtendCompilerPipeline;
 

@@ -3,32 +3,30 @@
 using Mosa.Compiler.MosaTypeSystem;
 using System.Collections.Generic;
 using System.Text;
+using static Mosa.Compiler.Framework.API.CompilerHook;
 
 namespace Mosa.Compiler.Framework.Trace
 {
 	/// <summary>
 	/// Logs all instructions.
 	/// </summary>
-	public static class InstructionLogger
+	public static class InstructionTrace
 	{
 		private const int TraceLevel = 6;
 
-		public static void Run(MethodCompiler methodCompiler, BaseMethodCompilerStage stage)
+		public static void Run(MethodCompiler methodCompiler, BaseMethodCompilerStage stage, NotifyTraceLogHandler handler)
 		{
 			Run(
-				methodCompiler.Compiler,
 				stage.FormattedStageName,
 				methodCompiler.Method,
 				methodCompiler.BasicBlocks,
-				methodCompiler.MethodData.Version
+				methodCompiler.MethodData.Version,
+				handler
 			);
 		}
 
-		public static void Run(Compiler compiler, string stage, MosaMethod method, BasicBlocks basicBlocks, int version)
+		public static void Run(string stage, MosaMethod method, BasicBlocks basicBlocks, int version, NotifyTraceLogHandler handler)
 		{
-			if (compiler.CompilerSettings.TraceLevel < TraceLevel)
-				return;
-
 			var traceLog = new TraceLog(TraceType.MethodInstructions, method, stage, version);
 
 			traceLog?.Log($"{method.FullName} [v{version}] after stage {stage}:");
@@ -52,7 +50,7 @@ namespace Mosa.Compiler.Framework.Trace
 				traceLog?.Log("No instructions.");
 			}
 
-			compiler.PostTraceLog(traceLog);
+			handler.Invoke(traceLog);
 		}
 
 		private static string ListBlocks(IList<BasicBlock> blocks)

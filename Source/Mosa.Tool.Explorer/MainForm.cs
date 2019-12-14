@@ -17,6 +17,7 @@ using System.IO;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
+using static Mosa.Compiler.Framework.API.CompilerHook;
 
 namespace Mosa.Tool.Explorer
 {
@@ -688,8 +689,17 @@ namespace Mosa.Tool.Explorer
 			compilerHook.NotifyEvent = NotifyEvent;
 			compilerHook.NotifyTraceLog = NotifyTraceLog;
 			compilerHook.NotifyMethodCompiled = NotifyMethodCompiled;
+			compilerHook.NotifyMethodInstructionTrace = NotifyMethodInstructionTrace;
 
 			return compilerHook;
+		}
+
+		public NotifyTraceLogHandler NotifyMethodInstructionTrace(MosaMethod method)
+		{
+			if (method != CurrentMethodSelected)
+				return null;
+
+			return NotifyMethodInstructionTraceResponse;
 		}
 
 		public void LoadAssembly()
@@ -778,12 +788,20 @@ namespace Mosa.Tool.Explorer
 			}
 			else if (traceLog.Type == TraceType.MethodInstructions)
 			{
-				methodStore.SetInstructionTraceInformation(traceLog.Method, traceLog.Stage, traceLog.Lines, traceLog.Version);
+				NotifyMethodInstructionTraceResponse(traceLog);
 			}
 			else if (traceLog.Type == TraceType.GlobalDebug)
 			{
 				UpdateLog(traceLog.Section, traceLog.Lines);
 			}
+		}
+
+		private void NotifyMethodInstructionTraceResponse(TraceLog traceLog)
+		{
+			//if (traceLog.Method != CurrentMethodSelected)
+			//	return;
+
+			methodStore.SetInstructionTraceInformation(traceLog.Method, traceLog.Stage, traceLog.Lines, traceLog.Version);
 		}
 
 		private void NotifyMethodCompiled(MosaMethod method)

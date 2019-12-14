@@ -2,6 +2,7 @@
 
 using Mosa.Compiler.Common;
 using Mosa.Compiler.Framework.Analysis;
+using Mosa.Compiler.Framework.API;
 using Mosa.Compiler.Framework.Linker;
 using Mosa.Compiler.Framework.Trace;
 using Mosa.Compiler.MosaTypeSystem;
@@ -9,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using static Mosa.Compiler.Framework.API.CompilerHook;
 
 namespace Mosa.Compiler.Framework
 {
@@ -199,6 +201,8 @@ namespace Mosa.Compiler.Framework
 		/// </summary>
 		public MethodScanner MethodScanner { get; }
 
+		public CompilerHook CompilerHook { get; }
+
 		#endregion Properties
 
 		#region Construction
@@ -222,8 +226,7 @@ namespace Mosa.Compiler.Framework
 			TypeLayout = compiler.TypeLayout;
 			Linker = compiler.Linker;
 			MethodScanner = compiler.MethodScanner;
-
-			//Statistics = compiler.CompilerOptions.Statistics;
+			CompilerHook = compiler.CompilerHook;
 
 			BasicBlocks = basicBlocks ?? new BasicBlocks();
 			LocalStack = new List<Operand>();
@@ -431,7 +434,7 @@ namespace Mosa.Compiler.Framework
 
 				executionTimes[i] = Stopwatch.ElapsedTicks;
 
-				InstructionLogger.Run(this, stage);
+				CreateInstructionTrace(stage);
 
 				if (IsStopped || IsMethodInlined)
 					break;
@@ -473,6 +476,24 @@ namespace Mosa.Compiler.Framework
 			}
 		}
 
+		private void CreateInstructionTrace(BaseMethodCompilerStage stage)
+		{
+			NotifyTraceLogHandler handler = GetMethodInstructionTraceHandler();
+
+			if (handler == null)
+				return;
+
+			InstructionTrace.Run(this, stage, handler);
+		}
+
+		private NotifyTraceLogHandler GetMethodInstructionTraceHandler()
+		{
+			if (CompilerHook.NotifyMethodInstructionTrace == null)
+				return null;
+
+			return CompilerHook.NotifyMethodInstructionTrace.Invoke(Method);
+		}
+
 		private void PlugMethod()
 		{
 			var plugMethod = Compiler.PlugSystem.GetReplacement(Method);
@@ -489,12 +510,14 @@ namespace Mosa.Compiler.Framework
 			IsExecutePipeline = false;
 			IsStackFrameRequired = false;
 
-			if (IsTraceable(5))
+			var handler = GetMethodInstructionTraceHandler();
+
+			if (handler != null)
 			{
 				var traceLog = new TraceLog(TraceType.MethodInstructions, Method, "XX-Plugged Method", MethodData.Version);
 				traceLog?.Log($"Plugged by {plugMethod.FullName}");
 
-				PostTraceLog(traceLog);
+				handler.Invoke(traceLog);
 			}
 		}
 
@@ -570,11 +593,13 @@ namespace Mosa.Compiler.Framework
 				// CompilerException.FileNotFound
 			}
 
-			if (IsTraceable(5))
+			var handler = GetMethodInstructionTraceHandler();
+
+			if (handler != null)
 			{
 				var traceLog = new TraceLog(TraceType.MethodInstructions, Method, "XX-External Method", MethodData.Version);
 				traceLog?.Log($"This method is external linked: {Method.ExternMethodName}");
-				PostTraceLog(traceLog);
+				handler.Invoke(traceLog);
 			}
 		}
 
@@ -587,11 +612,13 @@ namespace Mosa.Compiler.Framework
 			IsExecutePipeline = false;
 			IsStackFrameRequired = false;
 
-			if (IsTraceable(5))
+			var handler = GetMethodInstructionTraceHandler();
+
+			if (handler != null)
 			{
 				var traceLog = new TraceLog(TraceType.MethodInstructions, Method, "XX-External Method", MethodData.Version);
 				traceLog?.Log($"This method is an internal method");
-				PostTraceLog(traceLog);
+				handler.Invoke(traceLog);
 			}
 		}
 
