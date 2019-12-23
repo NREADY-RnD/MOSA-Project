@@ -125,6 +125,8 @@ namespace Mosa.Compiler.Framework
 
 		public int TraceLevel { get; }
 
+		public bool Statistics { get; }
+
 		#endregion Properties
 
 		#region Static Methods
@@ -223,6 +225,7 @@ namespace Mosa.Compiler.Framework
 			Architecture = mosaCompiler.Platform;
 			CompilerHook = mosaCompiler.CompilerHook;
 			TraceLevel = CompilerSettings.TraceLevel;
+			Statistics = CompilerSettings.Statistics;
 
 			Linker = new MosaLinker(this);
 

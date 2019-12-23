@@ -231,7 +231,7 @@ namespace Mosa.Compiler.Framework
 			CompilerHook = compiler.CompilerHook;
 
 			NotifyTraceLogHandler = GetMethodInstructionTraceHandler();
-			Statistics = compiler.CompilerSettings.Statistics;
+			Statistics = compiler.Statistics;
 
 			BasicBlocks = basicBlocks ?? new BasicBlocks();
 			LocalStack = new List<Operand>();

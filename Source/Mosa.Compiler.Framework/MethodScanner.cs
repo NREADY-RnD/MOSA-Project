@@ -53,7 +53,7 @@ namespace Mosa.Compiler.Framework
 			if (!IsEnabled)
 				return;
 
-			if (!Compiler.CompilerSettings.Statistics)
+			if (!Compiler.Statistics)
 				return;
 
 			MoreLogInfo();
