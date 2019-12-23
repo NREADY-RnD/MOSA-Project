@@ -752,7 +752,7 @@ namespace Mosa.Tool.Explorer
 
 		private void NotifyEvent(CompilerEvent compilerEvent, string message, int threadID)
 		{
-			var status = compilerEvent.ToText() + ": " + message;
+			var status = $"{compilerEvent.ToText()}: {message}";
 
 			lock (_statusLock)
 			{

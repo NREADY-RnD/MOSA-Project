@@ -3,6 +3,7 @@
 using Mosa.Compiler.Common.Configuration;
 using Mosa.Compiler.Framework.API;
 using Mosa.Compiler.Framework.Linker;
+using Mosa.Compiler.Framework.Trace;
 using Mosa.Compiler.MosaTypeSystem;
 using Mosa.Utility.DebugEngine;
 using Mosa.Utility.Launcher;
@@ -36,7 +37,7 @@ namespace Mosa.Utility.UnitTests
 
 		private readonly object _lock = new object();
 
-		private volatile bool Aborted = false;
+		internal volatile bool Aborted = false;
 		private volatile bool Ready = false;
 
 		private const int MaxSentQueue = 10000;
@@ -285,7 +286,22 @@ namespace Mosa.Utility.UnitTests
 		{
 			var compilerHook = new CompilerHook();
 
+			compilerHook.NotifyEvent = NotifyEvent;
+			compilerHook.NotifyProgress = NotifyProgress;
+
 			return compilerHook;
+		}
+
+		private void NotifyEvent(CompilerEvent compilerEvent, string message, int threadID)
+		{
+			if (compilerEvent == CompilerEvent.Error || compilerEvent == CompilerEvent.Exception || compilerEvent == CompilerEvent.CompilerEnd)
+			{
+				Console.WriteLine($"{compilerEvent.ToText()}: {message}");
+			}
+		}
+
+		private void NotifyProgress(int totalMethods, int completedMethods)
+		{
 		}
 
 		public bool LaunchVirtualMachine()
