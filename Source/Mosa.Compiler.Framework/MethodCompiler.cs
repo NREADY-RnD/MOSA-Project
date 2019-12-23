@@ -33,7 +33,7 @@ namespace Mosa.Compiler.Framework
 
 		private NotifyTraceLogHandler NotifyTraceLogHandler;
 
-		//private bool Statistics;
+		private bool Statistics;
 
 		#endregion Data Members
 
@@ -231,6 +231,7 @@ namespace Mosa.Compiler.Framework
 			CompilerHook = compiler.CompilerHook;
 
 			NotifyTraceLogHandler = GetMethodInstructionTraceHandler();
+			Statistics = compiler.CompilerSettings.Statistics;
 
 			BasicBlocks = basicBlocks ?? new BasicBlocks();
 			LocalStack = new List<Operand>();
@@ -411,7 +412,7 @@ namespace Mosa.Compiler.Framework
 
 			Symbol.SetReplacementStatus(MethodData.Inlined);
 
-			if (Compiler.CompilerSettings.Statistics)
+			if (Statistics)
 			{
 				var log = new TraceLog(TraceType.MethodCounters, Method, string.Empty, MethodData.Version);
 				log.Log(MethodData.Counters.Export());
@@ -444,7 +445,7 @@ namespace Mosa.Compiler.Framework
 					break;
 			}
 
-			if (Compiler.CompilerSettings.Statistics)
+			if (Statistics)
 			{
 				var lastTick = Stopwatch.ElapsedTicks;
 
