@@ -12,8 +12,6 @@ namespace Mosa.Compiler.Framework.Trace
 	/// </summary>
 	public static class InstructionTrace
 	{
-		private const int TraceLevel = 6;
-
 		public static void Run(MethodCompiler methodCompiler, BaseMethodCompilerStage stage, NotifyTraceLogHandler handler)
 		{
 			Run(
