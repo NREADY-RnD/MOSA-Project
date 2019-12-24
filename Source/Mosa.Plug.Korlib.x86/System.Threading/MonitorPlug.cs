@@ -26,8 +26,8 @@ namespace Mosa.Plug.Korlib.System.Threading.x86
 		{
 			var sync = Intrinsic.GetObjectAddress(obj) + IntPtr.Size;
 
-			if (Native.CmpXChgLoad32(sync.ToInt32(), 1, 0) != 0)
-				return;
+			while (Native.CmpXChgLoad32(sync.ToInt32(), 1, 0) != 0)
+			{ }
 
 			lockTaken = true;
 		}

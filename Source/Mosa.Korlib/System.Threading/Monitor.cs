@@ -23,7 +23,7 @@ namespace System.Threading
 		public static extern void Exit(Object obj);
 
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern void ReliableEnter(object obj, ref bool lockTaken);
+		private static extern void ReliableEnter(Object obj, ref bool lockTaken);
 
 		private static void ThrowLockTakenException()
 		{
