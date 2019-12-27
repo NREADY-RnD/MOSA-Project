@@ -104,17 +104,17 @@ namespace Mosa.Tool.GDBDebugger.Views
 
 		private void toolStripButton1_Click(object sender, EventArgs e)
 		{
-			if (Options.BreakpointFile == null)
+			if (MainForm.BreakpointFile == null)
 			{
-				if (Options.ImageFile != null)
+				if (MainForm.ImageFile != null)
 				{
-					Options.BreakpointFile = Path.Combine(
-						Path.GetDirectoryName(Options.ImageFile),
-						Path.GetFileNameWithoutExtension(Options.ImageFile)) + ".breakpoints";
+					MainForm.BreakpointFile = Path.Combine(
+						Path.GetDirectoryName(MainForm.ImageFile),
+						Path.GetFileNameWithoutExtension(MainForm.ImageFile)) + ".breakpoints";
 				}
 				else
 				{
-					Options.BreakpointFile = Path.Combine(Path.GetTempPath(), "default.breakpoints");
+					MainForm.BreakpointFile = Path.Combine(Path.GetTempPath(), "default.breakpoints");
 				}
 			}
 
@@ -125,7 +125,7 @@ namespace Mosa.Tool.GDBDebugger.Views
 		{
 			var lines = new List<string>();
 
-			if (Options.ImageFile != null)
+			if (MainForm.ImageFile != null)
 			{
 				lines.Add("#HASH: " + MainForm.VMHash);
 			}
@@ -135,14 +135,14 @@ namespace Mosa.Tool.GDBDebugger.Views
 				lines.Add(entry.Address + '\t' + entry.Name);
 			}
 
-			File.WriteAllLines(Options.BreakpointFile, lines);
+			File.WriteAllLines(MainForm.BreakpointFile, lines);
 		}
 
 		private void toolStripButton2_Click(object sender, EventArgs e)
 		{
 			if (openFileDialog1.ShowDialog() == DialogResult.OK)
 			{
-				Options.BreakpointFile = openFileDialog1.FileName;
+				MainForm.BreakpointFile = openFileDialog1.FileName;
 				MainForm.LoadBreakPoints();
 			}
 		}
