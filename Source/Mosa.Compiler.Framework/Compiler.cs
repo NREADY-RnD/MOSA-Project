@@ -9,6 +9,7 @@ using Mosa.Compiler.Framework.Trace;
 using Mosa.Compiler.MosaTypeSystem;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
 using System.Threading;
 
@@ -548,9 +549,30 @@ namespace Mosa.Compiler.Framework
 			}
 		}
 
-		//public LoadBinary(string filename)
-		//{
-		//}
+		public string SearchPathsForFile(string filename)
+		{
+			foreach (var path in CompilerSettings.SearchPaths)
+			{
+				var file = Path.Combine(path, filename);
+
+				if (File.Exists(file))
+				{
+					return file;
+				}
+			}
+
+			return null;
+		}
+
+		public byte[] SearchPathsForFileAndLoad(string filename)
+		{
+			var file = SearchPathsForFile(filename);
+
+			if (file == null)
+				return null;
+
+			return File.ReadAllBytes(file);
+		}
 
 		#endregion Methods
 

@@ -50,7 +50,7 @@ namespace Mosa.Compiler.Common.Configuration
 
 					property.List.Add(item);
 
-					lastLevel = CountLevels(property.Name) + level - 1;
+					lastLevel = property.Level + level - 1;
 					continue;
 				}
 				else
@@ -67,7 +67,7 @@ namespace Mosa.Compiler.Common.Configuration
 					var property = settings.CreateProperty(fullname);
 					property.Value = value;
 
-					lastLevel = CountLevels(property.Name) + level;
+					lastLevel = property.Level + level;
 					continue;
 				}
 			}
@@ -207,19 +207,6 @@ namespace Mosa.Compiler.Common.Configuration
 			}
 
 			return 0;
-		}
-
-		private static int CountLevels(string name)
-		{
-			int count = 0;
-
-			foreach (var c in name)
-			{
-				if (c == '.')
-					count++;
-			}
-
-			return count;
 		}
 
 		#endregion Internal Methods

@@ -1,6 +1,7 @@
 ﻿// Copyright (c) MOSA Project. Licensed under the New BSD License.
 
 using Mosa.Compiler.Common;
+using Mosa.Compiler.Common.Configuration;
 using Mosa.Compiler.Framework.Linker.Elf.Dwarf;
 using System;
 using System.Collections.Generic;
@@ -76,6 +77,8 @@ namespace Mosa.Compiler.Framework.Linker.Elf
 			var index = (ushort)sections.Count;
 			section.Index = index;
 
+			section.AddressAlignment = SectionAlignment;
+
 			sections.Add(section);
 
 			if (section.Name != null)
@@ -145,15 +148,17 @@ namespace Mosa.Compiler.Framework.Linker.Elf
 
 			RegisterStandardSections();
 
-			RegisterCustomSections();
+			RegisterSettingsSections();
+
+			RegisterHookSections();
 
 			RegisterSymbolSection();
-
-			RegisterStringSection();
 
 			RegisterDrawfSections();
 
 			RegisterRelocationSections();
+
+			RegisterStringSection();
 
 			RegisterSectionHeaderStringSection();
 		}
@@ -180,7 +185,6 @@ namespace Mosa.Compiler.Framework.Linker.Elf
 					Name = SectionNames[(int)linkerSection.SectionKind],
 					Address = linkerSection.VirtualAddress,
 					Size = Alignment.AlignUp(linkerSection.Size, SectionAlignment),
-					AddressAlignment = SectionAlignment,
 					Emitter = () => { return WriteLinkerSection(linkerSection.SectionKind); },
 					SectionKind = linkerSection.SectionKind
 				};
@@ -231,7 +235,6 @@ namespace Mosa.Compiler.Framework.Linker.Elf
 		{
 			sectionHeaderStringSection.Name = ".shstrtab";
 			sectionHeaderStringSection.Type = SectionType.StringTable;
-			sectionHeaderStringSection.AddressAlignment = SectionAlignment;
 			sectionHeaderStringSection.Emitter = EmitSectionHeaderStringSection;
 
 			RegisterSection(sectionHeaderStringSection);
@@ -241,7 +244,6 @@ namespace Mosa.Compiler.Framework.Linker.Elf
 		{
 			stringSection.Name = ".strtab";
 			stringSection.Type = SectionType.StringTable;
-			stringSection.AddressAlignment = SectionAlignment;
 			stringSection.Emitter = EmitStringSection;
 
 			RegisterSection(stringSection);
@@ -256,7 +258,6 @@ namespace Mosa.Compiler.Framework.Linker.Elf
 
 			symbolSection.Name = ".symtab";
 			symbolSection.Type = SectionType.SymbolTable;
-			symbolSection.AddressAlignment = SectionAlignment;
 			symbolSection.EntrySize = SymbolEntry.GetEntrySize(LinkerFormatType);
 			symbolSection.Link = stringSection;
 			symbolSection.Emitter = () => { return EmitSymbolSection(); };
@@ -267,7 +268,7 @@ namespace Mosa.Compiler.Framework.Linker.Elf
 			sectionHeaderStringSection.AddDependency(symbolSection);
 		}
 
-		private void RegisterCustomSections()
+		private void RegisterHookSections()
 		{
 			var CustomElfSections = Linker.Compiler.CompilerHook.CustomElfSections;
 
@@ -282,12 +283,48 @@ namespace Mosa.Compiler.Framework.Linker.Elf
 				{
 					Name = section.Name,
 					Address = section.VirtualAddress,
-					Size = Alignment.AlignUp((uint)section.Size, SectionAlignment),
-					AddressAlignment = SectionAlignment,
 					Stream = section.Stream,
+					Type = SectionType.ProgBits,
+					Flags = SectionAttribute.Alloc
 				};
 
 				RegisterSection(newsection);
+			}
+		}
+
+		private void RegisterSettingsSections()
+		{
+			var settings = Linker.LinkerSettings.Settings;
+			var settingSections = settings.GetChildNames("Linker.CustomSections");
+
+			foreach (var name in settingSections)
+			{
+				var sectionName = settings.GetValue($"Linker.CustomSections." + name + ".SectionName");
+				var sectionSource = settings.GetValue($"Linker.CustomSections." + name + ".SourceFile");
+				var sectionAddress = settings.GetValue($"Linker.CustomSections." + name + ".Address", 0);
+
+				if (sectionName == null) sectionName = name;
+				if (sectionName == null && sectionSource != null) sectionName = Path.GetFileName(sectionSource);
+
+				var bytes = Linker.Compiler.SearchPathsForFileAndLoad(sectionSource);
+
+				if (bytes == null)
+				{
+					// TODO: Generate an error if the file is not found
+					// CompilerException.FileNotFound
+					continue;
+				}
+
+				var section = new Section()
+				{
+					Name = sectionName,
+					Address = (ulong)sectionAddress,
+					Stream = new MemoryStream(bytes),
+					Type = SectionType.ProgBits,
+					Flags = SectionAttribute.Alloc
+				};
+
+				RegisterSection(section);
 			}
 		}
 
@@ -350,7 +387,6 @@ namespace Mosa.Compiler.Framework.Linker.Elf
 				Type = addend ? SectionType.RelocationA : SectionType.Relocation,
 				Link = symbolSection,
 				Info = GetSection(kind),
-				AddressAlignment = SectionAlignment,
 				EntrySize = addend ? RelocationAddendEntry.GetEntrySize(LinkerFormatType) : RelocationEntry.GetEntrySize(LinkerFormatType),
 				Emitter = () => { return addend ? EmitRelocationAddendSection(kind) : EmitRelocationSection(kind); }
 			};

@@ -575,22 +575,12 @@ namespace Mosa.Compiler.Framework
 
 			if (filename != null)
 			{
-				foreach (var path in Compiler.CompilerSettings.SearchPaths)
-				{
-					var src = Path.Combine(path, filename);
-
-					if (File.Exists(src))
-					{
-						var b = File.ReadAllBytes(src);
-
-						Symbol.SetData(b);
-
-						break;
-					}
-				}
+				var bytes = Compiler.SearchPathsForFileAndLoad(filename);
 
 				// TODO: Generate an error if the file is not found
 				// CompilerException.FileNotFound
+
+				Symbol.SetData(bytes);
 			}
 
 			if (NotifyTraceLogHandler != null)

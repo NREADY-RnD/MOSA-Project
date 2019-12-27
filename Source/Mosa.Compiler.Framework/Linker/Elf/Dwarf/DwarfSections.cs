@@ -39,7 +39,6 @@ namespace Mosa.Compiler.Framework.Linker.Elf.Dwarf
 			{
 				Name = ".debug_info",
 				Type = SectionType.ProgBits,
-				AddressAlignment = 0x1000,
 				Emitter = () => { return EmitDebugInfo(); }
 			});
 
@@ -47,7 +46,6 @@ namespace Mosa.Compiler.Framework.Linker.Elf.Dwarf
 			{
 				Name = ".debug_abbrev",
 				Type = SectionType.ProgBits,
-				AddressAlignment = 0x1000,
 				Emitter = () => { return EmitDebugAbbrev(); }
 			});
 
@@ -55,7 +53,6 @@ namespace Mosa.Compiler.Framework.Linker.Elf.Dwarf
 			{
 				Name = ".debug_line",
 				Type = SectionType.ProgBits,
-				AddressAlignment = 0x1000,
 				Emitter = () => { return EmitDebugLine(); }
 			});
 		}

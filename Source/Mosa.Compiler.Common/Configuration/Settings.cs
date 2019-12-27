@@ -57,10 +57,7 @@ namespace Mosa.Compiler.Common.Configuration
 		{
 			if (!Lookups.TryGetValue(fullname, out Property property))
 			{
-				property = new Property()
-				{
-					Name = fullname
-				};
+				property = new Property(fullname);
 
 				AddProperty(property);
 			}
@@ -266,6 +263,27 @@ namespace Mosa.Compiler.Common.Configuration
 
 			Lookups.Remove(property.Name);
 			Properties.Remove(property);
+		}
+
+		public List<string> GetChildNames(string parent)
+		{
+			var list = new List<string>();
+
+			parent += ".";
+			var len = parent.Length + 1;
+
+			foreach (var property in Properties)
+			{
+				if (property.Name.StartsWith(parent))
+				{
+					if (property.Name.IndexOf('.', len) <= 0)
+					{
+						list.Add(property.Name);
+					}
+				}
+			}
+
+			return list;
 		}
 	}
 }
