@@ -9,24 +9,18 @@ namespace Mosa.Compiler.Framework.API
 	{
 		public string Name { get; set; }
 
-		public SectionType Type { get; set; }
+		public ulong VirtualAddress { get; set; } = 0;
 
-		public SectionAttribute Flags { get; set; }
+		public ulong PhysicalAddress { get; set; } = 0;
 
-		public ulong Address { get; set; }
+		public long Size { get { return Stream.Length; } }
 
-		public uint Offset { get; set; }
+		public bool Read { get; set; } = true;
 
-		public uint Size { get; set; }
+		public bool Write { get; set; } = false;
 
-		public CustomELFSection Link { get; set; }
-
-		public CustomELFSection Info { get; set; }
-
-		public uint EntrySize { get; set; }
+		public bool Execute { get; set; } = false;
 
 		public Stream Stream { get; set; }
-
-		public SectionEmitter Emitter { get; set; }
 	}
 }

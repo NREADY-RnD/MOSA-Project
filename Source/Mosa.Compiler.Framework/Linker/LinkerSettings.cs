@@ -41,14 +41,6 @@ namespace Mosa.Compiler.Framework.Linker
 
 		public LinkerSettings(Settings settings)
 		{
-			// defaults
-
-			Settings.SetValue("Compiler.Binary", true);
-			Settings.SetValue("Compiler.TraceLevel", 0);
-			Settings.SetValue("Compiler.Platform", "x86");
-			Settings.SetValue("Compiler.Multithreading", true);
-			Settings.SetValue("CompilerDebug.Statistics", true);
-
 			Settings.Merge(settings);
 		}
 	}

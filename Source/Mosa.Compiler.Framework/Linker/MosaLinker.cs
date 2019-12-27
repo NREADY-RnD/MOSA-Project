@@ -40,8 +40,12 @@ namespace Mosa.Compiler.Framework.Linker
 		private readonly object _lock = new object();
 		private readonly object _cacheLock = new object();
 
+		public Compiler Compiler { get; set; }
+
 		public MosaLinker(Compiler compiler)
 		{
+			Compiler = compiler;
+
 			LinkerSettings = new LinkerSettings(compiler.CompilerSettings.Settings);
 
 			LinkerFormatType = LinkerSettings.LinkerFormat.ToLower() == "elf64" ? LinkerFormatType.Elf64 : LinkerFormatType.Elf32;
@@ -118,10 +122,10 @@ namespace Mosa.Compiler.Framework.Linker
 
 		public LinkerSymbol DefineSymbol(string name, SectionKind kind, int alignment, int size)
 		{
+			uint aligned = alignment != 0 ? (uint)alignment : 1;
+
 			lock (_lock)
 			{
-				uint aligned = alignment != 0 ? (uint)alignment : 1;
-
 				if (!symbolLookup.TryGetValue(name, out LinkerSymbol symbol))
 				{
 					symbol = new LinkerSymbol(name, aligned, kind);
@@ -254,62 +258,6 @@ namespace Mosa.Compiler.Framework.Linker
 			}
 
 			return size;
-		}
-
-		internal void WriteLinkerSectionTo(Stream stream, LinkerSection section, uint fileOffset)
-		{
-			//var fileOffset = section.FileOffset;
-
-			foreach (var symbol in Symbols)
-			{
-				if (symbol.IsReplaced)
-					continue;
-
-				if (symbol.SectionKind != section.SectionKind)
-					continue;
-
-				if (!symbol.IsResolved)
-					continue;
-
-				stream.Seek(fileOffset + symbol.SectionOffset, SeekOrigin.Begin);
-
-				if (symbol.IsDataAvailable)
-				{
-					symbol.Stream.Position = 0;
-					symbol.Stream.WriteTo(stream);
-				}
-			}
-
-			stream.WriteZeroBytes((int)(fileOffset + Alignment.AlignUp(section.Size, SectionAlignment) - stream.Position));
-		}
-
-		internal Stream WriteLinkerSection(LinkerSection section)
-		{
-			var stream = new MemoryStream();
-
-			foreach (var symbol in Symbols)
-			{
-				if (symbol.IsReplaced)
-					continue;
-
-				if (symbol.SectionKind != section.SectionKind)
-					continue;
-
-				if (!symbol.IsResolved)
-					continue;
-
-				stream.Seek(symbol.SectionOffset, SeekOrigin.Begin);
-
-				if (symbol.IsDataAvailable)
-				{
-					symbol.Stream.Position = 0;
-					symbol.Stream.WriteTo(stream);
-				}
-			}
-
-			stream.WriteZeroBytes((int)Alignment.AlignUp((uint)stream.Position, SectionAlignment));
-
-			return stream;
 		}
 
 		#region Cache Methods

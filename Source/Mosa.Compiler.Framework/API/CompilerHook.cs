@@ -22,8 +22,6 @@ namespace Mosa.Compiler.Framework.API
 
 		public delegate IList<CustomELFSection> CustomElfSectionsHandler();
 
-		public delegate IList<CustomProgramHeader> CustomProgramHeadersHandler();
-
 		public delegate NotifyTraceLogHandler NotifyMethodInstructionTraceHandler(MosaMethod method);
 
 		public delegate void ExtendCompilerPipelineHandler(Pipeline<BaseCompilerStage> pipeline);
@@ -43,8 +41,6 @@ namespace Mosa.Compiler.Framework.API
 		public NotifyMethodCompiledHandler NotifyMethodCompiled;
 
 		public CustomElfSectionsHandler CustomElfSections;
-
-		public CustomProgramHeadersHandler CustomProgramHeaders;
 
 		public NotifyMethodInstructionTraceHandler NotifyMethodInstructionTrace;
 
