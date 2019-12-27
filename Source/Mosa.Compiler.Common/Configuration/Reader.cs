@@ -80,7 +80,7 @@ namespace Mosa.Compiler.Common.Configuration
 			var settings = new Settings();
 			var defaultMap = GetDefaultArgumentMap(arguments);
 
-			for (int at = 1; at < args.Length; at++)
+			for (int at = 0; at < args.Length; at++)
 			{
 				var arg = args[at];
 				var map = GetArgumentMap(arg, arguments);

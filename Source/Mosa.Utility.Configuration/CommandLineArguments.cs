@@ -186,6 +186,8 @@ namespace Mosa.Utility.Configuration
 				// Debugger:
 				new Argument() { Name =  "--breakpoints", Setting = "Debugger.BreakpointFile"},
 				new Argument() { Name =  "--watch", Setting = "Debugger.WatchFile"},
+
+				new Argument() { Name =  "--dwarf", Setting = "Linker.Drawf", Value = "true"},
 			};
 
 			return map;

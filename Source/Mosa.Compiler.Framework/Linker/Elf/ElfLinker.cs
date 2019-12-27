@@ -95,31 +95,6 @@ namespace Mosa.Compiler.Framework.Linker.Elf
 			return sectionByName[SectionNames[(int)sectionKind]];
 		}
 
-		private void ResolveSectionOffset(Section section)
-		{
-			if (section.Type == SectionType.Null)
-				return;
-
-			//if (section.Type == SectionType.NoBits)
-			//	return;
-
-			// Already resolved?
-			if (section.Offset != 0)
-				return;
-
-			var offset = BaseFileOffset;
-
-			foreach (var entry in sections)
-			{
-				if (entry.Offset == 0)
-					continue;
-
-				offset = Math.Max(offset, entry.Offset + Alignment.AlignUp(entry.Size, SectionAlignment));
-			}
-
-			section.Offset = offset;
-		}
-
 		#endregion Helpers
 
 		public void Emit(Stream stream)
@@ -154,11 +129,11 @@ namespace Mosa.Compiler.Framework.Linker.Elf
 
 			RegisterSymbolSection();
 
-			RegisterDrawfSections();
+			RegisterStringSection();
 
 			RegisterRelocationSections();
 
-			RegisterStringSection();
+			RegisterDrawfSections();
 
 			RegisterSectionHeaderStringSection();
 		}
@@ -253,8 +228,8 @@ namespace Mosa.Compiler.Framework.Linker.Elf
 
 		private void RegisterSymbolSection()
 		{
-			if (!Linker.LinkerSettings.Symbols)
-				return;
+			//if (!Linker.LinkerSettings.Symbols)
+			//	return;
 
 			symbolSection.Name = ".symtab";
 			symbolSection.Type = SectionType.SymbolTable;
@@ -439,7 +414,7 @@ namespace Mosa.Compiler.Framework.Linker.Elf
 			if (section.Type == SectionType.Null)
 				return;
 
-			ResolveSectionOffset(section);
+			section.Offset = Math.Max(BaseFileOffset, Alignment.AlignUp((uint)writer.BaseStream.Length, SectionAlignment));
 
 			if (section.Type == SectionType.NoBits)
 				return;
@@ -456,6 +431,8 @@ namespace Mosa.Compiler.Framework.Linker.Elf
 				section.Stream.Position = 0;
 				section.Stream.WriteTo(writer.BaseStream);
 			}
+
+			section.Size = (uint)section.Stream.Length;
 		}
 
 		private void WriteElfHeader(BinaryWriter writer)
