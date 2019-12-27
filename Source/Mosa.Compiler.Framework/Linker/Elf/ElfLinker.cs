@@ -39,6 +39,8 @@ namespace Mosa.Compiler.Framework.Linker.Elf
 
 		private MachineType MachineType;
 
+		private bool EmitShortSymbolName;
+
 		#endregion Data Members
 
 		#region Properties
@@ -60,6 +62,9 @@ namespace Mosa.Compiler.Framework.Linker.Elf
 
 			BaseFileOffset = 0x1000;   // required by ELF
 			SectionAlignment = 0x1000; // default 1K
+
+			// Cache for faster performance
+			EmitShortSymbolName = linker.LinkerSettings.ShortSymbolNames;
 		}
 
 		#region Helpers
@@ -687,7 +692,7 @@ namespace Mosa.Compiler.Framework.Linker.Elf
 			if (symbol.SectionKind != SectionKind.Text)
 				return symbol.Name;
 
-			if (!Linker.EmitShortSymbolName)
+			if (!EmitShortSymbolName)
 				return symbol.Name;
 
 			int pos = symbol.Name.LastIndexOf(") ");

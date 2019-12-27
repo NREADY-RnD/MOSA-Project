@@ -29,8 +29,6 @@ namespace Mosa.Compiler.Framework.Linker
 
 		public uint BaseFileOffset { get { return ElfLinker.BaseFileOffset; } }
 
-		public bool EmitShortSymbolName { get; set; }
-
 		public LinkerFormatType LinkerFormatType { get; }
 
 		public LinkerSection[] Sections { get; } = new LinkerSection[4];
@@ -51,9 +49,6 @@ namespace Mosa.Compiler.Framework.Linker
 			LinkerFormatType = LinkerSettings.LinkerFormat.ToLower() == "elf64" ? LinkerFormatType.Elf64 : LinkerFormatType.Elf32;
 
 			ElfLinker = new ElfLinker(this, LinkerFormatType, compiler.Architecture.ElfMachineType);
-
-			// Cache for faster performance
-			EmitShortSymbolName = LinkerSettings.ShortSymbolNames;
 
 			AddSection(new LinkerSection(SectionKind.Text));
 			AddSection(new LinkerSection(SectionKind.Data));
