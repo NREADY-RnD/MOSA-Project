@@ -388,21 +388,12 @@ namespace Mosa.Compiler.Framework
 
 		private MosaMethod ProcessQueue(int threadID = 0)
 		{
-			try
-			{
-				WorkIncrement();
+			var method = MethodScheduler.GetMethodToCompile();
 
-				var method = MethodScheduler.GetMethodToCompile();
+			if (method == null)
+				return null;
 
-				if (method == null)
-					return null;
-
-				return CompileMethod(method, threadID);
-			}
-			finally
-			{
-				WorkDecrement();
-			}
+			return CompileMethod(method, threadID);
 		}
 
 		public MosaMethod CompileMethod(MosaMethod method)
@@ -425,73 +416,74 @@ namespace Mosa.Compiler.Framework
 			return method;
 		}
 
-		public void ExecuteThreadedCompile(int threads)
+		public void ExecuteThreadedCompile(int maxThreads)
 		{
 			PostEvent(CompilerEvent.CompilingMethods);
 
-			ExecuteThreadedCompilePass(threads);
+			ExecuteThreadedCompilePass(maxThreads);
 
 			PostEvent(CompilerEvent.CompilingMethodsCompleted);
 		}
 
-		private int WorkIncrement()
+		private void ExecuteThreadedCompilePass(int maxThreads)
 		{
-			return Interlocked.Increment(ref WorkCount);
-		}
+			//maxThreads = 512;
 
-		private int WorkDecrement()
-		{
-			return Interlocked.Decrement(ref WorkCount);
-		}
+			int threadLaunched = 0;
 
-		private bool IsWorkDone()
-		{
-			return WorkCount == 0;
-		}
+			var threadIDs = new Stack<int>();
 
-		private void ExecuteThreadedCompilePass(int threads)
-		{
-			using (var finished = new CountdownEvent(1))
+			for (var i = 1; i <= maxThreads; i++)
 			{
-				WorkIncrement();
-
-				for (int threadID = 1; threadID <= threads; threadID++)
-				{
-					finished.AddCount();
-
-					int tid = threadID;
-
-					ThreadPool.QueueUserWorkItem(
-						new WaitCallback(
-							delegate
-							{
-								CompileWorker(tid);
-								finished.Signal();
-							}
-						)
-					);
-				}
-
-				WorkDecrement();
-
-				finished.Signal();
-				finished.Wait();
+				threadIDs.Push(i);
 			}
-		}
 
-		private void CompileWorker(int threadID)
-		{
 			while (true)
 			{
-				var method = ProcessQueue(threadID);
+				int launched;
 
-				if (method != null)
-					continue;
+				lock (threadIDs)
+				{
+					launched = threadLaunched;
+				}
 
-				if (IsWorkDone())
-					return;
+				// are available threads?
+				if (launched < maxThreads)
+				{
+					// Yes - is there a method to compile
+					var method = MethodScheduler.GetMethodToCompile();
 
-				Thread.Yield();
+					if (method != null)
+					{
+						int threadID;
+
+						lock (threadIDs)
+						{
+							threadID = threadIDs.Pop();
+							threadLaunched++;
+						}
+
+						ThreadPool.QueueUserWorkItem((o) =>
+						{
+							CompileMethod(method, threadID);
+
+							lock (threadIDs)
+							{
+								threadIDs.Push(threadID);
+								threadLaunched--;
+							}
+						});
+					}
+					else
+					{
+						if (launched == 0)
+							return; // all done
+					}
+				}
+				else
+				{
+					Thread.Yield();
+				}
 			}
 		}
 
@@ -532,8 +524,8 @@ namespace Mosa.Compiler.Framework
 
 		public void Stop()
 		{
-			PostEvent(CompilerEvent.Stopped);
 			IsStopped = true;
+			PostEvent(CompilerEvent.Stopped);
 		}
 
 		public IntrinsicMethodDelegate GetInstrincMethod(string name)
