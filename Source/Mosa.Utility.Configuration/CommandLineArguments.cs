@@ -91,6 +91,8 @@ namespace Mosa.Utility.Configuration
 				new Argument() { Name =  "--emit-relocations", Setting = "Linker.StaticRelocations", Value = "true"},
 				new Argument() { Name =  "--emit-relocations-off", Setting = "Linker.StaticRelocations", Value = "false"},
 				new Argument() { Name =  "--emit-static-relocations", Setting = "Linker.StaticRelocations", Value = "true"},
+				new Argument() { Name =  "--emit-drawf", Setting = "Linker.Drawf", Value = "true"},
+				new Argument() { Name =  "--emit-drawf-off", Setting = "Linker.Drawf", Value = "false"},
 				new Argument() { Name =  "--drawf", Setting = "Linker.Drawf", Value = "true"},
 
 				// Explorer:
@@ -109,10 +111,6 @@ namespace Mosa.Utility.Configuration
 
 				new Argument() { Name =  "--launch", Setting = "Launcher.Launch", Value="true"},
 				new Argument() { Name =  "--launch-off", Setting = "Launcher.Launch", Value="false"},
-
-				//new Argument() { Name =  "--destination-dir", Setting = "Image.Destination"}, // legacy
-				//new Argument() { Name =  "--e", Setting = "Launcher.Exit", Value="true"}, // legacy
-				//new Argument() { Name =  "--q", Setting = "Launcher.Exit", Value="true"}, // legacy
 
 				// Launcher - Emulator:
 				new Argument() { Name =  "--emulator", Setting = "Emulator"},
@@ -141,8 +139,6 @@ namespace Mosa.Utility.Configuration
 				new Argument() { Name =  "--o", Setting = "Image.ImageFile"},
 				new Argument() { Name =  "--m", Setting = "Image.MasterBootRecordFile"},
 				new Argument() { Name =  "--b", Setting = "Image.BootBlockFile"},
-
-				//new Argument() { Name =  "--bootloader-image", Setting = "Image.ImageFile"}, // legacy
 
 				// Launcher - Boot:
 				new Argument() { Name =  "--multiboot-v1", Setting = "Multiboot.Version", Value = "v1"},
@@ -186,8 +182,6 @@ namespace Mosa.Utility.Configuration
 				// Debugger:
 				new Argument() { Name =  "--breakpoints", Setting = "Debugger.BreakpointFile"},
 				new Argument() { Name =  "--watch", Setting = "Debugger.WatchFile"},
-
-				new Argument() { Name =  "--dwarf", Setting = "Linker.Drawf", Value = "true"},
 			};
 
 			return map;

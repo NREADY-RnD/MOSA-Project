@@ -20,6 +20,8 @@ namespace Mosa.Compiler.Framework
 	/// </summary>
 	public sealed class Compiler
 	{
+		private const int MaxThreads = 1024;
+
 		#region Data Members
 
 		private readonly Pipeline<BaseMethodCompilerStage>[] MethodStagePipelines;
@@ -237,7 +239,7 @@ namespace Mosa.Compiler.Framework
 
 			PostEvent(CompilerEvent.CompilerStart);
 
-			MethodStagePipelines = new Pipeline<BaseMethodCompilerStage>[mosaCompiler.MaxThreads + 1];
+			MethodStagePipelines = new Pipeline<BaseMethodCompilerStage>[MaxThreads];
 
 			MethodScheduler = new MethodScheduler(this);
 			MethodScanner = new MethodScanner(this);

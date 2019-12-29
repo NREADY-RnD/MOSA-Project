@@ -7,7 +7,7 @@ namespace Mosa.Compiler.Common.Configuration
 {
 	public static class Reader
 	{
-		private static char[] whitespace = new char[] { '\t', ' ' };
+		private static char[] Whitespace = new char[] { '\t', ' ' };
 
 		public static Settings Import(string filename)
 		{
@@ -27,7 +27,7 @@ namespace Mosa.Compiler.Common.Configuration
 				if (l == null)
 					continue;
 
-				var line = TrimOutComment(l).TrimEnd(whitespace);
+				var line = TrimOutComment(l).TrimEnd(Whitespace);
 
 				var level = DetermineLevel(line);
 
@@ -43,7 +43,7 @@ namespace Mosa.Compiler.Common.Configuration
 					if (data.StartsWith("\'"))
 						item = data.Trim('\'');
 					else if (data.StartsWith("-"))
-						item = data.Substring(1).Trim(whitespace);
+						item = data.Substring(1).Trim(Whitespace);
 
 					var parent = GetSubPropertyName(lastProperty, level + lastLevel);
 					var property = settings.CreateProperty(parent);
@@ -80,9 +80,21 @@ namespace Mosa.Compiler.Common.Configuration
 			var settings = new Settings();
 			var defaultMap = GetDefaultArgumentMap(arguments);
 
-			for (int at = 0; at < args.Length; at++)
+			for (var at = 0; at < args.Length; at++)
 			{
 				var arg = args[at];
+
+				if (arg == "-s" || arg == "-p" ||  arg == "--setting" || arg == "--property")
+				{
+					var parts = args[++at].Split('=');
+
+					var property = settings.CreateProperty(parts[0]);
+
+					property.Value = parts[1];
+
+					continue;
+				}
+
 				var map = GetArgumentMap(arg, arguments);
 
 				if (map == null || map.Count == 0)
@@ -144,7 +156,7 @@ namespace Mosa.Compiler.Common.Configuration
 			if (pos == 0)
 				return null;
 
-			var name = data.Substring(0, pos).Trim(whitespace);
+			var name = data.Substring(0, pos).Trim(Whitespace);
 
 			return name;
 		}
@@ -156,7 +168,7 @@ namespace Mosa.Compiler.Common.Configuration
 			if (pos == 0)
 				return null;
 
-			var value = data.Substring(pos + 1).Trim(whitespace);
+			var value = data.Substring(pos + 1).Trim(Whitespace);
 
 			return value;
 		}
@@ -213,7 +225,7 @@ namespace Mosa.Compiler.Common.Configuration
 
 		private static List<Argument> GetArgumentMap(string arg, List<Argument> arguments)
 		{
-			List<Argument> map = new List<Argument>();
+			var map = new List<Argument>();
 
 			foreach (var entry in arguments)
 			{

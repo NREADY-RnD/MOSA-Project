@@ -535,6 +535,9 @@ namespace Mosa.Compiler.Framework.Linker.Elf
 				if (symbol.VirtualAddress == 0)
 					continue;
 
+				if (symbol.Size == 0)
+					continue;
+
 				var name = GetFinalSymboName(symbol);
 
 				var symbolEntry = new SymbolEntry()
