@@ -26,13 +26,13 @@ namespace Mosa.Compiler.Framework
 		/// <summary>
 		/// The empty operand list
 		/// </summary>
-		private static readonly Operand[] emptyOperandList = new Operand[0];
+		private static readonly Operand[] emptyOperandList = System.Array.Empty<Operand>();
 
 		private readonly Stopwatch Stopwatch;
 
 		private NotifyTraceLogHandler NotifyTraceLogHandler;
 
-		private bool Statistics;
+		private readonly bool Statistics;
 
 		#endregion Data Members
 

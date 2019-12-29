@@ -28,8 +28,6 @@ namespace Mosa.Compiler.Framework
 
 		private Dictionary<string, IntrinsicMethodDelegate> InternalIntrinsicMethods { get; } = new Dictionary<string, IntrinsicMethodDelegate>();
 
-		private volatile int WorkCount;
-
 		#endregion Data Members
 
 		#region Properties
@@ -278,7 +276,6 @@ namespace Mosa.Compiler.Framework
 			Architecture.ExtendCompilerPipeline(CompilerPipeline, CompilerSettings);
 
 			IsStopped = false;
-			WorkCount = 0;
 		}
 
 		/// <summary>
