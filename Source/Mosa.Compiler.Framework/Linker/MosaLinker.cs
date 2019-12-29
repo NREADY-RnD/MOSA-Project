@@ -192,7 +192,7 @@ namespace Mosa.Compiler.Framework.Linker
 
 		private void ApplyPatch(LinkRequest linkRequest)
 		{
-			ulong value = 0;
+			ulong value;
 
 			if (linkRequest.LinkType == LinkType.Size)
 			{
@@ -232,8 +232,7 @@ namespace Mosa.Compiler.Framework.Linker
 
 		private uint ResolveSymbolLocation(SectionKind section, ulong VirtualAddress)
 		{
-			var virtualAddress = VirtualAddress;
-			uint size = 0;
+			uint position = 0;
 
 			foreach (var symbol in Symbols)
 			{
@@ -246,13 +245,13 @@ namespace Mosa.Compiler.Framework.Linker
 				if (symbol.IsResolved)
 					continue;
 
-				symbol.SectionOffset = size;
-				symbol.VirtualAddress = virtualAddress + size;
+				symbol.SectionOffset = position;
+				symbol.VirtualAddress = VirtualAddress + position;
 
-				size += symbol.Size;
+				position += symbol.Size;
 			}
 
-			return size;
+			return position;
 		}
 
 		#region Cache Methods

@@ -649,6 +649,9 @@ namespace Mosa.Compiler.Framework.Linker.Elf
 				if (!symbol.IsResolved)
 					continue;
 
+				if (symbol.Size == 0)
+					continue;
+
 				stream.Seek(symbol.SectionOffset, SeekOrigin.Begin);
 
 				if (symbol.IsDataAvailable)
@@ -657,8 +660,6 @@ namespace Mosa.Compiler.Framework.Linker.Elf
 					symbol.Stream.WriteTo(stream);
 				}
 			}
-
-			stream.WriteZeroBytes((int)Alignment.AlignUp((uint)stream.Position, SectionAlignment));
 
 			return stream;
 		}
