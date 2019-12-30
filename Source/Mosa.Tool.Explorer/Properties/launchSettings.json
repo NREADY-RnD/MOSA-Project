@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "Mosa.Tool.Explorer": {
-      "commandName": "Project",
-      "commandLineArgs": "Mosa.TestWorld.x86.exe"
-    }
-  }
-}
