@@ -31,7 +31,7 @@ namespace Mosa.Compiler.Framework
 
 		public string PostLinkHashFile { get { return Settings.GetValue("CompilerDebug.PostlinkHashFile", null); } }
 
-		public bool SSA { get { return Settings.GetValue("Launcher.SSA", true); } }
+		public bool SSA { get { return Settings.GetValue("Optimizations.SSA", true); } }
 
 		public bool BasicOptimizations { get { return Settings.GetValue("Optimizations.Basic", true); } }
 

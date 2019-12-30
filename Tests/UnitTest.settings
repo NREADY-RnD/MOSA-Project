@@ -1,17 +1,17 @@
 Optimizations:
 	Basic: true
-	SSA: off
-	SCCP: off
-	ValueNumbering: off
-	LongExpansion: off
-	BitTracker: off
-	LoopInvariantCodeMotion: off
-	Platform: off
-	Inline: off
+	SSA: true
+	SCCP: true
+	ValueNumbering: true
+	LongExpansion: true
+	BitTracker: true
+	LoopInvariantCodeMotion: true
+	Platform: true
+	Inline: true
 		Maximum: 12
 		AggressiveMaximum: 24
 		ExplicitOnly: true
-	TwoPass: off
+	TwoPass: true
 
 #Compiler.Multithreading: false
 #CompilerDebug.PostlinkHashFile: %DEFAULT%
