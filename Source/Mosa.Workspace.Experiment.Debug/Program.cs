@@ -79,15 +79,13 @@ namespace Mosa.Workspace.Experiment.Debug
 
 			MeasureCompileTime(stopwatch, compiler, "Mosa.Kernel.x86.IDT::SetTableEntries");
 
-			//MeasureCompileTime(stopwatch, compiler, "System.String System.Int32::CreateString(System.UInt32, System.Boolean, System.Boolean)");
-
 			compiler.ScheduleAll();
 
 			var start = stopwatch.Elapsed.TotalSeconds;
 
 			Console.WriteLine("Threaded Execution Time:");
 
-			compiler.ThreadedCompile();
+			//compiler.ThreadedCompile();
 
 			//compiler.Execute();
 
