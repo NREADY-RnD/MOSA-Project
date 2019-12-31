@@ -53,7 +53,7 @@ namespace Mosa.Tool.GDBDebugger
 
 		public MemoryCache MemoryCache { get; private set; }
 
-		public Settings Settings { get; } = new Settings();
+		public Settings Settings { get; }
 
 		public AppLocations AppLocations { get; } = new AppLocations();
 
@@ -91,6 +91,36 @@ namespace Mosa.Tool.GDBDebugger
 			set { Settings.SetValue("Image.ImageFile", value); }
 		}
 
+		public int GDBPort
+		{
+			get { return Settings.GetValue("GDB.Port", 0); }
+			set { Settings.SetValue("GDB.Port", value); }
+		}
+
+		public string GDBHost
+		{
+			get { return Settings.GetValue("GDB.Host", "localhost"); }
+			set { Settings.SetValue("GDB.Host", value); }
+		}
+
+		public string ImageFormat
+		{
+			get { return Settings.GetValue("Image.Format", null); }
+			set { Settings.SetValue("Image.Format", value); }
+		}
+
+		public bool LauncherStart
+		{
+			get { return Settings.GetValue("Launcher.Start", false); }
+			set { Settings.SetValue("Launcher.Start", value); }
+		}
+
+		public bool EmulatorDisplay
+		{
+			get { return Settings.GetValue("LEmulator.Display", false); }
+			set { Settings.SetValue("Emulator.Display", value); }
+		}
+
 		public MainForm()
 		{
 			InitializeComponent();
@@ -117,9 +147,14 @@ namespace Mosa.Tool.GDBDebugger
 			sourceView = new SourceView(this);
 			sourceDataView = new SourceDataView(this);
 
-			AppLocations.FindApplications();
+			AppLocations.FindApplications();    // Legacy
+
+			Settings = AppLocationsSettings.GetAppLocations();
 
 			Settings.SetValue("Emulator.GDB", true);
+			Settings.SetValue("Emulator.Serial", "TCPServer");
+			Settings.SetValue("Emulator.Serial.Port", 1250);
+			Settings.SetValue("Emulator.Display", false);
 		}
 
 		private void MainForm_Load(object sender, EventArgs e)
@@ -161,17 +196,14 @@ namespace Mosa.Tool.GDBDebugger
 
 			CalculateVMHash();
 
-			Settings.SetValue("Emulator.Serial", "TCPServer");
-			Settings.SetValue("Emulator.Serial.Port", 1250);
-
-			if (Settings.GetValue("Image.ImageFile", null) != null)
+			if (ImageFile != null)
 			{
 				VMProcess = StartQEMU();
 			}
 
 			LoadDebugFile();
 
-			if (Settings.GetValue("Launcher.Start", false))
+			if (LauncherStart)
 			{
 				System.Threading.Thread.Sleep(3000);
 				Connect();
@@ -292,12 +324,12 @@ namespace Mosa.Tool.GDBDebugger
 				MemoryCache = null;
 			}
 
-			if (Settings.GetValue("GDB.Port", 0) == 0)
+			if (GDBPort == 0)
 			{
-				Settings.SetValue("GDB.Port", 1234);
+				GDBPort = 1234;
 			}
 
-			GDBConnector = new Connector(new X86Platform(), Settings.GetValue("GDB.Host", "localhost"), Settings.GetValue("GDB.Port", 1234));
+			GDBConnector = new Connector(new X86Platform(), GDBHost, GDBPort);
 
 			GDBConnector.Connect();
 			GDBConnector.OnPause = OnPause;
@@ -516,8 +548,8 @@ namespace Mosa.Tool.GDBDebugger
 			{
 				var imagefile = odfVMImage.FileName;
 
-				Settings.SetValue("Image.ImageFile", imagefile);
-				Settings.SetValue("Image.Format", GetFormat(odfVMImage.FileName));
+				ImageFile = imagefile;
+				ImageFormat = GetFormat(odfVMImage.FileName);
 
 				var debugFile = Path.Combine(
 					Path.GetDirectoryName(imagefile),
@@ -532,7 +564,7 @@ namespace Mosa.Tool.GDBDebugger
 					Path.GetDirectoryName(imagefile),
 					Path.GetFileNameWithoutExtension(imagefile)) + ".breakpoints";
 
-				if (File.Exists(debugFile))
+				if (File.Exists(breakpointFile))
 				{
 					BreakpointFile = breakpointFile;
 				}
@@ -546,7 +578,7 @@ namespace Mosa.Tool.GDBDebugger
 					WatchFile = watchFile;
 				}
 
-				Settings.SetValue("GDB.Port", Settings.GetValue("GDB.Port", 0) + 1);
+				GDBPort++;
 
 				CalculateVMHash();
 

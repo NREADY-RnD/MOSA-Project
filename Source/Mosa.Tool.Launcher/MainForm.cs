@@ -18,7 +18,7 @@ namespace Mosa.Tool.Launcher
 {
 	public partial class MainForm : MetroForm
 	{
-		private Settings Settings = new Settings();
+		private Settings Settings;
 
 		public Builder Builder;
 
@@ -49,8 +49,9 @@ namespace Mosa.Tool.Launcher
 			InitializeComponent();
 
 			AppLocations = new AppLocations();
-
 			AppLocations.FindApplications();
+
+			Settings = AppLocationsSettings.GetAppLocations();
 
 			dataGridView1.DataSource = includedEntries;
 			dataGridView1.AutoResizeColumns();

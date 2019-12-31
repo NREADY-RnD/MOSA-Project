@@ -33,7 +33,7 @@ namespace Mosa.Utility.UnitTests
 		protected Starter Starter;
 		protected Process Process;
 
-		private Settings Settings = new Settings();
+		private Settings Settings;
 
 		private readonly object _lock = new object();
 
@@ -61,6 +61,8 @@ namespace Mosa.Utility.UnitTests
 
 		public UnitTestEngine(Settings settings)
 		{
+			Settings = AppLocationsSettings.GetAppLocations();
+
 			Settings.SetValue("Compiler.MethodScanner", false);
 			Settings.SetValue("Compiler.Multithreading", true);
 			Settings.SetValue("Compiler.Platform", "x86");
@@ -113,7 +115,6 @@ namespace Mosa.Utility.UnitTests
 			Settings.SetValue("Image.FileSystem", "FAT16");
 
 			AppLocations = new AppLocations();
-
 			AppLocations.FindApplications();
 
 			Initialize();
