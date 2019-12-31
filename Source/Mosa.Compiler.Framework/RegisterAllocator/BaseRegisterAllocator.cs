@@ -507,7 +507,7 @@ namespace Mosa.Compiler.Framework.RegisterAllocator
 							{
 								if (r.Contains(innerslot))
 								{
-									string s = row[index] ?? string.Empty;
+									var s = row[index] ?? string.Empty;
 
 									if (vr.IsPhysicalRegister)
 									{
@@ -536,7 +536,7 @@ namespace Mosa.Compiler.Framework.RegisterAllocator
 										{
 											int index2 = r.AssignedPhysicalRegister.Index;
 
-											string s2 = row[index2] ?? string.Empty;
+											var s2 = row[index2] ?? string.Empty;
 
 											s2 += vr.ToString();
 
@@ -546,7 +546,7 @@ namespace Mosa.Compiler.Framework.RegisterAllocator
 								}
 								else if (r.End == innerslot)
 								{
-									string s = row[index] ?? string.Empty;
+									var s = row[index] ?? string.Empty;
 									s += ")";
 									row[index] = s;
 								}

@@ -4,6 +4,7 @@ using CommandLine;
 using Mosa.Compiler.Common.Configuration;
 using Mosa.Compiler.Common.Exceptions;
 using Mosa.Compiler.Framework;
+using Mosa.Compiler.Framework.API;
 using Mosa.Compiler.Framework.Linker.Elf.Dwarf;
 using Mosa.Utility.Configuration;
 using System;
@@ -71,12 +72,6 @@ Example: Mosa.Tool.Compiler.exe -o Mosa.HelloWorld.x86.bin -a x86 --mboot v1 --x
 			{
 				LoadArguments(args);
 
-				//if (options == null)
-				//{
-				//	ShowShortHelp();
-				//	return;
-				//}
-
 				var sourceFiles = Settings.GetValueList("Compiler.SourceFiles");
 
 				if (sourceFiles == null && sourceFiles.Count == 0)
@@ -84,7 +79,7 @@ Example: Mosa.Tool.Compiler.exe -o Mosa.HelloWorld.x86.bin -a x86 --mboot v1 --x
 					throw new Exception("No input file(s) specified.");
 				}
 
-				compiler = new MosaCompiler(Settings);
+				compiler = new MosaCompiler(Settings, new CompilerHook());
 
 				Trace.Listeners.Add(new TextWriterTraceListener(Console.Out));
 				Debug.AutoFlush = true;

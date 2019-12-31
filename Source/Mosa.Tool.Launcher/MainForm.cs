@@ -173,10 +173,11 @@ namespace Mosa.Tool.Launcher
 
 		private CompilerHook CreateCompilerHook()
 		{
-			var compilerHook = new CompilerHook();
-
-			compilerHook.NotifyProgress = NotifyProgress;
-			compilerHook.NotifyStatus = NotifyStatus;
+			var compilerHook = new CompilerHook
+			{
+				NotifyProgress = NotifyProgress,
+				NotifyStatus = NotifyStatus
+			};
 
 			return compilerHook;
 		}

@@ -464,6 +464,17 @@ namespace Mosa.Compiler.Framework
 						{
 							CompileMethod(method, threadID);
 
+							// lets check for another one
+							while (true)
+							{
+								var method2 = MethodScheduler.GetMethodToCompile();
+
+								if (method2 == null)
+									break;
+
+								CompileMethod(method2, threadID);
+							}
+
 							lock (threadIDs)
 							{
 								threadIDs.Push(threadID);

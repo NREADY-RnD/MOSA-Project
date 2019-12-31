@@ -367,6 +367,8 @@ namespace Mosa.Tool.Explorer
 
 		private string CreateTimeStampedLog(CompilerEvent compilerEvent, string message, int threadID = 0)
 		{
+			message = string.IsNullOrWhiteSpace(message) ? string.Empty : $": {message}";
+
 			return $"{(DateTime.Now - compileStartTime).TotalSeconds:0.00} [{threadID.ToString()}] {compilerEvent.ToText()}: {message}";
 		}
 
@@ -680,16 +682,17 @@ namespace Mosa.Tool.Explorer
 
 		private CompilerHook CreateCompilerHook()
 		{
-			var compilerHook = new CompilerHook();
+			var compilerHook = new CompilerHook
+			{
+				ExtendCompilerPipeline = ExtendCompilerPipeline,
+				ExtendMethodCompilerPipeline = ExtendMethodCompilerPipeline,
 
-			compilerHook.ExtendCompilerPipeline = ExtendCompilerPipeline;
-			compilerHook.ExtendMethodCompilerPipeline = ExtendMethodCompilerPipeline;
-
-			compilerHook.NotifyProgress = NotifyProgress;
-			compilerHook.NotifyEvent = NotifyEvent;
-			compilerHook.NotifyTraceLog = NotifyTraceLog;
-			compilerHook.NotifyMethodCompiled = NotifyMethodCompiled;
-			compilerHook.NotifyMethodInstructionTrace = NotifyMethodInstructionTrace;
+				NotifyProgress = NotifyProgress,
+				NotifyEvent = NotifyEvent,
+				NotifyTraceLog = NotifyTraceLog,
+				NotifyMethodCompiled = NotifyMethodCompiled,
+				NotifyMethodInstructionTrace = NotifyMethodInstructionTrace
+			};
 
 			return compilerHook;
 		}
@@ -997,7 +1000,7 @@ namespace Mosa.Tool.Explorer
 			Settings.SetValue("Compiler.MethodScanner", false);
 			Settings.SetValue("Compiler.Multithreading", true);
 			Settings.SetValue("Compiler.Platform", "x86");
-			Settings.SetValue("Compiler.TraceLevel", 8);
+			Settings.SetValue("Compiler.TraceLevel", 10);
 			Settings.SetValue("Compiler.Multithreading", true);
 			Settings.SetValue("Compiler.Advanced.PlugKorlib", true);
 			Settings.SetValue("CompilerDebug.DebugFile", string.Empty);
@@ -1042,7 +1045,7 @@ namespace Mosa.Tool.Explorer
 		{
 			Settings.SetValue("Compiler.MethodScanner", cbEnableMethodScanner.Checked);
 			Settings.SetValue("Compiler.Binary", cbEnableBinaryCodeGeneration.Checked);
-			Settings.SetValue("Compiler.TraceLevel", 8);
+			Settings.SetValue("Compiler.TraceLevel", 10);
 			Settings.SetValue("Compiler.Platform", cbPlatform.Text);
 			Settings.SetValue("Compiler.Multithreading", CBEnableMultithreading.Checked);
 			Settings.SetValue("Optimizations.SSA", cbEnableSSA.Checked);

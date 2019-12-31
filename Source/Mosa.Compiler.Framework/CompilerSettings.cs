@@ -73,6 +73,8 @@ namespace Mosa.Compiler.Framework
 
 		public bool EmitInline { get { return Settings.GetValue("Compiler.EmitInline", false); } }
 
+		public int MaxThreads { get { return Settings.GetValue("Compiler.Multithreading.MaxThreads", 0); } }
+
 		public List<string> SearchPaths { get { return Settings.GetValueList("SearchPaths"); } }
 
 		public List<string> SourceFiles { get { return Settings.GetValueList("Compiler.SourceFiles"); } }

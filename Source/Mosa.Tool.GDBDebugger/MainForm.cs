@@ -560,9 +560,10 @@ namespace Mosa.Tool.GDBDebugger
 
 		private CompilerHook CreateCompilerHook()
 		{
-			var compilerHook = new CompilerHook();
-
-			compilerHook.NotifyStatus = NotifyStatus;
+			var compilerHook = new CompilerHook
+			{
+				NotifyStatus = NotifyStatus
+			};
 
 			return compilerHook;
 		}

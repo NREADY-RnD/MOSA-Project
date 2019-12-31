@@ -57,6 +57,8 @@ namespace Mosa.Utility.UnitTests
 		private int SendOneCount = -1;
 		private int Errors = 0;
 
+		private DateTime CompileStartTime;
+
 		public UnitTestEngine(Settings settings)
 		{
 			Settings.SetValue("Compiler.MethodScanner", false);
@@ -264,6 +266,8 @@ namespace Mosa.Utility.UnitTests
 
 		public bool Compile()
 		{
+			CompileStartTime = DateTime.Now;
+
 			Settings.AddPropertyListValue("SearchPaths", TestAssemblyPath);
 
 			Settings.ClearProperty("Compiler.SourceFiles");
@@ -284,19 +288,28 @@ namespace Mosa.Utility.UnitTests
 
 		private CompilerHook CreateCompilerHook()
 		{
-			var compilerHook = new CompilerHook();
-
-			compilerHook.NotifyEvent = NotifyEvent;
-			compilerHook.NotifyProgress = NotifyProgress;
+			var compilerHook = new CompilerHook
+			{
+				NotifyEvent = NotifyEvent,
+				NotifyProgress = NotifyProgress
+			};
 
 			return compilerHook;
 		}
 
 		private void NotifyEvent(CompilerEvent compilerEvent, string message, int threadID)
 		{
-			if (compilerEvent == CompilerEvent.Error || compilerEvent == CompilerEvent.Exception || compilerEvent == CompilerEvent.CompilerEnd)
+			if (compilerEvent != CompilerEvent.MethodCompileEnd
+				&& compilerEvent != CompilerEvent.MethodCompileStart
+				&& compilerEvent != CompilerEvent.Counter
+				&& compilerEvent != CompilerEvent.SetupStageStart
+				&& compilerEvent != CompilerEvent.SetupStageEnd
+				&& compilerEvent != CompilerEvent.FinalizationStageStart
+				&& compilerEvent != CompilerEvent.FinalizationStageEnd
+				)
 			{
-				Console.WriteLine($"{compilerEvent.ToText()}: {message}");
+				message = string.IsNullOrWhiteSpace(message) ? string.Empty : $": {message}";
+				Console.WriteLine($"{(DateTime.Now - CompileStartTime).TotalSeconds:0.00} [{threadID.ToString()}] {compilerEvent.ToText()}{message}");
 			}
 		}
 

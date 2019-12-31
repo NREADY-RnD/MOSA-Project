@@ -23,8 +23,6 @@ namespace Mosa.Compiler.Framework
 
 		public CompilerHook CompilerHook { get; }
 
-		public int MaxThreads { get; }
-
 		private enum CompileStage { Initial, Loaded, Initialized, Ready, Executing, Completed }
 
 		private CompileStage Stage = CompileStage.Initial;
@@ -33,13 +31,10 @@ namespace Mosa.Compiler.Framework
 
 		private readonly object _lock = new object();
 
-		public MosaCompiler(Settings settings, CompilerHook compilerHook = null, int maxThreads = 0)
+		public MosaCompiler(Settings settings, CompilerHook compilerHook)
 		{
 			CompilerSettings = new CompilerSettings(settings.Clone());
-
-			CompilerHook = compilerHook ?? new CompilerHook();
-
-			MaxThreads = (maxThreads == 0) ? Environment.ProcessorCount : maxThreads;
+			CompilerHook = compilerHook;
 		}
 
 		public void Load()
@@ -178,7 +173,9 @@ namespace Mosa.Compiler.Framework
 				Stage = CompileStage.Executing;
 			}
 
-			Compiler.ExecuteThreadedCompile(MaxThreads);
+			var maxThreads = CompilerSettings.MaxThreads != 0 ? CompilerSettings.MaxThreads : Environment.ProcessorCount;
+
+			Compiler.ExecuteThreadedCompile(maxThreads);
 
 			lock (_lock)
 			{
