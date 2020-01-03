@@ -262,7 +262,7 @@ namespace Mosa.TestWorld.x86
 		[MethodImpl(MethodImplOptions.NoInlining)]
 		public static void UnitTest()
 		{
-			ForeachTests.ForeachI1();
+			SpecificTests.SetBits64D();
 		}
 
 		public static int Test1()
