@@ -127,29 +127,6 @@ namespace Mosa.UnitTests
 			ulong self = 0x00004000;
 			return self.SetBits(12, 52, 0x00000007, 12);
 		}
-
-		[MosaUnitTest]
-		public static ulong SetBits64B()
-		{
-			ulong addr = 0x0000000019ad000;
-			ulong data = 40004005;
-			return data.SetBits(12, 52, addr, 12);
-		}
-
-		[MosaUnitTest]
-		public static ulong SetBits64C()
-		{
-			ulong addr = 0x0000000019ad000;
-			ulong data = 40004005;
-			return data.SetBits2(12, 52, addr, 12);
-		}
-
-		[MosaUnitTest]
-		public static ulong SetBits64D()
-		{
-			ulong data = 00000001;
-			return data.SetBits2(1, 1, 0x000000000000001, 1);
-		}
 	}
 
 	public static class Extension
@@ -166,13 +143,6 @@ namespace Mosa.UnitTests
 		{
 			value = value >> sourceIndex;
 			ulong mask = 0xFFFFFFFFFFFFFFFFU >> (64 - count);
-			ulong bits = (value & mask) << index;
-			return (self & ~(mask << index)) | bits;
-		}
-
-		public static ulong SetBits2(this ulong self, byte index, byte count, ulong value, byte sourceIndex)
-		{
-			ulong mask = 0xFFFFFFFFFFFFFFFFU >> count;
 			ulong bits = (value & mask) << index;
 			return (self & ~(mask << index)) | bits;
 		}

@@ -488,14 +488,25 @@ namespace Mosa.Platform.x86.Stages
 			var v2 = AllocateVirtualRegister(TypeSystem.BuiltIn.I4);
 
 			context.SetInstruction(X86.Shld32, resultHigh, op1H, op1L, count);
-			context.AppendInstruction(X86.Mov32, resultLow, ConstantZero32);
 			context.AppendInstruction(X86.Shl32, v1, op1L, count);
-			context.AppendInstruction(X86.Mov32, v2, count);
 
-			// FUTURE: Optimization - TestConst32 and conditional moves are not necessary if count is a constant
-			context.AppendInstruction(X86.Test32, null, v2, CreateConstant(32));
-			context.AppendInstruction(X86.CMov32, ConditionCode.NotEqual, resultHigh, resultHigh, v1);
-			context.AppendInstruction(X86.CMov32, ConditionCode.Equal, resultLow, resultLow, v1);
+			if (count.IsConstant)
+			{
+				// FUTURE: Optimization - Test32 and conditional moves are not necessary if the count is a resolved constant
+
+				context.AppendInstruction(X86.Mov32, v2, count);
+				context.AppendInstruction(X86.Test32, null, v2, CreateConstant(32));
+				context.AppendInstruction(X86.CMov32, ConditionCode.NotEqual, resultHigh, resultHigh, v1);
+				context.AppendInstruction(X86.Mov32, resultLow, ConstantZero32);
+				context.AppendInstruction(X86.CMov32, ConditionCode.Equal, resultLow, resultLow, v1);
+			}
+			else
+			{
+				context.AppendInstruction(X86.Test32, null, count, CreateConstant(32));
+				context.AppendInstruction(X86.CMov32, ConditionCode.NotEqual, resultHigh, resultHigh, v1);
+				context.AppendInstruction(X86.Mov32, resultLow, ConstantZero32);
+				context.AppendInstruction(X86.CMov32, ConditionCode.Equal, resultLow, resultLow, v1);
+			}
 		}
 
 		private void ShiftRight64(Context context)
