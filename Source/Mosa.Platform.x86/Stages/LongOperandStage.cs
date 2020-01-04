@@ -561,10 +561,6 @@ namespace Mosa.Platform.x86.Stages
 			newBlocks[0].AppendInstruction(X86.Mov32, resultLow, resultHigh);
 			newBlocks[0].AppendInstruction(X86.Mov32, resultHigh, ConstantZero32);
 			newBlocks[0].AppendInstruction(X86.Jmp, nextBlock.Block);
-
-			//context.AppendInstruction(X86.Cmp32, null, count, CreateConstant(32));
-			//context.AppendInstruction(X86.CMov32, ConditionCode.NotEqual, resultLow, resultHigh);
-			//context.AppendInstruction(X86.CMov32, ConditionCode.NotEqual, resultHigh, ConstantZero32);
 		}
 
 		private void SignExtend16x64(Context context)
