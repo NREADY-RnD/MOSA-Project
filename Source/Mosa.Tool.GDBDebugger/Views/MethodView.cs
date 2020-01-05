@@ -25,6 +25,8 @@ namespace Mosa.Tool.GDBDebugger.Views
 
 			public string Instruction { get; set; }
 
+			public string Info { get; set; }
+
 			[Browsable(false)]
 			public int Length { get; set; }
 		}
@@ -36,7 +38,8 @@ namespace Mosa.Tool.GDBDebugger.Views
 			dataGridView1.DataSource = instructions;
 			dataGridView1.AutoResizeColumns();
 			dataGridView1.Columns[0].Width = 65;
-			dataGridView1.Columns[1].Width = 250;
+			dataGridView1.Columns[1].Width = 170;
+			dataGridView1.Columns[2].Width = 400;
 		}
 
 		public override void OnPause()
@@ -168,11 +171,28 @@ namespace Mosa.Tool.GDBDebugger.Views
 
 				foreach (var instruction in disasm.Disassemble())
 				{
+					var text = translator.Translate(instruction);
+
+					var info = string.Empty;
+
+					var value = ParseAddress(text);
+
+					if (value != 0)
+					{
+						var symbols = DebugSource.GetSymbolsStartingAt(value);
+
+						if (symbols != null && symbols.Count >= 1)
+						{
+							info = symbols[0].Name;
+						}
+					}
+
 					var entry = new MethodInstructionEntry()
 					{
 						IP = instruction.Offset,
 						Length = instruction.Length,
-						Instruction = translator.Translate(instruction)
+						Instruction = text,
+						Info = info
 					};
 
 					instructions.Add(entry);
@@ -212,6 +232,33 @@ namespace Mosa.Tool.GDBDebugger.Views
 			m.MenuItems.Add(new MenuItem("Set &Breakpoint", new EventHandler(MainForm.OnAddBreakPoint)) { Tag = new AddBreakPointArgs(null, clickedEntry.IP) });
 
 			m.Show(dataGridView1, relativeMousePosition);
+		}
+
+		public ulong ParseAddress(string decode)
+		{
+			if (String.IsNullOrWhiteSpace(decode))
+				return 0;
+
+			if (!decode.Contains("call"))
+				return 0;
+
+			try
+			{
+				int space = decode.IndexOf(' ');
+
+				if (space <= 0)
+					return 0;
+
+				var value = decode.Substring(space + 1).Trim();
+
+				var address = MainForm.ParseHexAddress(value);
+
+				return address;
+			}
+			catch
+			{
+				return 0;
+			}
 		}
 	}
 }
