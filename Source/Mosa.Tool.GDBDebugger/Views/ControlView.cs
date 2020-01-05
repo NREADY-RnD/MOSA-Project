@@ -8,10 +8,42 @@ namespace Mosa.Tool.GDBDebugger.Views
 {
 	public partial class ControlView : DebugDockContent
 	{
+		public ulong ReturnAddress { get; private set; } = 0;
+
 		public ControlView(MainForm mainForm)
 			: base(mainForm)
 		{
 			InitializeComponent();
+		}
+
+		public override void OnPause()
+		{
+			btnPause.Enabled = false;
+
+			ReturnAddress = 0;
+
+			ulong ebp = Platform.StackFrame.Value;
+			ulong ip = Platform.InstructionPointer.Value;
+
+			if (ebp == 0 || ip == 0)
+				return;
+
+			MemoryCache.ReadMemory(ebp, 8, OnMemoryRead);
+		}
+
+		private void OnMemoryRead(ulong address, byte[] memory)
+		{
+			if (memory.Length < 8)
+				return; // something went wrong!
+
+			ulong ebp = MainForm.ToLong(memory, 0, 4);
+			ulong ip = MainForm.ToLong(memory, 4, 4);
+
+			if (ip == 0)
+				return;
+
+			ReturnAddress = ip;
+			btnPause.Enabled = true;
 		}
 
 		private void btnStep_Click(object sender, EventArgs e)
@@ -27,7 +59,8 @@ namespace Mosa.Tool.GDBDebugger.Views
 			if (GDBConnector.IsRunning)
 				return;
 
-			uint steps = 0;
+			uint steps;
+
 			try
 			{
 				steps = Convert.ToUInt32(tbSteps.Text);
@@ -50,7 +83,7 @@ namespace Mosa.Tool.GDBDebugger.Views
 
 				while (GDBConnector.IsRunning)
 				{
-					Thread.Sleep(1);
+					Thread.Sleep(10);
 				}
 
 				MainForm.ResendBreakPoints();
@@ -71,6 +104,11 @@ namespace Mosa.Tool.GDBDebugger.Views
 
 		private void btnStart_Click(object sender, EventArgs e)
 		{
+			Continue();
+		}
+
+		private void Continue()
+		{
 			if (GDBConnector == null)
 				return;
 
@@ -84,10 +122,9 @@ namespace Mosa.Tool.GDBDebugger.Views
 				GDBConnector.ClearAllBreakPoints();
 				GDBConnector.Step(true);
 
-				// TODO: Add timeout
 				while (GDBConnector.IsRunning)
 				{
-					Thread.Sleep(1);
+					Thread.Sleep(10);
 				}
 
 				MainForm.ResendBreakPoints();
@@ -100,6 +137,16 @@ namespace Mosa.Tool.GDBDebugger.Views
 		{
 			GDBConnector.Break();
 			GDBConnector.GetRegisters();
+		}
+
+		private void btnStepOut_Click(object sender, EventArgs e)
+		{
+			if (Platform == null)
+				return;
+
+			MainForm.AddBreakPoint(ReturnAddress, true);
+
+			Continue();
 		}
 	}
 }

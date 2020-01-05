@@ -63,6 +63,8 @@ namespace Mosa.Tool.GDBDebugger
 
 		public List<Watch> Watchs { get; } = new List<Watch>();
 
+		public BasePlatform Platform { get { return GDBConnector?.Platform; } }
+
 		private Process VMProcess;
 
 		public string VMHash;
@@ -248,6 +250,8 @@ namespace Mosa.Tool.GDBDebugger
 
 		private void NotifyPause()
 		{
+			DeleteTemporaryBreakPonts();
+
 			foreach (var dock in dockPanel.Contents)
 			{
 				if (dock.DockHandler.Content is DebugDockContent debugdock)
@@ -414,10 +418,10 @@ namespace Mosa.Tool.GDBDebugger
 			AddBreakPoint(breakpoint);
 		}
 
-		public void AddBreakPoint(ulong address)
+		public void AddBreakPoint(ulong address, bool temporary = false)
 		{
 			string name = CreateBreakPointName(address);
-			var breakpoint = new BreakPoint(name, address);
+			var breakpoint = new BreakPoint(name, address, temporary);
 			AddBreakPoint(breakpoint);
 		}
 
@@ -433,6 +437,38 @@ namespace Mosa.Tool.GDBDebugger
 			BreakPoints.Clear();
 			GDBConnector.ClearAllBreakPoints();
 			NotifyBreakPointChange();
+		}
+
+		public void DeleteTemporaryBreakPonts()
+		{
+			if (Platform == null)
+				return;
+
+			if (BreakPoints.Count == 0)
+				return;
+
+			var address = Platform.InstructionPointer.Value;
+
+			var temps = new List<BreakPoint>();
+
+			foreach (var breakpoint in BreakPoints)
+			{
+				if (breakpoint.Temporary && breakpoint.Address == address)
+				{
+					temps.Add(breakpoint);
+				}
+			}
+
+			foreach (var breakpoint in temps)
+			{
+				BreakPoints.Remove(breakpoint);
+				GDBConnector.ClearBreakPoint(breakpoint.Address);
+			}
+
+			if (temps.Count != 0)
+			{
+				NotifyBreakPointChange();
+			}
 		}
 
 		public void AddWatch(Watch watch)
@@ -720,6 +756,19 @@ namespace Mosa.Tool.GDBDebugger
 
 				AddWatch(symbol, address, size);
 			}
+		}
+
+		public static ulong ToLong(byte[] bytes, int start, int size) // future: make this common
+		{
+			ulong value = 0;
+
+			for (int i = 0; i < size; i++)
+			{
+				ulong shifted = (ulong)(bytes[start + i] << (i * 8));
+				value |= shifted;
+			}
+
+			return value;
 		}
 
 		private void CalculateVMHash()

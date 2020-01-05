@@ -28,6 +28,11 @@
     <Compile Update="DebugAppLocationsWindow.Designer.cs">
       <DependentUpon>DebugAppLocationsWindow.cs</DependentUpon>
     </Compile>
+    <Compile Update="DebugVMImageWindow.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>DebugVMImageWindow.resx</DependentUpon>
+    </Compile>
     <Compile Update="Views\BreakpointView.cs" />
     <Compile Update="Views\BreakpointView.designer.cs">
       <DependentUpon>BreakpointView.cs</DependentUpon>
@@ -118,6 +123,14 @@
     <EmbeddedResource Update="DebugAppLocationsWindow.resx">
       <DependentUpon>DebugAppLocationsWindow.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Update="DebugVMImageWindow.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>DebugVMImageWindow.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Update="Views\BreakpointView.resx">
       <DependentUpon>BreakpointView.cs</DependentUpon>
     </EmbeddedResource>
@@ -182,7 +195,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="DebugVMImageWindow.cs" />
-    <Compile Remove="DebugVMImageWindow.Designer.cs" />
     <Compile Remove="DebugInfo\DebugSource.cs" />
   </ItemGroup>
 </Project>

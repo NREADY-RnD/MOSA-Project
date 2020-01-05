@@ -31,6 +31,7 @@ namespace Mosa.Tool.GDBDebugger.Views
 			: base(mainForm)
 		{
 			InitializeComponent();
+			treeView1.MouseDown += (sender, args) => treeView1.SelectedNode = treeView1.GetNodeAt(args.X, args.Y);
 		}
 
 		public override void OnRunning()
@@ -50,10 +51,7 @@ namespace Mosa.Tool.GDBDebugger.Views
 
 			AddSymbol(ip);
 
-			if (ebp != 0)
-			{
-				MemoryCache.ReadMemory(ebp, 8, OnMemoryRead);
-			}
+			MemoryCache.ReadMemory(ebp, 8, OnMemoryRead);
 		}
 
 		private void AddSymbol(ulong ip)
@@ -73,19 +71,6 @@ namespace Mosa.Tool.GDBDebugger.Views
 			BeginInvoke(method);
 		}
 
-		public static ulong ToLong(byte[] bytes, int start, int size) // future: make this common
-		{
-			ulong value = 0;
-
-			for (int i = 0; i < size; i++)
-			{
-				ulong shifted = (ulong)(bytes[start + i] << (i * 8));
-				value |= shifted;
-			}
-
-			return value;
-		}
-
 		private void UpdateDisplay(ulong address, byte[] memory)
 		{
 			if (memory.Length < 8)
@@ -94,8 +79,8 @@ namespace Mosa.Tool.GDBDebugger.Views
 			if (treeView1.Nodes.Count == 0)
 				return; // race condition
 
-			ulong ebp = ToLong(memory, 0, 4);
-			ulong ip = ToLong(memory, 4, 4);
+			ulong ebp = MainForm.ToLong(memory, 0, 4);
+			ulong ip = MainForm.ToLong(memory, 4, 4);
 
 			if (ip == 0)
 				return;
@@ -127,6 +112,7 @@ namespace Mosa.Tool.GDBDebugger.Views
 
 			var menu = new MenuItem(clickedEntry.Text);
 			menu.Enabled = false;
+
 			var m = new ContextMenu();
 			m.MenuItems.Add(menu);
 			m.MenuItems.Add(new MenuItem("Copy to &Clipboard", new EventHandler(MainForm.OnCopyToClipboard)) { Tag = clickedEntry.HexAddress });
