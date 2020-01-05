@@ -94,7 +94,7 @@ namespace Mosa.Tool.GDBDebugger.Views
 			// 
 			this.tbSteps.Location = new System.Drawing.Point(496, 7);
 			this.tbSteps.Name = "tbSteps";
-			this.tbSteps.Size = new System.Drawing.Size(55, 20);
+			this.tbSteps.Size = new System.Drawing.Size(55, 36);
 			this.tbSteps.TabIndex = 20;
 			this.tbSteps.Text = "1000";
 			// 
@@ -126,7 +126,7 @@ namespace Mosa.Tool.GDBDebugger.Views
 			// 
 			// ControlView
 			// 
-			this.ClientSize = new System.Drawing.Size(566, 39);
+			this.ClientSize = new System.Drawing.Size(780, 114);
 			this.CloseButton = false;
 			this.CloseButtonVisible = false;
 			this.Controls.Add(this.btnStepOut);
