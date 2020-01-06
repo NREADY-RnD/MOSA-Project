@@ -54,10 +54,10 @@ namespace Mosa.Tool.GDBDebugger.Views
 			if (Platform.Registers == null)
 				return;
 
-			if (Platform.StackFrame.Value == 0 || Platform.StackPointer.Value == 0)
+			if (StackFrame == 0 || StackPointer == 0)
 				return;
 
-			var span = Platform.StackFrame.Value - Platform.StackPointer.Value;
+			var span = StackFrame - StackPointer;
 
 			if (span <= 0)
 				span = 4;
@@ -67,17 +67,12 @@ namespace Mosa.Tool.GDBDebugger.Views
 			if (span % 4 != 0)
 				span += (span % 4);
 
-			MemoryCache.ReadMemory(Platform.StackPointer.Value, (uint)span + NativeIntegerSize, OnMemoryRead);
+			MemoryCache.ReadMemory(StackPointer, (uint)span + NativeIntegerSize, OnMemoryRead);
 		}
 
 		private void OnMemoryRead(ulong address, byte[] bytes)
 		{
-			MethodInvoker method = delegate ()
-			{
-				UpdateDisplay(address, bytes);
-			};
-
-			BeginInvoke(method);
+			Invoke((MethodInvoker)(() => UpdateDisplay(address, bytes)));
 		}
 
 		private void UpdateDisplay(ulong address, byte[] memory)
@@ -91,7 +86,7 @@ namespace Mosa.Tool.GDBDebugger.Views
 
 				var at = address + (ulong)i;
 
-				var offset = (long)(Platform.StackFrame.Value - at);
+				var offset = (long)(StackFrame - at);
 
 				var entry = new StackEntry()
 				{

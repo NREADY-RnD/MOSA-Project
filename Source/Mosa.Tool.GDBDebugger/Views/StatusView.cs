@@ -31,26 +31,21 @@ namespace Mosa.Tool.GDBDebugger.Views
 			tbIP.Text = Platform.InstructionPointer.ToHex();
 			tbInstruction.Text = string.Empty;
 
-			MemoryCache.ReadMemory(Platform.InstructionPointer.Value, 16, OnMemoryRead);
+			MemoryCache.ReadMemory(InstructionPointer, 16, OnMemoryRead);
 
-			var symbol = DebugSource.GetFirstSymbol(Platform.InstructionPointer.Value);
+			var symbol = DebugSource.GetFirstSymbol(InstructionPointer);
 
 			tbMethod.Text = symbol == null ? string.Empty : symbol.CommonName;
 		}
 
 		private void OnMemoryRead(ulong address, byte[] bytes)
 		{
-			MethodInvoker method = delegate ()
-			{
-				UpdateDisplay(address, bytes);
-			};
-
-			BeginInvoke(method);
+			Invoke((MethodInvoker)(() => UpdateDisplay(address, bytes)));
 		}
 
 		private void UpdateDisplay(ulong address, byte[] memory)
 		{
-			if (address != Platform.InstructionPointer.Value)
+			if (address != InstructionPointer)
 				return;
 
 			var mode = ArchitectureMode.x86_32; // todo:

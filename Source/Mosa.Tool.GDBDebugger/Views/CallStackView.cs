@@ -43,15 +43,31 @@ namespace Mosa.Tool.GDBDebugger.Views
 		{
 			treeView1.Nodes.Clear();
 
-			ulong ebp = Platform.StackFrame.Value;
-			ulong ip = Platform.InstructionPointer.Value;
-
-			if (ebp == 0 || ip == 0)
+			if (StackFrame == 0 || InstructionPointer == 0 || StackPointer == 0)
 				return;
 
-			AddSymbol(ip);
+			AddSymbol(InstructionPointer);
 
-			MemoryCache.ReadMemory(ebp, 8, OnMemoryRead);
+			// FIXME: x86 specific implementation
+			var symbol = DebugSource.GetFirstSymbolsStartingAt(InstructionPointer);
+
+			if (symbol != null)
+			{
+				// new stack frame has not been setup
+				MemoryCache.ReadMemory(StackPointer, 8, OnMemoryReadPrologue);
+				return;
+			}
+
+			symbol = DebugSource.GetFirstSymbolsStartingAt(InstructionPointer - 2);
+
+			if (symbol != null)
+			{
+				// new stack frame has not been setup
+				MemoryCache.ReadMemory(StackPointer + 4, 8, OnMemoryReadPrologue);
+				return;
+			}
+
+			MemoryCache.ReadMemory(StackFrame, 8, OnMemoryRead);
 		}
 
 		private void AddSymbol(ulong ip)
@@ -63,12 +79,12 @@ namespace Mosa.Tool.GDBDebugger.Views
 
 		private void OnMemoryRead(ulong address, byte[] bytes)
 		{
-			MethodInvoker method = delegate ()
-			{
-				UpdateDisplay(address, bytes);
-			};
+			Invoke((MethodInvoker)(() => UpdateDisplay(address, bytes)));
+		}
 
-			BeginInvoke(method);
+		private void OnMemoryReadPrologue(ulong address, byte[] bytes)
+		{
+			Invoke((MethodInvoker)(() => UpdateDisplayPrologue(address, bytes)));
 		}
 
 		private void UpdateDisplay(ulong address, byte[] memory)
@@ -79,8 +95,9 @@ namespace Mosa.Tool.GDBDebugger.Views
 			if (treeView1.Nodes.Count == 0)
 				return; // race condition
 
-			ulong ebp = MainForm.ToLong(memory, 0, 4);
-			ulong ip = MainForm.ToLong(memory, 4, 4);
+			// FIXME: x86 specific implementation
+			var ebp = MainForm.ToLong(memory, 0, 4);
+			var ip = MainForm.ToLong(memory, 4, 4);
 
 			if (ip == 0)
 				return;
@@ -94,6 +111,25 @@ namespace Mosa.Tool.GDBDebugger.Views
 
 				MemoryCache.ReadMemory(ebp, 8, OnMemoryRead);
 			}
+		}
+
+		private void UpdateDisplayPrologue(ulong address, byte[] memory)
+		{
+			if (memory.Length < 8)
+				return; // something went wrong!
+
+			if (treeView1.Nodes.Count == 0)
+				return; // race condition
+
+			// FIXME: x86 specific implementation
+			ulong ip = MainForm.ToLong(memory, 0, 4);
+
+			if (ip == 0)
+				return;
+
+			AddSymbol(ip);
+
+			MemoryCache.ReadMemory(StackFrame, 8, OnMemoryRead);
 		}
 
 		private void treeView1_MouseClick(object sender, MouseEventArgs e)

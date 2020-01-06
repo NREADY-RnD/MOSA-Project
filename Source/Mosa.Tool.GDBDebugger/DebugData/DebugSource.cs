@@ -113,6 +113,16 @@ namespace Mosa.Tool.GDBDebugger.DebugData
 			return SymbolLookup[address];
 		}
 
+		public SymbolInfo GetFirstSymbolsStartingAt(ulong address)
+		{
+			var symbols = GetSymbolsStartingAt(address);
+
+			if (symbols == null || symbols.Count == 0)
+				return null;
+
+			return symbols[0];
+		}
+
 		public InstructionInfo GetInstruction(ulong address)
 		{
 			InstructionLookup.TryGetValue(address, out InstructionInfo instruction);

@@ -3,6 +3,7 @@
 using Mosa.Compiler.Common;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace Mosa.Tool.GDBDebugger.GDB
 {
@@ -52,6 +53,11 @@ namespace Mosa.Tool.GDBDebugger.GDB
 
 		public void ReadMemory(ulong address, uint size, OnMemoryRead onMemoryRead)
 		{
+			ThreadPool.QueueUserWorkItem(state => { ReadMemoryInternal(address, size, onMemoryRead); });
+		}
+
+		private void ReadMemoryInternal(ulong address, uint size, OnMemoryRead onMemoryRead)
+		{
 			var request = new Request(address, size, onMemoryRead);
 
 			var start = Alignment.AlignDown(address, BlockSize);
@@ -69,7 +75,6 @@ namespace Mosa.Tool.GDBDebugger.GDB
 					{
 						requested.Add(i);
 
-						//Connector.ReadMemory(i, BlockSize, OnMemoryRead);
 						queries.Add(i);
 					}
 
@@ -142,46 +147,43 @@ namespace Mosa.Tool.GDBDebugger.GDB
 
 				var data = new byte[request.Size];
 
-				lock (sync)
+				for (ulong blockStart = start; blockStart < end; blockStart += BlockSize)
 				{
-					for (ulong blockStart = start; blockStart < end; blockStart += BlockSize)
+					ulong blockEnd = blockStart + BlockSize;
+
+					int blockOffset = 0;
+					int dataOffset = 0;
+
+					ulong overlapStart = Math.Max(requestStart, blockStart);
+					ulong overlapEnd = Math.Min(requestEnd, blockEnd);
+					int len = (int)(overlapEnd - overlapStart);
+
+					if (len <= 0)
+						continue;
+
+					if (requestStart > blockStart)
 					{
-						ulong blockEnd = blockStart + BlockSize;
+						blockOffset = (int)(requestStart - blockStart);
+					}
 
-						int blockOffset = 0;
-						int dataOffset = 0;
+					if (blockStart > requestStart)
+					{
+						dataOffset = (int)(blockStart - requestStart);
+					}
 
-						ulong overlapStart = Math.Max(requestStart, blockStart);
-						ulong overlapEnd = Math.Min(requestEnd, blockEnd);
-						int len = (int)(overlapEnd - overlapStart);
+					var block = buffer[blockStart];
 
-						if (len <= 0)
-							continue;
-
-						if (requestStart > blockStart)
-						{
-							blockOffset = (int)(requestStart - blockStart);
-						}
-
-						if (blockStart > requestStart)
-						{
-							dataOffset = (int)(blockStart - requestStart);
-						}
-
-						var block = buffer[blockStart];
-
-						try
-						{
-							Array.Copy(block, blockOffset, data, dataOffset, len);
-						}
-						catch (Exception e)
-						{
-							System.Diagnostics.Debug.WriteLine(e.ToString());
-						}
+					try
+					{
+						Array.Copy(block, blockOffset, data, dataOffset, len);
+					}
+					catch (Exception e)
+					{
+						System.Diagnostics.Debug.WriteLine(e.ToString());
 					}
 				}
 
-				request.OnMemoryRead(request.Address, data);
+				ThreadPool.QueueUserWorkItem(state => { request.OnMemoryRead(request.Address, data); });
 			}
 		}
 	}

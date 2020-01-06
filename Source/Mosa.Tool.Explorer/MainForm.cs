@@ -23,7 +23,7 @@ namespace Mosa.Tool.Explorer
 {
 	public partial class MainForm : Form
 	{
-		private Settings Settings = new Settings();
+		private readonly Settings Settings = new Settings();
 
 		private DateTime compileStartTime;
 

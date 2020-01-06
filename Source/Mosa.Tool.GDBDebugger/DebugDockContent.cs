@@ -33,6 +33,11 @@ namespace Mosa.Tool.GDBDebugger
 		public bool IsRunning { get { return GDBConnector.IsRunning; } }
 		public bool IsPaused { get { return GDBConnector.IsPaused; } }
 
+		public ulong InstructionPointer { get { return Platform == null ? 0 : Platform.InstructionPointer.Value; } }
+		public ulong StackFrame { get { return Platform == null ? 0 : Platform.StackFrame.Value; } }
+		public ulong StackPointer { get { return Platform == null ? 0 : Platform.StackPointer.Value; } }
+		public ulong StatusFlag { get { return Platform == null ? 0 : Platform.StatusFlag.Value; } }
+
 		public virtual void OnPause()
 		{
 		}

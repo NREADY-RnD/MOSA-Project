@@ -22,22 +22,63 @@ namespace Mosa.Tool.GDBDebugger.Views
 
 			ReturnAddress = 0;
 
-			ulong ebp = Platform.StackFrame.Value;
-			ulong ip = Platform.InstructionPointer.Value;
-
-			if (ebp == 0 || ip == 0)
+			if (StackFrame == 0 || InstructionPointer == 0 || StackPointer == 0)
 				return;
 
-			MemoryCache.ReadMemory(ebp, 8, OnMemoryRead);
+			// FIXME: x86 specific implementation
+			var symbol = DebugSource.GetFirstSymbolsStartingAt(InstructionPointer);
+
+			if (symbol != null)
+			{
+				// new stack frame has not been setup
+				MemoryCache.ReadMemory(StackPointer, 8, OnMemoryReadPrologue);
+				return;
+			}
+
+			symbol = DebugSource.GetFirstSymbolsStartingAt(InstructionPointer - 2);
+
+			if (symbol != null)
+			{
+				// new stack frame has not been setup
+				MemoryCache.ReadMemory(StackPointer + 4, 8, OnMemoryReadPrologue);
+				return;
+			}
+
+			MemoryCache.ReadMemory(StackFrame, 8, OnMemoryRead);
 		}
 
-		private void OnMemoryRead(ulong address, byte[] memory)
+		private void OnMemoryRead(ulong address, byte[] bytes)
+		{
+			Invoke((MethodInvoker)(() => UpdateDisplay(address, bytes)));
+		}
+
+		private void OnMemoryReadPrologue(ulong address, byte[] bytes)
+		{
+			Invoke((MethodInvoker)(() => UpdateDisplayPrologue(address, bytes)));
+		}
+
+		private void UpdateDisplay(ulong address, byte[] memory)
 		{
 			if (memory.Length < 8)
 				return; // something went wrong!
 
 			ulong ebp = MainForm.ToLong(memory, 0, 4);
 			ulong ip = MainForm.ToLong(memory, 4, 4);
+
+			if (ip == 0)
+				return;
+
+			ReturnAddress = ip;
+			btnPause.Enabled = true;
+		}
+
+		private void UpdateDisplayPrologue(ulong address, byte[] memory)
+		{
+			if (memory.Length < 8)
+				return; // something went wrong!
+
+			// FIXME: x86 specific implementation
+			ulong ip = MainForm.ToLong(memory, 0, 4);
 
 			if (ip == 0)
 				return;

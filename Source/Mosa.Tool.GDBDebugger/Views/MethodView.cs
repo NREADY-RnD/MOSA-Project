@@ -50,9 +50,7 @@ namespace Mosa.Tool.GDBDebugger.Views
 			if (Platform.Registers == null)
 				return;
 
-			//tbMethod.Text = Platform.InstructionPointer.ToHex();
-
-			var symbol = DebugSource.GetFirstSymbol(Platform.InstructionPointer.Value);
+			var symbol = DebugSource.GetFirstSymbol(InstructionPointer);
 
 			tbMethod.Text = symbol == null ? string.Empty : symbol.CommonName;
 
@@ -72,13 +70,12 @@ namespace Mosa.Tool.GDBDebugger.Views
 		private void SelectRow()
 		{
 			dataGridView1.ClearSelection();
-			ulong ip = Platform.InstructionPointer.Value;
 
 			for (int i = 0; i < dataGridView1.Rows.Count; i++)
 			{
 				var methodInstruction = dataGridView1.Rows[i].DataBoundItem as MethodInstructionEntry;
 
-				if (methodInstruction.IP == ip)
+				if (methodInstruction.IP == InstructionPointer)
 				{
 					dataGridView1.Rows[i].Selected = true;
 
@@ -179,11 +176,11 @@ namespace Mosa.Tool.GDBDebugger.Views
 
 					if (value != 0)
 					{
-						var symbols = DebugSource.GetSymbolsStartingAt(value);
+						var symbol = DebugSource.GetFirstSymbolsStartingAt(value);
 
-						if (symbols != null && symbols.Count >= 1)
+						if (symbol != null)
 						{
-							info = symbols[0].Name;
+							info = symbol.Name;
 						}
 					}
 
