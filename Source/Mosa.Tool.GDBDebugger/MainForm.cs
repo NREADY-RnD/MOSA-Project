@@ -588,53 +588,29 @@ namespace Mosa.Tool.GDBDebugger
 			}
 		}
 
-		private void toolStripButton1_Click(object sender, EventArgs e)
+		public void LaunchImage(string imageFile, string debugFile, string breakpointFile, string watchFile)
 		{
-			if (odfVMImage.ShowDialog() == DialogResult.OK)
-			{
-				var imagefile = odfVMImage.FileName;
+			KillVMProcess();
 
-				ImageFile = imagefile;
-				ImageFormat = GetFormat(odfVMImage.FileName);
+			ImageFile = imageFile;
+			ImageFormat = GetFormat(imageFile);
 
-				var debugFile = Path.Combine(
-					Path.GetDirectoryName(imagefile),
-					Path.GetFileNameWithoutExtension(imagefile)) + ".debug";
+			DebugFile = debugFile;
+			BreakpointFile = breakpointFile;
+			WatchFile = watchFile;
 
-				if (File.Exists(debugFile))
-				{
-					DebugFile = debugFile;
-				}
+			GDBPort++;
 
-				var breakpointFile = Path.Combine(
-					Path.GetDirectoryName(imagefile),
-					Path.GetFileNameWithoutExtension(imagefile)) + ".breakpoints";
+			CalculateVMHash();
 
-				if (File.Exists(breakpointFile))
-				{
-					BreakpointFile = breakpointFile;
-				}
+			VMProcess = StartQEMU();
 
-				var watchFile = Path.Combine(
-					Path.GetDirectoryName(imagefile),
-					Path.GetFileNameWithoutExtension(imagefile)) + ".watches";
+			LoadDebugFile();
 
-				if (File.Exists(watchFile))
-				{
-					WatchFile = watchFile;
-				}
+			Connect();
 
-				GDBPort++;
-
-				CalculateVMHash();
-
-				VMProcess = StartQEMU();
-
-				LoadDebugFile();
-				Connect();
-				LoadBreakPoints();
-				LoadWatches();
-			}
+			LoadBreakPoints();
+			LoadWatches();
 		}
 
 		private void KillVMProcess()
@@ -642,11 +618,13 @@ namespace Mosa.Tool.GDBDebugger
 			if (VMProcess == null)
 				return;
 
-			if (VMProcess.HasExited)
-				return;
+			if (!VMProcess.HasExited)
+			{
+				VMProcess.Kill();
+				VMProcess.WaitForExit();
+			}
 
-			VMProcess.Kill();
-			VMProcess.WaitForExit();
+			VMProcess = null;
 		}
 
 		private CompilerHook CreateCompilerHook()
@@ -816,6 +794,10 @@ namespace Mosa.Tool.GDBDebugger
 					return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
 				}
 			}
+		}
+
+		private void toolStripButton3_Click(object sender, EventArgs e)
+		{
 		}
 	}
 }

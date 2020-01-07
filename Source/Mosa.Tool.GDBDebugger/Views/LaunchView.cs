@@ -110,6 +110,18 @@ namespace Mosa.Tool.GDBDebugger.Views
 
 		private void AddEntry(string imagefile)
 		{
+			var entry = CreateEntry(imagefile);
+
+			RemoveEntry(imagefile);
+
+			launchEntries.Add(entry);
+		}
+
+		private LaunchEntry CreateEntry(string imagefile)
+		{
+			if (!File.Exists(imagefile))
+				return null;
+
 			string directory = Path.GetDirectoryName(imagefile);
 			string imagefileWithException = Path.GetFileNameWithoutExtension(imagefile);
 
@@ -132,17 +144,64 @@ namespace Mosa.Tool.GDBDebugger.Views
 				watchFile = null;
 			}
 
-			launchEntries.Add(new LaunchEntry()
+			var entry = new LaunchEntry()
 			{
 				ImageFile = imagefile,
 				DebugFile = debugFile,
 				WatchFile = watchFile,
 				BreakpointFile = breakpointFile
-			});
+			};
+
+			return entry;
+		}
+
+		private void RemoveEntry(string filename)
+		{
+			for (int i = 0; i < launchEntries.Count; i++)
+			{
+				if (launchEntries[i].ImageFile == filename)
+				{
+					launchEntries.RemoveAt(i);
+				}
+			}
 		}
 
 		private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
 		{
+
+		}
+
+		private void btnAdd_Click(object sender, EventArgs e)
+		{
+			if (odfVMImage.ShowDialog() == DialogResult.OK)
+			{
+				AddEntry(odfVMImage.FileName);
+
+				dataGridView1.ClearSelection();
+				dataGridView1.Rows[launchEntries.Count - 1].Selected = true;
+			}
+		}
+
+		private void btnLaunch_Click(object sender, EventArgs e)
+		{
+			if (dataGridView1.SelectedRows.Count == 0)
+				return;
+
+			var entry = dataGridView1.SelectedRows[0].DataBoundItem as LaunchEntry;
+
+			Launch(entry);
+		}
+
+		private void Launch(LaunchEntry entry)
+		{
+			MainForm.LaunchImage(entry.ImageFile, entry.DebugFile, entry.BreakpointFile, entry.WatchFile);
+		}
+
+		private void dataGridView1_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
+		{
+			var entry = dataGridView1.Rows[e.RowIndex].DataBoundItem as LaunchEntry;
+
+			Launch(entry);
 		}
 	}
 }

@@ -60,7 +60,7 @@ namespace Mosa.Tool.GDBDebugger.Views
 			this.dataGridView1.Size = new System.Drawing.Size(1319, 320);
 			this.dataGridView1.TabIndex = 5;
 			this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
-			this.dataGridView1.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridView1_CellMouseClick);
+			this.dataGridView1.CellMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridView1_CellMouseDoubleClick);
 			// 
 			// toolStrip1
 			// 
@@ -82,6 +82,7 @@ namespace Mosa.Tool.GDBDebugger.Views
 			this.btnLaunch.Name = "btnLaunch";
 			this.btnLaunch.Size = new System.Drawing.Size(105, 41);
 			this.btnLaunch.Text = "Launch";
+			this.btnLaunch.Click += new System.EventHandler(this.btnLaunch_Click);
 			// 
 			// btnAdd
 			// 
@@ -90,6 +91,7 @@ namespace Mosa.Tool.GDBDebugger.Views
 			this.btnAdd.Name = "btnAdd";
 			this.btnAdd.Size = new System.Drawing.Size(70, 41);
 			this.btnAdd.Text = "Add";
+			this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
 			// 
 			// btnDelete
 			// 
