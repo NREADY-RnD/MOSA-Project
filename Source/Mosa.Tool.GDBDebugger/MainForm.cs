@@ -45,6 +45,8 @@ namespace Mosa.Tool.GDBDebugger
 		private readonly SourceView sourceView;
 		private readonly SourceDataView sourceDataView;
 
+		private readonly LaunchView launchView;
+
 		//private ScriptView scriptView;
 
 		public string Status { set { toolStripStatusLabel1.Text = value; toolStrip1.Refresh(); } }
@@ -149,6 +151,8 @@ namespace Mosa.Tool.GDBDebugger
 			sourceView = new SourceView(this);
 			sourceDataView = new SourceDataView(this);
 
+			launchView = new LaunchView(this);
+
 			AppLocations.FindApplications();    // Legacy
 
 			Settings = AppLocationsSettings.GetAppLocations();
@@ -176,6 +180,7 @@ namespace Mosa.Tool.GDBDebugger
 			breakPointView.Show(dockPanel, DockState.DockBottom);
 			watchView.Show(breakPointView.PanelPane, DockAlignment.Right, 0.50);
 
+			launchView.Show(dockPanel, DockState.Document);
 			displayView.Show(dockPanel, DockState.Document);
 			outputView.Show(dockPanel, DockState.Document);
 
@@ -190,6 +195,7 @@ namespace Mosa.Tool.GDBDebugger
 
 			var memoryView = new MemoryView(this);
 			memoryView.Show(dockPanel, DockState.Document);
+
 			symbolView.Show(dockPanel, DockState.Document);
 
 			instructionView.Show(symbolView.PanelPane, DockAlignment.Right, 0.35);
@@ -197,6 +203,7 @@ namespace Mosa.Tool.GDBDebugger
 			callStackView.Show(instructionView.PanelPane, DockAlignment.Bottom, 0.25);
 
 			registersView.Show();
+			launchView.Show();
 
 			dockPanel.ResumeLayout(true, true);
 
@@ -553,7 +560,6 @@ namespace Mosa.Tool.GDBDebugger
 
 		public void LoadArguments(string[] args)
 		{
-			//= new LauncherSettingsWrapper();
 			var arguments = Reader.ParseArguments(args, CommandLineArguments.Map);
 
 			Settings.Merge(arguments);
