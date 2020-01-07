@@ -157,6 +157,10 @@ namespace Mosa.Tool.GDBDebugger
 			Settings.SetValue("Emulator.Serial", "TCPServer");
 			Settings.SetValue("Emulator.Serial.Port", 1250);
 			Settings.SetValue("Emulator.Display", false);
+
+			AppDomain.CurrentDomain.DomainUnload += (s, e) => { KillVMProcess(); };
+			AppDomain.CurrentDomain.ProcessExit += (s, e) => { KillVMProcess(); };
+			AppDomain.CurrentDomain.UnhandledException += (s, e) => { KillVMProcess(); };
 		}
 
 		private void MainForm_Load(object sender, EventArgs e)
@@ -619,11 +623,24 @@ namespace Mosa.Tool.GDBDebugger
 				CalculateVMHash();
 
 				VMProcess = StartQEMU();
+
 				LoadDebugFile();
 				Connect();
 				LoadBreakPoints();
 				LoadWatches();
 			}
+		}
+
+		private void KillVMProcess()
+		{
+			if (VMProcess == null)
+				return;
+
+			if (VMProcess.HasExited)
+				return;
+
+			VMProcess.Kill();
+			VMProcess.WaitForExit();
 		}
 
 		private CompilerHook CreateCompilerHook()
@@ -653,10 +670,7 @@ namespace Mosa.Tool.GDBDebugger
 				GDBConnector = null;
 			}
 
-			if (VMProcess?.HasExited == false)
-			{
-				VMProcess.Kill();
-			}
+			KillVMProcess();
 		}
 
 		public void LoadBreakPoints()
@@ -756,6 +770,11 @@ namespace Mosa.Tool.GDBDebugger
 
 				AddWatch(symbol, address, size);
 			}
+		}
+
+		public static ulong ToLong(byte[] bytes) // future: make this common
+		{
+			return ToLong(bytes, 0, bytes.Length);
 		}
 
 		public static ulong ToLong(byte[] bytes, int start, int size) // future: make this common
