@@ -57,8 +57,6 @@ namespace Mosa.Tool.GDBDebugger
 
 		public Settings Settings { get; }
 
-		public AppLocations AppLocations { get; } = new AppLocations();
-
 		public DebugSource DebugSource { get; set; } = new DebugSource();
 
 		public List<BreakPoint> BreakPoints { get; } = new List<BreakPoint>();
@@ -130,6 +128,18 @@ namespace Mosa.Tool.GDBDebugger
 			set { Settings.SetValue("Emulator.Display", value); }
 		}
 
+		public string QEMU
+		{
+			get { return Settings.GetValue("AppLocation.Qemu", null); }
+			set { Settings.SetValue("AppLocation.Qemu", value); }
+		}
+
+		public string QEMUBios
+		{
+			get { return Settings.GetValue("AppLocation.Qemu.BIOS", null); }
+			set { Settings.SetValue("AppLocation.Qemu.BIOS", value); }
+		}
+
 		public MainForm()
 		{
 			InitializeComponent();
@@ -157,8 +167,6 @@ namespace Mosa.Tool.GDBDebugger
 			sourceDataView = new SourceDataView(this);
 
 			launchView = new LaunchView(this);
-
-			AppLocations.FindApplications();    // Legacy
 
 			Settings = AppLocationsSettings.GetAppLocations();
 
@@ -554,7 +562,7 @@ namespace Mosa.Tool.GDBDebugger
 
 		private void toolStripButton2_Click(object sender, EventArgs e)
 		{
-			using (var debug = new DebugAppLocationsWindow(AppLocations))
+			using (var debug = new DebugAppLocationsWindow(this))
 			{
 				if (debug.ShowDialog(this) == DialogResult.OK)
 				{
@@ -631,7 +639,7 @@ namespace Mosa.Tool.GDBDebugger
 		{
 			var compilerHook = CreateCompilerHook();
 
-			var starter = new Starter(Settings, compilerHook, AppLocations);
+			var starter = new Starter(Settings, compilerHook);
 
 			VMProcess = starter.LaunchVM();
 		}

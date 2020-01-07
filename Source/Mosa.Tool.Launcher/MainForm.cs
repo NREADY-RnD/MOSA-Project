@@ -22,8 +22,6 @@ namespace Mosa.Tool.Launcher
 
 		public Builder Builder;
 
-		public AppLocations AppLocations { get; set; }
-
 		private int TotalMethods = 0;
 		private int CompletedMethods = 0;
 
@@ -47,9 +45,6 @@ namespace Mosa.Tool.Launcher
 		public MainForm()
 		{
 			InitializeComponent();
-
-			AppLocations = new AppLocations();
-			AppLocations.FindApplications();
 
 			Settings = AppLocationsSettings.GetAppLocations();
 
@@ -196,7 +191,7 @@ namespace Mosa.Tool.Launcher
 				{
 					var compilerHook = CreateCompilerHook();
 
-					Builder = new Builder(Settings, AppLocations, compilerHook);
+					Builder = new Builder(Settings, compilerHook);
 
 					Builder.IncludeFiles.Clear();
 
@@ -239,7 +234,7 @@ namespace Mosa.Tool.Launcher
 
 				var compilerHooks = CreateCompilerHook();
 
-				var starter = new Starter(Builder.Settings, compilerHooks, AppLocations, Builder.Linker);
+				var starter = new Starter(Builder.Settings, compilerHooks, Builder.Linker);
 
 				starter.Launch();
 			}
@@ -365,13 +360,13 @@ namespace Mosa.Tool.Launcher
 
 		private void UpdateInterfaceAppLocations()
 		{
-			lbBOCHSExecutable.Text = AppLocations.BOCHS;
-			lbNDISASMExecutable.Text = AppLocations.NDISASM;
-			lbQEMUExecutable.Text = AppLocations.QEMU;
-			lbQEMUBIOSDirectory.Text = AppLocations.QEMUBIOSDirectory;
-			lbQEMUImgApplication.Text = AppLocations.QEMUImg;
-			lbVMwarePlayerExecutable.Text = AppLocations.VMwarePlayer;
-			lbmkisofsExecutable.Text = AppLocations.Mkisofs;
+			lbBOCHSExecutable.Text = Settings.GetValue("AppLocation.Bochs", string.Empty);
+			lbNDISASMExecutable.Text = Settings.GetValue("AppLocation.ndisasm", string.Empty);
+			lbQEMUExecutable.Text = Settings.GetValue("AppLocation.Qemu", string.Empty);
+			lbQEMUBIOSDirectory.Text = Settings.GetValue("AppLocation.Qemu.BIOS", string.Empty);
+			lbQEMUImgApplication.Text = Settings.GetValue("AppLocation.QemuImg", string.Empty);
+			lbVMwarePlayerExecutable.Text = Settings.GetValue("AppLocation.Vmware.Player", string.Empty);
+			lbmkisofsExecutable.Text = Settings.GetValue("AppLocation.mkisofs", string.Empty);
 		}
 
 		private void UpdateSettings()

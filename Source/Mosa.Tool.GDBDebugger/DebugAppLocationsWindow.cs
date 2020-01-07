@@ -8,25 +8,25 @@ namespace Mosa.Tool.GDBDebugger
 {
 	public partial class DebugAppLocationsWindow : Form
 	{
-		private readonly AppLocations AppLocations;
+		private readonly MainForm MainForm;
 
-		public DebugAppLocationsWindow(AppLocations apps)
+		public DebugAppLocationsWindow(MainForm mainForm)
 		{
 			InitializeComponent();
 
-			AppLocations = apps;
+			MainForm = mainForm;
 		}
 
 		private void DebugQemuWindow_Load(object sender, EventArgs e)
 		{
-			tbQEMU.Text = AppLocations.QEMU;
-			tbBIOSDirectory.Text = AppLocations.QEMUBIOSDirectory;
+			tbQEMU.Text = MainForm.QEMU;
+			tbBIOSDirectory.Text = MainForm.QEMUBios;
 		}
 
 		private void btnDebug_Click(object sender, EventArgs e)
 		{
-			AppLocations.QEMU = tbQEMU.Text;
-			AppLocations.QEMUBIOSDirectory = tbBIOSDirectory.Text;
+			MainForm.QEMU = tbQEMU.Text;
+			MainForm.QEMUBios = tbBIOSDirectory.Text;
 
 			Close();
 		}

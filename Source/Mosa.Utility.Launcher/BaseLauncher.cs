@@ -17,9 +17,7 @@ namespace Mosa.Utility.Launcher
 
 		public List<string> Log { get; }
 
-		public AppLocations AppLocations { get; set; }
-
-		public BaseLauncher(Settings settings, CompilerHook compilerHook, AppLocations appLocations)
+		public BaseLauncher(Settings settings, CompilerHook compilerHook)
 		{
 			CompilerHook = compilerHook;
 
@@ -29,7 +27,6 @@ namespace Mosa.Utility.Launcher
 
 			Settings.Merge(settings);
 
-			AppLocations = appLocations;
 			Log = new List<string>();
 		}
 

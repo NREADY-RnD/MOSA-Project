@@ -39,8 +39,8 @@ namespace Mosa.Utility.Launcher
 
 		public List<IncludeFile> IncludeFiles = new List<IncludeFile>();
 
-		public Builder(Settings settings, AppLocations appLocations, CompilerHook compilerHook)
-			: base(settings, compilerHook, appLocations)
+		public Builder(Settings settings, CompilerHook compilerHook)
+			: base(settings, compilerHook)
 		{
 			Counters = new List<string>();
 
@@ -421,6 +421,7 @@ namespace Mosa.Utility.Launcher
 			var destination = Settings.GetValue("Image.Destination", null);
 			var imagefile = Settings.GetValue("Image.ImageFile", null);
 			var output = Settings.GetValue("Compiler.OutputFile", null);
+			var mkisofs = Settings.GetValue("AppLocation.mkisofs", null);
 
 			string isoDirectory = Path.Combine(destination, "iso");
 			var sourcefile = Settings.GetValueList("Compiler.SourceFiles")[0];
@@ -458,7 +459,7 @@ namespace Mosa.Utility.Launcher
 
 			string arg = $"-relaxed-filenames -J -R -o {Quote(imagefile)} -b isolinux.bin -no-emul-boot -boot-load-size 4 -boot-info-table {Quote(isoDirectory)}";
 
-			LaunchApplication(AppLocations.Mkisofs, arg, true);
+			LaunchApplication(mkisofs, arg, true);
 		}
 
 		private void CreateISOImageWithGrub()
@@ -466,6 +467,7 @@ namespace Mosa.Utility.Launcher
 			var destination = Settings.GetValue("Image.Destination", null);
 			var output = Settings.GetValue("Compiler.OutputFile", null);
 			var imagefile = Settings.GetValue("Image.ImageFile", null);
+			var mkisofs = Settings.GetValue("AppLocation.mkisofs", null);
 
 			string isoDirectory = Path.Combine(destination, "iso");
 
@@ -513,16 +515,17 @@ namespace Mosa.Utility.Launcher
 
 			string arg = $"-relaxed-filenames -J -R -o {Quote(imagefile)} -b {Quote(loader)} -no-emul-boot -boot-load-size 4 -boot-info-table {Quote(isoDirectory)}";
 
-			LaunchApplication(AppLocations.Mkisofs, arg, true);
+			LaunchApplication(mkisofs, arg, true);
 		}
 
 		private void CreateVMDK(string source)
 		{
 			var imagefile = Settings.GetValue("Image.ImageFile", null);
+			var qemuimg = Settings.GetValue("AppLocation.QemuImg", null);
 
 			string arg = $"convert -f raw -O vmdk {Quote(source)} {Quote(imagefile)}";
 
-			LaunchApplication(AppLocations.QEMUImg, arg, true);
+			LaunchApplication(qemuimg, arg, true);
 		}
 
 		private void LaunchNDISASM()
@@ -532,6 +535,7 @@ namespace Mosa.Utility.Launcher
 			var imagefile = Settings.GetValue("Image.ImageFile", null);
 			var output = Settings.GetValue("Compiler.OutputFile", null);
 			var baseaddress = Settings.GetValue("Compiler.BaseAddress", 0x00400000);
+			var ndisasm = Settings.GetValue("AppLocation.ndisasm", null);
 
 			//var textSection = Linker.Sections[(int)SectionKind.Text];
 			var startingAddress = baseaddress + MultibootHeaderLength;
@@ -541,7 +545,7 @@ namespace Mosa.Utility.Launcher
 
 			var nasmfile = Path.Combine(destination, $"{Path.GetFileNameWithoutExtension(sourcefile)}.nasm");
 
-			var process = LaunchApplication(AppLocations.NDISASM, arg);
+			var process = LaunchApplication(ndisasm, arg);
 
 			var processoutput = GetOutput(process);
 

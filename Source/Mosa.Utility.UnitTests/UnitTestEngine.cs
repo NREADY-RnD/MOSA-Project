@@ -23,8 +23,6 @@ namespace Mosa.Utility.UnitTests
 
 		public string TestSuiteFile { get; set; }
 
-		public AppLocations AppLocations { get; set; }
-
 		public TypeSystem TypeSystem { get; internal set; }
 
 		public MosaLinker Linker { get; internal set; }
@@ -113,9 +111,6 @@ namespace Mosa.Utility.UnitTests
 			Settings.SetValue("Image.Destination", Path.Combine(Path.GetTempPath(), "MOSA-UnitTest"));
 			Settings.SetValue("Image.Format", "IMG");
 			Settings.SetValue("Image.FileSystem", "FAT16");
-
-			AppLocations = new AppLocations();
-			AppLocations.FindApplications();
 
 			Initialize();
 		}
@@ -276,7 +271,7 @@ namespace Mosa.Utility.UnitTests
 
 			var compilerHook = CreateCompilerHook();
 
-			var builder = new Builder(Settings, AppLocations, compilerHook);
+			var builder = new Builder(Settings, compilerHook);
 
 			builder.Build();
 
@@ -324,7 +319,7 @@ namespace Mosa.Utility.UnitTests
 			{
 				var compilerHook = CreateCompilerHook();
 
-				Starter = new Starter(Settings, compilerHook, AppLocations);
+				Starter = new Starter(Settings, compilerHook);
 			}
 
 			//Settings.SetValue("Emulator.Serial.Port", new Random().Next(11111, 22222));

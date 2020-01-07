@@ -14,13 +14,13 @@ namespace Mosa.Utility.Launcher
 	{
 		public MosaLinker Linker { get; }
 
-		public Starter(Settings settings, CompilerHook compilerHook, AppLocations appLocations)
-			: base(settings, compilerHook, appLocations)
+		public Starter(Settings settings, CompilerHook compilerHook)
+			: base(settings, compilerHook)
 		{
 		}
 
-		public Starter(Settings settings, CompilerHook compilerHook, AppLocations appLocations, MosaLinker linker)
-			: base(settings, compilerHook, appLocations)
+		public Starter(Settings settings, CompilerHook compilerHook, MosaLinker linker)
+			: base(settings, compilerHook)
 		{
 			Linker = linker;
 		}
@@ -61,10 +61,13 @@ namespace Mosa.Utility.Launcher
 
 		private Process LaunchQemu(bool getOutput)
 		{
-			string arg = " -L " + Quote(AppLocations.QEMUBIOSDirectory);
+			var qemubios = Settings.GetValue("AppLocation.Qemu.BIOS", null);
+
+			string arg = " -L " + Quote(qemubios);
 
 			var imageformat = Settings.GetValue("Image.Format", string.Empty).ToUpper();
 			var imagefile = Settings.GetValue("Image.ImageFile", null);
+			var qemu = Settings.GetValue("AppLocation.Qemu", null);
 
 			if (Settings.GetValue("Compiler.Platform", string.Empty).ToLower() == "x86")
 			{
@@ -113,7 +116,7 @@ namespace Mosa.Utility.Launcher
 					arg = $"{arg} -hda {Quote(imagefile)}";
 			}
 
-			return LaunchApplication(AppLocations.QEMU, arg, getOutput);
+			return LaunchApplication(qemu, arg, getOutput);
 		}
 
 		private Process LaunchBochs(bool getOutput)
@@ -122,12 +125,15 @@ namespace Mosa.Utility.Launcher
 			var imagefile = Settings.GetValue("Image.ImageFile", null);
 			var imageformat = Settings.GetValue("Image.Format", string.Empty).ToUpper();
 			var sourcefile = Settings.GetValueList("Compiler.SourceFiles")[0];
+			var bochs = Settings.GetValue("AppLocation.Bochs", null);
+
+			var bochsdirectory = Path.GetDirectoryName(bochs);
 
 			var logfile = Path.Combine(destination, Path.GetFileNameWithoutExtension(sourcefile) + "-bochs.log");
 			var configfile = Path.Combine(destination, Path.GetFileNameWithoutExtension(sourcefile) + ".bxrc");
-			var exeDir = Path.GetDirectoryName(AppLocations.BOCHS);
+			var exeDir = Path.GetDirectoryName(bochs);
 
-			var fileVersionInfo = FileVersionInfo.GetVersionInfo(AppLocations.BOCHS);
+			var fileVersionInfo = FileVersionInfo.GetVersionInfo(bochs);
 
 			// simd or sse
 			var simd = "simd";
@@ -142,8 +148,8 @@ namespace Mosa.Utility.Launcher
 			sb.AppendLine($"cpuid: mmx=1,sep=1,{simd}=sse4_2,apic=xapic,aes=1,movbe=1,xsave=1");
 			sb.AppendLine($"boot: cdrom,disk");
 			sb.AppendLine($"log: {Quote(logfile)}");
-			sb.AppendLine($"romimage: file={Quote(Path.Combine(AppLocations.BOCHSBIOSDirectory, "BIOS-bochs-latest"))}");
-			sb.AppendLine($"vgaromimage: file={Quote(Path.Combine(AppLocations.BOCHSBIOSDirectory, "VGABIOS-lgpl-latest"))}");
+			sb.AppendLine($"romimage: file={Quote(Path.Combine(bochsdirectory, "BIOS-bochs-latest"))}");
+			sb.AppendLine($"vgaromimage: file={Quote(Path.Combine(bochsdirectory, "VGABIOS-lgpl-latest"))}");
 			sb.AppendLine($"display_library: x, options={Quote("gui_debug")}");
 
 			if (imageformat == "ISO")
@@ -166,7 +172,7 @@ namespace Mosa.Utility.Launcher
 
 			File.WriteAllText(configfile, sb.ToString());
 
-			return LaunchApplication(AppLocations.BOCHS, arg, getOutput);
+			return LaunchApplication(bochs, arg, getOutput);
 		}
 
 		private Process LaunchVMwarePlayer(bool getOutput)
@@ -174,6 +180,7 @@ namespace Mosa.Utility.Launcher
 			var destination = Settings.GetValue("Image.Destination", null);
 			var imagefile = Settings.GetValue("Image.ImageFile", null);
 			var sourcefile = Settings.GetValueList("Compiler.SourceFiles")[0];
+			var vmwareplayer = Settings.GetValue("AppLocation.Vmware.Player", null);
 
 			var logfile = Path.Combine(destination, Path.GetFileNameWithoutExtension(sourcefile) + "-vmx.log");
 			var configfile = Path.Combine(destination, Path.GetFileNameWithoutExtension(sourcefile) + ".vmx");
@@ -222,7 +229,7 @@ namespace Mosa.Utility.Launcher
 
 			string arg = Quote(configfile);
 
-			return LaunchApplication(AppLocations.VMwarePlayer, arg, getOutput);
+			return LaunchApplication(vmwareplayer, arg, getOutput);
 		}
 
 		private void LaunchGDBDebugger()
@@ -243,6 +250,7 @@ namespace Mosa.Utility.Launcher
 		{
 			var destination = Settings.GetValue("Image.Destination", null);
 			var sourcefile = Settings.GetValueList("Compiler.SourceFiles")[0];
+			var gdb = Settings.GetValue("AppLocation.GDB", null);
 
 			var gdbscript = Path.Combine(destination, Path.GetFileNameWithoutExtension(sourcefile) + ".gdb");
 
@@ -270,7 +278,7 @@ namespace Mosa.Utility.Launcher
 			AddOutput(sb.ToString());
 			AddOutput("==================");
 
-			LaunchConsoleApplication(AppLocations.GDB, arg);
+			LaunchConsoleApplication(gdb, arg);
 		}
 	}
 }
