@@ -39,6 +39,7 @@
 			this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
 			this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
 			this.odfVMImage = new System.Windows.Forms.OpenFileDialog();
+			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
 			this.toolStrip1.SuspendLayout();
 			this.statusStrip1.SuspendLayout();
 			this.SuspendLayout();
@@ -56,7 +57,7 @@
 			this.dockPanel.DocumentStyle = WeifenLuo.WinFormsUI.Docking.DocumentStyle.DockingWindow;
 			this.dockPanel.Font = new System.Drawing.Font("Tahoma", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.World, ((byte)(0)));
 			this.dockPanel.Location = new System.Drawing.Point(0, 62);
-			this.dockPanel.Margin = new System.Windows.Forms.Padding(7, 7, 7, 7);
+			this.dockPanel.Margin = new System.Windows.Forms.Padding(7);
 			this.dockPanel.Name = "dockPanel";
 			this.dockPanel.RightToLeftLayout = true;
 			this.dockPanel.Size = new System.Drawing.Size(1864, 335);
@@ -64,16 +65,18 @@
 			// 
 			// toolStrip1
 			// 
+			this.toolStrip1.AllowMerge = false;
 			this.toolStrip1.ImageScalingSize = new System.Drawing.Size(36, 36);
 			this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.btnConnect,
             this.toolStripSeparator,
             this.toolStripButton2,
+            this.toolStripSeparator1,
             this.btnViewMemory});
 			this.toolStrip1.Location = new System.Drawing.Point(0, 0);
 			this.toolStrip1.Name = "toolStrip1";
 			this.toolStrip1.Padding = new System.Windows.Forms.Padding(0, 0, 5, 0);
-			this.toolStrip1.Size = new System.Drawing.Size(1864, 56);
+			this.toolStrip1.Size = new System.Drawing.Size(1864, 47);
 			this.toolStrip1.TabIndex = 28;
 			this.toolStrip1.Text = "toolStrip1";
 			// 
@@ -82,21 +85,21 @@
 			this.btnConnect.Image = ((System.Drawing.Image)(resources.GetObject("btnConnect.Image")));
 			this.btnConnect.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.btnConnect.Name = "btnConnect";
-			this.btnConnect.Size = new System.Drawing.Size(203, 50);
+			this.btnConnect.Size = new System.Drawing.Size(203, 41);
 			this.btnConnect.Text = "VM Connect";
 			this.btnConnect.Click += new System.EventHandler(this.btnConnect_Click);
 			// 
 			// toolStripSeparator
 			// 
 			this.toolStripSeparator.Name = "toolStripSeparator";
-			this.toolStripSeparator.Size = new System.Drawing.Size(6, 56);
+			this.toolStripSeparator.Size = new System.Drawing.Size(6, 47);
 			// 
 			// toolStripButton2
 			// 
 			this.toolStripButton2.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton2.Image")));
 			this.toolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.toolStripButton2.Name = "toolStripButton2";
-			this.toolStripButton2.Size = new System.Drawing.Size(226, 50);
+			this.toolStripButton2.Size = new System.Drawing.Size(226, 41);
 			this.toolStripButton2.Text = "App Locations";
 			this.toolStripButton2.Click += new System.EventHandler(this.toolStripButton2_Click);
 			// 
@@ -105,7 +108,7 @@
 			this.btnViewMemory.Image = ((System.Drawing.Image)(resources.GetObject("btnViewMemory.Image")));
 			this.btnViewMemory.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.btnViewMemory.Name = "btnViewMemory";
-			this.btnViewMemory.Size = new System.Drawing.Size(221, 50);
+			this.btnViewMemory.Size = new System.Drawing.Size(221, 41);
 			this.btnViewMemory.Text = "View Memory";
 			this.btnViewMemory.Click += new System.EventHandler(this.btnViewMemory_Click);
 			// 
@@ -138,6 +141,11 @@
 			this.odfVMImage.DefaultExt = "img";
 			this.odfVMImage.Filter = "Image File|*.img|All Files|*.*";
 			// 
+			// toolStripSeparator1
+			// 
+			this.toolStripSeparator1.Name = "toolStripSeparator1";
+			this.toolStripSeparator1.Size = new System.Drawing.Size(6, 47);
+			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(14F, 29F);
@@ -147,7 +155,7 @@
 			this.Controls.Add(this.toolStrip1);
 			this.Controls.Add(this.dockPanel);
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-			this.Margin = new System.Windows.Forms.Padding(7, 7, 7, 7);
+			this.Margin = new System.Windows.Forms.Padding(7);
 			this.Name = "MainForm";
 			this.Text = "Mosa GDB Debugger v1.2";
 			this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
@@ -174,5 +182,6 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
 		private System.Windows.Forms.ToolStripButton toolStripButton2;
 		private System.Windows.Forms.OpenFileDialog odfVMImage;
+		private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
 	}
 }

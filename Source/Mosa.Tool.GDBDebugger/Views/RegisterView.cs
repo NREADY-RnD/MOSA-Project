@@ -63,7 +63,7 @@ namespace Mosa.Tool.GDBDebugger.Views
 			if (Platform.Registers == null)
 				return;
 
-			foreach (var register in MainForm.GDBConnector.Platform.Registers)
+			foreach (var register in Platform.Registers)
 			{
 				registers.Add(new RegisterEntry(register.Name, register.Value, register.ToHex(), register.Size));
 			}

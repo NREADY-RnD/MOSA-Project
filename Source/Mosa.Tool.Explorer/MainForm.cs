@@ -410,11 +410,13 @@ namespace Mosa.Tool.Explorer
 
 			toolStrip1.Enabled = false;
 
-			ThreadPool.QueueUserWorkItem(new WaitCallback(delegate
+			var multithread = CBEnableMultithreading.Checked;
+
+			ThreadPool.QueueUserWorkItem(state =>
 			{
 				try
 				{
-					if (CBEnableMultithreading.Checked)
+					if (multithread)
 						Compiler.ThreadedCompile();
 					else
 						Compiler.Compile();
@@ -423,15 +425,10 @@ namespace Mosa.Tool.Explorer
 				{
 					OnCompileCompleted();
 				}
-			}));
+			});
 		}
 
-		private void OnCompileCompleted()
-		{
-			MethodInvoker call = CompileCompleted;
-
-			Invoke(call);
-		}
+		private void OnCompileCompleted() => Invoke((MethodInvoker)(() => CompileCompleted()));
 
 		private void CompileCompleted()
 		{

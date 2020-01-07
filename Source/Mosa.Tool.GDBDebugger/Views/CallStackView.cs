@@ -77,15 +77,9 @@ namespace Mosa.Tool.GDBDebugger.Views
 			treeView1.Nodes.Add(new CallStackEntry(symbol, ip));
 		}
 
-		private void OnMemoryRead(ulong address, byte[] bytes)
-		{
-			Invoke((MethodInvoker)(() => UpdateDisplay(address, bytes)));
-		}
+		private void OnMemoryRead(ulong address, byte[] bytes) => Invoke((MethodInvoker)(() => UpdateDisplay(address, bytes)));
 
-		private void OnMemoryReadPrologue(ulong address, byte[] bytes)
-		{
-			Invoke((MethodInvoker)(() => UpdateDisplayPrologue(address, bytes)));
-		}
+		private void OnMemoryReadPrologue(ulong address, byte[] bytes) => Invoke((MethodInvoker)(() => UpdateDisplayPrologue(address, bytes)));
 
 		private void UpdateDisplay(ulong address, byte[] memory)
 		{

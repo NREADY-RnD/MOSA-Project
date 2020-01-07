@@ -82,10 +82,7 @@ namespace Mosa.Tool.Launcher
 			AddOutput(info);
 		}
 
-		private void NotifyStatus(string status)
-		{
-			Invoke((MethodInvoker)(() => NewStatus(status)));
-		}
+		private void NotifyStatus(string status) => Invoke((MethodInvoker)(() => NewStatus(status)));
 
 		private void UpdateProgress()
 		{
@@ -193,7 +190,7 @@ namespace Mosa.Tool.Launcher
 
 			tbApplicationLocations.SelectedTab = tabOutput;
 
-			ThreadPool.QueueUserWorkItem(new WaitCallback(delegate
+			ThreadPool.QueueUserWorkItem(state =>
 			{
 				try
 				{
@@ -221,22 +218,12 @@ namespace Mosa.Tool.Launcher
 						OnCompileCompleted();
 					}
 				}
-			}));
+			});
 		}
 
-		private void OnException(string data)
-		{
-			MethodInvoker method = () => AddOutput(data);
+		private void OnException(string data) => Invoke((MethodInvoker)(() => AddOutput(data)));
 
-			Invoke(method);
-		}
-
-		private void OnCompileCompleted()
-		{
-			MethodInvoker method = CompileCompleted;
-
-			Invoke(method);
-		}
+		private void OnCompileCompleted() => Invoke((MethodInvoker)(() => CompileCompleted()));
 
 		private void CompileCompleted()
 		{

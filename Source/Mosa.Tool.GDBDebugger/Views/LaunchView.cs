@@ -84,6 +84,7 @@ namespace Mosa.Tool.GDBDebugger.Views
 		{
 			SearchImages(Path.GetTempPath(), ImageExtensions);
 			SearchImages(Path.Combine(Path.GetTempPath(), "MOSA"), ImageExtensions);
+			SearchImages(Directory.GetCurrentDirectory(), ImageExtensions);
 		}
 
 		private void SearchImages(string directory, List<string> patterns)
@@ -168,7 +169,6 @@ namespace Mosa.Tool.GDBDebugger.Views
 
 		private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
 		{
-
 		}
 
 		private void btnAdd_Click(object sender, EventArgs e)

@@ -38,10 +38,7 @@ namespace Mosa.Tool.GDBDebugger.Views
 			tbMethod.Text = symbol == null ? string.Empty : symbol.CommonName;
 		}
 
-		private void OnMemoryRead(ulong address, byte[] bytes)
-		{
-			Invoke((MethodInvoker)(() => UpdateDisplay(address, bytes)));
-		}
+		private void OnMemoryRead(ulong address, byte[] bytes) => Invoke((MethodInvoker)(() => UpdateDisplay(address, bytes)));
 
 		private void UpdateDisplay(ulong address, byte[] memory)
 		{

@@ -460,7 +460,7 @@ namespace Mosa.Compiler.Framework
 							threadLaunched++;
 						}
 
-						ThreadPool.QueueUserWorkItem((o) =>
+						ThreadPool.QueueUserWorkItem((state) =>
 						{
 							CompileMethod(method, threadID);
 

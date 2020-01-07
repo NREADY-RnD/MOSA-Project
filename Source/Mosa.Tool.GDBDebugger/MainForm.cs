@@ -67,6 +67,11 @@ namespace Mosa.Tool.GDBDebugger
 
 		public BasePlatform Platform { get { return GDBConnector?.Platform; } }
 
+		public ulong InstructionPointer { get { return Platform == null ? 0 : Platform.InstructionPointer.Value; } }
+		public ulong StackFrame { get { return Platform == null ? 0 : Platform.StackFrame.Value; } }
+		public ulong StackPointer { get { return Platform == null ? 0 : Platform.StackPointer.Value; } }
+		public ulong StatusFlag { get { return Platform == null ? 0 : Platform.StatusFlag.Value; } }
+
 		private Process VMProcess;
 
 		public string VMHash;
@@ -162,6 +167,8 @@ namespace Mosa.Tool.GDBDebugger
 			Settings.SetValue("Emulator.Serial.Port", 1250);
 			Settings.SetValue("Emulator.Display", false);
 
+			GDBPort = 1234;
+
 			AppDomain.CurrentDomain.DomainUnload += (s, e) => { KillVMProcess(); };
 			AppDomain.CurrentDomain.ProcessExit += (s, e) => { KillVMProcess(); };
 			AppDomain.CurrentDomain.UnhandledException += (s, e) => { KillVMProcess(); };
@@ -207,29 +214,19 @@ namespace Mosa.Tool.GDBDebugger
 
 			dockPanel.ResumeLayout(true, true);
 
-			CalculateVMHash();
-
 			if (ImageFile != null)
 			{
-				VMProcess = StartQEMU();
+				//VMProcess = StartQEMU();
+
+				//if (LauncherStart)
+				//{
+				//	System.Threading.Thread.Sleep(3000);
+				//	Connect();
+				//}
 			}
-
-			LoadDebugFile();
-
-			if (LauncherStart)
-			{
-				System.Threading.Thread.Sleep(3000);
-				Connect();
-			}
-
-			LoadBreakPoints();
-			LoadWatches();
 		}
 
-		private void NotifyStatus(string status)
-		{
-			Invoke((MethodInvoker)(() => NewStatus(status)));
-		}
+		private void NotifyStatus(string status) => Invoke((MethodInvoker)(() => NewStatus(status)));
 
 		private void NewStatus(string info)
 		{
@@ -245,19 +242,9 @@ namespace Mosa.Tool.GDBDebugger
 			}
 		}
 
-		private void OnPause()
-		{
-			MethodInvoker method = NotifyPause;
+		private void OnPause() => Invoke((MethodInvoker)(() => NotifyPause()));
 
-			BeginInvoke(method);
-		}
-
-		private void OnRunning()
-		{
-			MethodInvoker method = NotifyRunning;
-
-			BeginInvoke(method);
-		}
+		private void OnRunning() => Invoke((MethodInvoker)(() => NotifyRunning()));
 
 		private void NotifyPause()
 		{
@@ -458,13 +445,11 @@ namespace Mosa.Tool.GDBDebugger
 			if (BreakPoints.Count == 0)
 				return;
 
-			var address = Platform.InstructionPointer.Value;
-
 			var temps = new List<BreakPoint>();
 
 			foreach (var breakpoint in BreakPoints)
 			{
-				if (breakpoint.Temporary && breakpoint.Address == address)
+				if (breakpoint.Temporary && breakpoint.Address == InstructionPointer)
 				{
 					temps.Add(breakpoint);
 				}
@@ -590,8 +575,6 @@ namespace Mosa.Tool.GDBDebugger
 
 		public void LaunchImage(string imageFile, string debugFile, string breakpointFile, string watchFile)
 		{
-			KillVMProcess();
-
 			ImageFile = imageFile;
 			ImageFormat = GetFormat(imageFile);
 
@@ -599,11 +582,16 @@ namespace Mosa.Tool.GDBDebugger
 			BreakpointFile = breakpointFile;
 			WatchFile = watchFile;
 
-			GDBPort++;
+			LaunchImage();
+		}
+
+		private void LaunchImage()
+		{
+			KillVMProcess();
 
 			CalculateVMHash();
 
-			VMProcess = StartQEMU();
+			StartQEMU();
 
 			LoadDebugFile();
 
@@ -611,6 +599,8 @@ namespace Mosa.Tool.GDBDebugger
 
 			LoadBreakPoints();
 			LoadWatches();
+
+			displayView.Show();
 		}
 
 		private void KillVMProcess()
@@ -637,13 +627,13 @@ namespace Mosa.Tool.GDBDebugger
 			return compilerHook;
 		}
 
-		private Process StartQEMU()
+		private void StartQEMU()
 		{
 			var compilerHook = CreateCompilerHook();
 
 			var starter = new Starter(Settings, compilerHook, AppLocations);
 
-			return starter.LaunchVM();
+			VMProcess = starter.LaunchVM();
 		}
 
 		private void MainForm_FormClosed(object sender, FormClosedEventArgs e)

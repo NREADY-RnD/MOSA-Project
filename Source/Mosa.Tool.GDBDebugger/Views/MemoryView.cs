@@ -47,10 +47,7 @@ namespace Mosa.Tool.GDBDebugger.Views
 			MemoryCache.ReadMemory(address, bytes, OnMemoryRead);
 		}
 
-		private void OnMemoryRead(ulong address, byte[] bytes)
-		{
-			Invoke((MethodInvoker)(() => UpdateDisplay(address, bytes)));
-		}
+		private void OnMemoryRead(ulong address, byte[] bytes) => Invoke((MethodInvoker)(() => UpdateDisplay(address, bytes)));
 
 		private void UpdateDisplay(ulong address, byte[] memory)
 		{
