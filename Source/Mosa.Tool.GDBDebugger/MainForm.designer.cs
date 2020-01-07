@@ -66,7 +66,6 @@
 			// toolStrip1
 			// 
 			this.toolStrip1.AllowMerge = false;
-			this.toolStrip1.ImageScalingSize = new System.Drawing.Size(36, 36);
 			this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.btnConnect,
             this.toolStripSeparator,
@@ -76,7 +75,7 @@
 			this.toolStrip1.Location = new System.Drawing.Point(0, 0);
 			this.toolStrip1.Name = "toolStrip1";
 			this.toolStrip1.Padding = new System.Windows.Forms.Padding(0, 0, 5, 0);
-			this.toolStrip1.Size = new System.Drawing.Size(1864, 47);
+			this.toolStrip1.Size = new System.Drawing.Size(1864, 25);
 			this.toolStrip1.TabIndex = 28;
 			this.toolStrip1.Text = "toolStrip1";
 			// 
@@ -92,14 +91,14 @@
 			// toolStripSeparator
 			// 
 			this.toolStripSeparator.Name = "toolStripSeparator";
-			this.toolStripSeparator.Size = new System.Drawing.Size(6, 47);
+			this.toolStripSeparator.Size = new System.Drawing.Size(6, 22);
 			// 
 			// toolStripButton2
 			// 
 			this.toolStripButton2.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton2.Image")));
 			this.toolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.toolStripButton2.Name = "toolStripButton2";
-			this.toolStripButton2.Size = new System.Drawing.Size(226, 41);
+			this.toolStripButton2.Size = new System.Drawing.Size(226, 22);
 			this.toolStripButton2.Text = "App Locations";
 			this.toolStripButton2.Click += new System.EventHandler(this.toolStripButton2_Click);
 			// 
@@ -108,7 +107,7 @@
 			this.btnViewMemory.Image = ((System.Drawing.Image)(resources.GetObject("btnViewMemory.Image")));
 			this.btnViewMemory.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.btnViewMemory.Name = "btnViewMemory";
-			this.btnViewMemory.Size = new System.Drawing.Size(221, 41);
+			this.btnViewMemory.Size = new System.Drawing.Size(221, 25);
 			this.btnViewMemory.Text = "View Memory";
 			this.btnViewMemory.Click += new System.EventHandler(this.btnViewMemory_Click);
 			// 
