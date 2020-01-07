@@ -48,25 +48,17 @@ namespace Mosa.Tool.GDBDebugger.Views
 			dataGridView1.Columns[4].Width = 200;
 		}
 
-		public override void OnRunning()
-		{
-			//launchEntries.Clear();
-		}
-
-		public override void OnPause()
-		{
-		}
-
 		private void dataGridView1_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
 		{
-			if (e.Button != MouseButtons.Right)
-				return;
-
 			if (e.RowIndex < 0 || e.ColumnIndex < 0)
 				return;
 
 			dataGridView1.ClearSelection();
 			dataGridView1.Rows[e.RowIndex].Selected = true;
+
+			if (e.Button != MouseButtons.Right)
+				return;
+
 			var relativeMousePosition = dataGridView1.PointToClient(Cursor.Position);
 
 			var clickedEntry = dataGridView1.Rows[e.RowIndex].DataBoundItem as LaunchEntry;
@@ -165,10 +157,6 @@ namespace Mosa.Tool.GDBDebugger.Views
 					launchEntries.RemoveAt(i);
 				}
 			}
-		}
-
-		private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
-		{
 		}
 
 		private void btnAdd_Click(object sender, EventArgs e)

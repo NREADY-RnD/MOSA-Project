@@ -179,7 +179,7 @@ namespace Mosa.Tool.GDBDebugger
 			Text = "MOSA GDB Debugger v" + CompilerVersion.VersionString;
 
 			dockPanel.SuspendLayout(true);
-			dockPanel.DockTopPortion = 75;
+			dockPanel.DockTopPortion = 54;
 
 			controlView.Show(dockPanel, DockState.DockTop);
 			statusView.Show(controlView.PanelPane, DockAlignment.Right, 0.50);
