@@ -34,58 +34,28 @@ namespace Mosa.Utility.Launcher
 
 		private void SetDefaultSettings()
 		{
-			//Settings.SetValue("Compiler.BaseAddress", 0x00400000);
-			//Settings.SetValue("Compiler.Binary", true);
-			//Settings.SetValue("Compiler.MethodScanner", false);
-			//Settings.SetValue("Compiler.Multithreading", true);
-			//Settings.SetValue("Compiler.Platform", "x86");
-			//Settings.SetValue("Compiler.TraceLevel", 10);
-			//Settings.SetValue("Compiler.Multithreading", true);
-			//Settings.SetValue("CompilerDebug.DebugFile", string.Empty);
-			//Settings.SetValue("CompilerDebug.AsmFile", string.Empty);
-			//Settings.SetValue("CompilerDebug.MapFile", string.Empty);
-			//Settings.SetValue("CompilerDebug.NasmFile", string.Empty);
-			//Settings.SetValue("Optimizations.Basic", true);
-			//Settings.SetValue("Optimizations.BitTracker", true);
-			//Settings.SetValue("Optimizations.Inline", true);
-			//Settings.SetValue("Optimizations.Inline.AggressiveMaximum", 24);
-			//Settings.SetValue("Optimizations.Inline.ExplicitOnly", false);
-			//Settings.SetValue("Optimizations.Inline.Maximum", 12);
-			//Settings.SetValue("Optimizations.LongExpansion", true);
-			//Settings.SetValue("Optimizations.LoopInvariantCodeMotion", true);
-			//Settings.SetValue("Optimizations.Platform", true);
-			//Settings.SetValue("Optimizations.SCCP", true);
-			//Settings.SetValue("Optimizations.SSA", true);
-			//Settings.SetValue("Optimizations.TwoPass", true);
-			//Settings.SetValue("Optimizations.ValueNumbering", true);
-			//Settings.SetValue("Image.BootLoader", "syslinux3.72");
-			//Settings.SetValue("Image.Destination", Path.Combine(Path.GetTempPath(), "MOSA"));
-			//Settings.SetValue("Image.Format", "IMG");
-			//Settings.SetValue("Image.FileSystem", "FAT16");
-			//Settings.SetValue("Multiboot.Version", "v1");
-			//Settings.SetValue("Multiboot.Video", false);
-			//Settings.SetValue("Multiboot.Video.Width", 640);
-			//Settings.SetValue("Multiboot.Video.Height", 480);
-			//Settings.SetValue("Multiboot.Video.Depth", 32);
 			Settings.SetValue("Emulator", "Qemu");
 			Settings.SetValue("Emulator.Memory", 128);
 			Settings.SetValue("Emulator.Serial", "TCPServer");
 			Settings.SetValue("Emulator.Serial.Host", "127.0.0.1");
 			Settings.SetValue("Emulator.Serial.Port", 9999);
 			Settings.SetValue("Emulator.Serial.Pipe", "MOSA");
-
-			//Settings.SetValue("Launcher.Start", false);
-			//Settings.SetValue("Launcher.Launch", false);
-			//Settings.SetValue("Launcher.Exit", false);
 			Settings.SetValue("Launcher.Advance.PlugKorlib", true);
 			Settings.SetValue("Launcher.Advance.HuntForCorLib", true);
 		}
 
 		protected void NormalizeSettings()
 		{
-			var sourcefile = LauncherSettings.SourceFiles[0];
-
 			// Normalize inputs
+			LauncherSettings.ImageBootLoader = LauncherSettings.ImageBootLoader == null ? string.Empty : LauncherSettings.ImageBootLoader.ToLower();
+			LauncherSettings.ImageFormat = LauncherSettings.ImageFormat == null ? string.Empty : LauncherSettings.ImageFormat.ToLower();
+			LauncherSettings.FileSystem = LauncherSettings.FileSystem == null ? string.Empty : LauncherSettings.FileSystem.ToLower();
+			LauncherSettings.EmulatorSerial = LauncherSettings.EmulatorSerial == null ? string.Empty : LauncherSettings.EmulatorSerial.ToLower();
+			LauncherSettings.Emulator = LauncherSettings.Emulator == null ? string.Empty : LauncherSettings.Emulator.ToLower();
+			LauncherSettings.Platform = LauncherSettings.Platform.ToLower();
+
+			// Apply defaults
+			var sourcefile = LauncherSettings.SourceFiles[0];
 
 			if (string.IsNullOrEmpty(LauncherSettings.ImageDestination))
 			{
@@ -129,30 +99,7 @@ namespace Mosa.Utility.Launcher
 
 			if (LauncherSettings.ImageFile == "%DEFAULT%")
 			{
-				var vmext = GetImageFileExtension(LauncherSettings.ImageFormat);
-
-				LauncherSettings.ImageFile = Path.Combine(LauncherSettings.ImageDestination, $"{Path.GetFileNameWithoutExtension(sourcefile)}.{vmext}");
-			}
-
-			LauncherSettings.ImageBootLoader = LauncherSettings.ImageBootLoader == null ? string.Empty : LauncherSettings.ImageBootLoader.ToLower();
-			LauncherSettings.ImageFormat = LauncherSettings.ImageFormat == null ? string.Empty : LauncherSettings.ImageFormat.ToLower();
-			LauncherSettings.FileSystem = LauncherSettings.FileSystem == null ? string.Empty : LauncherSettings.FileSystem.ToLower();
-			LauncherSettings.EmulatorSerial = LauncherSettings.EmulatorSerial == null ? string.Empty : LauncherSettings.EmulatorSerial.ToLower();
-			LauncherSettings.Emulator = LauncherSettings.Emulator == null ? string.Empty : LauncherSettings.Emulator.ToLower();
-
-			LauncherSettings.Platform = LauncherSettings.Platform.ToLower();
-		}
-
-		private static string GetImageFileExtension(string imageformat)
-		{
-			switch (imageformat)
-			{
-				case "VHD": return "vhd";
-				case "VDI": return "vdi";
-				case "ISO": return "iso";
-				case "IMG": return "img";
-				case "VMDK": return "vmdk";
-				default: return "img";
+				LauncherSettings.ImageFile = Path.Combine(LauncherSettings.ImageDestination, $"{Path.GetFileNameWithoutExtension(sourcefile)}.{LauncherSettings.ImageFormat}");
 			}
 		}
 

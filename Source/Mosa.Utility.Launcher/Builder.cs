@@ -182,7 +182,7 @@ namespace Mosa.Utility.Launcher
 
 				CreateVMDK(tmpimagefile);
 			}
-			else
+			else if (LauncherSettings.ImageFormat == "img")
 			{
 				CreateDiskImage(LauncherSettings.ImageFile);
 			}
@@ -242,11 +242,11 @@ namespace Mosa.Utility.Launcher
 
 			switch (LauncherSettings.ImageFormat)
 			{
-				case "IMG": bootImageOptions.ImageFormat = ImageFormat.IMG; break;
-				case "ISO": bootImageOptions.ImageFormat = ImageFormat.ISO; break;
-				case "VHD": bootImageOptions.ImageFormat = ImageFormat.VHD; break;
-				case "VDI": bootImageOptions.ImageFormat = ImageFormat.VDI; break;
-				case "VMDK": bootImageOptions.ImageFormat = ImageFormat.VMDK; break;
+				case "img": bootImageOptions.ImageFormat = ImageFormat.IMG; break;
+				case "iso": bootImageOptions.ImageFormat = ImageFormat.ISO; break;
+				case "vhd": bootImageOptions.ImageFormat = ImageFormat.VHD; break;
+				case "vdi": bootImageOptions.ImageFormat = ImageFormat.VDI; break;
+				case "vmdk": bootImageOptions.ImageFormat = ImageFormat.VMDK; break;
 				default: break;
 			}
 
