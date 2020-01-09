@@ -1000,8 +1000,7 @@ namespace Mosa.Tool.Explorer
 			Settings.SetValue("Compiler.Multithreading", true);
 			Settings.SetValue("Compiler.Platform", "x86");
 			Settings.SetValue("Compiler.TraceLevel", 10);
-			Settings.SetValue("Compiler.Multithreading", true);
-			Settings.SetValue("Compiler.Advanced.PlugKorlib", true);
+			Settings.SetValue("Launcher.Advance.PlugKorlib", true);
 			Settings.SetValue("CompilerDebug.DebugFile", string.Empty);
 			Settings.SetValue("CompilerDebug.AsmFile", string.Empty);
 			Settings.SetValue("CompilerDebug.MapFile", string.Empty);

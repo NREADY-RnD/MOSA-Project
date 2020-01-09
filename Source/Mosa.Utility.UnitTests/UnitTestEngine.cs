@@ -95,7 +95,7 @@ namespace Mosa.Utility.UnitTests
 			Settings.SetValue("Compiler.BaseAddress", 0x00500000);
 			Settings.SetValue("Compiler.Binary", true);
 			Settings.SetValue("Compiler.TraceLevel", 0);
-			Settings.SetValue("Compiler.Advanced.PlugKorlib", true);
+			Settings.SetValue("Launcher.Advance.PlugKorlib", true);
 			Settings.SetValue("Multiboot.Version", "v1");
 			Settings.SetValue("Emulator", "Qemu");
 			Settings.SetValue("Emulator.Memory", 128);

@@ -11,21 +11,23 @@ namespace Mosa.Utility.Launcher
 {
 	public class BaseLauncher
 	{
-		public Settings Settings { get; }
-
 		public CompilerHook CompilerHook { get; }
 
 		public List<string> Log { get; }
+
+		public LauncherSettings LauncherSettings { get; }
+
+		public Settings Settings { get { return LauncherSettings.Settings; } }
 
 		public BaseLauncher(Settings settings, CompilerHook compilerHook)
 		{
 			CompilerHook = compilerHook;
 
-			Settings = new Settings();
+			LauncherSettings = new LauncherSettings(settings);
 
 			SetDefaultSettings();
 
-			Settings.Merge(settings);
+			NormalizeSettings();
 
 			Log = new List<string>();
 		}
@@ -39,7 +41,6 @@ namespace Mosa.Utility.Launcher
 			//Settings.SetValue("Compiler.Platform", "x86");
 			//Settings.SetValue("Compiler.TraceLevel", 10);
 			//Settings.SetValue("Compiler.Multithreading", true);
-			//Settings.SetValue("Compiler.Advanced.PlugKorlib", true);
 			//Settings.SetValue("CompilerDebug.DebugFile", string.Empty);
 			//Settings.SetValue("CompilerDebug.AsmFile", string.Empty);
 			//Settings.SetValue("CompilerDebug.MapFile", string.Empty);
@@ -76,10 +77,86 @@ namespace Mosa.Utility.Launcher
 			//Settings.SetValue("Launcher.Start", false);
 			//Settings.SetValue("Launcher.Launch", false);
 			//Settings.SetValue("Launcher.Exit", false);
-			//Settings.SetValue("Launcher.Advance.HuntForCorLib", true);
+			Settings.SetValue("Launcher.Advance.PlugKorlib", true);
+			Settings.SetValue("Launcher.Advance.HuntForCorLib", true);
 		}
 
-		public void AddOutput(string status)
+		protected void NormalizeSettings()
+		{
+			var sourcefile = LauncherSettings.SourceFiles[0];
+
+			// Normalize inputs
+
+			if (string.IsNullOrEmpty(LauncherSettings.ImageDestination))
+			{
+				LauncherSettings.ImageDestination = Path.Combine(Path.GetTempPath(), "MOSA");
+			}
+
+			if (LauncherSettings.OutputFile == null || LauncherSettings.OutputFile == "%DEFAULT%")
+			{
+				LauncherSettings.OutputFile = Path.Combine(LauncherSettings.ImageDestination, $"{Path.GetFileNameWithoutExtension(sourcefile)}.bin");
+			}
+
+			if (LauncherSettings.MapFile == "%DEFAULT%")
+			{
+				LauncherSettings.MapFile = Path.Combine(LauncherSettings.ImageDestination, $"{Path.GetFileNameWithoutExtension(sourcefile)}-map.txt");
+			}
+
+			if (LauncherSettings.CompileTimeFile == "%DEFAULT%")
+			{
+				LauncherSettings.CompileTimeFile = Path.Combine(LauncherSettings.ImageDestination, $"{Path.GetFileNameWithoutExtension(sourcefile)}-time.txt");
+			}
+
+			if (LauncherSettings.DebugFile == "%DEFAULT%")
+			{
+				LauncherSettings.DebugFile = Path.Combine(LauncherSettings.ImageDestination, $"{Path.GetFileNameWithoutExtension(sourcefile)}.debug");
+			}
+
+			if (LauncherSettings.InlinedFile == "%DEFAULT%")
+			{
+				LauncherSettings.InlinedFile = Path.Combine(LauncherSettings.ImageDestination, $"{Path.GetFileNameWithoutExtension(sourcefile)}-inlined.txt");
+			}
+
+			if (LauncherSettings.PreLinkHashFile == "%DEFAULT%")
+			{
+				LauncherSettings.PreLinkHashFile = Path.Combine(LauncherSettings.ImageDestination, $"{Path.GetFileNameWithoutExtension(sourcefile)}-prelink-hash.txt");
+			}
+
+			if (LauncherSettings.PostLinkHashFile == "%DEFAULT%")
+			{
+				LauncherSettings.PostLinkHashFile = Path.Combine(LauncherSettings.ImageDestination, $"{Path.GetFileNameWithoutExtension(sourcefile)}-postlink-hash.txt");
+			}
+
+			if (LauncherSettings.ImageFile == "%DEFAULT%")
+			{
+				var vmext = GetImageFileExtension(LauncherSettings.ImageFormat);
+
+				LauncherSettings.ImageFile = Path.Combine(LauncherSettings.ImageDestination, $"{Path.GetFileNameWithoutExtension(sourcefile)}.{vmext}");
+			}
+
+			LauncherSettings.ImageBootLoader = LauncherSettings.ImageBootLoader == null ? string.Empty : LauncherSettings.ImageBootLoader.ToLower();
+			LauncherSettings.ImageFormat = LauncherSettings.ImageFormat == null ? string.Empty : LauncherSettings.ImageFormat.ToLower();
+			LauncherSettings.FileSystem = LauncherSettings.FileSystem == null ? string.Empty : LauncherSettings.FileSystem.ToLower();
+			LauncherSettings.EmulatorSerial = LauncherSettings.EmulatorSerial == null ? string.Empty : LauncherSettings.EmulatorSerial.ToLower();
+			LauncherSettings.Emulator = LauncherSettings.Emulator == null ? string.Empty : LauncherSettings.Emulator.ToLower();
+
+			LauncherSettings.Platform = LauncherSettings.Platform.ToLower();
+		}
+
+		private static string GetImageFileExtension(string imageformat)
+		{
+			switch (imageformat)
+			{
+				case "VHD": return "vhd";
+				case "VDI": return "vdi";
+				case "ISO": return "iso";
+				case "IMG": return "img";
+				case "VMDK": return "vmdk";
+				default: return "img";
+			}
+		}
+
+		protected void AddOutput(string status)
 		{
 			if (status == null)
 				return;

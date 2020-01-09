@@ -45,7 +45,7 @@ namespace Mosa.Workspace.Experiment.Debug
 			settings.SetValue("Compiler.BaseAddress", 0x00500000);
 			settings.SetValue("Compiler.Binary", true);
 			settings.SetValue("Compiler.TraceLevel", 0);
-			settings.SetValue("Compiler.Advanced.PlugKorlib", true);
+			settings.SetValue("Launcher.Advance.PlugKorlib", true);
 			settings.SetValue("Multiboot.Version", "v1");
 			settings.SetValue("Emulator", "Qemu");
 			settings.SetValue("Emulator.Memory", 128);

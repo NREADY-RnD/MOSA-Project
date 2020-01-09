@@ -47,7 +47,7 @@ namespace Mosa.Tool.GDBDebugger.Views
 			this.dataGridView1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
 			this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
 			this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.dataGridView1.Location = new System.Drawing.Point(0, 49);
+			this.dataGridView1.Location = new System.Drawing.Point(0, 288);
 			this.dataGridView1.Margin = new System.Windows.Forms.Padding(0);
 			this.dataGridView1.MultiSelect = false;
 			this.dataGridView1.Name = "dataGridView1";
@@ -58,7 +58,7 @@ namespace Mosa.Tool.GDBDebugger.Views
 			this.dataGridView1.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Consolas", 8F);
 			this.dataGridView1.RowTemplate.Height = 18;
 			this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-			this.dataGridView1.Size = new System.Drawing.Size(1319, 320);
+			this.dataGridView1.Size = new System.Drawing.Size(2968, 542);
 			this.dataGridView1.TabIndex = 5;
 			this.dataGridView1.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridView1_CellMouseClick);
 			this.dataGridView1.CellMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridView1_CellMouseDoubleClick);
@@ -72,7 +72,7 @@ namespace Mosa.Tool.GDBDebugger.Views
             this.btnAdd});
 			this.toolStrip1.Location = new System.Drawing.Point(0, 2);
 			this.toolStrip1.Name = "toolStrip1";
-			this.toolStrip1.Size = new System.Drawing.Size(1319, 47);
+			this.toolStrip1.Size = new System.Drawing.Size(2968, 126);
 			this.toolStrip1.TabIndex = 4;
 			this.toolStrip1.Text = "toolStrip1";
 			// 

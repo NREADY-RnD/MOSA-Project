@@ -50,180 +50,42 @@ namespace Mosa.Utility.Launcher
 			}
 		}
 
-		public void AddCounters(string data)
-		{
-			if (data == null)
-				return;
-
-			Counters.Add(data);
-		}
-
 		public void Build()
 		{
 			Log.Clear();
 			Counters.Clear();
 			HasCompileError = true;
 
-			var sourcefile = Settings.GetValueList("Compiler.SourceFiles")[0];
-			var destination = Settings.GetValue("Image.Destination", null);
-			var output = Settings.GetValue("Compiler.OutputFile", null);
-			var imagefile = Settings.GetValue("Image.ImageFile", null);
-			var imageformat = Settings.GetValue("Image.Format", string.Empty).ToUpper();
-			var bootloader = Settings.GetValue("Image.BootLoader", string.Empty).ToLower();
+			CompileStartTime = DateTime.Now;
 
 			try
 			{
-				CompileStartTime = DateTime.Now;
-
-				if (string.IsNullOrEmpty(destination))
+				if (!Directory.Exists(LauncherSettings.ImageDestination))
 				{
-					destination = Path.Combine(Path.GetTempPath(), "MOSA");
-					Settings.SetValue("Image.Destination", destination);
+					Directory.CreateDirectory(LauncherSettings.ImageDestination);
 				}
 
-				if (output == null || output == "%DEFAULT%")
-				{
-					Settings.SetValue("Compiler.OutputFile", Path.Combine(destination, $"{Path.GetFileNameWithoutExtension(sourcefile)}.bin"));
-				}
-
-				if (Settings.GetValue("CompilerDebug.MapFile", string.Empty) == "%DEFAULT%")
-				{
-					Settings.SetValue("CompilerDebug.MapFile", Path.Combine(destination, $"{Path.GetFileNameWithoutExtension(sourcefile)}-map.txt"));
-				}
-
-				if (Settings.GetValue("CompilerDebug.CompileTimeFile", string.Empty) == "%DEFAULT%")
-				{
-					Settings.SetValue("CompilerDebug.CompileTimeFile", Path.Combine(destination, $"{Path.GetFileNameWithoutExtension(sourcefile)}-time.txt"));
-				}
-
-				if (Settings.GetValue("CompilerDebug.DebugFile", string.Empty) == "%DEFAULT%")
-				{
-					Settings.SetValue("CompilerDebug.DebugFile", Path.Combine(destination, $"{Path.GetFileNameWithoutExtension(sourcefile)}.debug"));
-				}
-
-				if (Settings.GetValue("CompilerDebug.InlinedFile", string.Empty) == "%DEFAULT%")
-				{
-					Settings.SetValue("CompilerDebug.InlinedFile", Path.Combine(destination, $"{Path.GetFileNameWithoutExtension(sourcefile)}-inlined.txt"));
-				}
-
-				if (Settings.GetValue("CompilerDebug.PrelinkHashFile", string.Empty) == "%DEFAULT%")
-				{
-					Settings.SetValue("CompilerDebug.PrelinkHashFile", Path.Combine(destination, $"{Path.GetFileNameWithoutExtension(sourcefile)}-prelink-hash.txt"));
-				}
-
-				if (Settings.GetValue("CompilerDebug.PostlinkHashFile", string.Empty) == "%DEFAULT%")
-				{
-					Settings.SetValue("CompilerDebug.PostlinkHashFile", Path.Combine(destination, $"{Path.GetFileNameWithoutExtension(sourcefile)}-postlink-hash.txt"));
-				}
-
-				if (imagefile == null || imagefile == "%DEFAULT")
-				{
-					var vmext = GetImageFileExtension(imageformat);
-					imagefile = Path.Combine(destination, $"{Path.GetFileNameWithoutExtension(sourcefile)}.{vmext}");
-					Settings.SetValue("Image.ImageFile", imagefile);
-				}
-
-				if (!Directory.Exists(destination))
-				{
-					Directory.CreateDirectory(destination);
-				}
-
-				if (string.IsNullOrEmpty(sourcefile))
+				if (string.IsNullOrEmpty(LauncherSettings.SourceFiles[0]))
 				{
 					AddOutput("Please select a source file");
 					return;
 				}
-				else if (!File.Exists(sourcefile))
+				else if (!File.Exists(LauncherSettings.SourceFiles[0]))
 				{
-					AddOutput($"File {sourcefile} does not exists");
+					AddOutput($"File {LauncherSettings.SourceFiles[0]} does not exists");
 					return;
 				}
 
-				var fileHunter = new FileHunter(Path.GetDirectoryName(sourcefile));
+				Compile();
 
-				if (Settings.GetValue("Launcher.Advance.HuntForCorLib", false))
-				{
-					var fileCorlib = fileHunter.HuntFile("mscorlib.dll");
+				BuildImage();
 
-					if (fileCorlib != null)
-					{
-						Settings.AddPropertyListValue("Compiler.SourceFiles", fileCorlib.FullName);
-					}
-				}
-
-				if (Settings.GetValue("Compiler.Advanced.PlugKorlib", false))
-				{
-					var fileKorlib = fileHunter.HuntFile("Mosa.Plug.Korlib.dll");
-
-					if (fileKorlib != null)
-					{
-						Settings.AddPropertyListValue("Compiler.SourceFiles", fileKorlib.FullName);
-					}
-
-					string platform = Settings.GetValue("Compiler.Platform", string.Empty).ToLower();
-
-					if (platform == "armv8a32")
-						platform = "ARMv8A32";
-
-					var fileKorlibPlatform = fileHunter.HuntFile($"Mosa.Plug.Korlib.{platform}.dll");
-
-					if (fileKorlibPlatform != null)
-					{
-						Settings.AddPropertyListValue("Compiler.SourceFiles", fileKorlibPlatform.FullName);
-					}
-				}
-
-				var compiler = new MosaCompiler(Settings, CompilerHook);
-
-				compiler.Load();
-				compiler.Initialize();
-				compiler.Setup();
-
-				if (Settings.GetValue("Compiler.Multithreading", false))
-				{
-					compiler.ThreadedCompile();
-				}
-				else
-				{
-					compiler.Compile();
-				}
-
-				Linker = compiler.Linker;
-				TypeSystem = compiler.TypeSystem;
-
-				if (imageformat == "ISO")
-				{
-					if (bootloader == "grub0.97" || bootloader == "grub2.00")
-					{
-						CreateISOImageWithGrub();
-					}
-					else // assuming syslinux
-					{
-						CreateISOImageWithSyslinux();
-					}
-				}
-				else
-				{
-					if (imageformat == "VMDK")
-					{
-						var tmpimagefile = Path.Combine(destination, $"{Path.GetFileNameWithoutExtension(sourcefile)}.img");
-
-						CreateDiskImage(tmpimagefile);
-
-						CreateVMDK(tmpimagefile);
-					}
-					else
-					{
-						CreateDiskImage(imagefile);
-					}
-				}
-
-				if (!string.IsNullOrWhiteSpace(Settings.GetValue("CompilerDebug.NasmFile", string.Empty)))
+				if (!string.IsNullOrWhiteSpace(LauncherSettings.NasmFile))
 				{
 					LaunchNDISASM();
 				}
 
-				if (!string.IsNullOrWhiteSpace(Settings.GetValue("CompilerDebug.AsmFile", string.Empty)))
+				if (!string.IsNullOrWhiteSpace(LauncherSettings.AsmFile))
 				{
 					GenerateASMFile();
 				}
@@ -233,6 +95,7 @@ namespace Mosa.Utility.Launcher
 			catch (Exception e)
 			{
 				HasCompileError = true;
+				AddOutput("An internal error has occured:");
 				AddOutput(e.ToString());
 			}
 			finally
@@ -241,15 +104,103 @@ namespace Mosa.Utility.Launcher
 			}
 		}
 
+		private void Compile()
+		{
+			var fileHunter = new FileHunter(Path.GetDirectoryName(LauncherSettings.SourceFiles[0]));
+
+			if (LauncherSettings.HuntForCorLib)
+			{
+				var fileCorlib = fileHunter.HuntFile("mscorlib.dll");
+
+				if (fileCorlib != null)
+				{
+					Settings.AddPropertyListValue("Compiler.SourceFiles", fileCorlib.FullName);
+				}
+			}
+
+			if (LauncherSettings.PlugKorlib)
+			{
+				var fileKorlib = fileHunter.HuntFile("Mosa.Plug.Korlib.dll");
+
+				if (fileKorlib != null)
+				{
+					Settings.AddPropertyListValue("Compiler.SourceFiles", fileKorlib.FullName);
+				}
+
+				var platform = LauncherSettings.Platform;
+
+				if (platform == "armv8a32")
+				{
+					platform = "ARMv8A32";
+				}
+
+				var fileKorlibPlatform = fileHunter.HuntFile($"Mosa.Plug.Korlib.{platform}.dll");
+
+				if (fileKorlibPlatform != null)
+				{
+					Settings.AddPropertyListValue("Compiler.SourceFiles", fileKorlibPlatform.FullName);
+				}
+			}
+
+			var compiler = new MosaCompiler(Settings, CompilerHook);
+
+			compiler.Load();
+			compiler.Initialize();
+			compiler.Setup();
+
+			if (LauncherSettings.Multithreading)
+			{
+				compiler.ThreadedCompile();
+			}
+			else
+			{
+				compiler.Compile();
+			}
+
+			Linker = compiler.Linker;
+			TypeSystem = compiler.TypeSystem;
+		}
+
+		private void BuildImage()
+		{
+			if (LauncherSettings.ImageFormat == "iso")
+			{
+				if (LauncherSettings.ImageBootLoader == "grub0.97" || LauncherSettings.ImageBootLoader == "grub2.00")
+				{
+					CreateISOImageWithGrub();
+				}
+				else // assuming syslinux
+				{
+					CreateISOImageWithSyslinux();
+				}
+			}
+			else if (LauncherSettings.ImageFormat == "vmdk")
+			{
+				var tmpimagefile = Path.Combine(LauncherSettings.ImageDestination, $"{Path.GetFileNameWithoutExtension(LauncherSettings.SourceFiles[0])}.img");
+
+				CreateDiskImage(tmpimagefile);
+
+				CreateVMDK(tmpimagefile);
+			}
+			else
+			{
+				CreateDiskImage(LauncherSettings.ImageFile);
+			}
+		}
+
+		private void AddCounters(string data)
+		{
+			if (data == null)
+				return;
+
+			Counters.Add(data);
+		}
+
 		private void CreateDiskImage(string imagefile)
 		{
 			var bootImageOptions = new BootImageOptions();
-			var output = Settings.GetValue("Compiler.OutputFile", null);
-			var bootloader = Settings.GetValue("Image.BootLoader", string.Empty).ToLower();
-			var imageformat = Settings.GetValue("Image.Format", string.Empty).ToUpper();
-			var filesystem = Settings.GetValue("Image.FileSystem", string.Empty).ToLower();
 
-			if (bootloader == "syslinux6.03")
+			if (LauncherSettings.ImageBootLoader == "syslinux6.03")
 			{
 				bootImageOptions.MBRCode = GetResource(@"syslinux\6.03", "mbr.bin");
 				bootImageOptions.FatBootCode = GetResource(@"syslinux\6.03", "ldlinux.bin");
@@ -257,7 +208,7 @@ namespace Mosa.Utility.Launcher
 				bootImageOptions.IncludeFiles.Add(new IncludeFile("ldlinux.sys", GetResource(@"syslinux\6.03", "ldlinux.sys")));
 				bootImageOptions.IncludeFiles.Add(new IncludeFile("mboot.c32", GetResource(@"syslinux\6.03", "mboot.c32")));
 			}
-			else if (bootloader == "syslinux3.72")
+			else if (LauncherSettings.ImageBootLoader == "syslinux3.72")
 			{
 				bootImageOptions.MBRCode = GetResource(@"syslinux\3.72", "mbr.bin");
 				bootImageOptions.FatBootCode = GetResource(@"syslinux\3.72", "ldlinux.bin");
@@ -267,7 +218,7 @@ namespace Mosa.Utility.Launcher
 			}
 
 			bootImageOptions.IncludeFiles.Add(new IncludeFile("syslinux.cfg", GetResource("syslinux", "syslinux.cfg")));
-			bootImageOptions.IncludeFiles.Add(new IncludeFile(output, "main.exe"));
+			bootImageOptions.IncludeFiles.Add(new IncludeFile(LauncherSettings.OutputFile, "main.exe"));
 
 			bootImageOptions.IncludeFiles.Add(new IncludeFile("TEST.TXT", Encoding.ASCII.GetBytes("This is a test file.")));
 
@@ -280,7 +231,7 @@ namespace Mosa.Utility.Launcher
 			bootImageOptions.PatchSyslinuxOption = true;
 			bootImageOptions.DiskImageFileName = imagefile;
 
-			switch (bootloader)
+			switch (LauncherSettings.ImageBootLoader)
 			{
 				case "syslinux3.72": bootImageOptions.BootLoader = BootLoader.Syslinux_3_72; break;
 				case "syslinux6.03": bootImageOptions.BootLoader = BootLoader.Syslinux_6_03; break;
@@ -289,7 +240,7 @@ namespace Mosa.Utility.Launcher
 				default: break;
 			}
 
-			switch (imageformat)
+			switch (LauncherSettings.ImageFormat)
 			{
 				case "IMG": bootImageOptions.ImageFormat = ImageFormat.IMG; break;
 				case "ISO": bootImageOptions.ImageFormat = ImageFormat.ISO; break;
@@ -299,7 +250,7 @@ namespace Mosa.Utility.Launcher
 				default: break;
 			}
 
-			switch (filesystem)
+			switch (LauncherSettings.FileSystem)
 			{
 				case "fat12": bootImageOptions.FileSystem = BootImage.FileSystem.FAT12; break;
 				case "fat16": bootImageOptions.FileSystem = BootImage.FileSystem.FAT16; break;
@@ -310,19 +261,6 @@ namespace Mosa.Utility.Launcher
 			Generator.Create(bootImageOptions);
 		}
 
-		private static string GetImageFileExtension(string imageformat)
-		{
-			switch (imageformat.ToUpper())
-			{
-				case "VHD": return "vhd";
-				case "VDI": return "vdi";
-				case "ISO": return "iso";
-				case "IMG": return "img";
-				case "VMDK": return "vmdk";
-				default: return "img";
-			}
-		}
-
 		private void CreateDiskImageV2(string compiledFile)
 		{
 			var SectorSize = 512;
@@ -330,19 +268,13 @@ namespace Mosa.Utility.Launcher
 			byte[] mbr = null;
 			byte[] fatBootCode = null;
 
-			var destination = Settings.GetValue("Image.Destination", null);
-			var sourcefile = Settings.GetValueList("Compiler.SourceFiles")[0];
-			var imagefile = Settings.GetValue("Image.ImageFile", null);
-
-			if (File.Exists(imagefile))
+			if (File.Exists(LauncherSettings.ImageFile))
 			{
-				File.Delete(imagefile);
+				File.Delete(LauncherSettings.ImageFile);
 			}
 
-			var bootloader = Settings.GetValue("Image.BootLoader", string.Empty).ToLower();
-
 			// Get Files
-			if (bootloader == "syslinux6.03")
+			if (LauncherSettings.ImageBootLoader == "syslinux6.03")
 			{
 				mbr = GetResource(@"syslinux\6.03", "mbr.bin");
 				fatBootCode = GetResource(@"syslinux\6.03", "ldlinux.bin");
@@ -350,7 +282,7 @@ namespace Mosa.Utility.Launcher
 				files.Add(new IncludeFile("ldlinux.sys", GetResource(@"syslinux\6.03", "ldlinux.sys")));
 				files.Add(new IncludeFile("mboot.c32", GetResource(@"syslinux\6.03", "mboot.c32")));
 			}
-			else if (bootloader == "syslinux3.72")
+			else if (LauncherSettings.ImageBootLoader == "syslinux3.72")
 			{
 				mbr = GetResource(@"syslinux\3.72", "mbr.bin");
 				fatBootCode = GetResource(@"syslinux\3.72", "ldlinux.bin");
@@ -412,19 +344,13 @@ namespace Mosa.Utility.Launcher
 					partition.Close();
 				}
 
-				imageStream.WriteTo(File.Create(imagefile));
+				imageStream.WriteTo(File.Create(LauncherSettings.ImageFile));
 			}
 		}
 
 		private void CreateISOImageWithSyslinux()
 		{
-			var destination = Settings.GetValue("Image.Destination", null);
-			var imagefile = Settings.GetValue("Image.ImageFile", null);
-			var output = Settings.GetValue("Compiler.OutputFile", null);
-			var mkisofs = Settings.GetValue("AppLocation.mkisofs", null);
-
-			string isoDirectory = Path.Combine(destination, "iso");
-			var sourcefile = Settings.GetValueList("Compiler.SourceFiles")[0];
+			string isoDirectory = Path.Combine(LauncherSettings.ImageDestination, "iso");
 
 			if (Directory.Exists(isoDirectory))
 			{
@@ -433,16 +359,14 @@ namespace Mosa.Utility.Launcher
 
 			Directory.CreateDirectory(isoDirectory);
 
-			var bootloader = Settings.GetValue("Image.BootLoader", string.Empty).ToLower();
-
-			if (bootloader == "syslinux6.03")
+			if (LauncherSettings.ImageBootLoader == "syslinux6.03")
 			{
 				File.WriteAllBytes(Path.Combine(isoDirectory, "isolinux.bin"), GetResource(@"syslinux\6.03", "isolinux.bin"));
 				File.WriteAllBytes(Path.Combine(isoDirectory, "mboot.c32"), GetResource(@"syslinux\6.03", "mboot.c32"));
 				File.WriteAllBytes(Path.Combine(isoDirectory, "ldlinux.c32"), GetResource(@"syslinux\6.03", "ldlinux.c32"));
 				File.WriteAllBytes(Path.Combine(isoDirectory, "libcom32.c32"), GetResource(@"syslinux\6.03", "libcom32.c32"));
 			}
-			else if (bootloader == "Syslinux3.72")
+			else if (LauncherSettings.ImageBootLoader == "Syslinux3.72")
 			{
 				File.WriteAllBytes(Path.Combine(isoDirectory, "isolinux.bin"), GetResource(@"syslinux\3.72", "isolinux.bin"));
 				File.WriteAllBytes(Path.Combine(isoDirectory, "mboot.c32"), GetResource(@"syslinux\3.72", "mboot.c32"));
@@ -455,21 +379,16 @@ namespace Mosa.Utility.Launcher
 				File.WriteAllBytes(Path.Combine(isoDirectory, include.Filename), include.Content);
 			}
 
-			File.Copy(output, Path.Combine(isoDirectory, "main.exe"));
+			File.Copy(LauncherSettings.OutputFile, Path.Combine(isoDirectory, "main.exe"));
 
-			string arg = $"-relaxed-filenames -J -R -o {Quote(imagefile)} -b isolinux.bin -no-emul-boot -boot-load-size 4 -boot-info-table {Quote(isoDirectory)}";
+			string arg = $"-relaxed-filenames -J -R -o {Quote(LauncherSettings.ImageFile)} -b isolinux.bin -no-emul-boot -boot-load-size 4 -boot-info-table {Quote(isoDirectory)}";
 
-			LaunchApplication(mkisofs, arg, true);
+			LaunchApplication(LauncherSettings.Mkisofs, arg, true);
 		}
 
 		private void CreateISOImageWithGrub()
 		{
-			var destination = Settings.GetValue("Image.Destination", null);
-			var output = Settings.GetValue("Compiler.OutputFile", null);
-			var imagefile = Settings.GetValue("Image.ImageFile", null);
-			var mkisofs = Settings.GetValue("AppLocation.mkisofs", null);
-
-			string isoDirectory = Path.Combine(destination, "iso");
+			string isoDirectory = Path.Combine(LauncherSettings.ImageDestination, "iso");
 
 			if (Directory.Exists(isoDirectory))
 			{
@@ -483,15 +402,13 @@ namespace Mosa.Utility.Launcher
 
 			string loader = string.Empty;
 
-			var bootloader = Settings.GetValue("Image.BootLoader", string.Empty).ToLower();
-
-			if (bootloader == "grub0.97")
+			if (LauncherSettings.ImageBootLoader == "grub0.97")
 			{
 				loader = "boot/grub/stage2_eltorito";
 				File.WriteAllBytes(Path.Combine(isoDirectory, "boot", "grub", "stage2_eltorito"), GetResource(@"grub\0.97", "stage2_eltorito"));
 				File.WriteAllBytes(Path.Combine(isoDirectory, "boot", "grub", "menu.lst"), GetResource(@"grub\0.97", "menu.lst"));
 			}
-			else if (bootloader == "grub2.00")
+			else if (LauncherSettings.ImageBootLoader == "grub2.00")
 			{
 				loader = "boot/grub/i386-pc/eltorito.img";
 				File.WriteAllBytes(Path.Combine(isoDirectory, "boot", "grub", "grub.cfg"), GetResource(@"grub\2.00", "grub.cfg"));
@@ -511,41 +428,31 @@ namespace Mosa.Utility.Launcher
 				File.WriteAllBytes(Path.Combine(isoDirectory, include.Filename), include.Content);
 			}
 
-			File.Copy(output, Path.Combine(isoDirectory, "boot", "main.exe"));
+			File.Copy(LauncherSettings.OutputFile, Path.Combine(isoDirectory, "boot", "main.exe"));
 
-			string arg = $"-relaxed-filenames -J -R -o {Quote(imagefile)} -b {Quote(loader)} -no-emul-boot -boot-load-size 4 -boot-info-table {Quote(isoDirectory)}";
+			string arg = $"-relaxed-filenames -J -R -o {Quote(LauncherSettings.ImageFile)} -b {Quote(loader)} -no-emul-boot -boot-load-size 4 -boot-info-table {Quote(isoDirectory)}";
 
-			LaunchApplication(mkisofs, arg, true);
+			LaunchApplication(LauncherSettings.Mkisofs, arg, true);
 		}
 
 		private void CreateVMDK(string source)
 		{
-			var imagefile = Settings.GetValue("Image.ImageFile", null);
-			var qemuimg = Settings.GetValue("AppLocation.QemuImg", null);
+			string arg = $"convert -f raw -O vmdk {Quote(source)} {Quote(LauncherSettings.ImageFile)}";
 
-			string arg = $"convert -f raw -O vmdk {Quote(source)} {Quote(imagefile)}";
-
-			LaunchApplication(qemuimg, arg, true);
+			LaunchApplication(LauncherSettings.QemuImg, arg, true);
 		}
 
 		private void LaunchNDISASM()
 		{
-			var destination = Settings.GetValue("Image.Destination", null);
-			var sourcefile = Settings.GetValueList("Compiler.SourceFiles")[0];
-			var imagefile = Settings.GetValue("Image.ImageFile", null);
-			var output = Settings.GetValue("Compiler.OutputFile", null);
-			var baseaddress = Settings.GetValue("Compiler.BaseAddress", 0x00400000);
-			var ndisasm = Settings.GetValue("AppLocation.ndisasm", null);
-
 			//var textSection = Linker.Sections[(int)SectionKind.Text];
-			var startingAddress = baseaddress + MultibootHeaderLength;
+			var startingAddress = LauncherSettings.BaseAddress + MultibootHeaderLength;
 			var fileOffset = Linker.BaseFileOffset + MultibootHeaderLength;
 
-			string arg = $"-b 32 -o0x{startingAddress.ToString("x")} -e0x{fileOffset.ToString("x")} {Quote(output)}";
+			string arg = $"-b 32 -o0x{startingAddress.ToString("x")} -e0x{fileOffset.ToString("x")} {Quote(LauncherSettings.OutputFile)}";
 
-			var nasmfile = Path.Combine(destination, $"{Path.GetFileNameWithoutExtension(sourcefile)}.nasm");
+			var nasmfile = Path.Combine(LauncherSettings.ImageDestination, $"{Path.GetFileNameWithoutExtension(LauncherSettings.SourceFiles[0])}.nasm");
 
-			var process = LaunchApplication(ndisasm, arg);
+			var process = LaunchApplication(LauncherSettings.Ndisasm, arg);
 
 			var processoutput = GetOutput(process);
 
@@ -554,19 +461,13 @@ namespace Mosa.Utility.Launcher
 
 		private void GenerateASMFile()
 		{
-			var destination = Settings.GetValue("Image.Destination", null);
-			var sourcefile = Settings.GetValueList("Compiler.SourceFiles")[0];
-			var imagefile = Settings.GetValue("Image.ImageFile", null);
-			var output = Settings.GetValue("Compiler.OutputFile", null);
-			var baseaddress = Settings.GetValue("Compiler.BaseAddress", 0x00400000);
-
 			var translator = new IntelTranslator()
 			{
 				IncludeAddress = true,
 				IncludeBinary = true
 			};
 
-			var asmfile = Path.Combine(destination, Path.GetFileNameWithoutExtension(sourcefile) + ".asm");
+			var asmfile = Path.Combine(LauncherSettings.ImageDestination, Path.GetFileNameWithoutExtension(LauncherSettings.SourceFiles[0]) + ".asm");
 
 			var map = new Dictionary<ulong, List<string>>();
 
@@ -586,7 +487,7 @@ namespace Mosa.Utility.Launcher
 			var fileOffset = Linker.BaseFileOffset + MultibootHeaderLength;
 			var length = textSection.Size;
 
-			var code2 = File.ReadAllBytes(output);
+			var code2 = File.ReadAllBytes(LauncherSettings.OutputFile);
 
 			var code = new byte[code2.Length];
 
@@ -597,7 +498,7 @@ namespace Mosa.Utility.Launcher
 
 			var mode = ArchitectureMode.x86_32;
 
-			switch (Settings.GetValue("Compiler.Platform", string.Empty).ToLower())
+			switch (LauncherSettings.Platform)
 			{
 				case "x86": mode = ArchitectureMode.x86_32; break;
 				case "x64": mode = ArchitectureMode.x86_64; break;

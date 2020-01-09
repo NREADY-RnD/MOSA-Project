@@ -208,7 +208,7 @@ namespace Mosa.Tool.Launcher
 				}
 				finally
 				{
-					if (!Builder.HasCompileError)
+					if (Builder != null && !Builder.HasCompileError)
 					{
 						OnCompileCompleted();
 					}
@@ -303,7 +303,13 @@ namespace Mosa.Tool.Launcher
 			{
 				foreach (var sourcefile in sourcefiles)
 				{
-					Settings.AddPropertyListValue("SearchPaths", Path.GetDirectoryName(sourcefile));
+					var full = Path.GetFullPath(sourcefile);
+					var path = Path.GetDirectoryName(full);
+
+					if (!string.IsNullOrWhiteSpace(path))
+					{
+						Settings.AddPropertyListValue("SearchPaths", path);
+					}
 				}
 			}
 		}
@@ -317,7 +323,7 @@ namespace Mosa.Tool.Launcher
 			Settings.SetValue("Compiler.Platform", "x86");
 			Settings.SetValue("Compiler.TraceLevel", 0);
 			Settings.SetValue("Compiler.Multithreading", true);
-			Settings.SetValue("Compiler.Advanced.PlugKorlib", true);
+			Settings.SetValue("Launcher.Advance.PlugKorlib", true);
 			Settings.SetValue("CompilerDebug.DebugFile", string.Empty);
 			Settings.SetValue("CompilerDebug.AsmFile", string.Empty);
 			Settings.SetValue("CompilerDebug.MapFile", string.Empty);
@@ -340,6 +346,7 @@ namespace Mosa.Tool.Launcher
 			Settings.SetValue("Image.Destination", Path.Combine(Path.GetTempPath(), "MOSA"));
 			Settings.SetValue("Image.Format", "IMG");
 			Settings.SetValue("Image.FileSystem", "FAT16");
+			Settings.SetValue("Image.ImageFile", "%DEFAULT%");
 			Settings.SetValue("Multiboot.Version", "v1");
 			Settings.SetValue("Multiboot.Video", false);
 			Settings.SetValue("Multiboot.Video.Width", 640);

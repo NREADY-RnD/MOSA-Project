@@ -168,8 +168,7 @@ Example: Mosa.Tool.Compiler.exe -o Mosa.HelloWorld.x86.bin -a x86 --mboot v1 --x
 			Settings.SetValue("Compiler.Multithreading", true);
 			Settings.SetValue("Compiler.Platform", "x86");
 			Settings.SetValue("Compiler.TraceLevel", 0);
-			Settings.SetValue("Compiler.Multithreading", true);
-			Settings.SetValue("Compiler.Advanced.PlugKorlib", true);
+			Settings.SetValue("Launcher.Advance.PlugKorlib", true);
 			Settings.SetValue("CompilerDebug.DebugFile", string.Empty);
 			Settings.SetValue("CompilerDebug.AsmFile", string.Empty);
 			Settings.SetValue("CompilerDebug.MapFile", string.Empty);

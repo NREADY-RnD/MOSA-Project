@@ -74,6 +74,8 @@ namespace Mosa.Tool.GDBDebugger
 
 		public string VMHash;
 
+		#region Settings
+
 		public string BreakpointFile
 		{
 			get { return Settings.GetValue("Debugger.BreakpointFile", null); }
@@ -139,6 +141,8 @@ namespace Mosa.Tool.GDBDebugger
 			get { return Settings.GetValue("AppLocation.Qemu.BIOS", null); }
 			set { Settings.SetValue("AppLocation.Qemu.BIOS", value); }
 		}
+
+		#endregion Settings
 
 		public MainForm()
 		{
