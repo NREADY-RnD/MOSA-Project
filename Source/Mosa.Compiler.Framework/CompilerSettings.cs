@@ -27,9 +27,9 @@ namespace Mosa.Compiler.Framework
 
 		public string InlinedFile { get { return Settings.GetValue("CompilerDebug.InlinedFile", null); } }
 
-		public string PreLinkHashFile { get { return Settings.GetValue("CompilerDebug.PrelinkHashFile", null); } }
+		public string PreLinkHashFile { get { return Settings.GetValue("CompilerDebug.PreLinkHashFile", null); } }
 
-		public string PostLinkHashFile { get { return Settings.GetValue("CompilerDebug.PostlinkHashFile", null); } }
+		public string PostLinkHashFile { get { return Settings.GetValue("CompilerDebug.PostLinkHashFile", null); } }
 
 		public bool SSA { get { return Settings.GetValue("Optimizations.SSA", true); } }
 

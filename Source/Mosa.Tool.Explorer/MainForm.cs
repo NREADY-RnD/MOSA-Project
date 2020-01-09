@@ -986,7 +986,7 @@ namespace Mosa.Tool.Explorer
 
 			if (sourcefiles != null && sourcefiles.Count >= 1)
 			{
-				UpdateSettings(sourcefiles[0]);
+				UpdateSettings(Path.GetFullPath(sourcefiles[0]));
 
 				LoadAssembly();
 			}

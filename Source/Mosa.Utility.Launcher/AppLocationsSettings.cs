@@ -18,8 +18,8 @@ namespace Mosa.Utility.Launcher
 			Set(settings, "AppLocation.QemuImg", FindQemuImg());
 			Set(settings, "AppLocation.Bochs", FindBochs());
 			Set(settings, "AppLocation.Vmware.Player", FindVmwarePlayer());
-			Set(settings, "AppLocation.ndisasm", FindNdisasm());
-			Set(settings, "AppLocation.mkisofs", FindMkisofs());
+			Set(settings, "AppLocation.Ndisasm", FindNdisasm());
+			Set(settings, "AppLocation.Mkisofs", FindMkisofs());
 			Set(settings, "AppLocation.GDB", FindGDB());
 
 			return settings;

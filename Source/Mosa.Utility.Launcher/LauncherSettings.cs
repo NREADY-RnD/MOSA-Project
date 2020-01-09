@@ -214,8 +214,8 @@ namespace Mosa.Utility.Launcher
 
 		public string Mkisofs
 		{
-			get { return Settings.GetValue("AppLocation.mkisofs", null); }
-			set { Settings.SetValue("AppLocation.mkisofs", value); }
+			get { return Settings.GetValue("AppLocation.Mkisofs", null); }
+			set { Settings.SetValue("AppLocation.Mkisofs", value); }
 		}
 
 		public bool Multithreading
@@ -233,8 +233,8 @@ namespace Mosa.Utility.Launcher
 		public string Ndisasm
 
 		{
-			get { return Settings.GetValue("AppLocation.ndisasm", null); }
-			set { Settings.SetValue("AppLocation.ndisasm", value); }
+			get { return Settings.GetValue("AppLocation.Ndisasm", null); }
+			set { Settings.SetValue("AppLocation.Ndisasm", value); }
 		}
 
 		public string OutputFile
@@ -259,14 +259,14 @@ namespace Mosa.Utility.Launcher
 
 		public string PostLinkHashFile
 		{
-			get { return Settings.GetValue("CompilerDebug.PostlinkHashFile", null); }
-			set { Settings.SetValue("CompilerDebug.PostlinkHashFile", value); }
+			get { return Settings.GetValue("CompilerDebug.PostLinkHashFile", null); }
+			set { Settings.SetValue("CompilerDebug.PostLinkHashFile", value); }
 		}
 
 		public string PreLinkHashFile
 		{
-			get { return Settings.GetValue("CompilerDebug.PrelinkHashFile", null); }
-			set { Settings.SetValue("CompilerDebug.PrelinkHashFile", value); }
+			get { return Settings.GetValue("CompilerDebug.PreLinkHashFile", null); }
+			set { Settings.SetValue("CompilerDebug.PreLinkHashFile", value); }
 		}
 
 		public string QEMU
