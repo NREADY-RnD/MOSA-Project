@@ -48,26 +48,25 @@ namespace Mosa.Tool.GDBDebugger.Views
 
 			AddSymbol(InstructionPointer);
 
-			// FIXME: x86 specific implementation
 			var symbol = DebugSource.GetFirstSymbolsStartingAt(InstructionPointer);
 
 			if (symbol != null)
 			{
 				// new stack frame has not been setup
-				MemoryCache.ReadMemory(StackPointer, 8, OnMemoryReadPrologue);
+				MemoryCache.ReadMemory(StackPointer, NativeIntegerSize, OnMemoryReadPrologue);
 				return;
 			}
 
-			symbol = DebugSource.GetFirstSymbolsStartingAt(InstructionPointer - 2);
+			symbol = DebugSource.GetFirstSymbolsStartingAt(InstructionPointer - Platform.FirstPrologueInstructionSize);
 
 			if (symbol != null)
 			{
 				// new stack frame has not been setup
-				MemoryCache.ReadMemory(StackPointer + NativeIntegerSize, NativeIntegerSize * 2, OnMemoryReadPrologue);
+				MemoryCache.ReadMemory(StackPointer + NativeIntegerSize, NativeIntegerSize, OnMemoryReadPrologue);
 				return;
 			}
 
-			MemoryCache.ReadMemory(StackFrame, 8, OnMemoryRead);
+			MemoryCache.ReadMemory(StackFrame, NativeIntegerSize * 2, OnMemoryRead);
 		}
 
 		private void AddSymbol(ulong ip)
@@ -83,45 +82,43 @@ namespace Mosa.Tool.GDBDebugger.Views
 
 		private void UpdateDisplay(ulong address, byte[] memory)
 		{
-			if (memory.Length < 8)
-				return; // something went wrong!
-
-			if (treeView1.Nodes.Count == 0)
-				return; // race condition
-
-			// FIXME: x86 specific implementation
-			var ebp = MainForm.ToLong(memory, 0, NativeIntegerSize);
-			var ip = MainForm.ToLong(memory, NativeIntegerSize, NativeIntegerSize);
-
-			if (ip == 0)
-				return;
-
-			AddSymbol(ip);
-
-			if (ebp != 0)
-			{
-				if (treeView1.Nodes.Count > 20)
-					return;
-
-				MemoryCache.ReadMemory(ebp, 8, OnMemoryRead);
-			}
-		}
-
-		private void UpdateDisplayPrologue(ulong address, byte[] memory)
-		{
 			if (memory.Length < NativeIntegerSize * 2)
 				return; // something went wrong!
 
 			if (treeView1.Nodes.Count == 0)
 				return; // race condition
 
-			// FIXME: x86 specific implementation
-			ulong ip = MainForm.ToLong(memory, 0, NativeIntegerSize);
+			var stackFrame = MainForm.ToLong(memory, 0, NativeIntegerSize);
+			var returnIP = MainForm.ToLong(memory, NativeIntegerSize, NativeIntegerSize);
 
-			if (ip == 0)
+			if (returnIP == 0)
 				return;
 
-			AddSymbol(ip);
+			AddSymbol(returnIP);
+
+			if (stackFrame != 0)
+			{
+				if (treeView1.Nodes.Count > 20)
+					return;
+
+				MemoryCache.ReadMemory(stackFrame, NativeIntegerSize * 2, OnMemoryRead);
+			}
+		}
+
+		private void UpdateDisplayPrologue(ulong address, byte[] memory)
+		{
+			if (memory.Length < NativeIntegerSize)
+				return; // something went wrong!
+
+			if (treeView1.Nodes.Count == 0)
+				return; // race condition
+
+			ulong returnIP = MainForm.ToLong(memory, 0, NativeIntegerSize);
+
+			if (returnIP == 0)
+				return;
+
+			AddSymbol(returnIP);
 
 			MemoryCache.ReadMemory(StackFrame, NativeIntegerSize * 2, OnMemoryRead);
 		}

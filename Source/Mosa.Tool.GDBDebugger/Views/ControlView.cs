@@ -31,7 +31,7 @@ namespace Mosa.Tool.GDBDebugger.Views
 			if (symbol != null)
 			{
 				// new stack frame has not been setup
-				MemoryCache.ReadMemory(StackPointer, 8, OnMemoryReadPrologue);
+				MemoryCache.ReadMemory(StackPointer, NativeIntegerSize * 2, OnMemoryReadPrologue);
 				return;
 			}
 
@@ -40,11 +40,11 @@ namespace Mosa.Tool.GDBDebugger.Views
 			if (symbol != null)
 			{
 				// new stack frame has not been setup
-				MemoryCache.ReadMemory(StackPointer + 4, 8, OnMemoryReadPrologue);
+				MemoryCache.ReadMemory(StackPointer + NativeIntegerSize, NativeIntegerSize * 2, OnMemoryReadPrologue);
 				return;
 			}
 
-			MemoryCache.ReadMemory(StackFrame, 8, OnMemoryRead);
+			MemoryCache.ReadMemory(StackFrame, NativeIntegerSize * 2, OnMemoryRead);
 		}
 
 		private void OnMemoryRead(ulong address, byte[] bytes) => Invoke((MethodInvoker)(() => UpdateDisplay(address, bytes)));

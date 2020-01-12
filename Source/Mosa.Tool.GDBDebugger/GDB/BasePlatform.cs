@@ -29,5 +29,7 @@ namespace Mosa.Tool.GDBDebugger.GDB
 				default: return "N/A";
 			}
 		}
+
+		public abstract uint FirstPrologueInstructionSize { get; }
 	}
 }
