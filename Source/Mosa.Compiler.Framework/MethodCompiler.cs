@@ -285,7 +285,14 @@ namespace Mosa.Compiler.Framework
 
 		private void CalculateMethodParameterSize()
 		{
+			// Check if already computed
+			if (MethodData.ParameterStackSize != 0)
+				return;
+
 			int stacksize = 0;
+
+			MethodData.ParameterSizes = new List<int>(Method.Signature.Parameters.Count);
+			MethodData.ParameterOffsets = new List<int>(Method.Signature.Parameters.Count);
 
 			if (Method.HasThis)
 			{
@@ -295,6 +302,10 @@ namespace Mosa.Compiler.Framework
 			foreach (var parameter in Method.Signature.Parameters)
 			{
 				var size = parameter.ParameterType.IsValueType ? TypeLayout.GetTypeSize(parameter.ParameterType) : TypeLayout.NativePointerAlignment;
+
+				MethodData.ParameterSizes.Add(size);
+				MethodData.ParameterOffsets.Add(stacksize);
+
 				stacksize += Alignment.AlignUp(size, TypeLayout.NativePointerAlignment);
 			}
 

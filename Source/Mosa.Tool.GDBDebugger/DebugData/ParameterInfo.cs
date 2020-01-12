@@ -11,5 +11,6 @@ namespace Mosa.Tool.GDBDebugger.DebugData
 		public string Name { get; set; }
 		public string FullName { get; set; }
 		public uint Attributes { get; set; }
+		public uint Size { get; set; }
 	}
 }

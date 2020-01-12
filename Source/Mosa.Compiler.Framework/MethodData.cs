@@ -47,6 +47,10 @@ namespace Mosa.Compiler.Framework
 
 		public int ParameterStackSize { get; set; }
 
+		public List<int> ParameterSizes { get; set; }
+
+		public List<int> ParameterOffsets { get; set; }
+
 		public int LocalMethodStackSize { get; set; }
 
 		public List<LabelRegion> LabelRegions { get; }
