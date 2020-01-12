@@ -63,7 +63,7 @@ namespace Mosa.Tool.GDBDebugger.Views
 			if (symbol != null)
 			{
 				// new stack frame has not been setup
-				MemoryCache.ReadMemory(StackPointer + 4, 8, OnMemoryReadPrologue);
+				MemoryCache.ReadMemory(StackPointer + NativeIntegerSize, NativeIntegerSize * 2, OnMemoryReadPrologue);
 				return;
 			}
 
@@ -90,8 +90,8 @@ namespace Mosa.Tool.GDBDebugger.Views
 				return; // race condition
 
 			// FIXME: x86 specific implementation
-			var ebp = MainForm.ToLong(memory, 0, 4);
-			var ip = MainForm.ToLong(memory, 4, 4);
+			var ebp = MainForm.ToLong(memory, 0, NativeIntegerSize);
+			var ip = MainForm.ToLong(memory, NativeIntegerSize, NativeIntegerSize);
 
 			if (ip == 0)
 				return;
@@ -109,21 +109,21 @@ namespace Mosa.Tool.GDBDebugger.Views
 
 		private void UpdateDisplayPrologue(ulong address, byte[] memory)
 		{
-			if (memory.Length < 8)
+			if (memory.Length < NativeIntegerSize * 2)
 				return; // something went wrong!
 
 			if (treeView1.Nodes.Count == 0)
 				return; // race condition
 
 			// FIXME: x86 specific implementation
-			ulong ip = MainForm.ToLong(memory, 0, 4);
+			ulong ip = MainForm.ToLong(memory, 0, NativeIntegerSize);
 
 			if (ip == 0)
 				return;
 
 			AddSymbol(ip);
 
-			MemoryCache.ReadMemory(StackFrame, 8, OnMemoryRead);
+			MemoryCache.ReadMemory(StackFrame, NativeIntegerSize * 2, OnMemoryRead);
 		}
 
 		private void treeView1_MouseClick(object sender, MouseEventArgs e)

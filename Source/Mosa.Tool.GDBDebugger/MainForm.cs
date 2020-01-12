@@ -46,6 +46,7 @@ namespace Mosa.Tool.GDBDebugger
 		private readonly SourceDataView sourceDataView;
 
 		private readonly LaunchView launchView;
+		private readonly MethodParametersView methodParametersView;
 
 		//private ScriptView scriptView;
 
@@ -164,6 +165,7 @@ namespace Mosa.Tool.GDBDebugger
 			breakPointView = new BreakpointView(this);
 			instructionView = new InstructionView(this);
 			methodView = new MethodView(this);
+			methodParametersView = new MethodParametersView(this);
 
 			//scriptView = new ScriptView(this);
 
@@ -220,6 +222,7 @@ namespace Mosa.Tool.GDBDebugger
 			instructionView.Show(symbolView.PanelPane, DockAlignment.Right, 0.35);
 			methodView.Show(instructionView.PanelPane, instructionView);
 			callStackView.Show(instructionView.PanelPane, DockAlignment.Bottom, 0.25);
+			methodParametersView.Show(callStackView.Pane, callStackView);
 
 			registersView.Show();
 			launchView.Show();
@@ -758,12 +761,17 @@ namespace Mosa.Tool.GDBDebugger
 			}
 		}
 
-		public static ulong ToLong(byte[] bytes) // future: make this common
+		public static ulong ToLong(byte[] bytes)
 		{
-			return ToLong(bytes, 0, bytes.Length);
+			return ToLong(bytes, 0, (uint)bytes.Length);
 		}
 
-		public static ulong ToLong(byte[] bytes, int start, int size) // future: make this common
+		public static ulong ToLong(byte[] bytes, uint size)
+		{
+			return ToLong(bytes, 0, size);
+		}
+
+		public static ulong ToLong(byte[] bytes, uint start, uint size)
 		{
 			ulong value = 0;
 

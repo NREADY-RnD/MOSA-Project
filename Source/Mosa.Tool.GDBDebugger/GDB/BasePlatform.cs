@@ -11,6 +11,8 @@ namespace Mosa.Tool.GDBDebugger.GDB
 
 		internal abstract void Parse(GDBCommand command);
 
+		public abstract uint NativeIntegerSize { get; }
+
 		public abstract Register InstructionPointer { get; }
 		public abstract Register StackPointer { get; }
 		public abstract Register StackFrame { get; }

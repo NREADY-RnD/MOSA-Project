@@ -27,6 +27,9 @@ namespace Mosa.Tool.GDBDebugger
 
 		public Connector GDBConnector { get { return MainForm.GDBConnector; } }
 		public BasePlatform Platform { get { return MainForm.Platform; } }
+
+		public uint NativeIntegerSize { get { return Platform.NativeIntegerSize; } }
+
 		public MemoryCache MemoryCache { get { return MainForm.MemoryCache; } }
 
 		public bool IsConnected { get { return GDBConnector?.IsConnected ?? false; } }

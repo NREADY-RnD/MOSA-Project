@@ -54,9 +54,26 @@ namespace Mosa.Utility.Launcher
 			LauncherSettings.Emulator = LauncherSettings.Emulator == null ? string.Empty : LauncherSettings.Emulator.ToLower();
 			LauncherSettings.Platform = LauncherSettings.Platform.ToLower();
 
-			// Apply defaults
-			var sourcefile = LauncherSettings.SourceFiles[0];
+			string baseFilename = null;
 
+			if (LauncherSettings.OutputFile != null && LauncherSettings.OutputFile != "%DEFAULT%")
+			{
+				baseFilename = Path.GetFileNameWithoutExtension(LauncherSettings.OutputFile);
+			}
+			else if (LauncherSettings.SourceFiles != null && LauncherSettings.SourceFiles.Count != 0)
+			{
+				baseFilename = Path.GetFileNameWithoutExtension(LauncherSettings.SourceFiles[0]);
+			}
+			else if (LauncherSettings.ImageFile != null && LauncherSettings.ImageFile != "%DEFAULT%")
+			{
+				baseFilename = Path.GetFileNameWithoutExtension(LauncherSettings.ImageFile);
+			}
+			else
+			{
+				baseFilename = "output";
+			}
+
+			// Apply defaults
 			if (string.IsNullOrEmpty(LauncherSettings.ImageDestination))
 			{
 				LauncherSettings.ImageDestination = Path.Combine(Path.GetTempPath(), "MOSA");
@@ -64,42 +81,42 @@ namespace Mosa.Utility.Launcher
 
 			if (LauncherSettings.OutputFile == null || LauncherSettings.OutputFile == "%DEFAULT%")
 			{
-				LauncherSettings.OutputFile = Path.Combine(LauncherSettings.ImageDestination, $"{Path.GetFileNameWithoutExtension(sourcefile)}.bin");
-			}
-
-			if (LauncherSettings.MapFile == "%DEFAULT%")
-			{
-				LauncherSettings.MapFile = Path.Combine(LauncherSettings.ImageDestination, $"{Path.GetFileNameWithoutExtension(sourcefile)}-map.txt");
-			}
-
-			if (LauncherSettings.CompileTimeFile == "%DEFAULT%")
-			{
-				LauncherSettings.CompileTimeFile = Path.Combine(LauncherSettings.ImageDestination, $"{Path.GetFileNameWithoutExtension(sourcefile)}-time.txt");
-			}
-
-			if (LauncherSettings.DebugFile == "%DEFAULT%")
-			{
-				LauncherSettings.DebugFile = Path.Combine(LauncherSettings.ImageDestination, $"{Path.GetFileNameWithoutExtension(sourcefile)}.debug");
-			}
-
-			if (LauncherSettings.InlinedFile == "%DEFAULT%")
-			{
-				LauncherSettings.InlinedFile = Path.Combine(LauncherSettings.ImageDestination, $"{Path.GetFileNameWithoutExtension(sourcefile)}-inlined.txt");
-			}
-
-			if (LauncherSettings.PreLinkHashFile == "%DEFAULT%")
-			{
-				LauncherSettings.PreLinkHashFile = Path.Combine(LauncherSettings.ImageDestination, $"{Path.GetFileNameWithoutExtension(sourcefile)}-prelink-hash.txt");
-			}
-
-			if (LauncherSettings.PostLinkHashFile == "%DEFAULT%")
-			{
-				LauncherSettings.PostLinkHashFile = Path.Combine(LauncherSettings.ImageDestination, $"{Path.GetFileNameWithoutExtension(sourcefile)}-postlink-hash.txt");
+				LauncherSettings.OutputFile = Path.Combine(LauncherSettings.ImageDestination, $"{baseFilename}.bin");
 			}
 
 			if (LauncherSettings.ImageFile == "%DEFAULT%")
 			{
-				LauncherSettings.ImageFile = Path.Combine(LauncherSettings.ImageDestination, $"{Path.GetFileNameWithoutExtension(sourcefile)}.{LauncherSettings.ImageFormat}");
+				LauncherSettings.ImageFile = Path.Combine(LauncherSettings.ImageDestination, $"{baseFilename}.{LauncherSettings.ImageFormat}");
+			}
+
+			if (LauncherSettings.MapFile == "%DEFAULT%")
+			{
+				LauncherSettings.MapFile = Path.Combine(LauncherSettings.ImageDestination, $"{baseFilename}-map.txt");
+			}
+
+			if (LauncherSettings.CompileTimeFile == "%DEFAULT%")
+			{
+				LauncherSettings.CompileTimeFile = Path.Combine(LauncherSettings.ImageDestination, $"{baseFilename}-time.txt");
+			}
+
+			if (LauncherSettings.DebugFile == "%DEFAULT%")
+			{
+				LauncherSettings.DebugFile = Path.Combine(LauncherSettings.ImageDestination, $"{baseFilename}.debug");
+			}
+
+			if (LauncherSettings.InlinedFile == "%DEFAULT%")
+			{
+				LauncherSettings.InlinedFile = Path.Combine(LauncherSettings.ImageDestination, $"{baseFilename}-inlined.txt");
+			}
+
+			if (LauncherSettings.PreLinkHashFile == "%DEFAULT%")
+			{
+				LauncherSettings.PreLinkHashFile = Path.Combine(LauncherSettings.ImageDestination, $"{baseFilename}-prelink-hash.txt");
+			}
+
+			if (LauncherSettings.PostLinkHashFile == "%DEFAULT%")
+			{
+				LauncherSettings.PostLinkHashFile = Path.Combine(LauncherSettings.ImageDestination, $"{baseFilename}-postlink-hash.txt");
 			}
 		}
 

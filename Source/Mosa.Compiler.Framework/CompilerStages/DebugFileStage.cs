@@ -99,8 +99,8 @@ namespace Mosa.Compiler.Framework.CompilerStages
 				if (type.IsModule)
 					continue;
 
-				if (!Linker.IsSymbolDefined(type.FullName))
-					continue;
+				//if (!Linker.IsSymbolDefined(type.FullName))
+				//	continue;
 
 				writer.WriteLine(
 					"{0}\t{1:x8}\t{2}\t{3}\t{4}\t{5}\t{6}",

@@ -11,6 +11,7 @@ namespace Mosa.Tool.GDBDebugger.GDB
 			Registers = X86.Parse(command);
 		}
 
+		public override uint NativeIntegerSize { get { return 4; } }
 		public override Register InstructionPointer { get { return Registers[X86.InstructionPointerIndex]; } }
 		public override Register StackPointer { get { return Registers[X86.StackPointerIndex]; } }
 		public override Register StackFrame { get { return Registers[X86.StackFrameIndex]; } }

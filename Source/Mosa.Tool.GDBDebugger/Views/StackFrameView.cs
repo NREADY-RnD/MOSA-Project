@@ -3,14 +3,13 @@
 using Mosa.Tool.GDBDebugger.GDB;
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Windows.Forms;
 
 namespace Mosa.Tool.GDBDebugger.Views
 {
 	public partial class StackFrameView : DebugDockContent
 	{
-		private const int NativeIntegerSize = 4;
-
 		private BindingList<StackEntry> stackentries = new BindingList<StackEntry>();
 
 		private class StackEntry
@@ -74,21 +73,17 @@ namespace Mosa.Tool.GDBDebugger.Views
 
 		private void UpdateDisplay(ulong address, byte[] memory)
 		{
-			uint size = NativeIntegerSize;
-
-			for (int i = memory.Length - NativeIntegerSize; i >= 0; i -= (int)size)
+			for (var i = memory.Length - NativeIntegerSize; i >= 0; i -= (int)NativeIntegerSize)
 			{
-				// FIXME: for 64 bit
-				ulong value = (ulong)(memory[i] | (memory[i + 1] << 8) | (memory[i + 2] << 16) | (memory[i + 3] << 24));
+				ulong value = MainForm.ToLong(memory, (uint)i, NativeIntegerSize);
 
 				var at = address + (ulong)i;
-
 				var offset = (long)(StackFrame - at);
 
 				var entry = new StackEntry()
 				{
-					Address = BasePlatform.ToHex(at, size),
-					HexValue = BasePlatform.ToHex(value, size),
+					Address = BasePlatform.ToHex(at, NativeIntegerSize),
+					HexValue = BasePlatform.ToHex(value, NativeIntegerSize),
 					Value = value,
 					Offset = Platform.StackFrame.Name.ToUpper() +
 						(offset >= 0
