@@ -338,6 +338,7 @@ namespace Mosa.Tool.Launcher
 			Settings.SetValue("Optimizations.LoopInvariantCodeMotion", true);
 			Settings.SetValue("Optimizations.Platform", true);
 			Settings.SetValue("Optimizations.SCCP", true);
+			Settings.SetValue("Optimizations.Devirtualization", true);
 			Settings.SetValue("Optimizations.SSA", true);
 			Settings.SetValue("Optimizations.TwoPass", true);
 			Settings.SetValue("Optimizations.ValueNumbering", true);
@@ -379,8 +380,10 @@ namespace Mosa.Tool.Launcher
 		private void UpdateSettings()
 		{
 			Settings.SetValue("Launcher.SSA", cbEnableSSA.Checked);
-			Settings.SetValue("Optimizations.Basic", cbEnableIROptimizations.Checked);
-			Settings.SetValue("Optimizations.SCCP", cbEnableSparseConditionalConstantPropagation.Checked);
+			Settings.SetValue("Optimizations.Basic", cbBasicOptimizations.Checked);
+			Settings.SetValue("Optimizations.SCCP", cbSparseConditionalConstantPropagation.Checked);
+
+			//Settings.SetValue("Optimizations.Devirtualization", cbEnableDevirtualization.Checked);
 			Settings.SetValue("CompilerDebug.NasmFile", cbGenerateNASMFile.Checked ? "%DEFAULT%" : string.Empty);
 			Settings.SetValue("CompilerDebug.AsmFile", cbGenerateASMFile.Checked ? "%DEFAULT%" : string.Empty);
 			Settings.SetValue("CompilerDebug.MapFile", cbGenerateMapFile.Checked ? "%DEFAULT%" : string.Empty);
@@ -487,8 +490,10 @@ namespace Mosa.Tool.Launcher
 		private void UpdateDisplay()
 		{
 			cbEnableSSA.Checked = Settings.GetValue("Launcher.SSA", true);
-			cbEnableIROptimizations.Checked = Settings.GetValue("Optimizations.Basic", true);
-			cbEnableSparseConditionalConstantPropagation.Checked = Settings.GetValue("Optimizations.SCCP", true);
+			cbBasicOptimizations.Checked = Settings.GetValue("Optimizations.Basic", true);
+			cbSparseConditionalConstantPropagation.Checked = Settings.GetValue("Optimizations.SCCP", true);
+
+			//cbEnableDevirtualization.Checked = Settings.GetValue("Optimizations.Devirtualization", cbEnableDevirtualization.Checked);
 			cbGenerateNASMFile.Checked = Settings.GetValue("CompilerDebug.NasmFile", string.Empty) == "%DEFAULT%";
 			cbGenerateASMFile.Checked = Settings.GetValue("CompilerDebug.AsmFile", string.Empty) == "%DEFAULT%";
 			cbGenerateMapFile.Checked = Settings.GetValue("CompilerDebug.MapFile", string.Empty) == "%DEFAULT%";

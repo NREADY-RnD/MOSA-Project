@@ -183,6 +183,7 @@ Example: Mosa.Tool.Compiler.exe -o Mosa.HelloWorld.x86.bin -a x86 --mboot v1 --x
 			Settings.SetValue("Optimizations.LoopInvariantCodeMotion", true);
 			Settings.SetValue("Optimizations.Platform", true);
 			Settings.SetValue("Optimizations.SCCP", true);
+			Settings.SetValue("Optimizations.Devirtualization", true);
 			Settings.SetValue("Optimizations.SSA", true);
 			Settings.SetValue("Optimizations.TwoPass", true);
 			Settings.SetValue("Optimizations.ValueNumbering", true);

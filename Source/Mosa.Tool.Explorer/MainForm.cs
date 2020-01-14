@@ -1015,6 +1015,7 @@ namespace Mosa.Tool.Explorer
 			Settings.SetValue("Optimizations.LoopInvariantCodeMotion", true);
 			Settings.SetValue("Optimizations.Platform", true);
 			Settings.SetValue("Optimizations.SCCP", true);
+			Settings.SetValue("Optimizations.Devirtualization", true);
 			Settings.SetValue("Optimizations.SSA", true);
 			Settings.SetValue("Optimizations.TwoPass", true);
 			Settings.SetValue("Optimizations.ValueNumbering", true);
@@ -1050,6 +1051,7 @@ namespace Mosa.Tool.Explorer
 			Settings.SetValue("Optimizations.Basic", cbEnableBasicOptimizations.Checked);
 			Settings.SetValue("Optimizations.ValueNumbering", cbEnableValueNumbering.Checked);
 			Settings.SetValue("Optimizations.SCCP", cbEnableSparseConditionalConstantPropagation.Checked);
+			Settings.SetValue("Optimizations.Devirtualization", cbEnableDevirtualization.Checked);
 			Settings.SetValue("Optimizations.BitTracker", cbEnableBitTracker.Checked);
 			Settings.SetValue("Optimizations.LoopInvariantCodeMotion", cbLoopInvariantCodeMotion.Checked);
 			Settings.SetValue("Optimizations.LongExpansion", cbEnableLongExpansion.Checked);
@@ -1087,6 +1089,7 @@ namespace Mosa.Tool.Explorer
 			cbEnableSSA.Checked = Settings.GetValue("Optimizations.SSA", cbEnableSSA.Checked);
 			cbEnableBasicOptimizations.Checked = Settings.GetValue("Optimizations.Basic", cbEnableBasicOptimizations.Checked);
 			cbEnableSparseConditionalConstantPropagation.Checked = Settings.GetValue("Optimizations.SCCP", cbEnableSparseConditionalConstantPropagation.Checked);
+			cbEnableDevirtualization.Checked = Settings.GetValue("Optimizations.Devirtualization", cbEnableDevirtualization.Checked);
 			cbInlineExplicitOnly.Checked = Settings.GetValue("Optimizations.Inline.ExplicitOnly", cbInlineExplicitOnly.Checked);
 			cbPlatformOptimizations.Checked = Settings.GetValue("Optimizations.Platform", cbPlatformOptimizations.Checked);
 			cbEnableLongExpansion.Checked = Settings.GetValue("Optimizations.LongExpansion", cbEnableLongExpansion.Checked);

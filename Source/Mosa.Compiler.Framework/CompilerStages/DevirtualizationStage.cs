@@ -56,16 +56,38 @@ namespace Mosa.Compiler.Framework.CompilerStages
 
 		private bool HasInterface(MosaType type)
 		{
+			return CheckBaseTypesForInterface(type) || CheckDerivedTypesForInterface(type);
+		}
+
+		private bool CheckBaseTypesForInterface(MosaType type)
+		{
 			var baseType = type;
 
 			while (baseType != null)
 			{
-				foreach (var interfaceType in baseType.Interfaces)
-				{
+				if (baseType.Interfaces.Count >= 1)
 					return true;
-				}
 
 				baseType = baseType.BaseType;
+			}
+
+			return false;
+		}
+
+		private bool CheckDerivedTypesForInterface(MosaType type)
+		{
+			var derivedTypes = TypeLayout.GetDerivedTypes(type);
+
+			if (derivedTypes == null || derivedTypes.Length == 0)
+				return false;
+
+			foreach (var dervided in derivedTypes)
+			{
+				if (dervided.Interfaces.Count >= 1)
+					return true;
+
+				if (CheckDerivedTypesForInterface(dervided))
+					return true;
 			}
 
 			return false;

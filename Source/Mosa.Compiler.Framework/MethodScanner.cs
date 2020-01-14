@@ -148,18 +148,18 @@ namespace Mosa.Compiler.Framework
 				return;
 
 			// find all interfaces methods for this type
-			foreach (var itype in type.Interfaces)
+			foreach (var interfaceType in type.Interfaces)
 			{
-				if (!invokedInteraceTypes.Contains(itype))
+				if (!invokedInteraceTypes.Contains(interfaceType))
 					continue;
 
-				var imethods = TypeLayout.GetInterfaceTable(type, itype);
+				var interfaceMethodTable = TypeLayout.GetInterfaceTable(type, interfaceType);
 
-				var list = interfaceSlots.Get(itype);
+				var list = interfaceSlots.Get(interfaceType);
 
 				foreach (var slot in list)
 				{
-					var imethod = imethods[slot];
+					var imethod = interfaceMethodTable[slot];
 
 					ScheduleMethod(imethod);
 				}
@@ -228,9 +228,9 @@ namespace Mosa.Compiler.Framework
 							continue;
 					}
 
-					var imethods = TypeLayout.GetInterfaceTable(type, interfaceType); // this can be slow
+					var interfaceMethodTable = TypeLayout.GetInterfaceTable(type, interfaceType); // this can be slow
 
-					var imethod = imethods[slot];
+					var imethod = interfaceMethodTable[slot];
 
 					// schedule this type's interface method implementation
 					ScheduleMethod(imethod);

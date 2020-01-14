@@ -1,5 +1,6 @@
 // Copyright (c) MOSA Project. Licensed under the New BSD License.
 
+using Mosa.Tool.GDBDebugger.DebugData;
 using Mosa.Tool.GDBDebugger.GDB;
 using System;
 using System.ComponentModel;
@@ -8,9 +9,11 @@ using System.Windows.Forms;
 
 namespace Mosa.Tool.GDBDebugger.Views
 {
-	public partial class StackFrameView : DebugDockContent
+	public partial class MethodParametersView : DebugDockContent
 	{
 		private BindingList<StackEntry> stackentries = new BindingList<StackEntry>();
+
+		private MethodInfo method;
 
 		private class StackEntry
 		{
@@ -20,6 +23,12 @@ namespace Mosa.Tool.GDBDebugger.Views
 
 			public ulong Value { get; set; }
 
+			public string Name { get; set; }
+
+			public uint Size { get; set; }
+
+			public string Type { get; set; }
+
 			[Browsable(false)]
 			public string Address { get; set; }
 
@@ -27,7 +36,7 @@ namespace Mosa.Tool.GDBDebugger.Views
 			public int Index { get; set; }
 		}
 
-		public StackFrameView(MainForm mainForm)
+		public MethodParametersView(MainForm mainForm)
 			: base(mainForm)
 		{
 			InitializeComponent();
@@ -36,6 +45,9 @@ namespace Mosa.Tool.GDBDebugger.Views
 			dataGridView1.Columns[0].Width = 75;
 			dataGridView1.Columns[1].Width = 75;
 			dataGridView1.Columns[2].Width = 75;
+			dataGridView1.Columns[3].Width = 200;
+			dataGridView1.Columns[4].Width = 40;
+			dataGridView1.Columns[5].Width = 200;
 		}
 
 		public override void OnRunning()
@@ -45,6 +57,7 @@ namespace Mosa.Tool.GDBDebugger.Views
 
 		public override void OnPause()
 		{
+			this.method = null;
 			stackentries.Clear();
 
 			if (Platform == null)
@@ -56,40 +69,74 @@ namespace Mosa.Tool.GDBDebugger.Views
 			if (StackFrame == 0 || StackPointer == 0)
 				return;
 
-			var span = StackFrame - StackPointer;
+			method = DebugSource.GetMethod(InstructionPointer);
 
-			if (span <= 0)
-				span = 4;
-			else if (span > 512)
-				span = 512;
+			if (method == null)
+				return;
 
-			if (span % 4 != 0)
-				span += (span % 4);
+			if (method.ParameterStackSize == 0)
+				return;
 
-			MemoryCache.ReadMemory(StackPointer, (uint)span + NativeIntegerSize, OnMemoryRead);
+			var symbol = DebugSource.GetFirstSymbolsStartingAt(InstructionPointer);
+
+			ulong paramStart = StackFrame + (NativeIntegerSize * 2);
+
+			if (symbol != null)
+			{
+				// new stack frame has not been setup
+				paramStart = StackPointer + NativeIntegerSize;
+			}
+			else
+			{
+				symbol = DebugSource.GetFirstSymbolsStartingAt(InstructionPointer - Platform.FirstPrologueInstructionSize);
+
+				if (symbol != null)
+				{
+					// new stack frame has not been setup
+					paramStart = StackPointer + (NativeIntegerSize * 2);
+				}
+			}
+
+			MemoryCache.ReadMemory(paramStart, method.ParameterStackSize, OnMemoryRead);
 		}
 
 		private void OnMemoryRead(ulong address, byte[] bytes) => Invoke((MethodInvoker)(() => UpdateDisplay(address, bytes)));
 
 		private void UpdateDisplay(ulong address, byte[] memory)
 		{
-			for (var i = memory.Length - NativeIntegerSize; i >= 0; i -= (int)NativeIntegerSize)
-			{
-				ulong value = MainForm.ToLong(memory, (uint)i, NativeIntegerSize);
+			var parameters = DebugSource.GetMethodParameters(method);
 
-				var at = address + (ulong)i;
-				var offset = StackFrame - at;
+			if (parameters == null || parameters.Count == 0)
+				return;
+
+			long offset = (long)(address - StackFrame);
+
+			foreach (var parameter in parameters)
+			{
+				var type = DebugSource.GetTypeInfo(parameter.ParameterTypeID);
+
+				uint size = (parameter.Size == NativeIntegerSize || parameter.Size == NativeIntegerSize * 2) ? parameter.Size : 0;
+
+				if (size == 0 && parameter.Size <= NativeIntegerSize)
+				{
+					size = NativeIntegerSize;
+				}
+
+				ulong value = (size != 0) ? MainForm.ToLong(memory, parameter.Offset, size) : 0;
 
 				var entry = new StackEntry()
 				{
-					Address = BasePlatform.ToHex(at, NativeIntegerSize),
-					HexValue = BasePlatform.ToHex(value, NativeIntegerSize),
-					Value = value,
+					Index = (int)parameter.Index,
+					Name = parameter.Name,
 					Offset = Platform.StackFrame.Name.ToUpper() +
 						(offset >= 0
-						? "-" + BasePlatform.ToHex(offset, 1)
-						: "+" + BasePlatform.ToHex(-(long)offset, 1)),
-					Index = stackentries.Count,
+						? "+" + BasePlatform.ToHex(offset + parameter.Offset, 1)
+						: "-" + BasePlatform.ToHex(-offset + parameter.Offset, 1)),
+					Address = BasePlatform.ToHex(StackFrame + parameter.Offset, size),
+					HexValue = BasePlatform.ToHex(value, size),
+					Size = size,
+					Value = value,
+					Type = type.FullName
 				};
 
 				stackentries.Add(entry);

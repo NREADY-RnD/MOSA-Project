@@ -52,6 +52,7 @@
 			this.statusStrip1 = new System.Windows.Forms.StatusStrip();
 			this.tsStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
 			this.groupBox2 = new System.Windows.Forms.GroupBox();
+			this.cbGenerateHashFiles = new MetroFramework.Controls.MetroCheckBox();
 			this.cbGenerateInlineFile = new MetroFramework.Controls.MetroCheckBox();
 			this.cbGenerateNASMFile = new MetroFramework.Controls.MetroCheckBox();
 			this.cbGenerateCompilerTime = new MetroFramework.Controls.MetroCheckBox();
@@ -72,8 +73,8 @@
 			this.cbBitTracker = new MetroFramework.Controls.MetroCheckBox();
 			this.cbValueNumbering = new MetroFramework.Controls.MetroCheckBox();
 			this.cbLongExpansion = new MetroFramework.Controls.MetroCheckBox();
-			this.cbEnableSparseConditionalConstantPropagation = new MetroFramework.Controls.MetroCheckBox();
-			this.cbEnableIROptimizations = new MetroFramework.Controls.MetroCheckBox();
+			this.cbSparseConditionalConstantPropagation = new MetroFramework.Controls.MetroCheckBox();
+			this.cbBasicOptimizations = new MetroFramework.Controls.MetroCheckBox();
 			this.cbEnableSSA = new MetroFramework.Controls.MetroCheckBox();
 			this.cbInline = new MetroFramework.Controls.MetroCheckBox();
 			this.tabAdvanced = new MetroFramework.Controls.MetroTabPage();
@@ -132,7 +133,7 @@
 			this.rtbOutput = new System.Windows.Forms.RichTextBox();
 			this.openFileDialog2 = new System.Windows.Forms.OpenFileDialog();
 			this.timer1 = new System.Windows.Forms.Timer(this.components);
-			this.cbGenerateHashFiles = new MetroFramework.Controls.MetroCheckBox();
+			this.cbDevirtualization = new MetroFramework.Controls.MetroCheckBox();
 			this.tbApplicationLocations.SuspendLayout();
 			this.tabOptions.SuspendLayout();
 			this.groupBox17.SuspendLayout();
@@ -173,7 +174,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.progressBar1.Location = new System.Drawing.Point(0, 63);
 			this.progressBar1.Name = "progressBar1";
-			this.progressBar1.Size = new System.Drawing.Size(661, 20);
+			this.progressBar1.Size = new System.Drawing.Size(660, 20);
 			this.progressBar1.Step = 1;
 			this.progressBar1.Style = MetroFramework.MetroColorStyle.Blue;
 			this.progressBar1.TabIndex = 3;
@@ -197,7 +198,7 @@
 			this.tbApplicationLocations.Multiline = true;
 			this.tbApplicationLocations.Name = "tbApplicationLocations";
 			this.tbApplicationLocations.SelectedIndex = 0;
-			this.tbApplicationLocations.Size = new System.Drawing.Size(661, 430);
+			this.tbApplicationLocations.Size = new System.Drawing.Size(660, 440);
 			this.tbApplicationLocations.Style = MetroFramework.MetroColorStyle.Blue;
 			this.tbApplicationLocations.TabIndex = 22;
 			this.tbApplicationLocations.UseSelectable = true;
@@ -220,7 +221,7 @@
 			this.tabOptions.Location = new System.Drawing.Point(4, 22);
 			this.tabOptions.Margin = new System.Windows.Forms.Padding(0);
 			this.tabOptions.Name = "tabOptions";
-			this.tabOptions.Size = new System.Drawing.Size(653, 404);
+			this.tabOptions.Size = new System.Drawing.Size(652, 414);
 			this.tabOptions.TabIndex = 0;
 			this.tabOptions.Text = "Compile Options";
 			this.tabOptions.VerticalScrollbarBarColor = true;
@@ -232,7 +233,7 @@
 			this.cbExitOnLaunch.AutoSize = true;
 			this.cbExitOnLaunch.Checked = true;
 			this.cbExitOnLaunch.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.cbExitOnLaunch.Location = new System.Drawing.Point(452, 324);
+			this.cbExitOnLaunch.Location = new System.Drawing.Point(452, 340);
 			this.cbExitOnLaunch.Name = "cbExitOnLaunch";
 			this.cbExitOnLaunch.Size = new System.Drawing.Size(101, 15);
 			this.cbExitOnLaunch.Style = MetroFramework.MetroColorStyle.Blue;
@@ -243,7 +244,7 @@
 			// 
 			// btnCompileAndRun
 			// 
-			this.btnCompileAndRun.Location = new System.Drawing.Point(452, 345);
+			this.btnCompileAndRun.Location = new System.Drawing.Point(452, 362);
 			this.btnCompileAndRun.Name = "btnCompileAndRun";
 			this.btnCompileAndRun.Size = new System.Drawing.Size(168, 23);
 			this.btnCompileAndRun.TabIndex = 39;
@@ -267,7 +268,7 @@
 			this.groupBox17.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.groupBox17.Location = new System.Drawing.Point(428, 122);
 			this.groupBox17.Name = "groupBox17";
-			this.groupBox17.Size = new System.Drawing.Size(215, 149);
+			this.groupBox17.Size = new System.Drawing.Size(214, 158);
 			this.groupBox17.TabIndex = 33;
 			this.groupBox17.TabStop = false;
 			this.groupBox17.Text = "Target:";
@@ -407,9 +408,9 @@
 			this.groupBox12.Controls.Add(this.cbEnableMethodScanner);
 			this.groupBox12.Controls.Add(this.cbCompilerUsesMultipleThreads);
 			this.groupBox12.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.groupBox12.Location = new System.Drawing.Point(264, 300);
+			this.groupBox12.Location = new System.Drawing.Point(264, 285);
 			this.groupBox12.Name = "groupBox12";
-			this.groupBox12.Size = new System.Drawing.Size(158, 77);
+			this.groupBox12.Size = new System.Drawing.Size(158, 103);
 			this.groupBox12.TabIndex = 30;
 			this.groupBox12.TabStop = false;
 			this.groupBox12.Text = "Misc Options:";
@@ -421,10 +422,11 @@
 			this.cbEnableMethodScanner.CheckState = System.Windows.Forms.CheckState.Checked;
 			this.cbEnableMethodScanner.Location = new System.Drawing.Point(7, 40);
 			this.cbEnableMethodScanner.Name = "cbEnableMethodScanner";
-			this.cbEnableMethodScanner.Size = new System.Drawing.Size(148, 15);
+			this.cbEnableMethodScanner.Size = new System.Drawing.Size(148, 30);
 			this.cbEnableMethodScanner.Style = MetroFramework.MetroColorStyle.Blue;
 			this.cbEnableMethodScanner.TabIndex = 14;
-			this.cbEnableMethodScanner.Text = "Enable Method Scanner";
+			this.cbEnableMethodScanner.Text = "Enable Method Scanner\r\n(Experimental)";
+			this.cbEnableMethodScanner.TextAlign = System.Drawing.ContentAlignment.TopLeft;
 			this.cbEnableMethodScanner.Theme = MetroFramework.MetroThemeStyle.Light;
 			this.cbEnableMethodScanner.UseCustomBackColor = true;
 			this.cbEnableMethodScanner.UseSelectable = true;
@@ -449,9 +451,9 @@
 			this.statusStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
 			this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsStatusLabel});
-			this.statusStrip1.Location = new System.Drawing.Point(0, 382);
+			this.statusStrip1.Location = new System.Drawing.Point(0, 392);
 			this.statusStrip1.Name = "statusStrip1";
-			this.statusStrip1.Size = new System.Drawing.Size(653, 22);
+			this.statusStrip1.Size = new System.Drawing.Size(652, 22);
 			this.statusStrip1.TabIndex = 32;
 			this.statusStrip1.Text = "statusStrip1";
 			// 
@@ -473,15 +475,27 @@
 			this.groupBox2.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.groupBox2.Location = new System.Drawing.Point(264, 122);
 			this.groupBox2.Name = "groupBox2";
-			this.groupBox2.Size = new System.Drawing.Size(158, 172);
+			this.groupBox2.Size = new System.Drawing.Size(158, 158);
 			this.groupBox2.TabIndex = 29;
 			this.groupBox2.TabStop = false;
 			this.groupBox2.Text = "Diagnostic Output:";
 			// 
+			// cbGenerateHashFiles
+			// 
+			this.cbGenerateHashFiles.AutoSize = true;
+			this.cbGenerateHashFiles.Location = new System.Drawing.Point(6, 138);
+			this.cbGenerateHashFiles.Name = "cbGenerateHashFiles";
+			this.cbGenerateHashFiles.Size = new System.Drawing.Size(76, 15);
+			this.cbGenerateHashFiles.Style = MetroFramework.MetroColorStyle.Blue;
+			this.cbGenerateHashFiles.TabIndex = 52;
+			this.cbGenerateHashFiles.Text = "Hash Files";
+			this.cbGenerateHashFiles.UseCustomBackColor = true;
+			this.cbGenerateHashFiles.UseSelectable = true;
+			// 
 			// cbGenerateInlineFile
 			// 
 			this.cbGenerateInlineFile.AutoSize = true;
-			this.cbGenerateInlineFile.Location = new System.Drawing.Point(6, 102);
+			this.cbGenerateInlineFile.Location = new System.Drawing.Point(6, 98);
 			this.cbGenerateInlineFile.Name = "cbGenerateInlineFile";
 			this.cbGenerateInlineFile.Size = new System.Drawing.Size(101, 15);
 			this.cbGenerateInlineFile.Style = MetroFramework.MetroColorStyle.Blue;
@@ -493,7 +507,7 @@
 			// cbGenerateNASMFile
 			// 
 			this.cbGenerateNASMFile.AutoSize = true;
-			this.cbGenerateNASMFile.Location = new System.Drawing.Point(6, 60);
+			this.cbGenerateNASMFile.Location = new System.Drawing.Point(6, 58);
 			this.cbGenerateNASMFile.Name = "cbGenerateNASMFile";
 			this.cbGenerateNASMFile.Size = new System.Drawing.Size(78, 15);
 			this.cbGenerateNASMFile.Style = MetroFramework.MetroColorStyle.Blue;
@@ -505,7 +519,7 @@
 			// cbGenerateCompilerTime
 			// 
 			this.cbGenerateCompilerTime.AutoSize = true;
-			this.cbGenerateCompilerTime.Location = new System.Drawing.Point(6, 123);
+			this.cbGenerateCompilerTime.Location = new System.Drawing.Point(6, 118);
 			this.cbGenerateCompilerTime.Name = "cbGenerateCompilerTime";
 			this.cbGenerateCompilerTime.Size = new System.Drawing.Size(118, 15);
 			this.cbGenerateCompilerTime.Style = MetroFramework.MetroColorStyle.Blue;
@@ -517,7 +531,7 @@
 			// cbGenerateDebugInfoFile
 			// 
 			this.cbGenerateDebugInfoFile.AutoSize = true;
-			this.cbGenerateDebugInfoFile.Location = new System.Drawing.Point(6, 81);
+			this.cbGenerateDebugInfoFile.Location = new System.Drawing.Point(6, 78);
 			this.cbGenerateDebugInfoFile.Name = "cbGenerateDebugInfoFile";
 			this.cbGenerateDebugInfoFile.Size = new System.Drawing.Size(79, 15);
 			this.cbGenerateDebugInfoFile.Style = MetroFramework.MetroColorStyle.Blue;
@@ -529,7 +543,7 @@
 			// cbGenerateASMFile
 			// 
 			this.cbGenerateASMFile.AutoSize = true;
-			this.cbGenerateASMFile.Location = new System.Drawing.Point(6, 39);
+			this.cbGenerateASMFile.Location = new System.Drawing.Point(6, 38);
 			this.cbGenerateASMFile.Name = "cbGenerateASMFile";
 			this.cbGenerateASMFile.Size = new System.Drawing.Size(69, 15);
 			this.cbGenerateASMFile.Style = MetroFramework.MetroColorStyle.Blue;
@@ -560,7 +574,7 @@
 			this.groupBox4.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.groupBox4.Location = new System.Drawing.Point(5, 7);
 			this.groupBox4.Name = "groupBox4";
-			this.groupBox4.Size = new System.Drawing.Size(638, 53);
+			this.groupBox4.Size = new System.Drawing.Size(637, 53);
 			this.groupBox4.TabIndex = 25;
 			this.groupBox4.TabStop = false;
 			this.groupBox4.Text = "Source:";
@@ -597,7 +611,7 @@
 			this.groupBox3.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.groupBox3.Location = new System.Drawing.Point(5, 63);
 			this.groupBox3.Name = "groupBox3";
-			this.groupBox3.Size = new System.Drawing.Size(638, 53);
+			this.groupBox3.Size = new System.Drawing.Size(637, 53);
 			this.groupBox3.TabIndex = 24;
 			this.groupBox3.TabStop = false;
 			this.groupBox3.Text = "Output:";
@@ -627,6 +641,7 @@
 			// groupBox1
 			// 
 			this.groupBox1.BackColor = System.Drawing.SystemColors.ControlLightLight;
+			this.groupBox1.Controls.Add(this.cbDevirtualization);
 			this.groupBox1.Controls.Add(this.cbPlatformOptimizations);
 			this.groupBox1.Controls.Add(this.cbLoopInvariantCodeMotion);
 			this.groupBox1.Controls.Add(this.cbTwoPassOptimizations);
@@ -634,14 +649,14 @@
 			this.groupBox1.Controls.Add(this.cbBitTracker);
 			this.groupBox1.Controls.Add(this.cbValueNumbering);
 			this.groupBox1.Controls.Add(this.cbLongExpansion);
-			this.groupBox1.Controls.Add(this.cbEnableSparseConditionalConstantPropagation);
-			this.groupBox1.Controls.Add(this.cbEnableIROptimizations);
+			this.groupBox1.Controls.Add(this.cbSparseConditionalConstantPropagation);
+			this.groupBox1.Controls.Add(this.cbBasicOptimizations);
 			this.groupBox1.Controls.Add(this.cbEnableSSA);
 			this.groupBox1.Controls.Add(this.cbInline);
 			this.groupBox1.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.groupBox1.Location = new System.Drawing.Point(5, 122);
 			this.groupBox1.Name = "groupBox1";
-			this.groupBox1.Size = new System.Drawing.Size(253, 255);
+			this.groupBox1.Size = new System.Drawing.Size(253, 266);
 			this.groupBox1.TabIndex = 22;
 			this.groupBox1.TabStop = false;
 			this.groupBox1.Text = "Optimizations:";
@@ -651,7 +666,7 @@
 			this.cbPlatformOptimizations.AutoSize = true;
 			this.cbPlatformOptimizations.Checked = true;
 			this.cbPlatformOptimizations.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.cbPlatformOptimizations.Location = new System.Drawing.Point(6, 228);
+			this.cbPlatformOptimizations.Location = new System.Drawing.Point(6, 241);
 			this.cbPlatformOptimizations.Name = "cbPlatformOptimizations";
 			this.cbPlatformOptimizations.Size = new System.Drawing.Size(146, 15);
 			this.cbPlatformOptimizations.Style = MetroFramework.MetroColorStyle.Blue;
@@ -665,7 +680,7 @@
 			this.cbLoopInvariantCodeMotion.AutoSize = true;
 			this.cbLoopInvariantCodeMotion.Checked = true;
 			this.cbLoopInvariantCodeMotion.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.cbLoopInvariantCodeMotion.Location = new System.Drawing.Point(6, 102);
+			this.cbLoopInvariantCodeMotion.Location = new System.Drawing.Point(6, 121);
 			this.cbLoopInvariantCodeMotion.Name = "cbLoopInvariantCodeMotion";
 			this.cbLoopInvariantCodeMotion.Size = new System.Drawing.Size(172, 15);
 			this.cbLoopInvariantCodeMotion.Style = MetroFramework.MetroColorStyle.Blue;
@@ -679,7 +694,7 @@
 			this.cbTwoPassOptimizations.AutoSize = true;
 			this.cbTwoPassOptimizations.Checked = true;
 			this.cbTwoPassOptimizations.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.cbTwoPassOptimizations.Location = new System.Drawing.Point(6, 207);
+			this.cbTwoPassOptimizations.Location = new System.Drawing.Point(6, 221);
 			this.cbTwoPassOptimizations.Name = "cbTwoPassOptimizations";
 			this.cbTwoPassOptimizations.Size = new System.Drawing.Size(153, 15);
 			this.cbTwoPassOptimizations.Style = MetroFramework.MetroColorStyle.Blue;
@@ -693,7 +708,7 @@
 			this.cbInlineExplicitOnly.AutoSize = true;
 			this.cbInlineExplicitOnly.Checked = true;
 			this.cbInlineExplicitOnly.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.cbInlineExplicitOnly.Location = new System.Drawing.Point(6, 186);
+			this.cbInlineExplicitOnly.Location = new System.Drawing.Point(6, 201);
 			this.cbInlineExplicitOnly.Name = "cbInlineExplicitOnly";
 			this.cbInlineExplicitOnly.Size = new System.Drawing.Size(121, 15);
 			this.cbInlineExplicitOnly.Style = MetroFramework.MetroColorStyle.Blue;
@@ -707,7 +722,7 @@
 			this.cbBitTracker.AutoSize = true;
 			this.cbBitTracker.Checked = true;
 			this.cbBitTracker.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.cbBitTracker.Location = new System.Drawing.Point(6, 123);
+			this.cbBitTracker.Location = new System.Drawing.Point(6, 141);
 			this.cbBitTracker.Name = "cbBitTracker";
 			this.cbBitTracker.Size = new System.Drawing.Size(77, 15);
 			this.cbBitTracker.Style = MetroFramework.MetroColorStyle.Blue;
@@ -721,7 +736,7 @@
 			this.cbValueNumbering.AutoSize = true;
 			this.cbValueNumbering.Checked = true;
 			this.cbValueNumbering.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.cbValueNumbering.Location = new System.Drawing.Point(6, 60);
+			this.cbValueNumbering.Location = new System.Drawing.Point(6, 81);
 			this.cbValueNumbering.Name = "cbValueNumbering";
 			this.cbValueNumbering.Size = new System.Drawing.Size(115, 15);
 			this.cbValueNumbering.Style = MetroFramework.MetroColorStyle.Blue;
@@ -735,7 +750,7 @@
 			this.cbLongExpansion.AutoSize = true;
 			this.cbLongExpansion.Checked = true;
 			this.cbLongExpansion.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.cbLongExpansion.Location = new System.Drawing.Point(6, 144);
+			this.cbLongExpansion.Location = new System.Drawing.Point(6, 161);
 			this.cbLongExpansion.Name = "cbLongExpansion";
 			this.cbLongExpansion.Size = new System.Drawing.Size(107, 15);
 			this.cbLongExpansion.Style = MetroFramework.MetroColorStyle.Blue;
@@ -744,40 +759,40 @@
 			this.cbLongExpansion.UseCustomBackColor = true;
 			this.cbLongExpansion.UseSelectable = true;
 			// 
-			// cbEnableSparseConditionalConstantPropagation
+			// cbSparseConditionalConstantPropagation
 			// 
-			this.cbEnableSparseConditionalConstantPropagation.AutoSize = true;
-			this.cbEnableSparseConditionalConstantPropagation.Checked = true;
-			this.cbEnableSparseConditionalConstantPropagation.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.cbEnableSparseConditionalConstantPropagation.Location = new System.Drawing.Point(6, 81);
-			this.cbEnableSparseConditionalConstantPropagation.Name = "cbEnableSparseConditionalConstantPropagation";
-			this.cbEnableSparseConditionalConstantPropagation.Size = new System.Drawing.Size(241, 15);
-			this.cbEnableSparseConditionalConstantPropagation.Style = MetroFramework.MetroColorStyle.Blue;
-			this.cbEnableSparseConditionalConstantPropagation.TabIndex = 8;
-			this.cbEnableSparseConditionalConstantPropagation.Text = "Sparse Conditional Constant Propagation";
-			this.cbEnableSparseConditionalConstantPropagation.UseCustomBackColor = true;
-			this.cbEnableSparseConditionalConstantPropagation.UseSelectable = true;
+			this.cbSparseConditionalConstantPropagation.AutoSize = true;
+			this.cbSparseConditionalConstantPropagation.Checked = true;
+			this.cbSparseConditionalConstantPropagation.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.cbSparseConditionalConstantPropagation.Location = new System.Drawing.Point(6, 101);
+			this.cbSparseConditionalConstantPropagation.Name = "cbSparseConditionalConstantPropagation";
+			this.cbSparseConditionalConstantPropagation.Size = new System.Drawing.Size(241, 15);
+			this.cbSparseConditionalConstantPropagation.Style = MetroFramework.MetroColorStyle.Blue;
+			this.cbSparseConditionalConstantPropagation.TabIndex = 8;
+			this.cbSparseConditionalConstantPropagation.Text = "Sparse Conditional Constant Propagation";
+			this.cbSparseConditionalConstantPropagation.UseCustomBackColor = true;
+			this.cbSparseConditionalConstantPropagation.UseSelectable = true;
 			// 
-			// cbEnableIROptimizations
+			// cbBasicOptimizations
 			// 
-			this.cbEnableIROptimizations.AutoSize = true;
-			this.cbEnableIROptimizations.Checked = true;
-			this.cbEnableIROptimizations.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.cbEnableIROptimizations.Location = new System.Drawing.Point(6, 39);
-			this.cbEnableIROptimizations.Name = "cbEnableIROptimizations";
-			this.cbEnableIROptimizations.Size = new System.Drawing.Size(140, 15);
-			this.cbEnableIROptimizations.Style = MetroFramework.MetroColorStyle.Blue;
-			this.cbEnableIROptimizations.TabIndex = 7;
-			this.cbEnableIROptimizations.Text = "IR Level Optimizations";
-			this.cbEnableIROptimizations.UseCustomBackColor = true;
-			this.cbEnableIROptimizations.UseSelectable = true;
+			this.cbBasicOptimizations.AutoSize = true;
+			this.cbBasicOptimizations.Checked = true;
+			this.cbBasicOptimizations.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.cbBasicOptimizations.Location = new System.Drawing.Point(6, 21);
+			this.cbBasicOptimizations.Name = "cbBasicOptimizations";
+			this.cbBasicOptimizations.Size = new System.Drawing.Size(127, 15);
+			this.cbBasicOptimizations.Style = MetroFramework.MetroColorStyle.Blue;
+			this.cbBasicOptimizations.TabIndex = 7;
+			this.cbBasicOptimizations.Text = "Basic Optimizations";
+			this.cbBasicOptimizations.UseCustomBackColor = true;
+			this.cbBasicOptimizations.UseSelectable = true;
 			// 
 			// cbEnableSSA
 			// 
 			this.cbEnableSSA.AutoSize = true;
 			this.cbEnableSSA.Checked = true;
 			this.cbEnableSSA.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.cbEnableSSA.Location = new System.Drawing.Point(6, 18);
+			this.cbEnableSSA.Location = new System.Drawing.Point(6, 61);
 			this.cbEnableSSA.Name = "cbEnableSSA";
 			this.cbEnableSSA.Size = new System.Drawing.Size(184, 15);
 			this.cbEnableSSA.Style = MetroFramework.MetroColorStyle.Blue;
@@ -791,7 +806,7 @@
 			this.cbInline.AutoSize = true;
 			this.cbInline.Checked = true;
 			this.cbInline.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.cbInline.Location = new System.Drawing.Point(6, 165);
+			this.cbInline.Location = new System.Drawing.Point(6, 181);
 			this.cbInline.Name = "cbInline";
 			this.cbInline.Size = new System.Drawing.Size(52, 15);
 			this.cbInline.Style = MetroFramework.MetroColorStyle.Blue;
@@ -1595,23 +1610,25 @@
 			this.timer1.Enabled = true;
 			this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
 			// 
-			// cbGenerateHashFiles
+			// cbDevirtualization
 			// 
-			this.cbGenerateHashFiles.AutoSize = true;
-			this.cbGenerateHashFiles.Location = new System.Drawing.Point(6, 144);
-			this.cbGenerateHashFiles.Name = "cbGenerateHashFiles";
-			this.cbGenerateHashFiles.Size = new System.Drawing.Size(76, 15);
-			this.cbGenerateHashFiles.Style = MetroFramework.MetroColorStyle.Blue;
-			this.cbGenerateHashFiles.TabIndex = 52;
-			this.cbGenerateHashFiles.Text = "Hash Files";
-			this.cbGenerateHashFiles.UseCustomBackColor = true;
-			this.cbGenerateHashFiles.UseSelectable = true;
+			this.cbDevirtualization.AutoSize = true;
+			this.cbDevirtualization.Checked = true;
+			this.cbDevirtualization.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.cbDevirtualization.Location = new System.Drawing.Point(6, 41);
+			this.cbDevirtualization.Name = "cbDevirtualization";
+			this.cbDevirtualization.Size = new System.Drawing.Size(105, 15);
+			this.cbDevirtualization.Style = MetroFramework.MetroColorStyle.Blue;
+			this.cbDevirtualization.TabIndex = 17;
+			this.cbDevirtualization.Text = "Devirtualization";
+			this.cbDevirtualization.UseCustomBackColor = true;
+			this.cbDevirtualization.UseSelectable = true;
 			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(659, 516);
+			this.ClientSize = new System.Drawing.Size(658, 526);
 			this.Controls.Add(this.progressBar1);
 			this.Controls.Add(this.tbApplicationLocations);
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -1683,7 +1700,7 @@
 		private System.Windows.Forms.GroupBox groupBox3;
 		private MetroFramework.Controls.MetroButton btnDestination;
 		private System.Windows.Forms.GroupBox groupBox1;
-		private MetroFramework.Controls.MetroCheckBox cbEnableIROptimizations;
+		private MetroFramework.Controls.MetroCheckBox cbBasicOptimizations;
 		private MetroFramework.Controls.MetroCheckBox cbEnableSSA;
 		private MetroFramework.Controls.MetroTabPage tabOptions;
 		private System.Windows.Forms.RichTextBox rtbOutput;
@@ -1712,7 +1729,7 @@
 		private MetroFramework.Controls.MetroButton button8;
 		private System.Windows.Forms.GroupBox groupBox2;
 		private MetroFramework.Controls.MetroCheckBox cbGenerateMapFile;
-		private MetroFramework.Controls.MetroCheckBox cbEnableSparseConditionalConstantPropagation;
+		private MetroFramework.Controls.MetroCheckBox cbSparseConditionalConstantPropagation;
 		private System.Windows.Forms.StatusStrip statusStrip1;
 		private System.Windows.Forms.ToolStripStatusLabel tsStatusLabel;
 		private System.Windows.Forms.GroupBox groupBox12;
@@ -1775,5 +1792,6 @@
 		private MetroFramework.Controls.MetroCheckBox cbGenerateNASMFile;
 		private MetroFramework.Controls.MetroCheckBox cbGenerateInlineFile;
 		private MetroFramework.Controls.MetroCheckBox cbGenerateHashFiles;
+		private MetroFramework.Controls.MetroCheckBox cbDevirtualization;
 	}
 }

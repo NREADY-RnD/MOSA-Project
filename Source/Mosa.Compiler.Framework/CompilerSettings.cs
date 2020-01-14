@@ -39,6 +39,8 @@ namespace Mosa.Compiler.Framework
 
 		public bool SparseConditionalConstantPropagation { get { return Settings.GetValue("Optimizations.SCCP", true); } }
 
+		public bool Devirtualization { get { return Settings.GetValue("Optimizations.Devirtualization", true); } }
+
 		public bool LoopInvariantCodeMotion { get { return Settings.GetValue("Optimizations.LoopInvariantCodeMotion", true); } }
 
 		public bool InlineMethods { get { return Settings.GetValue("Optimizations.Inline", true); } }
@@ -97,6 +99,7 @@ namespace Mosa.Compiler.Framework
 			Settings.SetValue("Optimizations.Basic", true);
 			Settings.SetValue("Optimizations.ValueNumbering", true);
 			Settings.SetValue("Optimizations.SCCP", true);
+			Settings.SetValue("Optimizations.Devirtualization", true);
 			Settings.SetValue("Optimizations.BitTracker", true);
 			Settings.SetValue("Optimizations.LoopInvariantCodeMotion", true);
 			Settings.SetValue("Optimizations.LongExpansion", true);

@@ -24,10 +24,6 @@ namespace Mosa.Utility.Launcher
 			set { Settings.SetValue("Compiler.BaseAddress", value); }
 		}
 
-		public bool BasicOptimizations { get { return Settings.GetValue("Optimizations.Basic", true); } }
-
-		public bool BitTracker { get { return Settings.GetValue("Optimizations.BitTracker", true); } }
-
 		public string Bochs
 		{
 			get { return Settings.GetValue("AppLocation.Bochs", null); }
@@ -49,8 +45,6 @@ namespace Mosa.Utility.Launcher
 		public bool EmitBinary { get { return Settings.GetValue("Compiler.Binary", true); } }
 
 		public bool EmitDrawf { get { return Settings.GetValue("Linker.Drawf", false); } }
-
-		public bool EmitInline { get { return Settings.GetValue("Compiler.EmitInline", false); } }
 
 		public string Emulator
 		{
@@ -154,23 +148,11 @@ namespace Mosa.Utility.Launcher
 			set { Settings.SetValue("Image.Format", value); }
 		}
 
-		public List<string> InlineAggressiveList { get { return Settings.GetValueList("Optimizations.Inline.Aggressive"); } }
-
-		public int InlineAggressiveMaximum { get { return Settings.GetValue("Optimizations.Inline.AggressiveMaximum", 24); } }
-
 		public string InlinedFile
 		{
 			get { return Settings.GetValue("CompilerDebug.InlinedFile", null); }
 			set { Settings.SetValue("CompilerDebug.InlinedFile", value); }
 		}
-
-		public List<string> InlineExcludeList { get { return Settings.GetValueList("Optimizations.Inline.Exclude"); } }
-
-		public bool InlineExplicitOnly { get { return Settings.GetValue("Optimizations.Inline.ExplicitOnly", false); } }
-
-		public int InlineMaximum { get { return Settings.GetValue("Optimizations.Inline.Maximum", 12); } }
-
-		public bool InlineMethods { get { return Settings.GetValue("Optimizations.Inline", true); } }
 
 		public bool LauncherExit
 		{
@@ -197,10 +179,6 @@ namespace Mosa.Utility.Launcher
 		}
 
 		public string LinkerFormat { get { return Settings.GetValue("Linker.Format", "elf32"); } }
-
-		public bool LongExpansion { get { return Settings.GetValue("Optimizations.LongExpansion", true); } }
-
-		public bool LoopInvariantCodeMotion { get { return Settings.GetValue("Optimizations.LoopInvariantCodeMotion", true); } }
 
 		public string MapFile
 		{
@@ -249,8 +227,6 @@ namespace Mosa.Utility.Launcher
 			set { Settings.SetValue("Compiler.Platform", value); }
 		}
 
-		public bool PlatformOptimizations { get { return Settings.GetValue("Optimizations.Platform", true); } }
-
 		public bool PlugKorlib
 		{
 			get { return Settings.GetValue("Launcher.Advance.PlugKorlib", false); }
@@ -292,20 +268,6 @@ namespace Mosa.Utility.Launcher
 		public Settings Settings { get; } = new Settings();
 
 		public List<string> SourceFiles { get { return Settings.GetValueList("Compiler.SourceFiles"); } }
-
-		public bool SparseConditionalConstantPropagation { get { return Settings.GetValue("Optimizations.SCCP", true); } }
-
-		public bool SSA { get { return Settings.GetValue("Optimizations.SSA", true); } }
-
-		public bool Statistics { get { return Settings.GetValue("CompilerDebug.Statistics", true); } }
-
-		public int TraceLevel { get { return Settings.GetValue("Compiler.TraceLevel", 0); } }
-
-		public bool TwoPass { get { return Settings.GetValue("Optimizations.TwoPass", true); } }
-
-		public bool TwoPassOptimizations { get { return Settings.GetValue("Optimizations.TwoPass", true); } }
-
-		public bool ValueNumbering { get { return Settings.GetValue("Optimizations.ValueNumbering", true); } }
 
 		public string VmwarePlayer
 		{

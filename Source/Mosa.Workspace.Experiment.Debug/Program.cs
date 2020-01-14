@@ -1,12 +1,10 @@
 ﻿// Copyright (c) MOSA Project. Licensed under the New BSD License.
 
 using Mosa.Compiler.Common.Configuration;
-using Mosa.Compiler.Common.Exceptions;
 using Mosa.Compiler.Framework;
 using Mosa.Compiler.Framework.API;
 using Mosa.Compiler.MosaTypeSystem;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 
@@ -31,6 +29,7 @@ namespace Mosa.Workspace.Experiment.Debug
 			settings.SetValue("Optimizations.Basic", false);
 			settings.SetValue("Optimizations.ValueNumbering", false);
 			settings.SetValue("Optimizations.SCCP", false);
+			settings.SetValue("Optimizations.Devirtualization", false);
 			settings.SetValue("Optimizations.BitTracker", false);
 			settings.SetValue("Optimizations.LoopInvariantCodeMotion", false);
 			settings.SetValue("Optimizations.LongExpansion", false);
