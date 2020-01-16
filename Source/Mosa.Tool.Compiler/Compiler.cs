@@ -6,6 +6,7 @@ using Mosa.Compiler.Common.Exceptions;
 using Mosa.Compiler.Framework;
 using Mosa.Compiler.Framework.API;
 using Mosa.Compiler.Framework.Linker.Elf.Dwarf;
+using Mosa.Compiler.Framework.Trace;
 using Mosa.Utility.Configuration;
 using System;
 using System.Collections.Generic;
@@ -26,8 +27,8 @@ namespace Mosa.Tool.Compiler
 
 		protected Settings Settings = new Settings();
 
-		private readonly int majorVersion = 1;
-		private readonly int minorVersion = 4;
+		private DateTime CompileStartTime;
+
 		private readonly string codeName = "Neptune";
 
 		/// <summary>
@@ -62,7 +63,7 @@ Example: Mosa.Tool.Compiler.exe -o Mosa.HelloWorld.x86.bin -platform x86 Mosa.He
 			RegisterPlatforms();
 
 			// always print header with version information
-			Console.WriteLine("MOSA AOT Compiler, Version {0}.{1} '{2}'", majorVersion, minorVersion, codeName);
+			Console.WriteLine("MOSA AOT Compiler, Version {0}.'", CompilerVersion.VersionString);
 			Console.WriteLine("Copyright 2019 by the MOSA Project. Licensed under the New BSD License.");
 
 			Console.WriteLine();
@@ -79,10 +80,7 @@ Example: Mosa.Tool.Compiler.exe -o Mosa.HelloWorld.x86.bin -platform x86 Mosa.He
 					throw new Exception("No input file(s) specified.");
 				}
 
-				compiler = new MosaCompiler(Settings, new CompilerHook());
-
-				Trace.Listeners.Add(new TextWriterTraceListener(Console.Out));
-				Debug.AutoFlush = true;
+				compiler = new MosaCompiler(Settings, CreateCompilerHook());
 
 				if (string.IsNullOrEmpty(compiler.CompilerSettings.OutputFile))
 				{
@@ -93,22 +91,18 @@ Example: Mosa.Tool.Compiler.exe -o Mosa.HelloWorld.x86.bin -platform x86 Mosa.He
 				{
 					throw new Exception("No Architecture specified.");
 				}
-			}
-			catch (Exception e)
-			{
-				ShowError(e.Message);
-				Environment.Exit(1);
-				return;
-			}
 
-			Console.WriteLine(ToString());
+				Trace.Listeners.Add(new TextWriterTraceListener(Console.Out));
+				Debug.AutoFlush = true;
 
-			Console.WriteLine("Compiling ...");
+				Console.WriteLine($" > Output file: {compiler.CompilerSettings.OutputFile}");
+				Console.WriteLine($" > Input file(s): {(string.Join(", ", new List<string>(compiler.CompilerSettings.SourceFiles.ToArray())))}");
+				Console.WriteLine($" > Platform: {compiler.CompilerSettings.Platform}");
 
-			DateTime start = DateTime.Now;
+				Console.WriteLine();
+				Console.WriteLine("Compiling ...");
+				Console.WriteLine();
 
-			try
-			{
 				Compile();
 			}
 			catch (CompilerException ce)
@@ -117,26 +111,6 @@ Example: Mosa.Tool.Compiler.exe -o Mosa.HelloWorld.x86.bin -platform x86 Mosa.He
 				Environment.Exit(1);
 				return;
 			}
-
-			DateTime end = DateTime.Now;
-
-			TimeSpan time = end - start;
-			Console.WriteLine();
-			Console.WriteLine("Compilation time: " + time);
-		}
-
-		/// <summary>
-		/// Returns a string representation of the current options.
-		/// </summary>
-		/// <returns>A string containing the options.</returns>
-		public override string ToString()
-		{
-			var sb = new StringBuilder();
-			sb.Append(" > Output file: ").AppendLine(Settings.GetValue("Compiler.OutputFile", string.Empty));
-			sb.Append(" > Input file(s): ").AppendLine(string.Join(", ", new List<string>(Settings.GetValueList("Compiler.SourceFiles").ToArray())));
-			sb.Append(" > Platform: ").AppendLine(Settings.GetValue("Compiler.Platform", string.Empty));
-			sb.Append(" > Boot spec: ").AppendLine(Settings.GetValue("Multiboot.Version", string.Empty));
-			return sb.ToString();
 		}
 
 		private static void RegisterPlatforms()
@@ -225,11 +199,38 @@ Example: Mosa.Tool.Compiler.exe -o Mosa.HelloWorld.x86.bin -platform x86 Mosa.He
 			Settings.SetValue("Launcher.Advance.HuntForCorLib", true);
 		}
 
+		private CompilerHook CreateCompilerHook()
+		{
+			CompileStartTime = DateTime.Now;
+
+			var compilerHook = new CompilerHook
+			{
+				NotifyEvent = NotifyEvent,
+			};
+
+			return compilerHook;
+		}
+
 		private void Compile()
 		{
 			compiler.Load();
 
 			compiler.ThreadedCompile();
+		}
+
+		private void NotifyEvent(CompilerEvent compilerEvent, string message, int threadID)
+		{
+			if (compilerEvent != CompilerEvent.MethodCompileEnd
+				&& compilerEvent != CompilerEvent.MethodCompileStart
+				&& compilerEvent != CompilerEvent.Counter
+				&& compilerEvent != CompilerEvent.SetupStageStart
+				&& compilerEvent != CompilerEvent.SetupStageEnd
+				&& compilerEvent != CompilerEvent.FinalizationStageStart
+				&& compilerEvent != CompilerEvent.FinalizationStageEnd)
+			{
+				message = string.IsNullOrWhiteSpace(message) ? string.Empty : $": {message}";
+				Console.WriteLine($"{(DateTime.Now - CompileStartTime).TotalSeconds:0.00} [{threadID.ToString()}] {compilerEvent.ToText()}{message}");
+			}
 		}
 
 		/// <summary>
@@ -245,16 +246,6 @@ Example: Mosa.Tool.Compiler.exe -o Mosa.HelloWorld.x86.bin -platform x86 Mosa.He
 			Console.WriteLine();
 			Console.WriteLine("Execute 'Mosa.Tool.Compiler.exe --help' for more information.");
 			Console.WriteLine();
-		}
-
-		/// <summary>
-		/// Shows a short help text pointing to the '--help' option.
-		/// </summary>
-		private void ShowShortHelp()
-		{
-			Console.WriteLine(usageString);
-			Console.WriteLine();
-			Console.WriteLine("Execute 'Mosa.Tool.Compiler.exe --help' for more information.");
 		}
 
 		private void SetDefault(Settings settings)

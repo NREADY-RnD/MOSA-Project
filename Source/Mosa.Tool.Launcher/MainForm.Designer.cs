@@ -196,7 +196,7 @@
 			this.tbTabs.Margin = new System.Windows.Forms.Padding(0);
 			this.tbTabs.Multiline = true;
 			this.tbTabs.Name = "tbTabs";
-			this.tbTabs.SelectedIndex = 0;
+			this.tbTabs.SelectedIndex = 3;
 			this.tbTabs.Size = new System.Drawing.Size(660, 440);
 			this.tbTabs.Style = MetroFramework.MetroColorStyle.Blue;
 			this.tbTabs.TabIndex = 22;
@@ -1652,11 +1652,11 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.rtbCounters.Font = new System.Drawing.Font("Consolas", 8F);
-			this.rtbCounters.Location = new System.Drawing.Point(0, 0);
+			this.rtbCounters.Location = new System.Drawing.Point(0, 1);
 			this.rtbCounters.Margin = new System.Windows.Forms.Padding(0);
 			this.rtbCounters.Name = "rtbCounters";
 			this.rtbCounters.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedBoth;
-			this.rtbCounters.Size = new System.Drawing.Size(655, 421);
+			this.rtbCounters.Size = new System.Drawing.Size(655, 417);
 			this.rtbCounters.TabIndex = 2;
 			this.rtbCounters.Text = "";
 			this.rtbCounters.WordWrap = false;
@@ -1684,11 +1684,11 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.rtbOutput.Font = new System.Drawing.Font("Consolas", 8F);
-			this.rtbOutput.Location = new System.Drawing.Point(0, 0);
+			this.rtbOutput.Location = new System.Drawing.Point(0, 1);
 			this.rtbOutput.Margin = new System.Windows.Forms.Padding(0);
 			this.rtbOutput.Name = "rtbOutput";
 			this.rtbOutput.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedBoth;
-			this.rtbOutput.Size = new System.Drawing.Size(655, 421);
+			this.rtbOutput.Size = new System.Drawing.Size(652, 417);
 			this.rtbOutput.TabIndex = 0;
 			this.rtbOutput.Text = "";
 			this.rtbOutput.WordWrap = false;
