@@ -16,9 +16,6 @@
     <StartupObject>Mosa.Tool.Mosactl.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="..\Mosa.Utility.Launcher\AppLocations.cs" Link="AppLocations.cs" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Help\usage.txt" />
   </ItemGroup>
   <ItemGroup>

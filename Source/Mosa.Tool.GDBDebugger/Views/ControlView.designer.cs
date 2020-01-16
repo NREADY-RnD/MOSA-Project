@@ -34,6 +34,7 @@ namespace Mosa.Tool.GDBDebugger.Views
 			this.btnStepN = new System.Windows.Forms.Button();
 			this.tbSteps = new System.Windows.Forms.TextBox();
 			this.btnStep = new System.Windows.Forms.Button();
+			this.btnStepOut = new System.Windows.Forms.Button();
 			this.SuspendLayout();
 			// 
 			// btnPause
@@ -64,6 +65,7 @@ namespace Mosa.Tool.GDBDebugger.Views
 			// 
 			// btnRestart
 			// 
+			this.btnRestart.Enabled = false;
 			this.btnRestart.Image = ((System.Drawing.Image)(resources.GetObject("btnRestart.Image")));
 			this.btnRestart.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
 			this.btnRestart.Location = new System.Drawing.Point(5, 5);
@@ -79,7 +81,7 @@ namespace Mosa.Tool.GDBDebugger.Views
 			// 
 			this.btnStepN.Image = ((System.Drawing.Image)(resources.GetObject("btnStepN.Image")));
 			this.btnStepN.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-			this.btnStepN.Location = new System.Drawing.Point(329, 5);
+			this.btnStepN.Location = new System.Drawing.Point(410, 5);
 			this.btnStepN.Name = "btnStepN";
 			this.btnStepN.Size = new System.Drawing.Size(80, 23);
 			this.btnStepN.TabIndex = 22;
@@ -90,9 +92,9 @@ namespace Mosa.Tool.GDBDebugger.Views
 			// 
 			// tbSteps
 			// 
-			this.tbSteps.Location = new System.Drawing.Point(415, 7);
+			this.tbSteps.Location = new System.Drawing.Point(496, 7);
 			this.tbSteps.Name = "tbSteps";
-			this.tbSteps.Size = new System.Drawing.Size(55, 20);
+			this.tbSteps.Size = new System.Drawing.Size(55, 36);
 			this.tbSteps.TabIndex = 20;
 			this.tbSteps.Text = "1000";
 			// 
@@ -100,7 +102,7 @@ namespace Mosa.Tool.GDBDebugger.Views
 			// 
 			this.btnStep.Image = ((System.Drawing.Image)(resources.GetObject("btnStep.Image")));
 			this.btnStep.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-			this.btnStep.Location = new System.Drawing.Point(248, 5);
+			this.btnStep.Location = new System.Drawing.Point(329, 5);
 			this.btnStep.Name = "btnStep";
 			this.btnStep.Size = new System.Drawing.Size(80, 23);
 			this.btnStep.TabIndex = 0;
@@ -109,21 +111,35 @@ namespace Mosa.Tool.GDBDebugger.Views
 			this.btnStep.UseVisualStyleBackColor = true;
 			this.btnStep.Click += new System.EventHandler(this.btnStep_Click);
 			// 
+			// btnStepOut
+			// 
+			this.btnStepOut.Image = ((System.Drawing.Image)(resources.GetObject("btnStepOut.Image")));
+			this.btnStepOut.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+			this.btnStepOut.Location = new System.Drawing.Point(248, 5);
+			this.btnStepOut.Name = "btnStepOut";
+			this.btnStepOut.Size = new System.Drawing.Size(80, 23);
+			this.btnStepOut.TabIndex = 26;
+			this.btnStepOut.Text = "Step Out";
+			this.btnStepOut.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+			this.btnStepOut.UseVisualStyleBackColor = true;
+			this.btnStepOut.Click += new System.EventHandler(this.btnStepOut_Click);
+			// 
 			// ControlView
 			// 
-			this.ClientSize = new System.Drawing.Size(477, 36);
+			this.ClientSize = new System.Drawing.Size(780, 114);
 			this.CloseButton = false;
 			this.CloseButtonVisible = false;
+			this.Controls.Add(this.btnStepOut);
 			this.Controls.Add(this.btnPause);
 			this.Controls.Add(this.btnStart);
 			this.Controls.Add(this.btnRestart);
 			this.Controls.Add(this.btnStepN);
 			this.Controls.Add(this.tbSteps);
 			this.Controls.Add(this.btnStep);
-			this.DockAreas = ((WeifenLuo.WinFormsUI.Docking.DockAreas)(((((WeifenLuo.WinFormsUI.Docking.DockAreas.Float | WeifenLuo.WinFormsUI.Docking.DockAreas.DockLeft)
-			| WeifenLuo.WinFormsUI.Docking.DockAreas.DockRight)
-			| WeifenLuo.WinFormsUI.Docking.DockAreas.DockTop)
-			| WeifenLuo.WinFormsUI.Docking.DockAreas.DockBottom)));
+			this.DockAreas = ((WeifenLuo.WinFormsUI.Docking.DockAreas)(((((WeifenLuo.WinFormsUI.Docking.DockAreas.Float | WeifenLuo.WinFormsUI.Docking.DockAreas.DockLeft) 
+            | WeifenLuo.WinFormsUI.Docking.DockAreas.DockRight) 
+            | WeifenLuo.WinFormsUI.Docking.DockAreas.DockTop) 
+            | WeifenLuo.WinFormsUI.Docking.DockAreas.DockBottom)));
 			this.HideOnClose = true;
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
@@ -145,8 +161,6 @@ namespace Mosa.Tool.GDBDebugger.Views
 		private System.Windows.Forms.Button btnRestart;
 		private System.Windows.Forms.Button btnStart;
 		private System.Windows.Forms.Button btnPause;
-
-
-
+		private System.Windows.Forms.Button btnStepOut;
 	}
 }

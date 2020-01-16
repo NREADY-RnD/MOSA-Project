@@ -28,6 +28,11 @@
     <Compile Update="DebugAppLocationsWindow.Designer.cs">
       <DependentUpon>DebugAppLocationsWindow.cs</DependentUpon>
     </Compile>
+    <Compile Update="DebugVMImageWindow.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>DebugVMImageWindow.resx</DependentUpon>
+    </Compile>
     <Compile Update="Views\BreakpointView.cs" />
     <Compile Update="Views\BreakpointView.designer.cs">
       <DependentUpon>BreakpointView.cs</DependentUpon>
@@ -39,6 +44,12 @@
     <Compile Update="Views\DisplayView.cs" />
     <Compile Update="Views\DisplayView.designer.cs">
       <DependentUpon>DisplayView.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Views\LaunchView.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Views\LaunchView.designer.cs">
+      <DependentUpon>LaunchView.cs</DependentUpon>
     </Compile>
     <Compile Update="Views\SourceDataView.cs" />
     <Compile Update="Views\SourceDataView.designer.cs">
@@ -106,6 +117,7 @@
     <ProjectReference Include="..\Mosa.Compiler.Common\Mosa.Compiler.Common.csproj" />
     <ProjectReference Include="..\Mosa.Compiler.Framework\Mosa.Compiler.Framework.csproj" />
     <ProjectReference Include="..\Mosa.Utility.BootImage\Mosa.Utility.BootImage.csproj" />
+    <ProjectReference Include="..\Mosa.Utility.Configuration\Mosa.Utility.Configuration.csproj" />
     <ProjectReference Include="..\Mosa.Utility.DebugEngine\Mosa.Utility.DebugEngine.csproj" />
     <ProjectReference Include="..\Mosa.Utility.Launcher\Mosa.Utility.Launcher.csproj" />
     <ProjectReference Include="..\Mosa.Utility.RSP\Mosa.Utility.RSP.csproj" />
@@ -116,6 +128,14 @@
     </EmbeddedResource>
     <EmbeddedResource Update="DebugAppLocationsWindow.resx">
       <DependentUpon>DebugAppLocationsWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Update="DebugVMImageWindow.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>DebugVMImageWindow.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\BreakpointView.resx">
       <DependentUpon>BreakpointView.cs</DependentUpon>
@@ -132,9 +152,6 @@
     <EmbeddedResource Update="DebugDockContent.resx">
       <DependentUpon>DebugDockContent.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Update="Views\DisplayView.resx">
-      <DependentUpon>DisplayView.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Update="Views\SourceDataView.resx">
       <DependentUpon>SourceDataView.cs</DependentUpon>
     </EmbeddedResource>
@@ -149,18 +166,6 @@
     </EmbeddedResource>
     <EmbeddedResource Update="Views\OutputView.resx">
       <DependentUpon>OutputView.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Views\RegisterView.resx">
-      <DependentUpon>RegisterView.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Views\InstructionView.resx">
-      <DependentUpon>InstructionView.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Views\StackFrameView.resx">
-      <DependentUpon>StackFrameView.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Views\StatusView.resx">
-      <DependentUpon>StatusView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\SymbolView.resx">
       <DependentUpon>SymbolView.cs</DependentUpon>
@@ -181,7 +186,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="DebugVMImageWindow.cs" />
-    <Compile Remove="DebugVMImageWindow.Designer.cs" />
     <Compile Remove="DebugInfo\DebugSource.cs" />
   </ItemGroup>
 </Project>

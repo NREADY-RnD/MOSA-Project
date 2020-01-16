@@ -1,11 +1,14 @@
 ﻿// Copyright (c) MOSA Project. Licensed under the New BSD License.
 
 using CommandLine;
+using Mosa.Compiler.Common.Configuration;
 using Mosa.Compiler.Framework;
+using Mosa.Compiler.Framework.API;
 using Mosa.Tool.GDBDebugger.DebugData;
 using Mosa.Tool.GDBDebugger.GDB;
 using Mosa.Tool.GDBDebugger.Views;
 using Mosa.Utility.BootImage;
+using Mosa.Utility.Configuration;
 using Mosa.Utility.Launcher;
 using System;
 using System.Collections.Generic;
@@ -18,7 +21,7 @@ using WeifenLuo.WinFormsUI.Docking;
 
 namespace Mosa.Tool.GDBDebugger
 {
-	public partial class MainForm : Form, IStarterEvent
+	public partial class MainForm : Form
 	{
 		public readonly OutputView outputView;
 
@@ -42,16 +45,18 @@ namespace Mosa.Tool.GDBDebugger
 		private readonly SourceView sourceView;
 		private readonly SourceDataView sourceDataView;
 
+		private readonly LaunchView launchView;
+		private readonly MethodParametersView methodParametersView;
+
 		//private ScriptView scriptView;
 
 		public string Status { set { toolStripStatusLabel1.Text = value; toolStrip1.Refresh(); } }
 
 		public Connector GDBConnector { get; private set; }
+
 		public MemoryCache MemoryCache { get; private set; }
 
-		public LauncherOptions LauncherOptions { get; } = new LauncherOptions();
-
-		public AppLocations AppLocations { get; } = new AppLocations();
+		public Settings Settings { get; }
 
 		public DebugSource DebugSource { get; set; } = new DebugSource();
 
@@ -59,9 +64,86 @@ namespace Mosa.Tool.GDBDebugger
 
 		public List<Watch> Watchs { get; } = new List<Watch>();
 
+		public BasePlatform Platform { get { return GDBConnector?.Platform; } }
+
+		public ulong InstructionPointer { get { return Platform == null ? 0 : Platform.InstructionPointer.Value; } }
+		public ulong StackFrame { get { return Platform == null ? 0 : Platform.StackFrame.Value; } }
+		public ulong StackPointer { get { return Platform == null ? 0 : Platform.StackPointer.Value; } }
+		public ulong StatusFlag { get { return Platform == null ? 0 : Platform.StatusFlag.Value; } }
+
 		private Process VMProcess;
 
 		public string VMHash;
+
+		#region Settings
+
+		public string BreakpointFile
+		{
+			get { return Settings.GetValue("Debugger.BreakpointFile", null); }
+			set { Settings.SetValue("Debugger.BreakpointFile", value); }
+		}
+
+		public string WatchFile
+		{
+			get { return Settings.GetValue("Debugger.WatchFile", null); }
+			set { Settings.SetValue("Debugger.WatchFile", value); }
+		}
+
+		public string DebugFile
+		{
+			get { return Settings.GetValue("CompilerDebug.DebugFile", "%DEFAULT%"); }
+			set { Settings.SetValue("CompilerDebug.DebugFile", value); }
+		}
+
+		public string ImageFile
+		{
+			get { return Settings.GetValue("Image.ImageFile", null); }
+			set { Settings.SetValue("Image.ImageFile", value); }
+		}
+
+		public int GDBPort
+		{
+			get { return Settings.GetValue("GDB.Port", 0); }
+			set { Settings.SetValue("GDB.Port", value); }
+		}
+
+		public string GDBHost
+		{
+			get { return Settings.GetValue("GDB.Host", "localhost"); }
+			set { Settings.SetValue("GDB.Host", value); }
+		}
+
+		public string ImageFormat
+		{
+			get { return Settings.GetValue("Image.Format", null); }
+			set { Settings.SetValue("Image.Format", value); }
+		}
+
+		public bool LauncherStart
+		{
+			get { return Settings.GetValue("Launcher.Start", false); }
+			set { Settings.SetValue("Launcher.Start", value); }
+		}
+
+		public bool EmulatorDisplay
+		{
+			get { return Settings.GetValue("LEmulator.Display", false); }
+			set { Settings.SetValue("Emulator.Display", value); }
+		}
+
+		public string QEMU
+		{
+			get { return Settings.GetValue("AppLocation.Qemu", null); }
+			set { Settings.SetValue("AppLocation.Qemu", value); }
+		}
+
+		public string QEMUBios
+		{
+			get { return Settings.GetValue("AppLocation.Qemu.BIOS", null); }
+			set { Settings.SetValue("AppLocation.Qemu.BIOS", value); }
+		}
+
+		#endregion Settings
 
 		public MainForm()
 		{
@@ -83,14 +165,27 @@ namespace Mosa.Tool.GDBDebugger
 			breakPointView = new BreakpointView(this);
 			instructionView = new InstructionView(this);
 			methodView = new MethodView(this);
+			methodParametersView = new MethodParametersView(this);
 
 			//scriptView = new ScriptView(this);
 
 			sourceView = new SourceView(this);
 			sourceDataView = new SourceDataView(this);
 
-			AppLocations.FindApplications();
-			LauncherOptions.EnableQemuGDB = true;
+			launchView = new LaunchView(this);
+
+			Settings = AppLocationsSettings.GetAppLocations();
+
+			Settings.SetValue("Emulator.GDB", true);
+			Settings.SetValue("Emulator.Serial", "TCPServer");
+			Settings.SetValue("Emulator.Serial.Port", 1250);
+			Settings.SetValue("Emulator.Display", false);
+
+			GDBPort = 1234;
+
+			AppDomain.CurrentDomain.DomainUnload += (s, e) => { KillVMProcess(); };
+			AppDomain.CurrentDomain.ProcessExit += (s, e) => { KillVMProcess(); };
+			AppDomain.CurrentDomain.UnhandledException += (s, e) => { KillVMProcess(); };
 		}
 
 		private void MainForm_Load(object sender, EventArgs e)
@@ -98,7 +193,7 @@ namespace Mosa.Tool.GDBDebugger
 			Text = "MOSA GDB Debugger v" + CompilerVersion.VersionString;
 
 			dockPanel.SuspendLayout(true);
-			dockPanel.DockTopPortion = 75;
+			dockPanel.DockTopPortion = 54;
 
 			controlView.Show(dockPanel, DockState.DockTop);
 			statusView.Show(controlView.PanelPane, DockAlignment.Right, 0.50);
@@ -106,6 +201,7 @@ namespace Mosa.Tool.GDBDebugger
 			breakPointView.Show(dockPanel, DockState.DockBottom);
 			watchView.Show(breakPointView.PanelPane, DockAlignment.Right, 0.50);
 
+			launchView.Show(dockPanel, DockState.Document);
 			displayView.Show(dockPanel, DockState.Document);
 			outputView.Show(dockPanel, DockState.Document);
 
@@ -120,78 +216,55 @@ namespace Mosa.Tool.GDBDebugger
 
 			var memoryView = new MemoryView(this);
 			memoryView.Show(dockPanel, DockState.Document);
+
 			symbolView.Show(dockPanel, DockState.Document);
 
 			instructionView.Show(symbolView.PanelPane, DockAlignment.Right, 0.35);
 			methodView.Show(instructionView.PanelPane, instructionView);
 			callStackView.Show(instructionView.PanelPane, DockAlignment.Bottom, 0.25);
+			methodParametersView.Show(callStackView.Pane, callStackView);
 
 			registersView.Show();
+			launchView.Show();
 
 			dockPanel.ResumeLayout(true, true);
 
-			CalculateVMHash();
-
-			LauncherOptions.SerialConnectionOption = SerialConnectionOption.TCPServer;
-			LauncherOptions.SerialConnectionPort = 1250;
-
-			if (LauncherOptions.ImageFile != null)
+			if (ImageFile != null)
 			{
-				VMProcess = StartQEMU();
-			}
-			LoadDebugFile();
-			if (LauncherOptions.AutoStart)
-			{
-				System.Threading.Thread.Sleep(3000);
-				Connect();
-			}
+				//VMProcess = StartQEMU();
 
-			LoadBreakPoints();
-			LoadWatches();
+				//if (LauncherStart)
+				//{
+				//	System.Threading.Thread.Sleep(3000);
+				//	Connect();
+				//}
+			}
 		}
 
-		void IStarterEvent.NewStatus(string status)
-		{
-			MethodInvoker method = () => NewStatus(status);
-
-			Invoke(method);
-		}
+		private void NotifyStatus(string status) => Invoke((MethodInvoker)(() => NewStatus(status)));
 
 		private void NewStatus(string info)
 		{
-			AddOutput(info);
+			outputView.AddOutput(info);
 		}
 
 		private void LoadDebugFile()
 		{
-			if (LauncherOptions.DebugFile != null && File.Exists(LauncherOptions.DebugFile))
+			if (DebugFile != null && File.Exists(DebugFile))
 			{
 				DebugSource = new DebugSource();
-				LoadDebugData.LoadDebugInfo(LauncherOptions.DebugFile, DebugSource);
+				LoadDebugData.LoadDebugInfo(DebugFile, DebugSource);
 			}
 		}
 
-		public void AddOutput(string line)
-		{
-			outputView.AddOutput(line);
-		}
+		private void OnPause() => Invoke((MethodInvoker)(() => NotifyPause()));
 
-		private void OnPause()
-		{
-			MethodInvoker method = NotifyPause;
-
-			BeginInvoke(method);
-		}
-
-		private void OnRunning()
-		{
-			MethodInvoker method = NotifyRunning;
-
-			BeginInvoke(method);
-		}
+		private void OnRunning() => Invoke((MethodInvoker)(() => NotifyRunning()));
 
 		private void NotifyPause()
 		{
+			DeleteTemporaryBreakPonts();
+
 			foreach (var dock in dockPanel.Contents)
 			{
 				if (dock.DockHandler.Content is DebugDockContent debugdock)
@@ -251,7 +324,7 @@ namespace Mosa.Tool.GDBDebugger
 
 		private void btnConnect_Click(object sender, EventArgs e)
 		{
-			using (var connect = new ConnectWindow(LauncherOptions))
+			using (var connect = new ConnectWindow(Settings))
 			{
 				if (connect.ShowDialog(this) == DialogResult.OK)
 				{
@@ -268,12 +341,12 @@ namespace Mosa.Tool.GDBDebugger
 				MemoryCache = null;
 			}
 
-			if (LauncherOptions.GDBPort == 0)
+			if (GDBPort == 0)
 			{
-				LauncherOptions.GDBPort = 1234;
+				GDBPort = 1234;
 			}
 
-			GDBConnector = new Connector(new X86Platform(), LauncherOptions.GDBHost, LauncherOptions.GDBPort);
+			GDBConnector = new Connector(new X86Platform(), GDBHost, GDBPort);
 
 			GDBConnector.Connect();
 			GDBConnector.OnPause = OnPause;
@@ -358,10 +431,10 @@ namespace Mosa.Tool.GDBDebugger
 			AddBreakPoint(breakpoint);
 		}
 
-		public void AddBreakPoint(ulong address)
+		public void AddBreakPoint(ulong address, bool temporary = false)
 		{
 			string name = CreateBreakPointName(address);
-			var breakpoint = new BreakPoint(name, address);
+			var breakpoint = new BreakPoint(name, address, temporary);
 			AddBreakPoint(breakpoint);
 		}
 
@@ -377,6 +450,36 @@ namespace Mosa.Tool.GDBDebugger
 			BreakPoints.Clear();
 			GDBConnector.ClearAllBreakPoints();
 			NotifyBreakPointChange();
+		}
+
+		public void DeleteTemporaryBreakPonts()
+		{
+			if (Platform == null)
+				return;
+
+			if (BreakPoints.Count == 0)
+				return;
+
+			var temps = new List<BreakPoint>();
+
+			foreach (var breakpoint in BreakPoints)
+			{
+				if (breakpoint.Temporary && breakpoint.Address == InstructionPointer)
+				{
+					temps.Add(breakpoint);
+				}
+			}
+
+			foreach (var breakpoint in temps)
+			{
+				BreakPoints.Remove(breakpoint);
+				GDBConnector.ClearBreakPoint(breakpoint.Address);
+			}
+
+			if (temps.Count != 0)
+			{
+				NotifyBreakPointChange();
+			}
 		}
 
 		public void AddWatch(Watch watch)
@@ -457,14 +560,16 @@ namespace Mosa.Tool.GDBDebugger
 
 		public void LoadArguments(string[] args)
 		{
-			var cliParser = new Parser(config => config.HelpWriter = Console.Out);
+			var arguments = Reader.ParseArguments(args, CommandLineArguments.Map);
 
-			cliParser.ParseArguments(() => LauncherOptions, args);
+			Settings.Merge(arguments);
+
+			//UpdateDisplay(Settings);
 		}
 
 		private void toolStripButton2_Click(object sender, EventArgs e)
 		{
-			using (var debug = new DebugAppLocationsWindow(AppLocations))
+			using (var debug = new DebugAppLocationsWindow(this))
 			{
 				if (debug.ShowDialog(this) == DialogResult.OK)
 				{
@@ -472,69 +577,78 @@ namespace Mosa.Tool.GDBDebugger
 			}
 		}
 
-		private static ImageFormat GetFormat(string fileName)
+		private static string GetFormat(string fileName)
 		{
 			switch (Path.GetExtension(fileName).ToLower())
 			{
-				case ".bin": return ImageFormat.BIN;
-				case ".img": return ImageFormat.IMG;
-				case ".iso": return ImageFormat.ISO;
+				case ".bin": return "BIN";
+				case ".img": return "IMG";
+				case ".iso": return "ISO";
+				default: return string.Empty;
 			}
-
-			return ImageFormat.NotSpecified;
 		}
 
-		private void toolStripButton1_Click(object sender, EventArgs e)
+		public void LaunchImage(string imageFile, string debugFile, string breakpointFile, string watchFile)
 		{
-			if (odfVMImage.ShowDialog() == DialogResult.OK)
+			ImageFile = imageFile;
+			ImageFormat = GetFormat(imageFile);
+
+			DebugFile = debugFile;
+			BreakpointFile = breakpointFile;
+			WatchFile = watchFile;
+
+			LaunchImage();
+		}
+
+		private void LaunchImage()
+		{
+			KillVMProcess();
+
+			CalculateVMHash();
+
+			StartQEMU();
+
+			LoadDebugFile();
+
+			Connect();
+
+			LoadBreakPoints();
+			LoadWatches();
+
+			displayView.Show();
+		}
+
+		private void KillVMProcess()
+		{
+			if (VMProcess == null)
+				return;
+
+			if (!VMProcess.HasExited)
 			{
-				LauncherOptions.ImageFile = odfVMImage.FileName;
-				LauncherOptions.ImageFormat = GetFormat(LauncherOptions.ImageFile);
-
-				var debugFile = Path.Combine(
-					Path.GetDirectoryName(LauncherOptions.ImageFile),
-					Path.GetFileNameWithoutExtension(LauncherOptions.ImageFile)) + ".debug";
-
-				if (File.Exists(debugFile))
-				{
-					LauncherOptions.DebugFile = debugFile;
-				}
-
-				var breakpointFile = Path.Combine(
-					Path.GetDirectoryName(LauncherOptions.ImageFile),
-					Path.GetFileNameWithoutExtension(LauncherOptions.ImageFile)) + ".breakpoints";
-
-				if (File.Exists(debugFile))
-				{
-					LauncherOptions.BreakpointFile = breakpointFile;
-				}
-
-				var watchFile = Path.Combine(
-					Path.GetDirectoryName(LauncherOptions.ImageFile),
-					Path.GetFileNameWithoutExtension(LauncherOptions.ImageFile)) + ".watches";
-
-				if (File.Exists(watchFile))
-				{
-					LauncherOptions.WatchFile = watchFile;
-				}
-
-				LauncherOptions.GDBPort++;
-
-				CalculateVMHash();
-
-				VMProcess = StartQEMU();
-				LoadDebugFile();
-				Connect();
-				LoadBreakPoints();
-				LoadWatches();
+				VMProcess.Kill();
+				VMProcess.WaitForExit();
 			}
+
+			VMProcess = null;
 		}
 
-		private Process StartQEMU()
+		private CompilerHook CreateCompilerHook()
 		{
-			var starter = new Starter(LauncherOptions, AppLocations, this);
+			var compilerHook = new CompilerHook
+			{
+				NotifyStatus = NotifyStatus
+			};
 
-			return starter.LaunchVM();
+			return compilerHook;
+		}
+
+		private void StartQEMU()
+		{
+			var compilerHook = CreateCompilerHook();
+
+			var starter = new Starter(Settings, compilerHook);
+
+			VMProcess = starter.LaunchVM();
 		}
 
 		private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
@@ -545,27 +659,24 @@ namespace Mosa.Tool.GDBDebugger
 				GDBConnector = null;
 			}
 
-			if (VMProcess?.HasExited == false)
-			{
-				VMProcess.Kill();
-			}
+			KillVMProcess();
 		}
 
 		public void LoadBreakPoints()
 		{
-			if (LauncherOptions.BreakpointFile == null || !File.Exists(LauncherOptions.BreakpointFile))
+			if (BreakpointFile == null || !File.Exists(BreakpointFile))
 				return;
 
 			bool remap = false;
 
-			foreach (var line in File.ReadAllLines(LauncherOptions.BreakpointFile))
+			foreach (var line in File.ReadAllLines(BreakpointFile))
 			{
 				if (string.IsNullOrEmpty(line))
 					continue;
 
 				if (line.StartsWith("#HASH: "))
 				{
-					if (LauncherOptions.ImageFile != null && File.Exists(LauncherOptions.ImageFile))
+					if (ImageFile != null && File.Exists(ImageFile))
 					{
 						var hash = line.Substring(7).Trim();
 
@@ -602,19 +713,19 @@ namespace Mosa.Tool.GDBDebugger
 
 		public void LoadWatches()
 		{
-			if (LauncherOptions.WatchFile == null || !File.Exists(LauncherOptions.WatchFile))
+			if (WatchFile == null || !File.Exists(WatchFile))
 				return;
 
 			bool remap = false;
 
-			foreach (var line in File.ReadAllLines(LauncherOptions.WatchFile))
+			foreach (var line in File.ReadAllLines(WatchFile))
 			{
 				if (string.IsNullOrEmpty(line))
 					continue;
 
 				if (line.StartsWith("#HASH: "))
 				{
-					if (LauncherOptions.ImageFile != null && File.Exists(LauncherOptions.ImageFile))
+					if (ImageFile != null && File.Exists(ImageFile))
 					{
 						var hash = line.Substring(7).Trim();
 
@@ -650,13 +761,36 @@ namespace Mosa.Tool.GDBDebugger
 			}
 		}
 
+		public static ulong ToLong(byte[] bytes)
+		{
+			return ToLong(bytes, 0, (uint)bytes.Length);
+		}
+
+		public static ulong ToLong(byte[] bytes, uint size)
+		{
+			return ToLong(bytes, 0, size);
+		}
+
+		public static ulong ToLong(byte[] bytes, uint start, uint size)
+		{
+			ulong value = 0;
+
+			for (int i = 0; i < size; i++)
+			{
+				ulong shifted = (ulong)(bytes[start + i] << (i * 8));
+				value |= shifted;
+			}
+
+			return value;
+		}
+
 		private void CalculateVMHash()
 		{
 			VMHash = null;
 
-			if (LauncherOptions.ImageFile != null && File.Exists(LauncherOptions.ImageFile))
+			if (ImageFile != null && File.Exists(ImageFile))
 			{
-				VMHash = CalculateFileHash(LauncherOptions.ImageFile);
+				VMHash = CalculateFileHash(ImageFile);
 			}
 		}
 
@@ -670,6 +804,10 @@ namespace Mosa.Tool.GDBDebugger
 					return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
 				}
 			}
+		}
+
+		private void toolStripButton3_Click(object sender, EventArgs e)
+		{
 		}
 	}
 }

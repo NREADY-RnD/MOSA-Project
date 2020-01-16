@@ -38,7 +38,7 @@ namespace Mosa.Tool.GDBDebugger.Views
 			if (Platform.Registers == null)
 				return;
 
-			var sourceLocation = Source.Find(DebugSource, Platform.InstructionPointer.Value);
+			var sourceLocation = Source.Find(DebugSource, InstructionPointer);
 
 			if (sourceLocation == null)
 				return;

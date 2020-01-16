@@ -35,6 +35,11 @@ namespace Mosa.Tool.GDBDebugger.DebugData
 
 		public Dictionary<int, SourceFileInfo> SourceFileLookup = new Dictionary<int, SourceFileInfo>();
 
+		private SymbolInfo cachedSymbol;
+		private MethodInfo cachedMethod;
+		private int cachedParametersMethodID;
+		private List<ParameterInfo> cacheParameters;
+
 		public void Add(SymbolInfo symbol)
 		{
 			Symbols.Add(symbol);
@@ -113,6 +118,16 @@ namespace Mosa.Tool.GDBDebugger.DebugData
 			return SymbolLookup[address];
 		}
 
+		public SymbolInfo GetFirstSymbolsStartingAt(ulong address)
+		{
+			var symbols = GetSymbolsStartingAt(address);
+
+			if (symbols == null || symbols.Count == 0)
+				return null;
+
+			return symbols[0];
+		}
+
 		public InstructionInfo GetInstruction(ulong address)
 		{
 			InstructionLookup.TryGetValue(address, out InstructionInfo instruction);
@@ -137,10 +152,19 @@ namespace Mosa.Tool.GDBDebugger.DebugData
 
 		public SymbolInfo GetFirstSymbol(ulong address)
 		{
+			if (cachedSymbol != null)
+			{
+				if (address >= cachedSymbol.Address && address < (cachedSymbol.Address + cachedSymbol.Length))
+				{
+					return cachedSymbol;
+				}
+			}
+
 			foreach (var symbol in Symbols)
 			{
 				if (address >= symbol.Address && address < (symbol.Address + symbol.Length))
 				{
+					cachedSymbol = symbol;
 					return symbol;
 				}
 			}
@@ -160,10 +184,19 @@ namespace Mosa.Tool.GDBDebugger.DebugData
 
 		public MethodInfo GetMethod(ulong address)
 		{
+			if (cachedMethod != null)
+			{
+				if (address >= cachedMethod.Address && address < (cachedMethod.Address + cachedMethod.Size))
+				{
+					return cachedMethod;
+				}
+			}
+
 			foreach (var method in Methods)
 			{
 				if (address >= method.Address && address < (method.Address + method.Size))
 				{
+					cachedMethod = method;
 					return method;
 				}
 			}
@@ -249,6 +282,48 @@ namespace Mosa.Tool.GDBDebugger.DebugData
 			SourceFileLookup.TryGetValue(sourceFileID, out SourceFileInfo sourceFileInfo);
 
 			return sourceFileInfo;
+		}
+
+		//public List<ParameterInfo> Parameters { get; } = new List<ParameterInfo>();
+		public List<ParameterInfo> GetMethodParameters(MethodInfo methodInfo)
+		{
+			if (methodInfo.ParameterStackSize == 0)
+				return null;
+
+			return GetMethodParameters(methodInfo.ID);
+		}
+
+		public List<ParameterInfo> GetMethodParameters(int methodID)
+		{
+			if (cachedParametersMethodID == methodID)
+			{
+				return cacheParameters;
+			}
+
+			List<ParameterInfo> parameters = null;
+
+			foreach (var parameter in Parameters)
+			{
+				if (parameter.MethodID == methodID)
+				{
+					if (parameters == null)
+					{
+						parameters = new List<ParameterInfo>();
+					}
+
+					parameters.Add(parameter);
+				}
+			}
+
+			cachedParametersMethodID = methodID;
+			cacheParameters = parameters;
+
+			return parameters;
+		}
+
+		public TypeInfo GetTypeInfo(int typeID)
+		{
+			return TypeIDLookup[typeID];
 		}
 	}
 }

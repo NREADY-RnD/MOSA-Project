@@ -72,15 +72,7 @@ namespace Mosa.Tool.GDBDebugger.Views
 			OnPause();
 		}
 
-		private void OnMemoryRead(ulong address, byte[] bytes)
-		{
-			MethodInvoker method = delegate ()
-			{
-				UpdateDisplay(address, bytes);
-			};
-
-			BeginInvoke(method);
-		}
+		private void OnMemoryRead(ulong address, byte[] bytes) => Invoke((MethodInvoker)(() => UpdateDisplay(address, bytes)));
 
 		private void UpdateDisplay(ulong address, byte[] bytes)
 		{
@@ -89,24 +81,11 @@ namespace Mosa.Tool.GDBDebugger.Views
 				if (watch.Watch.Address != address || watch.Size != bytes.Length)
 					continue;
 
-				watch.Value = ToLong(bytes);
+				watch.Value = MainForm.ToLong(bytes);
 				watch.HexValue = BasePlatform.ToHex(watch.Value, watch.Size);
 			}
 
 			Refresh();
-		}
-
-		private static ulong ToLong(byte[] bytes)
-		{
-			ulong value = 0;
-
-			for (int i = 0; i < bytes.Length; i++)
-			{
-				ulong shifted = (ulong)(bytes[i] << (i * 8));
-				value |= shifted;
-			}
-
-			return value;
 		}
 
 		public void AddWatch(string name, ulong address, uint size, bool signed)
@@ -181,24 +160,24 @@ namespace Mosa.Tool.GDBDebugger.Views
 		{
 			if (openFileDialog1.ShowDialog() == DialogResult.OK)
 			{
-				Options.WatchFile = openFileDialog1.FileName;
+				MainForm.WatchFile = openFileDialog1.FileName;
 				MainForm.LoadWatches();
 			}
 		}
 
 		private void toolStripButton1_Click(object sender, EventArgs e)
 		{
-			if (Options.WatchFile == null)
+			if (MainForm.WatchFile != null)
 			{
-				if (Options.ImageFile != null)
+				if (MainForm.ImageFile != null)
 				{
-					Options.WatchFile = Path.Combine(
-						Path.GetDirectoryName(Options.ImageFile),
-						Path.GetFileNameWithoutExtension(Options.ImageFile)) + ".watches";
+					MainForm.WatchFile = Path.Combine(
+					Path.GetDirectoryName(MainForm.ImageFile),
+					Path.GetFileNameWithoutExtension(MainForm.ImageFile)) + ".watches";
 				}
 				else
 				{
-					Options.WatchFile = Path.Combine(Path.GetTempPath(), "default.watches");
+					MainForm.WatchFile = Path.Combine(Path.GetTempPath(), "default.watches");
 				}
 			}
 
@@ -209,7 +188,7 @@ namespace Mosa.Tool.GDBDebugger.Views
 		{
 			var lines = new List<string>();
 
-			if (Options.ImageFile != null)
+			if (MainForm.ImageFile != null)
 			{
 				lines.Add("#HASH: " + MainForm.VMHash);
 			}
@@ -219,7 +198,7 @@ namespace Mosa.Tool.GDBDebugger.Views
 				lines.Add(entry.Address + '\t' + entry.Size + '\t' + entry.Name);
 			}
 
-			File.WriteAllLines(Options.WatchFile, lines);
+			File.WriteAllLines(MainForm.WatchFile, lines);
 		}
 	}
 }
