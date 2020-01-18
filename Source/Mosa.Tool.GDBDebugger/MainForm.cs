@@ -212,8 +212,6 @@ namespace Mosa.Tool.GDBDebugger
 			sourceView.Show(dockPanel, DockState.Document);
 			sourceDataView.Show(dockPanel, DockState.Document);
 
-			//stackFrameView.Show(dockPanel, DockState.DockRight);
-
 			var memoryView = new MemoryView(this);
 			memoryView.Show(dockPanel, DockState.Document);
 
@@ -231,13 +229,7 @@ namespace Mosa.Tool.GDBDebugger
 
 			if (ImageFile != null)
 			{
-				//VMProcess = StartQEMU();
-
-				//if (LauncherStart)
-				//{
-				//	System.Threading.Thread.Sleep(3000);
-				//	Connect();
-				//}
+				Connect();
 			}
 		}
 
