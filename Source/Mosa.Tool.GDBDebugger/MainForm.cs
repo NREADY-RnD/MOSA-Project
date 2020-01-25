@@ -139,8 +139,8 @@ namespace Mosa.Tool.GDBDebugger
 
 		public string QEMUBios
 		{
-			get { return Settings.GetValue("AppLocation.Qemu.BIOS", null); }
-			set { Settings.SetValue("AppLocation.Qemu.BIOS", value); }
+			get { return Settings.GetValue("AppLocation.QemuBIOS", null); }
+			set { Settings.SetValue("AppLocation.QemuBIOS", value); }
 		}
 
 		#endregion Settings

@@ -84,7 +84,6 @@ namespace Mosa.Utility.Configuration
 
 				new Argument() { Name = "--interrupt-method", Setting = "X86.InterruptMethodName"},
 
-
 				// Linker:
 				new Argument() { Name = "--emit-all-symbols", Setting = "Linker.Symbols", Value = "true"},
 				new Argument() { Name = "--emit-all-symbols-off", Setting = "Linker.Symbols", Value = "false"},
@@ -159,11 +158,11 @@ namespace Mosa.Utility.Configuration
 				new Argument() { Name = "--video-height", Setting = "Multiboot.Video.Height"},
 				new Argument() { Name = "--video-depth", Setting = "Multiboot.Video.Depth"},
 
-				new Argument() { Name = "--gdb", Setting = "Launcher.Advance.LaunchGDBDebugger", Value="true"},
+				new Argument() { Name = "--gdb", Setting = "LauncherAdvance.LaunchGDBDebugger", Value="true"},
 				new Argument() { Name = "--gdb-port", Setting = "GDB.Port"},
 				new Argument() { Name = "--gdb-host", Setting = "GDB.Host"},
 
-				new Argument() { Name = "--launch-gdb-debugger", Setting = "Launcher.Advance.LaunchGDBDebugger", Value="true"},
+				new Argument() { Name = "--launch-gdb-debugger", Setting = "LauncherAdvance.LaunchGDBDebugger", Value="true"},
 
 				new Argument() { Name = "--bootloader", Setting = "Image.BootLoader"},
 				new Argument() { Name = "--grub", Setting = "Image.BootLoader", Value = "grub_v0.97"},
@@ -174,7 +173,7 @@ namespace Mosa.Utility.Configuration
 				new Argument() { Name = "--syslinux-6.0", Setting = "Image.BootLoader", Value = "syslinux_v6.03"},
 
 				// Launcher - Serial:
-				new Argument() { Name = "--hunt-corlib", Setting = "Launcher.Advance.HuntForCorLib", Value = "true"},
+				new Argument() { Name = "--hunt-corlib", Setting = "LauncherAdvance.HuntForCorLib", Value = "true"},
 
 				// Advance:
 				new Argument() { Name = "--plug-korlib", Setting = "Advanced.PlugKorlib", Value = "true"},

@@ -61,54 +61,56 @@ namespace Mosa.Utility.Launcher
 
 		private Process LaunchQemu(bool getOutput)
 		{
-			string arg = " -L " + Quote(LauncherSettings.QEMUBios);
+			var arg = new StringBuilder();
+
+			arg.Append(" -L " + Quote(LauncherSettings.QEMUBios));
 
 			if (LauncherSettings.Platform == "x86")
 			{
-				arg += " -cpu qemu32,+sse4.1";
+				arg.Append(" -cpu qemu32,+sse4.1");
 			}
 
 			//arg = arg + " -vga vmware";
 
 			if (!LauncherSettings.EmulatorDisplay)
 			{
-				arg += " -display none";
+				arg.Append(" -display none");
 			}
 
 			// We need as least 2 COM Ports:
 			// COM1 = Kernel log
 			// COM2 = MosaDebugger
 
-			arg += " -serial null"; // TODO: Redirect to file
+			arg.Append(" -serial null"); // TODO: Redirect to file
 
 			if (!string.IsNullOrWhiteSpace(LauncherSettings.EmulatorSerial))
 			{
 				switch (LauncherSettings.EmulatorSerial)
 				{
-					case "pipe": arg = $"{arg} -serial pipe:{LauncherSettings.EmulatorSerialPipe}"; break;
-					case "tcpserver": arg = $"{arg} -serial tcp:{LauncherSettings.EmulatorSerialHost}:{LauncherSettings.EmulatorSerialPort},server,nowait"; break;
-					case "tcpclient": arg = $"{arg} -serial tcp:{LauncherSettings.EmulatorSerialHost}:{LauncherSettings.EmulatorSerialPort},client,nowait"; break;
+					case "pipe": arg.Append($" -serial pipe:{LauncherSettings.EmulatorSerialPipe}"); break;
+					case "tcpserver": arg.Append($" -serial tcp:{LauncherSettings.EmulatorSerialHost}:{LauncherSettings.EmulatorSerialPort},server,nowait"); break;
+					case "tcpclient": arg.Append($" -serial tcp:{LauncherSettings.EmulatorSerialHost}:{LauncherSettings.EmulatorSerialPort},client,nowait"); break;
 				}
 			}
 
 			if (LauncherSettings.EmulatorGDB)
 			{
-				arg += $" -S -gdb tcp::{LauncherSettings.GDBPort}";
+				arg.Append($" -S -gdb tcp::{LauncherSettings.GDBPort}");
 			}
 
 			if (LauncherSettings.ImageFormat == "iso")
 			{
-				arg = arg + " -cdrom " + Quote(LauncherSettings.ImageFile);
+				arg.Append(" -cdrom " + Quote(LauncherSettings.ImageFile));
 			}
 			else
 			{
 				if (LauncherSettings.ImageFormat == "bin")
-					arg = $"{arg} -kernel {Quote(LauncherSettings.ImageFile)}";
+					arg.Append("-kernel {Quote(LauncherSettings.ImageFile)}");
 				else
-					arg = $"{arg} -hda {Quote(LauncherSettings.ImageFile)}";
+					arg.Append(" -hda {Quote(LauncherSettings.ImageFile)}");
 			}
 
-			return LaunchApplication(LauncherSettings.QEMU, arg, getOutput);
+			return LaunchApplication(LauncherSettings.QEMU, arg.ToString(), getOutput);
 		}
 
 		private Process LaunchBochs(bool getOutput)
@@ -153,9 +155,9 @@ namespace Mosa.Utility.Launcher
 				sb.AppendLine(@"com2: enabled=1, mode=pipe-server, dev=\\.\pipe\MOSA2");
 			}
 
-			string arg = "-q -f " + Quote(configfile);
-
 			File.WriteAllText(configfile, sb.ToString());
+
+			var arg = $"-q -f {Quote(configfile)}";
 
 			return LaunchApplication(LauncherSettings.Bochs, arg, getOutput);
 		}

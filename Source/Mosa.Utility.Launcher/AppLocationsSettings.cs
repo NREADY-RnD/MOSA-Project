@@ -14,10 +14,10 @@ namespace Mosa.Utility.Launcher
 			var settings = new Settings();
 
 			Set(settings, "AppLocation.Qemu", FindQemu());
-			Set(settings, "AppLocation.Qemu.BIOS", FindQemuBIOS(settings.GetValue("AppLocation.Qemu")));
+			Set(settings, "AppLocation.QemuBIOS", FindQemuBIOS(settings.GetValue("AppLocation.Qemu")));
 			Set(settings, "AppLocation.QemuImg", FindQemuImg());
 			Set(settings, "AppLocation.Bochs", FindBochs());
-			Set(settings, "AppLocation.Vmware.Player", FindVmwarePlayer());
+			Set(settings, "AppLocation.VmwarePlayer", FindVmwarePlayer());
 			Set(settings, "AppLocation.Ndisasm", FindNdisasm());
 			Set(settings, "AppLocation.Mkisofs", FindMkisofs());
 			Set(settings, "AppLocation.GDB", FindGDB());

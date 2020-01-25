@@ -120,8 +120,8 @@ namespace Mosa.Utility.Launcher
 
 		public bool HuntForCorLib
 		{
-			get { return Settings.GetValue("Launcher.Advance.HuntForCorLib", false); }
-			set { Settings.SetValue("Launcher.Advance.HuntForCorLib", value); }
+			get { return Settings.GetValue("LauncherAdvance.HuntForCorLib", false); }
+			set { Settings.SetValue("LauncherAdvance.HuntForCorLib", value); }
 		}
 
 		public string ImageBootLoader
@@ -180,14 +180,14 @@ namespace Mosa.Utility.Launcher
 
 		public bool LaunchGDB
 		{
-			get { return Settings.GetValue("Launcher.Advance.LaunchGDB", false); }
-			set { Settings.SetValue("Launcher.Advance.LaunchGDB", value); }
+			get { return Settings.GetValue("LauncherAdvance.LaunchGDB", false); }
+			set { Settings.SetValue("LauncherAdvance.LaunchGDB", value); }
 		}
 
 		public bool LaunchGDBDebugger
 		{
-			get { return Settings.GetValue("Launcher.Advance.LaunchGDBDebugger", false); }
-			set { Settings.SetValue("Launcher.Advance.LaunchGDBDebugger", value); }
+			get { return Settings.GetValue("LauncherAdvance.LaunchGDBDebugger", false); }
+			set { Settings.SetValue("LauncherAdvance.LaunchGDBDebugger", value); }
 		}
 
 		public string LinkerFormat { get { return Settings.GetValue("Linker.Format", "elf32"); } }
@@ -241,8 +241,8 @@ namespace Mosa.Utility.Launcher
 
 		public bool PlugKorlib
 		{
-			get { return Settings.GetValue("Launcher.Advance.PlugKorlib", false); }
-			set { Settings.SetValue("Launcher.Advance.PlugKorlib", value); }
+			get { return Settings.GetValue("LauncherAdvance.PlugKorlib", false); }
+			set { Settings.SetValue("LauncherAdvance.PlugKorlib", value); }
 		}
 
 		public string PostLinkHashFile
@@ -265,8 +265,8 @@ namespace Mosa.Utility.Launcher
 
 		public string QEMUBios
 		{
-			get { return Settings.GetValue("AppLocation.Qemu.BIOS", null); }
-			set { Settings.SetValue("AppLocation.Qemu.BIOS", value); }
+			get { return Settings.GetValue("AppLocation.QemuBIOS", null); }
+			set { Settings.SetValue("AppLocation.QemuBIOS", value); }
 		}
 
 		public string QemuImg
@@ -283,8 +283,8 @@ namespace Mosa.Utility.Launcher
 
 		public string VmwarePlayer
 		{
-			get { return Settings.GetValue("AppLocation.Vmware.Player", null); }
-			set { Settings.SetValue("AppLocation.Vmware.Player", value); }
+			get { return Settings.GetValue("AppLocation.VmwarePlayer", null); }
+			set { Settings.SetValue("AppLocation.VmwarePlayer", value); }
 		}
 
 		#endregion Properties

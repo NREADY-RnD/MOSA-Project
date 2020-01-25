@@ -316,8 +316,8 @@ namespace Mosa.Tool.Launcher
 			Settings.SetValue("Launcher.Start", true);
 			Settings.SetValue("Launcher.Launch", true);
 			Settings.SetValue("Launcher.Exit", true);
-			Settings.SetValue("Launcher.Advance.PlugKorlib", true);
-			Settings.SetValue("Launcher.Advance.HuntForCorLib", true);
+			Settings.SetValue("LauncherAdvance.PlugKorlib", true);
+			Settings.SetValue("LauncherAdvance.HuntForCorLib", true);
 			Settings.SetValue("Linker.Drawf", false);
 		}
 
@@ -326,9 +326,9 @@ namespace Mosa.Tool.Launcher
 			lbBOCHSExecutable.Text = Settings.GetValue("AppLocation.Bochs", string.Empty);
 			lbNDISASMExecutable.Text = Settings.GetValue("AppLocation.Ndisasm", string.Empty);
 			lbQEMUExecutable.Text = Settings.GetValue("AppLocation.Qemu", string.Empty);
-			lbQEMUBIOSDirectory.Text = Settings.GetValue("AppLocation.Qemu.BIOS", string.Empty);
+			lbQEMUBIOSDirectory.Text = Settings.GetValue("AppLocation.QemuBIOS", string.Empty);
 			lbQEMUImgApplication.Text = Settings.GetValue("AppLocation.QemuImg", string.Empty);
-			lbVMwarePlayerExecutable.Text = Settings.GetValue("AppLocation.Vmware.Player", string.Empty);
+			lbVMwarePlayerExecutable.Text = Settings.GetValue("AppLocation.VmwarePlayer", string.Empty);
 			lbmkisofsExecutable.Text = Settings.GetValue("AppLocation.Mkisofs", string.Empty);
 		}
 
@@ -347,8 +347,8 @@ namespace Mosa.Tool.Launcher
 			Settings.SetValue("CompilerDebug.PostLinkHashFile", cbGenerateHashFiles.Checked ? "%DEFAULT%" : string.Empty);
 			Settings.SetValue("Launcher.Exit", cbExitOnLaunch.Checked);
 			Settings.SetValue("Emulator.GDB", cbEnableQemuGDB.Checked);
-			Settings.SetValue("Launcher.Advance.LaunchGDB", cbLaunchGDB.Checked);
-			Settings.SetValue("Launcher.Advance.LaunchGDBDebugger", cbLaunchMosaDebugger.Checked);
+			Settings.SetValue("LauncherAdvance.LaunchGDB", cbLaunchGDB.Checked);
+			Settings.SetValue("LauncherAdvance.LaunchGDBDebugger", cbLaunchMosaDebugger.Checked);
 			Settings.SetValue("Compiler.Multithreading", cbCompilerUsesMultipleThreads.Checked);
 			Settings.SetValue("Emulator.Memory", Settings.GetValue("Emulator.Memory", 128));
 			Settings.SetValue("Optimizations.Inline", cbInline.Checked);
@@ -445,8 +445,8 @@ namespace Mosa.Tool.Launcher
 			cbGenerateHashFiles.Checked = Settings.GetValue("CompilerDebug.PreLinkHashFile", string.Empty) == "%DEFAULT%";
 			cbExitOnLaunch.Checked = Settings.GetValue("Launcher.Exit", true);
 			cbEnableQemuGDB.Checked = Settings.GetValue("Emulator.GDB", false);
-			cbLaunchGDB.Checked = Settings.GetValue("Launcher.Advance.LaunchGDB", false);
-			cbLaunchMosaDebugger.Checked = Settings.GetValue("Launcher.Advance.LaunchGDBDebugger", false);
+			cbLaunchGDB.Checked = Settings.GetValue("LauncherAdvance.LaunchGDB", false);
+			cbLaunchMosaDebugger.Checked = Settings.GetValue("LauncherAdvance.LaunchGDBDebugger", false);
 			cbInline.Checked = Settings.GetValue("Optimizations.Inline", true);
 			cbInlineExplicitOnly.Checked = Settings.GetValue("Optimizations.Inline.ExplicitOnly", false);
 			cbCompilerUsesMultipleThreads.Checked = Settings.GetValue("Compiler.Multithreading", false);

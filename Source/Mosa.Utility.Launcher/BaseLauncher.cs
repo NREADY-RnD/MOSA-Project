@@ -42,8 +42,8 @@ namespace Mosa.Utility.Launcher
 			Settings.SetValue("Emulator.Serial.Host", "127.0.0.1");
 			Settings.SetValue("Emulator.Serial.Port", 9999);
 			Settings.SetValue("Emulator.Serial.Pipe", "MOSA");
-			Settings.SetValue("Launcher.Advance.PlugKorlib", true);
-			Settings.SetValue("Launcher.Advance.HuntForCorLib", true);
+			Settings.SetValue("LauncherAdvance.PlugKorlib", true);
+			Settings.SetValue("LauncherAdvance.HuntForCorLib", true);
 		}
 
 		protected void NormalizeSettings()
