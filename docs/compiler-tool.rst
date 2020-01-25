@@ -1,8 +1,8 @@
 ##################
-Mosa Compiler Tool
+MOSA Compiler Tool
 ##################
 
-The Mosa Compiler can also invoked via Command Line:
+The MOSA Compiler can also invoked via Command Line:
 
 .. code-block:: console
   
