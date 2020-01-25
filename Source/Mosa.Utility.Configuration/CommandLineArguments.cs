@@ -77,8 +77,6 @@ namespace Mosa.Utility.Configuration
 				new Argument() { Name = "--output-hash", Setting = "CompilerDebug.PreLinkHashFile", Value = "%DEFAULT%"},
 				new Argument() { Name = "--output-hash", Setting = "CompilerDebug.PostLinkHashFile", Value = "%DEFAULT%"},
 
-				new Argument() { Name = "--debugfile", Setting = "CompilerDebug.DebugFile", Value = "%DEFAULT%"}, // legacy
-
 				new Argument() { Name = "--platform", Setting = "Compiler.Platform"},
 				new Argument() { Name = "--x86", Setting = "Compiler.Platform", Value = "x86"},
 				new Argument() { Name = "--x64", Setting = "Compiler.Platform", Value = "x64"},
@@ -86,7 +84,6 @@ namespace Mosa.Utility.Configuration
 
 				new Argument() { Name = "--interrupt-method", Setting = "X86.InterruptMethodName"},
 
-				new Argument() { Name = "-a", Setting = "Compiler.Platform"},	// legacy
 
 				// Linker:
 				new Argument() { Name = "--emit-all-symbols", Setting = "Linker.Symbols", Value = "true"},

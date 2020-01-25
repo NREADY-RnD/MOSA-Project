@@ -2,6 +2,10 @@
 MOSA Boot Image Tool
 ####################
 
+The Boot Image Tool is a command line application that can be used to create bootable images containing a MOSA operating system application. 
+
+.. note:: This tool is superceded by the MOSA Launcher Tool which can automate build chain functionality from compiling the application, creating the virtual disk image, and launching the virtual machine.
+
 The tool several command line options. Sample:
 
 .. code-block:: text

@@ -6,12 +6,12 @@ These are questions we're frequently answering in our IRC channel, the mailing l
 What does MOSA stand for?
 -------------------------
 
-Managed Operation System Alliance. It was an alliance with the SharpOS project to create a .NET based operating system. As operating systems share a lot of common groundwork MOSA aims to standardize interfaces in order to foster portability and to provide both projects with basic implementations of these interfaces.
+Managed Operation System Alliance. It was an alliance with the SharpOS project to create a .NET based operating system and toolsets. As operating systems share a lot of common groundwork MOSA aims to standardize interfaces in order to foster portability and to provide both projects with basic implementations of these interfaces.
 
 Who can join?
 -------------
 
-Anyone who is interested in operating system or .NET development can join the alliance. You have to keep in mind our [[New BSD License|License]] for your contributions though.
+Anyone who is interested in operating system or .NET development can join. You have to keep in mind our :doc:`New BSD License <license>` for your contributions though.
 
 What kind of .NET runtime will be available?
 --------------------------------------------
