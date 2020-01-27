@@ -4,8 +4,8 @@ namespace Mosa.Compiler.Framework.Trace
 {
 	public enum CompilerEvent
 	{
-		CompilerStart,
-		CompilerEnd,
+		CompileStart,
+		CompileEnd,
 
 		CompilingMethods,
 		CompilingMethodsCompleted,
@@ -48,8 +48,8 @@ namespace Mosa.Compiler.Framework.Trace
 		{
 			switch (stage)
 			{
-				case CompilerEvent.CompilerStart: return "Compiler Started";
-				case CompilerEvent.CompilerEnd: return "Compiler Completed";
+				case CompilerEvent.CompileStart: return "Compile Started";
+				case CompilerEvent.CompileEnd: return "Compile Completed";
 
 				case CompilerEvent.CompilingMethods: return "Compiling Methods";
 				case CompilerEvent.CompilingMethodsCompleted: return "Compiling Methods Completed";

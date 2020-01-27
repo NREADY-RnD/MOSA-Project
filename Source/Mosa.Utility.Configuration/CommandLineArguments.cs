@@ -23,6 +23,9 @@ namespace Mosa.Utility.Configuration
 				new Argument() { Name = "--threading-off", Setting = "Compiler.Multithreading", Value = "false"},
 				new Argument() { Name = "--settings", Setting = "Settings", Value = null, IsList = true},
 
+				new Argument() { Name = "-o", Setting = "Compiler.OutputFile"},
+				new Argument() { Name = "--o", Setting = "Compiler.OutputFile"},
+
 				new Argument() { Name = "--base", Setting = "Compiler.BaseAddress"},
 				new Argument() { Name = "--scanner", Setting = "Compiler.MethodScanner", Value = "true"},
 				new Argument() { Name = "--no-code", Setting = "Compiler.Binary", Value = "false"},
@@ -32,7 +35,6 @@ namespace Mosa.Utility.Configuration
 				new Argument() { Name = "--inline-off", Setting = "Optimizations.Inline", Value = "false"},
 				new Argument() { Name = "--ssa", Setting = "Optimizations.SSA", Value = "true"},
 				new Argument() { Name = "--ssa-off", Setting = "Optimizations.SSA", Value = "false"},
-
 				new Argument() { Name = "--sccp", Setting = "Optimizations.SCCP", Value = "true"},
 				new Argument() { Name = "--sccp-off", Setting = "Optimizations.SCCP", Value = "false"},
 				new Argument() { Name = "--basic-optimizations", Setting = "Optimizations.Basic", Value = "true"},
@@ -134,8 +136,6 @@ namespace Mosa.Utility.Configuration
 				new Argument() { Name = "--mbr", Setting = "Image.MasterBootRecordFile"},
 				new Argument() { Name = "--boot", Setting = "Image.BootBlockFile"},
 
-				new Argument() { Name = "-o", Setting = "Image.ImageFile"},
-				new Argument() { Name = "--o", Setting = "Image.ImageFile"},
 				new Argument() { Name = "--m", Setting = "Image.MasterBootRecordFile"},
 				new Argument() { Name = "--b", Setting = "Image.BootBlockFile"},
 

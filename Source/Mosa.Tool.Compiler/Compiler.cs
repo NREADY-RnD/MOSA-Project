@@ -63,8 +63,8 @@ Example: Mosa.Tool.Compiler.exe -o Mosa.HelloWorld.x86.bin -platform x86 Mosa.He
 			RegisterPlatforms();
 
 			// always print header with version information
-			Console.WriteLine("MOSA AOT Compiler, Version {0}.'", CompilerVersion.VersionString);
-			Console.WriteLine("Copyright 2019 by the MOSA Project. Licensed under the New BSD License.");
+			Console.WriteLine("MOSA Compiler, Version {0}.", CompilerVersion.VersionString);
+			Console.WriteLine("Copyright 2020 by the MOSA Project. Licensed under the New BSD License.");
 
 			Console.WriteLine();
 			Console.WriteLine("Parsing options...");

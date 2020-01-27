@@ -536,8 +536,8 @@ namespace Mosa.Utility.Launcher
 
 		private void NotifyEvent(CompilerEvent compilerEvent, string message, int threadID)
 		{
-			if (compilerEvent == CompilerEvent.CompilerStart
-				|| compilerEvent == CompilerEvent.CompilerEnd
+			if (compilerEvent == CompilerEvent.CompileStart
+				|| compilerEvent == CompilerEvent.CompileEnd
 				|| compilerEvent == CompilerEvent.CompilingMethods
 				|| compilerEvent == CompilerEvent.CompilingMethodsCompleted
 				|| compilerEvent == CompilerEvent.InlineMethodsScheduled

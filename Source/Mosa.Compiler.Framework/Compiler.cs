@@ -235,7 +235,7 @@ namespace Mosa.Compiler.Framework
 			ExceptionRegister = Operand.CreateCPURegister(TypeSystem.BuiltIn.Object, Architecture.ExceptionRegister);
 			LeaveTargetRegister = Operand.CreateCPURegister(TypeSystem.BuiltIn.Object, Architecture.LeaveTargetRegister);
 
-			PostEvent(CompilerEvent.CompilerStart);
+			PostEvent(CompilerEvent.CompileStart);
 
 			MethodStagePipelines = new Pipeline<BaseMethodCompilerStage>[MaxThreads];
 
@@ -527,7 +527,7 @@ namespace Mosa.Compiler.Framework
 			EmitCounters();
 
 			PostEvent(CompilerEvent.FinalizationEnd);
-			PostEvent(CompilerEvent.CompilerEnd);
+			PostEvent(CompilerEvent.CompileEnd);
 		}
 
 		public void Stop()
