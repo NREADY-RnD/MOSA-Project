@@ -31,6 +31,7 @@ namespace Mosa.Tool.GDBDebugger.Views
 			: base(mainForm)
 		{
 			InitializeComponent();
+			treeView1.MouseDown += (sender, args) => treeView1.SelectedNode = treeView1.GetNodeAt(args.X, args.Y);
 		}
 
 		public override void OnRunning()
@@ -42,18 +43,30 @@ namespace Mosa.Tool.GDBDebugger.Views
 		{
 			treeView1.Nodes.Clear();
 
-			ulong ebp = Platform.StackFrame.Value;
-			ulong ip = Platform.InstructionPointer.Value;
-
-			if (ebp == 0 || ip == 0)
+			if (StackFrame == 0 || InstructionPointer == 0 || StackPointer == 0)
 				return;
 
-			AddSymbol(ip);
+			AddSymbol(InstructionPointer);
 
-			if (ebp != 0)
+			var symbol = DebugSource.GetFirstSymbolsStartingAt(InstructionPointer);
+
+			if (symbol != null)
 			{
-				MemoryCache.ReadMemory(ebp, 8, OnMemoryRead);
+				// new stack frame has not been setup
+				MemoryCache.ReadMemory(StackPointer, NativeIntegerSize, OnMemoryReadPrologue);
+				return;
 			}
+
+			symbol = DebugSource.GetFirstSymbolsStartingAt(InstructionPointer - Platform.FirstPrologueInstructionSize);
+
+			if (symbol != null)
+			{
+				// new stack frame has not been setup
+				MemoryCache.ReadMemory(StackPointer + NativeIntegerSize, NativeIntegerSize, OnMemoryReadPrologue);
+				return;
+			}
+
+			MemoryCache.ReadMemory(StackFrame, NativeIntegerSize * 2, OnMemoryRead);
 		}
 
 		private void AddSymbol(ulong ip)
@@ -63,52 +76,51 @@ namespace Mosa.Tool.GDBDebugger.Views
 			treeView1.Nodes.Add(new CallStackEntry(symbol, ip));
 		}
 
-		private void OnMemoryRead(ulong address, byte[] bytes)
-		{
-			MethodInvoker method = delegate ()
-			{
-				UpdateDisplay(address, bytes);
-			};
+		private void OnMemoryRead(ulong address, byte[] bytes) => Invoke((MethodInvoker)(() => UpdateDisplay(address, bytes)));
 
-			BeginInvoke(method);
-		}
-
-		public static ulong ToLong(byte[] bytes, int start, int size) // future: make this common
-		{
-			ulong value = 0;
-
-			for (int i = 0; i < size; i++)
-			{
-				ulong shifted = (ulong)(bytes[start + i] << (i * 8));
-				value |= shifted;
-			}
-
-			return value;
-		}
+		private void OnMemoryReadPrologue(ulong address, byte[] bytes) => Invoke((MethodInvoker)(() => UpdateDisplayPrologue(address, bytes)));
 
 		private void UpdateDisplay(ulong address, byte[] memory)
 		{
-			if (memory.Length < 8)
+			if (memory.Length < NativeIntegerSize * 2)
 				return; // something went wrong!
 
 			if (treeView1.Nodes.Count == 0)
 				return; // race condition
 
-			ulong ebp = ToLong(memory, 0, 4);
-			ulong ip = ToLong(memory, 4, 4);
+			var stackFrame = MainForm.ToLong(memory, 0, NativeIntegerSize);
+			var returnIP = MainForm.ToLong(memory, NativeIntegerSize, NativeIntegerSize);
 
-			if (ip == 0)
+			if (returnIP == 0)
 				return;
 
-			AddSymbol(ip);
+			AddSymbol(returnIP);
 
-			if (ebp != 0)
+			if (stackFrame != 0)
 			{
 				if (treeView1.Nodes.Count > 20)
 					return;
 
-				MemoryCache.ReadMemory(ebp, 8, OnMemoryRead);
+				MemoryCache.ReadMemory(stackFrame, NativeIntegerSize * 2, OnMemoryRead);
 			}
+		}
+
+		private void UpdateDisplayPrologue(ulong address, byte[] memory)
+		{
+			if (memory.Length < NativeIntegerSize)
+				return; // something went wrong!
+
+			if (treeView1.Nodes.Count == 0)
+				return; // race condition
+
+			ulong returnIP = MainForm.ToLong(memory, 0, NativeIntegerSize);
+
+			if (returnIP == 0)
+				return;
+
+			AddSymbol(returnIP);
+
+			MemoryCache.ReadMemory(StackFrame, NativeIntegerSize * 2, OnMemoryRead);
 		}
 
 		private void treeView1_MouseClick(object sender, MouseEventArgs e)
@@ -127,6 +139,7 @@ namespace Mosa.Tool.GDBDebugger.Views
 
 			var menu = new MenuItem(clickedEntry.Text);
 			menu.Enabled = false;
+
 			var m = new ContextMenu();
 			m.MenuItems.Add(menu);
 			m.MenuItems.Add(new MenuItem("Copy to &Clipboard", new EventHandler(MainForm.OnCopyToClipboard)) { Tag = clickedEntry.HexAddress });

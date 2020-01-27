@@ -11,10 +11,17 @@ namespace Mosa.Tool.GDBDebugger.GDB
 
 		internal abstract void Parse(GDBCommand command);
 
+		public abstract uint NativeIntegerSize { get; }
+
 		public abstract Register InstructionPointer { get; }
 		public abstract Register StackPointer { get; }
 		public abstract Register StackFrame { get; }
 		public abstract Register StatusFlag { get; }
+
+		public static string ToHex(long value, uint size)
+		{
+			return ToHex((ulong)value, size);
+		}
 
 		public static string ToHex(ulong value, uint size)
 		{
@@ -27,5 +34,7 @@ namespace Mosa.Tool.GDBDebugger.GDB
 				default: return "N/A";
 			}
 		}
+
+		public abstract uint FirstPrologueInstructionSize { get; }
 	}
 }

@@ -40,7 +40,8 @@
             this.toolStripButton1});
 			this.toolStrip1.Location = new System.Drawing.Point(0, 0);
 			this.toolStrip1.Name = "toolStrip1";
-			this.toolStrip1.Size = new System.Drawing.Size(640, 25);
+			this.toolStrip1.Padding = new System.Windows.Forms.Padding(0, 0, 5, 0);
+			this.toolStrip1.Size = new System.Drawing.Size(1600, 47);
 			this.toolStrip1.TabIndex = 1;
 			this.toolStrip1.Text = "toolStrip1";
 			// 
@@ -49,22 +50,25 @@
 			this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
 			this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Black;
 			this.toolStripButton1.Name = "toolStripButton1";
-			this.toolStripButton1.Size = new System.Drawing.Size(50, 22);
+			this.toolStripButton1.Size = new System.Drawing.Size(107, 41);
 			this.toolStripButton1.Text = "Refresh";
 			// 
 			// DisplayView
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+			this.AutoScaleDimensions = new System.Drawing.SizeF(15F, 29F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(640, 460);
+			this.ClientSize = new System.Drawing.Size(1600, 1026);
 			this.Controls.Add(this.toolStrip1);
+			this.Margin = new System.Windows.Forms.Padding(8, 7, 8, 7);
 			this.Name = "DisplayView";
-			this.Text = "Display View";
+			this.TabText = "Display";
+			this.Text = "Display";
 			this.Paint += new System.Windows.Forms.PaintEventHandler(this.DisplayForm_Paint);
 			this.toolStrip1.ResumeLayout(false);
 			this.toolStrip1.PerformLayout();
 			this.ResumeLayout(false);
 			this.PerformLayout();
+
 		}
 
 		#endregion

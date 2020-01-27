@@ -43,7 +43,7 @@ namespace Mosa.Tool.GDBDebugger.Views
 			// 
 			// CallStackView
 			// 
-			this.ClientSize = new System.Drawing.Size(224, 161);
+			this.ClientSize = new System.Drawing.Size(264, 161);
 			this.CloseButton = false;
 			this.CloseButtonVisible = false;
 			this.Controls.Add(this.treeView1);

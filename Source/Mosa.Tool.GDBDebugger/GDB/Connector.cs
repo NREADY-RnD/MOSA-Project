@@ -4,6 +4,7 @@ using Mosa.Utility.RSP;
 using Mosa.Utility.RSP.Command;
 using System.Collections.Generic;
 using System.Net.Sockets;
+using System.Threading;
 
 namespace Mosa.Tool.GDBDebugger.GDB
 {
@@ -114,6 +115,8 @@ namespace Mosa.Tool.GDBDebugger.GDB
 			var command = new Kill();
 
 			GDBClient.SendCommand(command);
+
+			Thread.Sleep(100); // give it time to terminate
 
 			Disconnect();
 		}

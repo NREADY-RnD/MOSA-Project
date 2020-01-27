@@ -11,8 +11,6 @@ namespace Mosa.Tool.GDBDebugger
 	{
 		protected MainForm MainForm;
 
-		protected LauncherOptions Options { get { return MainForm.LauncherOptions; } }
-
 		public DebugDockContent()
 		{
 			InitializeComponent();
@@ -28,12 +26,20 @@ namespace Mosa.Tool.GDBDebugger
 		public DebugSource DebugSource { get { return MainForm.DebugSource; } }
 
 		public Connector GDBConnector { get { return MainForm.GDBConnector; } }
-		public BasePlatform Platform { get { return GDBConnector?.Platform; } }
+		public BasePlatform Platform { get { return MainForm.Platform; } }
+
+		public uint NativeIntegerSize { get { return Platform.NativeIntegerSize; } }
+
 		public MemoryCache MemoryCache { get { return MainForm.MemoryCache; } }
 
 		public bool IsConnected { get { return GDBConnector?.IsConnected ?? false; } }
 		public bool IsRunning { get { return GDBConnector.IsRunning; } }
 		public bool IsPaused { get { return GDBConnector.IsPaused; } }
+
+		public ulong InstructionPointer { get { return MainForm.InstructionPointer; } }
+		public ulong StackFrame { get { return MainForm.StackFrame; } }
+		public ulong StackPointer { get { return MainForm.StackPointer; } }
+		public ulong StatusFlag { get { return MainForm.StatusFlag; } }
 
 		public virtual void OnPause()
 		{

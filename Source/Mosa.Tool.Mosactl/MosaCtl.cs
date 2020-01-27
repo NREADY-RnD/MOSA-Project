@@ -20,12 +20,11 @@ namespace Mosa.Tool.Mosactl
 		private string RootDir;
 		private string SourceDir;
 
-		private static Utility.Launcher.AppLocations appLocations;
+		private static AppLocations appLocations;
 
 		public MosaCtl()
 		{
-			appLocations = new Utility.Launcher.AppLocations();
-			appLocations.FindApplications();
+			appLocations = new AppLocations();
 
 			RootDir = GetEnv("MOSA_ROOT");
 			BinDir = GetEnv("MOSA_BIN");

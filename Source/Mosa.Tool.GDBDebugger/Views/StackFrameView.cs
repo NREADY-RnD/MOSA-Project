@@ -3,14 +3,13 @@
 using Mosa.Tool.GDBDebugger.GDB;
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Windows.Forms;
 
 namespace Mosa.Tool.GDBDebugger.Views
 {
 	public partial class StackFrameView : DebugDockContent
 	{
-		private const int NativeIntegerSize = 4;
-
 		private BindingList<StackEntry> stackentries = new BindingList<StackEntry>();
 
 		private class StackEntry
@@ -54,10 +53,10 @@ namespace Mosa.Tool.GDBDebugger.Views
 			if (Platform.Registers == null)
 				return;
 
-			if (Platform.StackFrame.Value == 0 || Platform.StackPointer.Value == 0)
+			if (StackFrame == 0 || StackPointer == 0)
 				return;
 
-			var span = Platform.StackFrame.Value - Platform.StackPointer.Value;
+			var span = StackFrame - StackPointer;
 
 			if (span <= 0)
 				span = 4;
@@ -67,41 +66,29 @@ namespace Mosa.Tool.GDBDebugger.Views
 			if (span % 4 != 0)
 				span += (span % 4);
 
-			MemoryCache.ReadMemory(Platform.StackPointer.Value, (uint)span + NativeIntegerSize, OnMemoryRead);
+			MemoryCache.ReadMemory(StackPointer, (uint)span + NativeIntegerSize, OnMemoryRead);
 		}
 
-		private void OnMemoryRead(ulong address, byte[] bytes)
-		{
-			MethodInvoker method = delegate ()
-			{
-				UpdateDisplay(address, bytes);
-			};
-
-			BeginInvoke(method);
-		}
+		private void OnMemoryRead(ulong address, byte[] bytes) => Invoke((MethodInvoker)(() => UpdateDisplay(address, bytes)));
 
 		private void UpdateDisplay(ulong address, byte[] memory)
 		{
-			uint size = NativeIntegerSize;
-
-			for (int i = memory.Length - NativeIntegerSize; i >= 0; i -= (int)size)
+			for (var i = memory.Length - NativeIntegerSize; i >= 0; i -= (int)NativeIntegerSize)
 			{
-				// FIXME: for 64 bit
-				ulong value = (ulong)(memory[i] | (memory[i + 1] << 8) | (memory[i + 2] << 16) | (memory[i + 3] << 24));
+				ulong value = MainForm.ToLong(memory, (uint)i, NativeIntegerSize);
 
 				var at = address + (ulong)i;
-
-				var offset = (long)(Platform.StackFrame.Value - at);
+				var offset = StackFrame - at;
 
 				var entry = new StackEntry()
 				{
-					Address = BasePlatform.ToHex(at, size),
-					HexValue = BasePlatform.ToHex(value, size),
+					Address = BasePlatform.ToHex(at, NativeIntegerSize),
+					HexValue = BasePlatform.ToHex(value, NativeIntegerSize),
 					Value = value,
 					Offset = Platform.StackFrame.Name.ToUpper() +
 						(offset >= 0
-						? "-" + BasePlatform.ToHex((ulong)offset, 1)
-						: "+" + BasePlatform.ToHex((ulong)-offset, 1)),
+						? "-" + BasePlatform.ToHex(offset, 1)
+						: "+" + BasePlatform.ToHex(-(long)offset, 1)),
 					Index = stackentries.Count,
 				};
 

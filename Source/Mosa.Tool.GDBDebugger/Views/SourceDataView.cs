@@ -37,14 +37,12 @@ namespace Mosa.Tool.GDBDebugger.Views
 			if (Platform.Registers == null)
 				return;
 
-			var address = Platform.InstructionPointer.Value;
-
-			var method = DebugSource.GetMethod(address);
+			var method = DebugSource.GetMethod(InstructionPointer);
 
 			if (method == null)
 				return;
 
-			lbOffset.Text = (address - method.Address).ToString();
+			lbOffset.Text = (InstructionPointer - method.Address).ToString();
 			lbMethodID.Text = method.ID.ToString();
 
 			var sourceLabels = DebugSource.GetSourceLabels(method.ID);
