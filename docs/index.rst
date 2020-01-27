@@ -12,7 +12,7 @@ Contents
    compiler-optimizations
    settings-options
    command-line-arguments
-   flash-drive-installation
+   usb-flash-drive-installation
    boot-image-tool
    tests
    get-involved
