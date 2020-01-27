@@ -8,12 +8,12 @@ Contents
    faq
    tools
    compiler-tool
-   boot-image-tool
-   flash-drive-installation
    compiler-design
    compiler-optimizations
    settings-options
    command-line-arguments
+   flash-drive-installation
+   boot-image-tool
    tests
    get-involved
    authors

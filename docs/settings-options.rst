@@ -4,44 +4,44 @@ Settings Options
 
 Here are the setting options for the compiler tools:
 
-Compiler Settings:
-------------------
+Compiler Settings
+-----------------
 Settings|Description
 --------|-----------
-Compiler.Platform|Platform: x86, x64, ARMv8A32
-Compiler.BaseAddress|Base address of the compiled application
-Compiler.TraceLevel|Trace level for debugging
-Compiler.MethodScanner|If true, enable the experimental method scanner
-Compiler.Multithreading|If true, enables multithreading during compiling process
-Compiler.Multithreading.MaxThreads|Maximum number of threads used by the compiler
-Compiler.Binary|If true, emits object file, otherwise no object file is created
-Compiler.EmitInline|If true, emits all inlined methods into the object file
-Compiler.OutputFile|Filename of the object file
-Compiler.SourceFiles|Filename(s) of the source files
+|Compiler.Platform|Platform: x86, x64, ARMv8A32
+|Compiler.BaseAddress|Base address of the compiled application
+|Compiler.TraceLevel|Trace level for debugging
+|Compiler.MethodScanner|If true, enable the experimental method scanner
+|Compiler.Multithreading|If true, enables multithreading during compiling process
+|Compiler.Multithreading.MaxThreads|Maximum number of threads used by the compiler
+|Compiler.Binary|If true, emits object file, otherwise no object file is created
+|Compiler.EmitInline|If true, emits all inlined methods into the object file
+|Compiler.OutputFile|Filename of the object file
+|Compiler.SourceFiles|Filename(s) of the source files
 
-Compiler Optimizations Settings:
---------------------------------
+Compiler Optimizations Settings
+-------------------------------
 Settings|Description
 --------|-----------
-Optimizations.Basic|If true, enables prebuilt transformation optimizations, like constant folding and strength reduction
-Optimizations.SSA|If true, transforms instructions to Single Static Assignment (SSA) form
-Optimizations.SCCP|If true, enables Sparse Conditional Constant Propagation (SCCP) optimizations
-Optimizations.ValueNumbering|If true, enables the Value Numbering (VN) optimizations
-Optimizations.LongExpansion|If true, transforms some 64-bit instructions into 32-bit instructions prior to platform transformations
-Optimizations.BitTracker|If true, enables the bit tracker optimizations
-Optimizations.LoopInvariantCodeMotion|If true, enables the loop invariant code motion optimizations
-Optimizations.Devirtualization|If true, transforms virtual methods calls into static method calls
-Optimizations.Platform|If true, enable platform specific optimizations
-Optimizations.Inline|If true, small methods can be inlined
-Optimizations.Inline.Maximum|Maximun number of instructions that can be inlined within a method
-Optimizations.Inline.AggressiveMaximum|Maximun number of instructions that can be inlined when a method is explicited marked to be inlined
-Optimizations.Inline.ExplicitOnly|If true, only explicitly marked methods are inlined
-Optimizations.TwoPass|If true, some optimization stages are executed twice
-Optimizations.Inline.Aggressive|Methods to be aggressively inline
-Optimizations.Inline.Exclude|Methods that may not be inlined
+|Optimizations.Basic|If true, enables prebuilt transformation optimizations, like constant folding and strength reduction
+|Optimizations.SSA|If true, transforms instructions to Single Static Assignment (SSA) form
+|Optimizations.SCCP|If true, enables Sparse Conditional Constant Propagation (SCCP) optimizations
+|Optimizations.ValueNumbering|If true, enables the Value Numbering (VN) optimizations
+|Optimizations.LongExpansion|If true, transforms some 64-bit instructions into 32-bit instructions prior to platform transformations
+|Optimizations.BitTracker|If true, enables the bit tracker optimizations
+|Optimizations.LoopInvariantCodeMotion|If true, enables the loop invariant code motion optimizations
+|Optimizations.Devirtualization|If true, transforms virtual methods calls into static method calls
+|Optimizations.Platform|If true, enable platform specific optimizations
+|Optimizations.Inline|If true, small methods can be inlined
+|Optimizations.Inline.Maximum|Maximun number of instructions that can be inlined within a method
+|Optimizations.Inline.AggressiveMaximum|Maximun number of instructions that can be inlined when a method is explicited marked to be inlined
+|Optimizations.Inline.ExplicitOnly|If true, only explicitly marked methods are inlined
+|Optimizations.TwoPass|If true, some optimization stages are executed twice
+|Optimizations.Inline.Aggressive|Methods to be aggressively inline
+|Optimizations.Inline.Exclude|Methods that may not be inlined
 
-Linker Settings:
-----------------
+Linker Settings
+---------------
 Settings|Description
 --------|-----------
 Linker.Format	Type of ELF object file: elf32 or elf64
@@ -53,16 +53,16 @@ Linker.CustomSections.{Name}.SectionName|Emits a custom linker section with this
 Linker.CustomSections.{Name}.SourceFile|Emits a custom linker section using the specific file
 Linker.CustomSections.{Name}.Address|Emits a custom linker section with this address
 
-Common Settings:
-----------------
+Common Settings
+---------------
 Settings|Description
 --------|-----------
 SearchPaths|Folder to search for files
 DefaultFolder|Default folder to output files
 TemporaryFolder|Specifies a temporary folder
 	
-Compiler Debug Settings:
-------------------------
+Compiler Debug Settings
+-----------------------
 Settings|Description
 --------|-----------
 CompilerDebug.Statistics|If true, enables statistics gathering
@@ -75,20 +75,20 @@ CompilerDebug.InlinedFile|Filename to emit a list of all methods that were inlin
 CompilerDebug.PreLinkHashFile|Filename to emit a list of all methods with their hash value prior to linking 
 CompilerDebug.PostLinkHashFile|Filename to emit a list of all methods with their hash value after linking 
 
-Compiler X86 Settings:
-----------------------
+Compiler X86 Settings
+---------------------
 Settings|Description
 --------|-----------
 X86.InterruptMethodName|Name of the method that handles interrupts
 
-Explorer Settings:
-------------------
+Explorer Settings
+-----------------
 Settings|Description
 --------|-----------
 Explorer.Filter|Specifies the default method filter name when Explorer is launched
 
-Launcher Settings:
-------------------
+Launcher Settings
+-----------------
 Settings|Description
 --------|-----------
 Launcher.Start|If true, immediately start the compiler upon launch
@@ -100,8 +100,8 @@ Launcher.Advance.LaunchGDB|If true, launch the GNU GDB application after VM laun
 Launcher.Advance.LaunchGDBDebugger|If true, launch the MOSA GDB debugger application after VM launch
 Launcher.Advance.MonitorTest	If true, monitors VM serials for success of failure messages
 
-Image Settings:
----------------
+Image Settings
+--------------
 Settings|Description
 --------|-----------
 Image.Format|Format of the vritual image file: BIN, IMG, VHD, VDI, ISO, VMDK
@@ -110,8 +110,8 @@ Image.BootLoader|Type of bootloader: grub_v0.97, grub_v2.00, syslinux_v6.03, sys
 Image.Destination|Destination directory of the image file
 Image.ImageFile|Filename of the image file
 
-Emulator Settings:
-------------------
+Emulator Settings
+-----------------
 Settings|Description
 --------|-----------
 Emulator|Type of Emulator: Qemu, VMware, Bochs
@@ -123,15 +123,15 @@ Emulator.Serial.Host|Serial Host Name or IP address
 Emulator.Serial.Port|Serial Port
 Emulator.Serial.Pipe|Serial Pipename
 
-GDB Settings:
--------------
+GDB Settings
+------------
 Settings|Description
 --------|-----------
 GDB.Host|Host IP or Name for GDB
 GDB.Port|Port Number for GDB
 
-Multiboot Settings:
--------------------
+Multiboot Settings
+------------------
 Settings|Description
 --------|-----------
 Multiboot.Version|Multiboot version: none, v1, v2
@@ -140,28 +140,28 @@ Multiboot.Video.Width|Video Width
 Multiboot.Video.Height|Video Height
 Multiboot.Video.Depth|Video Depth
 
-Debugger Settings:
-------------------
+Debugger Settings
+-----------------
 Settings|Description
 --------|-----------
 Debugger.WatchFile|Filename of the watch file
 Debugger.BreakpointFile|Filename of the breakpoint file
 
-Application Location Settings:
+Application Location Settings
 -----------------------------
 Settings|Description
 --------|-----------
-AppLocation.Bochs|Location of the BOCH application
-AppLocation.Qemu|Location of the QEMU application
-AppLocation.QemuBIOS|Location of the QEMU BIOS
-AppLocation.QemuImg|Location of the QEMUImg application
-AppLocation.VmwarePlayer|Location of the VMPlayer application
-AppLocation.Ndisasm|Location of the Ndisasm application
-AppLocation.Mkisofs|Location of the Mkisofs application
-AppLocation.GDB	Location of the QEMU application
+|AppLocation.Bochs|Location of the BOCH application
+|AppLocation.Qemu|Location of the QEMU application
+|AppLocation.QemuBIOS|Location of the QEMU BIOS
+|AppLocation.QemuImg|Location of the QEMUImg application
+|AppLocation.VmwarePlayer|Location of the VMPlayer application
+|AppLocation.Ndisasm|Location of the Ndisasm application
+|AppLocation.Mkisofs|Location of the Mkisofs application
+|AppLocation.GDB	Location of the QEMU application
 
-Import Settings:
-----------------
+Import Settings
+---------------
 Settings|Description
 --------|-----------
-Import|Filename of another settings file to import
+|Import|Filename of another settings file to import

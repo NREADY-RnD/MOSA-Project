@@ -1,6 +1,6 @@
-########################
-Flash Drive Installation
-########################
+############################
+USB Flash Drive Installation
+############################
 
 While most of the development and testing of MOSA is done using virtualization software, MOSA does indeed boot on real hardware too.
 
