@@ -76,7 +76,7 @@ Linker Settings
 +--------+-----------+
 |Settings|Description|
 +--------+-----------+
-|Linker.Format	Type of ELF object file: elf32 or elf64|
+|Linker.Forma|Type of ELF object file: elf32 or elf64|
 +-+-+
 |Linker.Symbols|If true, emits the symbols into the object file|
 +-+-+
@@ -105,7 +105,7 @@ Common Settings
 +-+-+
 |TemporaryFolder|Specifies a temporary folder|
 +-+-+
-	
+
 Compiler Debug Settings
 -----------------------
 
@@ -172,7 +172,7 @@ Launcher Settings
 +-+-+
 |Launcher.Advance.LaunchGDBDebugger|If true, launch the MOSA GDB debugger application after VM launch|
 +-+-+
-|Launcher.Advance.MonitorTest	If true, monitors VM serials for success of failure messages|
+|Launcher.Advance.MonitorTest|If true, monitors VM serials for success of failure messages|
 +-+-+
 
 Image Settings
@@ -274,7 +274,7 @@ Application Location Settings
 +-+-+
 |AppLocation.Mkisofs|Location of the Mkisofs application|
 +-+-+
-|AppLocation.GDB	Location of the QEMU application|
+|AppLocation.GDB|Location of the QEMU application|
 +-+-+
 
 Import Settings
