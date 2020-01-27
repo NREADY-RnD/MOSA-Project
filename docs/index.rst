@@ -11,7 +11,7 @@ Contents
    boot-image-tool
    flash-drive-installation
    compiler-design
-   compiler-optiumizations
+   compiler-optimizations
    settings-options
    command-line-arguments
    tests
