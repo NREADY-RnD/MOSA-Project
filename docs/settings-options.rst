@@ -96,9 +96,8 @@ Compiler X86 Settings
 .. csv-table:: 
    :header: "Settings", "Description"
    :widths: 50, 200
-+-+-+
-|X86.InterruptMethodName|Name of the method that handles interrupts|
-+-+-+
+
+    X86.InterruptMethodName,Name of the method that handles interrupts
 
 Explorer Settings
 -----------------
@@ -187,7 +186,6 @@ Debugger Settings
 
     Debugger.WatchFile,Filename of the watch file
     Debugger.BreakpointFile,Filename of the breakpoint file
-
 
 Application Location Settings
 -----------------------------
