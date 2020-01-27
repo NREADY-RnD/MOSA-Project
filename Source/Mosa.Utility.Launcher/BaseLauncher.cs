@@ -38,12 +38,13 @@ namespace Mosa.Utility.Launcher
 		{
 			Settings.SetValue("Emulator", "Qemu");
 			Settings.SetValue("Emulator.Memory", 128);
-			Settings.SetValue("Emulator.Serial", "TCPServer");
+
+			//Settings.SetValue("Emulator.Serial", "none");
 			Settings.SetValue("Emulator.Serial.Host", "127.0.0.1");
 			Settings.SetValue("Emulator.Serial.Port", 9999);
 			Settings.SetValue("Emulator.Serial.Pipe", "MOSA");
-			Settings.SetValue("LauncherAdvance.PlugKorlib", true);
-			Settings.SetValue("LauncherAdvance.HuntForCorLib", true);
+			Settings.SetValue("Launcher.PlugKorlib", true);
+			Settings.SetValue("Launcher.HuntForCorLib", true);
 		}
 
 		protected void NormalizeSettings()

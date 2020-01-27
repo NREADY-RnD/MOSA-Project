@@ -118,11 +118,11 @@ Launcher Settings
     Launcher.Start,"If true, immediately start the compiler upon launch"
     Launcher.Launch,"If true, launch a virtual machine after compiling the application and generating the virtual machine image"
     Launcher.Exit,"If true, exit immediately after launch"
-    Launcher.Advance.PlugKorlib,"If true, automatically include the plugs for CoreLib"
-    Launcher.Advance.HuntForCorLib,"If true, search for CoreLib in various directories"
-    Launcher.Advance.LaunchGDB,"If true, launch the GNU GDB application after VM launch"
-    Launcher.Advance.LaunchGDBDebugger,"If true, launch the MOSA GDB debugger application after VM launch"
-    Launcher.Advance.MonitorTest,"If true, monitors VM serials for success of failure messages"
+    Launcher.PlugKorlib,"If true, automatically include the plugs for CoreLib"
+    Launcher.HuntForCorLib,"If true, search for CoreLib in various directories"
+    Launcher.LaunchGDB,"If true, launch the GNU GDB application after VM launch"
+    Launcher.LaunchDebugger,"If true, launch the MOSA debugger application after VM launch"
+    Launcher.MonitorTest,"If true, monitors VM serials for success of failure messages"
 
 Image Settings
 --------------

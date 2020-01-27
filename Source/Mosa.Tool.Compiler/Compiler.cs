@@ -159,7 +159,7 @@ Example: Mosa.Tool.Compiler.exe -o Mosa.HelloWorld.x86.bin -platform x86 Mosa.He
 			Settings.SetValue("Compiler.Multithreading", true);
 			Settings.SetValue("Compiler.Platform", "x86");
 			Settings.SetValue("Compiler.TraceLevel", 0);
-			Settings.SetValue("LauncherAdvance.PlugKorlib", true);
+			Settings.SetValue("Launcher.PlugKorlib", true);
 			Settings.SetValue("CompilerDebug.DebugFile", string.Empty);
 			Settings.SetValue("CompilerDebug.AsmFile", string.Empty);
 			Settings.SetValue("CompilerDebug.MapFile", string.Empty);
@@ -196,7 +196,7 @@ Example: Mosa.Tool.Compiler.exe -o Mosa.HelloWorld.x86.bin -platform x86 Mosa.He
 			Settings.SetValue("Launcher.Start", false);
 			Settings.SetValue("Launcher.Launch", false);
 			Settings.SetValue("Launcher.Exit", false);
-			Settings.SetValue("LauncherAdvance.HuntForCorLib", true);
+			Settings.SetValue("Launcher.HuntForCorLib", true);
 		}
 
 		private CompilerHook CreateCompilerHook()

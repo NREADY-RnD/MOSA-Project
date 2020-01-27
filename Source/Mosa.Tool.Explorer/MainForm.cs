@@ -1000,7 +1000,7 @@ namespace Mosa.Tool.Explorer
 			Settings.SetValue("Compiler.Multithreading", true);
 			Settings.SetValue("Compiler.Platform", "x86");
 			Settings.SetValue("Compiler.TraceLevel", 10);
-			Settings.SetValue("LauncherAdvance.PlugKorlib", true);
+			Settings.SetValue("Launcher.PlugKorlib", true);
 			Settings.SetValue("CompilerDebug.DebugFile", string.Empty);
 			Settings.SetValue("CompilerDebug.AsmFile", string.Empty);
 			Settings.SetValue("CompilerDebug.MapFile", string.Empty);
@@ -1030,14 +1030,14 @@ namespace Mosa.Tool.Explorer
 			Settings.SetValue("Multiboot.Video.Depth", 32);
 			Settings.SetValue("Emulator", "Qemu");
 			Settings.SetValue("Emulator.Memory", 128);
-			Settings.SetValue("Emulator.Serial", "TCPServer");
+			Settings.SetValue("Emulator.Serial", "none");
 			Settings.SetValue("Emulator.Serial.Host", "127.0.0.1");
 			Settings.SetValue("Emulator.Serial.Port", 9999);
 			Settings.SetValue("Emulator.Serial.Pipe", "MOSA");
 			Settings.SetValue("Launcher.Start", false);
 			Settings.SetValue("Launcher.Launch", false);
 			Settings.SetValue("Launcher.Exit", false);
-			Settings.SetValue("LauncherAdvance.HuntForCorLib", true);
+			Settings.SetValue("Launcher.HuntForCorLib", true);
 		}
 
 		private void UpdateSettings()

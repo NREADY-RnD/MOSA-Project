@@ -29,9 +29,9 @@ namespace Mosa.Utility.Launcher
 		{
 			var process = LaunchVM();
 
-			if (LauncherSettings.LaunchGDBDebugger)
+			if (LauncherSettings.LaunchDebugger)
 			{
-				LaunchGDBDebugger();
+				LaunchDebugger();
 			}
 
 			if (LauncherSettings.LaunchGDB)
@@ -102,14 +102,14 @@ namespace Mosa.Utility.Launcher
 
 			if (LauncherSettings.ImageFormat == "iso")
 			{
-				arg.Append(" -cdrom " + Quote(LauncherSettings.ImageFile));
+				arg.Append($" -cdrom {Quote(LauncherSettings.ImageFile)}");
 			}
 			else
 			{
 				if (LauncherSettings.ImageFormat == "bin")
-					arg.Append("-kernel {Quote(LauncherSettings.ImageFile)}");
+					arg.Append($"-kernel {Quote(LauncherSettings.ImageFile)}");
 				else
-					arg.Append(" -hda {Quote(LauncherSettings.ImageFile)}");
+					arg.Append($" -hda {Quote(LauncherSettings.ImageFile)}");
 			}
 
 			return LaunchApplication(LauncherSettings.QEMU, arg.ToString(), getOutput);
@@ -214,7 +214,7 @@ namespace Mosa.Utility.Launcher
 			return LaunchApplication(LauncherSettings.VmwarePlayer, arg, getOutput);
 		}
 
-		private void LaunchGDBDebugger()
+		private void LaunchDebugger()
 		{
 			// FIXME!!!
 			var arg = $" -debugfile {Path.Combine(LauncherSettings.TemporaryFolder, Path.GetFileNameWithoutExtension(LauncherSettings.ImageFile) + ".debug")}";

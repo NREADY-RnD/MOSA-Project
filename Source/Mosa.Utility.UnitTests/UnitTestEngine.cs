@@ -96,7 +96,7 @@ namespace Mosa.Utility.UnitTests
 			Settings.SetValue("Compiler.BaseAddress", 0x00500000);
 			Settings.SetValue("Compiler.Binary", true);
 			Settings.SetValue("Compiler.TraceLevel", 0);
-			Settings.SetValue("LauncherAdvance.PlugKorlib", true);
+			Settings.SetValue("Launcher.PlugKorlib", true);
 			Settings.SetValue("Multiboot.Version", "v1");
 			Settings.SetValue("Emulator", "Qemu");
 			Settings.SetValue("Emulator.Memory", 128);
@@ -107,11 +107,12 @@ namespace Mosa.Utility.UnitTests
 			Settings.SetValue("Launcher.Start", false);
 			Settings.SetValue("Launcher.Launch", false);
 			Settings.SetValue("Launcher.Exit", true);
-			Settings.SetValue("LauncherAdvance.HuntForCorLib", true);
+			Settings.SetValue("Launcher.HuntForCorLib", true);
 			Settings.SetValue("Image.BootLoader", "syslinux3.72");
 			Settings.SetValue("Image.Folder", Path.Combine(Path.GetTempPath(), "MOSA-UnitTest"));
 			Settings.SetValue("Image.Format", "IMG");
 			Settings.SetValue("Image.FileSystem", "FAT16");
+			Settings.SetValue("Image.ImageFile", "%DEFAULT%");
 
 			Initialize();
 		}

@@ -120,8 +120,8 @@ namespace Mosa.Utility.Launcher
 
 		public bool HuntForCorLib
 		{
-			get { return Settings.GetValue("LauncherAdvance.HuntForCorLib", false); }
-			set { Settings.SetValue("LauncherAdvance.HuntForCorLib", value); }
+			get { return Settings.GetValue("Launcher.HuntForCorLib", false); }
+			set { Settings.SetValue("Launcher.HuntForCorLib", value); }
 		}
 
 		public string ImageBootLoader
@@ -180,14 +180,14 @@ namespace Mosa.Utility.Launcher
 
 		public bool LaunchGDB
 		{
-			get { return Settings.GetValue("LauncherAdvance.LaunchGDB", false); }
-			set { Settings.SetValue("LauncherAdvance.LaunchGDB", value); }
+			get { return Settings.GetValue("Launcher.LaunchGDB", false); }
+			set { Settings.SetValue("Launcher.LaunchGDB", value); }
 		}
 
-		public bool LaunchGDBDebugger
+		public bool LaunchDebugger
 		{
-			get { return Settings.GetValue("LauncherAdvance.LaunchGDBDebugger", false); }
-			set { Settings.SetValue("LauncherAdvance.LaunchGDBDebugger", value); }
+			get { return Settings.GetValue("Launcher.LaunchDebugger", false); }
+			set { Settings.SetValue("Launcher.LaunchDebugger", value); }
 		}
 
 		public string LinkerFormat { get { return Settings.GetValue("Linker.Format", "elf32"); } }
@@ -241,8 +241,8 @@ namespace Mosa.Utility.Launcher
 
 		public bool PlugKorlib
 		{
-			get { return Settings.GetValue("LauncherAdvance.PlugKorlib", false); }
-			set { Settings.SetValue("LauncherAdvance.PlugKorlib", value); }
+			get { return Settings.GetValue("Launcher.PlugKorlib", false); }
+			set { Settings.SetValue("Launcher.PlugKorlib", value); }
 		}
 
 		public string PostLinkHashFile

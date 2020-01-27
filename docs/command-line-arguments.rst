@@ -4,7 +4,7 @@ Command Line Arguments
 
 The command line arguments serve as shortcuts to common set of :doc:`settings-options` used by the MOSA tool sets.
 
-.. tip:: Specific settings may also be specified on the command line using the ``--setting`` argument. For example to set the ``Compiler.OutputFile`` settings with ``Mosa.HelloWorld.x86.bin``, pass the following two arguments ``--setting Compiler.OutputFile=Mosa.HelloWorld.x86.bin`` on the command line.
+.. tip:: Specific settings may also be specified on the command line using the ``-setting`` argument. For example to set the ``Compiler.OutputFile`` settings with ``Mosa.HelloWorld.x86.bin``, pass the following two arguments ``-setting Compiler.OutputFile=Mosa.HelloWorld.x86.bin`` on the command line.
 
 Below are the command line arguments available:
 
@@ -13,160 +13,159 @@ Below are the command line arguments available:
    :widths: 100, 100, 50
    
     {none},Compiler.SourceFiles,{value}
-    --settings,Settings,{value}
-    --o,Compiler.OutputFile,{value}
-    --threading,Compiler.Multithreading,true
-    --threading-off,Compiler.Multithreading,false
-    --base,Compiler.BaseAddress,{value}
-    --scanner,Compiler.MethodScanner,true
-    --no-code,Compiler.Binary,false
-    --path,SearchPaths, 
-    --inline,Optimizations.Inline,true
-    --inline-off,Optimizations.Inline,false
-    --ssa,Optimizations.SSA,true
-    --ssa-off,Optimizations.SSA,false
-    --sccp,Optimizations.SCCP,true
-    --sccp-off,Optimizations.SCCP,false
-    --basic-optimizations,Optimizations.Basic,true
-    --basic-optimizations-off,Optimizations.Basic,false
-    --inline-explicit,Optimizations.Inline.ExplicitOnly,true
-    --inline-explicit-off,Optimizations.Inline.ExplicitOnly,false
-    --long-expansion,Optimizations.LongExpansion,true
-    --long-expansion-off,Optimizations.LongExpansion,false
-    --two-pass,Optimizations.TwoPass,true
-    --two-pass-off,Optimizations.TwoPass,true
-    --value-numbering,Optimizations.ValueNumbering,true
-    --value-numbering-off,Optimizations.ValueNumbering,false
-    --loop-invariant-code-motion,Optimizations.LoopInvariantCodeMotion,true
-    --loop-invariant-code-motion-off,Optimizations.LoopInvariantCodeMotion,false
-    --platform-optimizations,Optimizations.Platform,true
-    --platform-optimizations-off,Optimizations.Platform,false
-    --bit-tracker,Optimizations.BitTracker,true
-    --bit-tracker-off,Optimizations.BitTracker,false
-    --devirtualization,Optimizations.Devirtualization,true
-    --devirtualization-off,Optimizations.Devirtualization,false
-    --inline-level,Optimizations.Inline.Maximum,{value}
+    -settings,Settings,{value}
     -o,Compiler.OutputFile,{value}
+    -threading,Compiler.Multithreading,true
+    -threading-off,Compiler.Multithreading,false
+    -base,Compiler.BaseAddress,{value}
+    -scanner,Compiler.MethodScanner,true
+    -no-code,Compiler.Binary,false
+    -path,SearchPaths, 
+    -inline,Optimizations.Inline,true
+    -inline-off,Optimizations.Inline,false
+    -ssa,Optimizations.SSA,true
+    -ssa-off,Optimizations.SSA,false
+    -sccp,Optimizations.SCCP,true
+    -sccp-off,Optimizations.SCCP,false
+    -basic-optimizations,Optimizations.Basic,true
+    -basic-optimizations-off,Optimizations.Basic,false
+    -inline-explicit,Optimizations.Inline.ExplicitOnly,true
+    -inline-explicit-off,Optimizations.Inline.ExplicitOnly,false
+    -long-expansion,Optimizations.LongExpansion,true
+    -long-expansion-off,Optimizations.LongExpansion,false
+    -two-pass,Optimizations.TwoPass,true
+    -two-pass-off,Optimizations.TwoPass,true
+    -value-numbering,Optimizations.ValueNumbering,true
+    -value-numbering-off,Optimizations.ValueNumbering,false
+    -loop-invariant-code-motion,Optimizations.LoopInvariantCodeMotion,true
+    -loop-invariant-code-motion-off,Optimizations.LoopInvariantCodeMotion,false
+    -platform-optimizations,Optimizations.Platform,true
+    -platform-optimizations-off,Optimizations.Platform,false
+    -bit-tracker,Optimizations.BitTracker,true
+    -bit-tracker-off,Optimizations.BitTracker,false
+    -devirtualization,Optimizations.Devirtualization,true
+    -devirtualization-off,Optimizations.Devirtualization,false
+    -inline-level,Optimizations.Inline.Maximum,{value}
 
-    --optimizations-off,Optimizations.Inline,false
-    --optimizations-off,Optimizations.SSA,false
-    --optimizations-off,Optimizations.SCCP,false
-    --optimizations-off,Optimizations.Devirtualization,false
-    --optimizations-off,Optimizations.Basic,false
-    --optimizations-off,Optimizations.LongExpansion,false
-    --optimizations-off,Optimizations.Inline,false
-    --optimizations-off,Optimizations.LoopInvariantCodeMotion,false
-    --optimizations-off,Optimizations.Platform,false
-    --optimizations-off,Optimizations.BitTracker,false
-    --optimizations-off,Optimizations.ValueNumbering,false
-    --optimizations-off,Optimizations.TwoPass,false
+    -optimizations-off,Optimizations.Inline,false
+    -optimizations-off,Optimizations.SSA,false
+    -optimizations-off,Optimizations.SCCP,false
+    -optimizations-off,Optimizations.Devirtualization,false
+    -optimizations-off,Optimizations.Basic,false
+    -optimizations-off,Optimizations.LongExpansion,false
+    -optimizations-off,Optimizations.Inline,false
+    -optimizations-off,Optimizations.LoopInvariantCodeMotion,false
+    -optimizations-off,Optimizations.Platform,false
+    -optimizations-off,Optimizations.BitTracker,false
+    -optimizations-off,Optimizations.ValueNumbering,false
+    -optimizations-off,Optimizations.TwoPass,false
 
-    --output-nasm,CompilerDebug.NasmFile,%DEFAULT%
-    --output-asm,CompilerDebug.AsmFile,%DEFAULT%
-    --output-map,CompilerDebug.MapFile,%DEFAULT%
-    --output-time,CompilerDebug.CompilerTimeFile,%DEFAULT%
-    --output-debug,CompilerDebug.DebugFile,%DEFAULT%
-    --output-inlined,CompilerDebug.InlinedFile,%DEFAULT%
-    --output-hash,CompilerDebug.PreLinkHashFile,%DEFAULT%
-    --output-hash,CompilerDebug.PostLinkHashFile,%DEFAULT%
+    -output-nasm,CompilerDebug.NasmFile,%DEFAULT%
+    -output-asm,CompilerDebug.AsmFile,%DEFAULT%
+    -output-map,CompilerDebug.MapFile,%DEFAULT%
+    -output-time,CompilerDebug.CompilerTimeFile,%DEFAULT%
+    -output-debug,CompilerDebug.DebugFile,%DEFAULT%
+    -output-inlined,CompilerDebug.InlinedFile,%DEFAULT%
+    -output-hash,CompilerDebug.PreLinkHashFile,%DEFAULT%
+    -output-hash,CompilerDebug.PostLinkHashFile,%DEFAULT%
 
-    --platform,Compiler.Platform,{value}
-    --x86,Compiler.Platform,x86
-    --x64,Compiler.Platform,x64
-    --armv8a32,Compiler.Platform,armv8a32
+    -platform,Compiler.Platform,{value}
+    -x86,Compiler.Platform,x86
+    -x64,Compiler.Platform,x64
+    -armv8a32,Compiler.Platform,armv8a32
 
-    --interrupt-method,X86.InterruptMethodName,{value}
+    -interrupt-method,X86.InterruptMethodName,{value}
 
     // Linker:
-    --emit-all-symbols,Linker.Symbols,true
-    --emit-all-symbols-off,Linker.Symbols,false
-    --emit-relocations,Linker.StaticRelocations,true
-    --emit-relocations-off,Linker.StaticRelocations,false
-    --emit-static-relocations,Linker.StaticRelocations,true
-    --emit-drawf,Linker.Drawf,true
-    --emit-drawf-off,Linker.Drawf,false
-    --drawf,Linker.Drawf,true
+    -emit-all-symbols,Linker.Symbols,true
+    -emit-all-symbols-off,Linker.Symbols,false
+    -emit-relocations,Linker.StaticRelocations,true
+    -emit-relocations-off,Linker.StaticRelocations,false
+    -emit-static-relocations,Linker.StaticRelocations,true
+    -emit-drawf,Linker.Drawf,true
+    -emit-drawf-off,Linker.Drawf,false
+    -drawf,Linker.Drawf,true
 
     // Explorer:
-    --filter,Explorer.Filter,{value}
+    -filter,Explorer.Filter,{value}
 
     // Launcher:
-    --autoexit,Launcher.Exit,true
-    --autoexit-off,Launcher.Exit,false
-    --autostart,Launcher.Start,true
-    --autostart-off,Launcher.Start,false
-    --autolaunch,Launcher.Launch,true
-    --autolaunch-off,Launcher.Launch,false
+    -autoexit,Launcher.Exit,true
+    -autoexit-off,Launcher.Exit,false
+    -autostart,Launcher.Start,true
+    -autostart-off,Launcher.Start,false
+    -autolaunch,Launcher.Launch,true
+    -autolaunch-off,Launcher.Launch,false
 
-    --destination,Image.Folder,{value}
-    --dest,Image.Folder,{value}
+    -destination,Image.Folder,{value}
+    -dest,Image.Folder,{value}
 
-    --launch,Launcher.Launch,true
-    --launch-off,Launcher.Launch,false
+    -launch,Launcher.Launch,true
+    -launch-off,Launcher.Launch,false
 
     // Launcher - Emulator:
-    --emulator,Emulator,
-    --qemu,Emulator,qemu
-    --vmware,Emulator,vmware
-    --bochs,Emulator,bochs
-    --display,Emulator.Display,on
-    --display-off,Emulator.Display,off
-    --emulator-memory,Emulator.Memory,
-    --qemu-gdb,Emulator.GDB,false
+    -emulator,Emulator,
+    -qemu,Emulator,qemu
+    -vmware,Emulator,vmware
+    -bochs,Emulator,bochs
+    -display,Emulator.Display,on
+    -display-off,Emulator.Display,off
+    -emulator-memory,Emulator.Memory,
+    -qemu-gdb,Emulator.GDB,false
 
     // Launcher - Image:
-    --vhd,Image.Format,vhd
-    --img,Image.Format,img
-    --vdi,Image.Format,vdi
-    --iso,Image.Format,iso
-    --vmdk,Image.Format,vmdk
-    --image,Image.ImageFile,{value}
+    -vhd,Image.Format,vhd
+    -img,Image.Format,img
+    -vdi,Image.Format,vdi
+    -iso,Image.Format,iso
+    -vmdk,Image.Format,vmdk
+    -image,Image.ImageFile,{value}
 
-    --blocks,Image.DiskBlocks,
-    --volume-label,Image.VolumeLabel,
-    --mbr,Image.MasterBootRecordFile,
-    --boot,Image.BootBlockFile,
+    -blocks,Image.DiskBlocks,
+    -volume-label,Image.VolumeLabel,
+    -mbr,Image.MasterBootRecordFile,
+    -boot,Image.BootBlockFile,
 
     // Launcher - Boot:
-    --multiboot-v1,Multiboot.Version,v1
-    --multiboot-v2,Multiboot.Version,v2
-    --multiboot-none,Multiboot.Version,
-    --multiboot,Multiboot.Version,{value}
+    -multiboot-v1,Multiboot.Version,v1
+    -multiboot-v2,Multiboot.Version,v2
+    -multiboot-none,Multiboot.Version,
+    -multiboot,Multiboot.Version,{value}
 
     // Launcher - Serial:
-    --serial-connection,Emulator.Serial,
-    --serial-pipe,Emulator.Serial,pipe
-    --serial-tcpclient,Emulator.Serial,tcpclient
-    --serial-tcpserver,Emulator.Serial,tcpserver
-    --serial-connection-port,Emulator.Serial.Port,{value}
-    --serial-connection-host,Emulator.Serial.Host,{value}
+    -serial-connection,Emulator.Serial,
+    -serial-pipe,Emulator.Serial,pipe
+    -serial-tcpclient,Emulator.Serial,tcpclient
+    -serial-tcpserver,Emulator.Serial,tcpserver
+    -serial-connection-port,Emulator.Serial.Port,{value}
+    -serial-connection-host,Emulator.Serial.Host,{value}
 
-    --video,Multiboot.Video,true
-    --video-width,Multiboot.Video.Width,{value}
-    --video-height,Multiboot.Video.Height,{value}
-    --video-depth,Multiboot.Video.Depth,{value}
+    -video,Multiboot.Video,true
+    -video-width,Multiboot.Video.Width,{value}
+    -video-height,Multiboot.Video.Height,{value}
+    -video-depth,Multiboot.Video.Depth,{value}
 
-    --gdb,Launcher.Advance.LaunchGDBDebugger,true
-    --gdb-port,GDB.Port,{value}
-    --gdb-host,GDB.Host,{value}
+    -gdb,Launcher.LaunchDebugger,true
+    -gdb-port,GDB.Port,{value}
+    -gdb-host,GDB.Host,{value}
 
-    --launch-gdb-debugger,Launcher.Advance.LaunchGDBDebugger,true
+    -launch-gdb-debugger,Launcher.LaunchDebugger,true
 
-    --bootloader,Image.BootLoader,{value}
-    --grub,Image.BootLoader,grub_v0.97
-    --grub-0.97,Image.BootLoader,grub_v0.97
-    --grub2,Image.BootLoader,grub_v2.00
-    --syslinux,Image.BootLoader,syslinux_v3.72
-    --syslinux-3.72,Image.BootLoader,syslinux_v3.72
-    --syslinux-6.0,Image.BootLoader,syslinux_v6.03
+    -bootloader,Image.BootLoader,{value}
+    -grub,Image.BootLoader,grub_v0.97
+    -grub-0.97,Image.BootLoader,grub_v0.97
+    -grub2,Image.BootLoader,grub_v2.00
+    -syslinux,Image.BootLoader,syslinux_v3.72
+    -syslinux-3.72,Image.BootLoader,syslinux_v3.72
+    -syslinux-6.0,Image.BootLoader,syslinux_v6.03
 
     // Launcher - Advance:
-    --hunt-corlib,Launcher.Advance.HuntForCorLib,true
-    --plug-korlib,Launcher.Advance.PlugKorlib,true
+    -hunt-corlib,Launcher.HuntForCorLib,true
+    -plug-korlib,Launcher.PlugKorlib,true
 
     // Debugger:
-    --breakpoints,Debugger.BreakpointFile,{value}
-    --watch,Debugger.WatchFile,{value}
+    -breakpoints,Debugger.BreakpointFile,{value}
+    -watch,Debugger.WatchFile,{value}
 
     // Optimization Levels:
     -o0,Optimizations.Basic,false
@@ -299,43 +298,43 @@ Below are the command line arguments available:
     -o9,Optimizations.TwoPass,true
     -o9,Optimizations.Inline.Maximum,15
 
-    --Max,Optimizations.Basic,true
-    --Max,Optimizations.SSA,true
-    --Max,Optimizations.ValueNumbering,true
-    --Max,Optimizations.SCCP,true
-    --Max,Optimizations.Devirtualization,true
-    --Max,Optimizations.LongExpansion,true
-    --Max,Optimizations.Platform,true
-    --Max,Optimizations.Inline,true
-    --Max,Optimizations.LoopInvariantCodeMotion,true
-    --Max,Optimizations.BitTracker,true
-    --Max,Optimizations.TwoPass,true
-    --Max,Optimizations.Inline.Maximum,15
+    -Max,Optimizations.Basic,true
+    -Max,Optimizations.SSA,true
+    -Max,Optimizations.ValueNumbering,true
+    -Max,Optimizations.SCCP,true
+    -Max,Optimizations.Devirtualization,true
+    -Max,Optimizations.LongExpansion,true
+    -Max,Optimizations.Platform,true
+    -Max,Optimizations.Inline,true
+    -Max,Optimizations.LoopInvariantCodeMotion,true
+    -Max,Optimizations.BitTracker,true
+    -Max,Optimizations.TwoPass,true
+    -Max,Optimizations.Inline.Maximum,15
 
-    --Size,Optimizations.Basic,true
-    --Size,Optimizations.SSA,true
-    --Size,Optimizations.ValueNumbering,true
-    --Size,Optimizations.SCCP,true
-    --Size,Optimizations.Devirtualization,true
-    --Size,Optimizations.LongExpansion,true
-    --Size,Optimizations.Platform,true
-    --Size,Optimizations.Inline,true
-    --Size,Optimizations.LoopInvariantCodeMotion,true
-    --Size,Optimizations.BitTracker,true
-    --Size,Optimizations.TwoPass,true
-    --Size,Optimizations.Inline.Maximum,3
+    -Size,Optimizations.Basic,true
+    -Size,Optimizations.SSA,true
+    -Size,Optimizations.ValueNumbering,true
+    -Size,Optimizations.SCCP,true
+    -Size,Optimizations.Devirtualization,true
+    -Size,Optimizations.LongExpansion,true
+    -Size,Optimizations.Platform,true
+    -Size,Optimizations.Inline,true
+    -Size,Optimizations.LoopInvariantCodeMotion,true
+    -Size,Optimizations.BitTracker,true
+    -Size,Optimizations.TwoPass,true
+    -Size,Optimizations.Inline.Maximum,3
 
-    --Fast,Optimizations.Basic,true
-    --Fast,Optimizations.SSA,true
-    --Fast,Optimizations.ValueNumbering,true
-    --Fast,Optimizations.SCCP,false
-    --Fast,Optimizations.Devirtualization,true
-    --Fast,Optimizations.LongExpansion,false
-    --Fast,Optimizations.Platform,false
-    --Fast,Optimizations.Inline,false
-    --Fast,Optimizations.LoopInvariantCodeMotion,false
-    --Fast,Optimizations.BitTracker,false
-    --Fast,Optimizations.TwoPass,false
-    --Fast,Optimizations.Inline.Maximum,0
+    -Fast,Optimizations.Basic,true
+    -Fast,Optimizations.SSA,true
+    -Fast,Optimizations.ValueNumbering,true
+    -Fast,Optimizations.SCCP,false
+    -Fast,Optimizations.Devirtualization,true
+    -Fast,Optimizations.LongExpansion,false
+    -Fast,Optimizations.Platform,false
+    -Fast,Optimizations.Inline,false
+    -Fast,Optimizations.LoopInvariantCodeMotion,false
+    -Fast,Optimizations.BitTracker,false
+    -Fast,Optimizations.TwoPass,false
+    -Fast,Optimizations.Inline.Maximum,0
 
 .. note:: ``{value}`` is the next argument

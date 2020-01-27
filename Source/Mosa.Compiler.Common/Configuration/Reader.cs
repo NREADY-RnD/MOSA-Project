@@ -84,7 +84,7 @@ namespace Mosa.Compiler.Common.Configuration
 			{
 				var arg = args[at];
 
-				if (arg == "-s" || arg == "-p" ||  arg == "--setting" || arg == "--property")
+				if (arg == "-s" || arg == "-p" || arg == "-setting" || arg == "-property")
 				{
 					var parts = args[++at].Split('=');
 
