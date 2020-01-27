@@ -1,6 +1,6 @@
-###############
+######################
 Compiler Optimizations
-###############
+######################
 
 Optimizations
 -------------
@@ -14,8 +14,8 @@ Bit Tracker
 Long Expansion
   Expands 64-bit instructions into 32-bit components for platforms without native 64-bit instructions.
 
-Inlined Expansion
-  Inlines the code of small methods into the caller. This improves the performance, because calls can be expensive (storing the registers, placing the arguments onto stack, jumping to another location). 
+Inline Expansion
+  Inline Expansion replaces a methods call site with the body of the called method. This improves the performance, because calls can be expensive (storing the registers, placing the arguments onto stack, jumping to another location). 
 
 Static Single Assignment Form
   Transforms instructions to Single Static Assignment (SSA) form. In SSA form, all virtual registers may only have one definition. This is not an optimization by itself, but this form enables other optimization opportunities in other types of optimizations.
@@ -27,5 +27,5 @@ Value Numbering
   Value numbering is a technique of determining when two computations in a program are equivalent and eliminating one of them with while preserving the same semantics. 
 
 Two Pass Optimizations
-  This options causes the optimization stages to be executed again, possibility unlocked additional optimiztions.
+  This options causes the optimization stages to be executed again, possibility unlocked additional optimizations.
 
