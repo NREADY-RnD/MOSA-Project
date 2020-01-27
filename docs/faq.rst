@@ -16,7 +16,7 @@ Anyone who is interested in operating system or .NET development can join. You h
 What kind of .NET runtime will be available?
 --------------------------------------------
 
-We are developing an entirely new Runtime as part of the MOSA effort. This runtime is developed along the CIL specifications published by ECMA. We are building our own runtime with pluggable algorithms in order to be very flexible and usable for research.
+We are developing an entirely new runtime as part of the MOSA effort. This runtime is developed along the CIL specifications published by ECMA. We are building our own runtime with pluggable algorithms in order to be very flexible and usable for research.
 
 How is the Cosmos project different than MOSA?
 ----------------------------------------------
@@ -30,4 +30,4 @@ Another important difference is Cosmos compiles to Assembly ASM and uses Netwide
 Are Cosmos and MOSA working together?
 -------------------------------------
 
-No; Cosmos and MOSA are independent projects. 
+No; Cosmos and MOSA are seperate and independent projects. 

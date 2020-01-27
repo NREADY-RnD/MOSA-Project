@@ -14,11 +14,11 @@ Method Compiler Pipeline
 
 The other pipeline is the method compiler pipeline. This pipeline consists of stages which progressively lowers the high level instruction to native binary instructions of the target platform. These stages can be grouped into five categories:
 
-- Compiler Frontends Stage - Creates an instruction stream from a source specific representation, such as .NET CIL instructions
-- Transformation Stages - Transforms the instruction stream between various representations
-- Optimization Stages - Stages that intended to optimize the code to execute faster
-- Register Allocation Stage - Allocates architecture specific registers to operands used in the instruction stream
-- Platform Stages - Generates the binary code from platform specific instruction
+	# Compiler Frontends Stage - Creates an instruction stream from a source specific representation, such as .NET CIL instructions
+	# Transformation Stages - Transforms the instruction stream between various representations
+	# Optimization Stages - Stages that intended to optimize the code to execute faster
+	# Register Allocation Stage - Allocates architecture specific registers to operands used in the instruction stream
+	# Platform Stages - Generates the binary code from platform specific instruction
 
 The compiler framework provides predefined pieces of this pipeline. Some parts, especially the code generation, are provided by the architecture specific stages, such as for the x86 platform.
 
