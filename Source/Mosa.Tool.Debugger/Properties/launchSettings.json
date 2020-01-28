@@ -1,6 +1,6 @@
 {
 	"profiles": {
-		"Mosa.Tool.GDBDebugger": {
+		"Mosa.Tool.Debugger": {
 			"commandName": "Project"
 		}
 	}

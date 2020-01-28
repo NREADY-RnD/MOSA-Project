@@ -3,7 +3,7 @@
     <TargetFramework>net472</TargetFramework>
     <OutputType>WinExe</OutputType>
     <UseWindowsForms>true</UseWindowsForms>
-    <Title>Mosa.Tool.GDBDebugger</Title>
+    <Title>Mosa.Tool.Debugger</Title>
     <Company>MOSA Project</Company>
     <Copyright>Copyright © 2020</Copyright>
     <LangVersion>8.0</LangVersion>

@@ -293,7 +293,7 @@ namespace Mosa.Utility.Launcher
 			arg += $" -connect";
 			arg += $" -image {Quote(LauncherSettings.ImageFile)}";
 
-			LaunchApplication("Mosa.Tool.GDBDebugger.exe", arg);
+			LaunchApplication("Mosa.Tool.Debugger.exe", arg);
 		}
 
 		private void LaunchGDB()
