@@ -23,7 +23,6 @@
 		<file src="..\..\bin\Mosa.Compiler.Common.dll" target="tools" />
 		<file src="..\..\bin\Mosa.Compiler.Framework.dll" target="tools" />
 		<file src="..\..\bin\Mosa.Compiler.MosaTypeSystem.dll" target="tools" />
-		<file src="..\..\bin\Mosa.Compiler.Extension.Dwarf.dll" target="tools" />
 		<file src="..\..\bin\Mosa.Platform.ARMv8A32.dll" target="tools" />
 		<file src="..\..\bin\Mosa.Platform.Intel.dll" target="tools" />
 		<file src="..\..\bin\Mosa.Platform.x86.dll" target="tools" />
