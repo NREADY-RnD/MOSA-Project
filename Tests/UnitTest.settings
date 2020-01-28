@@ -17,4 +17,4 @@ Optimizations:
 #CompilerDebug.PostlinkHashFile: %DEFAULT%
 #CompilerDebug.PrelinkHashFile: %DEFAULT%
 
-Emulator.Display: on
+#Emulator.Display: on

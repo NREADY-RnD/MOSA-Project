@@ -47,19 +47,6 @@ Below are the command line arguments available:
     -devirtualization-off,Optimizations.Devirtualization,false
     -inline-level,Optimizations.Inline.Maximum,{value}
 
-    -optimizations-off,Optimizations.Inline,false
-    -optimizations-off,Optimizations.SSA,false
-    -optimizations-off,Optimizations.SCCP,false
-    -optimizations-off,Optimizations.Devirtualization,false
-    -optimizations-off,Optimizations.Basic,false
-    -optimizations-off,Optimizations.LongExpansion,false
-    -optimizations-off,Optimizations.Inline,false
-    -optimizations-off,Optimizations.LoopInvariantCodeMotion,false
-    -optimizations-off,Optimizations.Platform,false
-    -optimizations-off,Optimizations.BitTracker,false
-    -optimizations-off,Optimizations.ValueNumbering,false
-    -optimizations-off,Optimizations.TwoPass,false
-
     -output-nasm,CompilerDebug.NasmFile,%DEFAULT%
     -output-asm,CompilerDebug.AsmFile,%DEFAULT%
     -output-map,CompilerDebug.MapFile,%DEFAULT%
@@ -298,43 +285,56 @@ Below are the command line arguments available:
     -o9,Optimizations.TwoPass,true
     -o9,Optimizations.Inline.Maximum,15
 
-    -Max,Optimizations.Basic,true
-    -Max,Optimizations.SSA,true
-    -Max,Optimizations.ValueNumbering,true
-    -Max,Optimizations.SCCP,true
-    -Max,Optimizations.Devirtualization,true
-    -Max,Optimizations.LongExpansion,true
-    -Max,Optimizations.Platform,true
-    -Max,Optimizations.Inline,true
-    -Max,Optimizations.LoopInvariantCodeMotion,true
-    -Max,Optimizations.BitTracker,true
-    -Max,Optimizations.TwoPass,true
-    -Max,Optimizations.Inline.Maximum,15
+    -oNone,Optimizations.Basic,false
+    -oNone,Optimizations.SSA,false
+    -oNone,Optimizations.ValueNumbering,false
+    -oNone,Optimizations.SCCP,false
+    -oNone,Optimizations.Devirtualization,false
+    -oNone,Optimizations.LongExpansion,false
+    -oNone,Optimizations.Platform,false
+    -oNone,Optimizations.Inline,false
+    -oNone,Optimizations.LoopInvariantCodeMotion,false
+    -oNone,Optimizations.BitTracker,false
+    -oNone,Optimizations.TwoPass,false
+    -oNone,Optimizations.Inline.Maximum,0
 
-    -Size,Optimizations.Basic,true
-    -Size,Optimizations.SSA,true
-    -Size,Optimizations.ValueNumbering,true
-    -Size,Optimizations.SCCP,true
-    -Size,Optimizations.Devirtualization,true
-    -Size,Optimizations.LongExpansion,true
-    -Size,Optimizations.Platform,true
-    -Size,Optimizations.Inline,true
-    -Size,Optimizations.LoopInvariantCodeMotion,true
-    -Size,Optimizations.BitTracker,true
-    -Size,Optimizations.TwoPass,true
-    -Size,Optimizations.Inline.Maximum,3
+    -oMax,Optimizations.Basic,true
+    -oMax,Optimizations.SSA,true
+    -oMax,Optimizations.ValueNumbering,true
+    -oMax,Optimizations.SCCP,true
+    -oMax,Optimizations.Devirtualization,true
+    -oMax,Optimizations.LongExpansion,true
+    -oMax,Optimizations.Platform,true
+    -oMax,Optimizations.Inline,true
+    -oMax,Optimizations.LoopInvariantCodeMotion,true
+    -oMax,Optimizations.BitTracker,true
+    -oMax,Optimizations.TwoPass,true
+    -oMax,Optimizations.Inline.Maximum,15
 
-    -Fast,Optimizations.Basic,true
-    -Fast,Optimizations.SSA,true
-    -Fast,Optimizations.ValueNumbering,true
-    -Fast,Optimizations.SCCP,false
-    -Fast,Optimizations.Devirtualization,true
-    -Fast,Optimizations.LongExpansion,false
-    -Fast,Optimizations.Platform,false
-    -Fast,Optimizations.Inline,false
-    -Fast,Optimizations.LoopInvariantCodeMotion,false
-    -Fast,Optimizations.BitTracker,false
-    -Fast,Optimizations.TwoPass,false
-    -Fast,Optimizations.Inline.Maximum,0
+    -oSize,Optimizations.Basic,true
+    -oSize,Optimizations.SSA,true
+    -oSize,Optimizations.ValueNumbering,true
+    -oSize,Optimizations.SCCP,true
+    -oSize,Optimizations.Devirtualization,true
+    -oSize,Optimizations.LongExpansion,true
+    -oSize,Optimizations.Platform,true
+    -oSize,Optimizations.Inline,true
+    -oSize,Optimizations.LoopInvariantCodeMotion,true
+    -oSize,Optimizations.BitTracker,true
+    -oSize,Optimizations.TwoPass,true
+    -oSize,Optimizations.Inline.Maximum,3
+
+    -oFast,Optimizations.Basic,true
+    -oFast,Optimizations.SSA,true
+    -oFast,Optimizations.ValueNumbering,true
+    -oFast,Optimizations.SCCP,false
+    -oFast,Optimizations.Devirtualization,true
+    -oFast,Optimizations.LongExpansion,false
+    -oFast,Optimizations.Platform,false
+    -oFast,Optimizations.Inline,false
+    -oFast,Optimizations.LoopInvariantCodeMotion,false
+    -oFast,Optimizations.BitTracker,false
+    -oFast,Optimizations.TwoPass,false
+    -oFast,Optimizations.Inline.Maximum,0
 
 .. note:: ``{value}`` is the next argument

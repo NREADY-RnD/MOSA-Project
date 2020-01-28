@@ -39,5 +39,11 @@ jobs:
         working-directory: Source
       - name: Build
         run: msbuild Source/Mosa.sln
-      - name: Unit Tests
-        run: bin\Mosa.Utility.UnitTests.exe -settings tests\UnitTest.settings
+      - name: Create Installer
+        run: ISCC.exe /DMyAppVersion=2.0.0.0 Source/Inno-Setup-Script/Mosa-Installer.iss
+      - name: Unit Tests (full optimizations)
+        run: bin\Mosa.Utility.UnitTests.exe -oMax -s Emulator.Display=false
+      - name: Unit Tests (no optimizations)
+        run: bin\Mosa.Utility.UnitTests.exe -oNone -s Emulator.Display=false
+      - name: Unit Tests (balance optimizations)
+        run: bin\Mosa.Utility.UnitTests.exe -oFast -s Emulator.Display=false
