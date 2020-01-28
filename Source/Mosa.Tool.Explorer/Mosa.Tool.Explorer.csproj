@@ -44,8 +44,8 @@
     <Content Include="magnifier.ico" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="System.ComponentModel.Composition" Version="4.6.0" />
-    <PackageReference Include="dnlib" Version="3.2.0" />
+    <PackageReference Include="System.ComponentModel.Composition" Version="4.7.0" />
+    <PackageReference Include="dnlib" Version="3.3.1" />
     <PackageReference Include="SharpDisasm" Version="1.1.11" />
   </ItemGroup>
   <ItemGroup>
