@@ -53,7 +53,6 @@ for:
     - cmd: dotnet pack Source/Mosa.Runtime/Mosa.Runtime.csproj -p:NuspecProperties=\"version=%APPVEYOR_BUILD_VERSION%\"
     - cmd: dotnet pack Source/Mosa.Kernel.x86/Mosa.Kernel.x86.csproj -p:NuspecProperties=\"version=%APPVEYOR_BUILD_VERSION%\"
     - cmd: dotnet pack Source/Mosa.Runtime.x86/Mosa.Runtime.x86.csproj -p:NuspecProperties=\"version=%APPVEYOR_BUILD_VERSION%\"
-    - cmd: dotnet pack Source/Mosa.ClassLib/Mosa.ClassLib.csproj -p:NuspecProperties=\"version=%APPVEYOR_BUILD_VERSION%\"
     - cmd: dotnet pack Source/Mosa.Tools.Package/Mosa.Tools.Package.csproj -p:NuspecProperties=\"version=%APPVEYOR_BUILD_VERSION%\"
     - cmd: ISCC.exe "/DMyAppVersion=%APPVEYOR_BUILD_VERSION%" Source/Inno-Setup-Script/Mosa-Installer.iss
 #   - ps: ./mosactl.ps1 unittest

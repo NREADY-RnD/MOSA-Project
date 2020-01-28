@@ -20,9 +20,6 @@
 		<PackageReference Include="Mosa.Tools.Package" Version="*" />
 	</ItemGroup>
 	<ItemGroup>
-		<Reference Include="Mosa.ClassLib, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-			<Private>True</Private>
-		</Reference>
 		<Reference Include="Mosa.Kernel.x86, Version=0.0.0.0, Culture=neutral">
 			<Private>True</Private>
 		</Reference>
