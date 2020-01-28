@@ -45,7 +45,7 @@ jobs:
         run: bin\Mosa.Utility.UnitTests.exe -oMax -s Emulator.Display=false
       - name: Unit Tests - No Optimizations
         run: bin\Mosa.Utility.UnitTests.exe -oNone -s Emulator.Display=false
-      - name: Unit Tests - Optimized for Fast Compiling Time
+      - name: Unit Tests - Optimized for Fast Compile Time
         run: bin\Mosa.Utility.UnitTests.exe -oFast -s Emulator.Display=false
       - name: Unit Tests - Optimized for File Size
         run: bin\Mosa.Utility.UnitTests.exe -oFast -s Emulator.Display=false
