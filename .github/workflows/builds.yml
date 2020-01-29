@@ -55,8 +55,3 @@ jobs:
         run: dotnet pack Source/Mosa.Kernel.x86/Mosa.Kernel.x86.csproj --o finalpackages -p:NuspecProperties="version=2.0.0.0"
         run: dotnet pack Source/Mosa.Runtime.x86/Mosa.Runtime.x86.csproj --o finalpackages -p:NuspecProperties="version=2.0.0.0"
         run: dotnet pack Source/Mosa.Tools.Package/Mosa.Tools.Package.csproj -o finalpackages --p:NuspecProperties="version=2.0.0.0"
-     - name: Publish artifact
-        uses: actions/upload-artifact@master
-        with:
-          name: nupkg
-          path: finalpackages
