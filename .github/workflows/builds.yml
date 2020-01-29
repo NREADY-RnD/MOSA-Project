@@ -50,11 +50,12 @@ jobs:
       - name: Unit Tests - Optimized for File Size
         run: bin\Mosa.Utility.UnitTests.exe -oFast -s Emulator.Display=false
       - name: Pack
-        run: dotnet pack Source/Mosa.Korlib/Mosa.Korlib.csproj -o finalpackages -p:NuspecProperties="version=2.0.0.0"
-        run: dotnet pack Source/Mosa.Runtime/Mosa.Runtime.csproj -o finalpackages -p:NuspecProperties="version=2.0.0.0"
-        run: dotnet pack Source/Mosa.Kernel.x86/Mosa.Kernel.x86.csproj -o finalpackages -p:NuspecProperties="version=2.0.0.0"
-        run: dotnet pack Source/Mosa.Runtime.x86/Mosa.Runtime.x86.csproj -o finalpackages -p:NuspecProperties="version=2.0.0.0"
-     - name: Publish artifact
+        run: dotnet pack Source/Mosa.Korlib/Mosa.Korlib.csproj -o bin -p:NuspecProperties="version=2.0.0.0"
+        run: dotnet pack Source/Mosa.Runtime/Mosa.Runtime.csproj -o bin -p:NuspecProperties="version=2.0.0.0"
+        run: dotnet pack Source/Mosa.Kernel.x86/Mosa.Kernel.x86.csproj -o bin -p:NuspecProperties="version=2.0.0.0"
+        run: dotnet pack Source/Mosa.Runtime.x86/Mosa.Runtime.x86.csproj -o bin -p:NuspecProperties="version=2.0.0.0"
+        run: dotnet pack Source/Mosa.Tools.Package/Mosa.Tools.Package.csproj -o bin -p:NuspecProperties="version=2.0.0.0"
+      - name: Publish artifact
         uses: actions/upload-artifact@master
         with:
           name: nupkg
