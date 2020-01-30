@@ -134,7 +134,7 @@ namespace Mosa.Tool.Debugger.Views
 
 		private void btnRestart_Click(object sender, EventArgs e)
 		{
-			// ???
+			MainForm.LaunchImage(true);
 		}
 
 		private void btnStart_Click(object sender, EventArgs e)

@@ -5,25 +5,6 @@ on:
   pull_request:
 
 jobs:
-  build-unix:
-    name: Linux Build
-    runs-on: ubuntu-18.04
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v1
-        with:
-          submodules: recursive
-      - name: Update Package Respository
-        run: sudo apt-get -y -o Acquire::Check-Valid-Until=false update
-      - name: Install New Packages
-        run: sudo apt-get install -y git wget qemu qemu-system qemu-system-x86
-      - name: Restore nuget Packages
-        run: dotnet restore Source/Mosa.sln
-      - name: Build
-        run: msbuild /verbosity:minimal Source/Mosa.sln
-      - name: Unit Tests
-        run: bin\Mosa.Utility.UnitTests.exe -settings tests\UnitTest.settings
-
   build-mswin:
     name: Windows Build
     runs-on: windows-latest
@@ -66,3 +47,22 @@ jobs:
         with:
           name: nupkg
           path: finalpackages
+
+  build-unix:
+    name: Linux Build
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+        with:
+          submodules: recursive
+      - name: Update Package Respository
+        run: sudo apt-get -y -o Acquire::Check-Valid-Until=false update
+      - name: Install New Packages
+        run: sudo apt-get install -y git wget qemu qemu-system qemu-system-x86
+      - name: Restore nuget Packages
+        run: dotnet restore Source/Mosa.sln
+      - name: Build
+        run: msbuild /verbosity:minimal Source/Mosa.sln
+      - name: Unit Tests
+        run: bin\Mosa.Utility.UnitTests.exe -settings tests\UnitTest.settings

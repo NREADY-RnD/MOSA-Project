@@ -5,7 +5,6 @@
     <Company>MOSA Project</Company>
     <Description>MOSA Tools Package</Description>
     <Copyright>Copyright © 2020</Copyright>
-    <Version>1.0.0.0</Version>
     <Authors>MOSA Project</Authors>
     <PackageIcon>images\Mosa Icon.png</PackageIcon>
     <PackageId>Mosa.Tools.Package</PackageId>

@@ -227,7 +227,7 @@ namespace Mosa.Tool.Debugger
 
 			if (ImageFile != null)
 			{
-				Connect();
+				LaunchImage();
 			}
 		}
 
@@ -325,11 +325,7 @@ namespace Mosa.Tool.Debugger
 
 		private void Connect()
 		{
-			if (GDBConnector != null)
-			{
-				GDBConnector.Disconnect();
-				MemoryCache = null;
-			}
+			Disconnect();
 
 			if (GDBPort == 0)
 			{
@@ -352,6 +348,16 @@ namespace Mosa.Tool.Debugger
 			GDBConnector.ClearAllBreakPoints();
 			ResendBreakPoints();
 			MemoryCache = new MemoryCache(GDBConnector);
+		}
+
+		private void Disconnect()
+		{
+			if (GDBConnector != null)
+			{
+				GDBConnector.Disconnect();
+				GDBConnector = null;
+				MemoryCache = null;
+			}
 		}
 
 		private void btnViewMemory_Click(object sender, EventArgs e)
@@ -590,20 +596,23 @@ namespace Mosa.Tool.Debugger
 			LaunchImage();
 		}
 
-		private void LaunchImage()
+		public void LaunchImage(bool skipImports = false)
 		{
+			Disconnect();
 			KillVMProcess();
 
 			CalculateVMHash();
 
 			StartQEMU();
 
-			LoadDebugFile();
-
 			Connect();
 
-			LoadBreakPoints();
-			LoadWatches();
+			if (!skipImports)
+			{
+				LoadDebugFile();
+				LoadBreakPoints();
+				LoadWatches();
+			}
 
 			displayView.Show();
 		}
@@ -643,11 +652,7 @@ namespace Mosa.Tool.Debugger
 
 		private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
 		{
-			if (GDBConnector != null)
-			{
-				GDBConnector.Disconnect();
-				GDBConnector = null;
-			}
+			Disconnect();
 
 			KillVMProcess();
 		}

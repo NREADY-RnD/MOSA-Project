@@ -44,6 +44,5 @@
 		<file src="..\..\bin\MetroFramework.Fonts.dll" target="tools" />
 		<file src="..\..\bin\WeifenLuo.WinFormsUI.Docking.dll" target="tools" />
 		<file src="..\..\bin\WeifenLuo.WinFormsUI.Docking.ThemeVS2015.dll" target="tools" />
-		<file src="..\..\bin\Mosa.Tool.Compiler.exe" target="tools" />
 	</files>
 </package>

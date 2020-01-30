@@ -51,8 +51,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Runtime", "Runtime", "{849C
 		..\Documentation\Runtime\MOSA-Runtime-Tables.png = ..\Documentation\Runtime\MOSA-Runtime-Tables.png
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "VisualStudio", "VisualStudio", "{1F29608A-4C39-42C7-B981-154F92B9EDAC}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mosa.Tool.Compiler", "Mosa.Tool.Compiler\Mosa.Tool.Compiler.csproj", "{B69C2F31-5161-47BB-9FD3-2F2F2BCBF659}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mosa.Compiler.Framework", "Mosa.Compiler.Framework\Mosa.Compiler.Framework.csproj", "{75A12A8A-8C8F-4D1E-801B-689D8F781BF4}"
