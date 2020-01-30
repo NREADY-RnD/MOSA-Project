@@ -25,13 +25,13 @@ jobs:
       - name: Create Installer
         run: ISCC.exe /DMyAppVersion=2.0.0.0 Source/Inno-Setup-Script/Mosa-Installer.iss
       - name: Create Nuget Packages
-        - run: nuget pack Source\Mosa.Packages\Mosa.Tools.Package.nuspec -OutputDirectory bin -Version 2.0.0.0
-        - run: nuget pack Source\Mosa.Packages\Mosa.Korlib.nuspec -OutputDirectory bin -Version 2.0.0.0
-        - run: nuget pack Source\Mosa.Packages\Mosa.Runtime.nuspec -OutputDirectory bin -Version 2.0.0.0
-        - run: nuget pack Source\Mosa.Packages\Mosa.Platform.x86.nuspec -OutputDirectory bin -Version 2.0.0.0
-        - run: nuget pack Source\Mosa.Packages\Mosa.Kernel.x86.nuspec -OutputDirectory bin -Version 2.0.0.0
-        - run: nuget pack Source\Mosa.Packages\Mosa.Platform.x64.nuspec -OutputDirectory bin -Version 2.0.0.0
-        - run: nuget pack Source\Mosa.Packages\Mosa.Kernel.x64.nuspec -OutputDirectory bin -Version 2.0.0.0
+      - run: nuget pack Source\Mosa.Packages\Mosa.Tools.Package.nuspec -OutputDirectory bin -Version 2.0.0.0
+      - run: nuget pack Source\Mosa.Packages\Mosa.Korlib.nuspec -OutputDirectory bin -Version 2.0.0.0
+      - run: nuget pack Source\Mosa.Packages\Mosa.Runtime.nuspec -OutputDirectory bin -Version 2.0.0.0
+      - run: nuget pack Source\Mosa.Packages\Mosa.Platform.x86.nuspec -OutputDirectory bin -Version 2.0.0.0
+      - run: nuget pack Source\Mosa.Packages\Mosa.Kernel.x86.nuspec -OutputDirectory bin -Version 2.0.0.0
+      - run: nuget pack Source\Mosa.Packages\Mosa.Platform.x64.nuspec -OutputDirectory bin -Version 2.0.0.0
+      - run: nuget pack Source\Mosa.Packages\Mosa.Kernel.x64.nuspec -OutputDirectory bin -Version 2.0.0.0
       - name: Publish Nuget Package Artifacts
         uses: actions/upload-artifact@master
         with:
