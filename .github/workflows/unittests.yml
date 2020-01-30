@@ -6,12 +6,12 @@ on:
 
 jobs:
   build-mswin:
-    name: Windows - Unit Test
+    name: Win - Unit Test
     runs-on: windows-latest
 
     strategy:
        matrix:
-         levels: [-o0, -o1, -o2, -o3, -o4, -o5, -o6, -o7, -o8, -o9, -oMax, -oFast, -oSpeed, -oSize]
+         levels: [-oMax, -oNone, -oFast, -oSpeed, -oSize, -o0, -o1, -o2, -o3, -o4, -o5, -o6, -o7, -o8, -o9]
     steps:
       - name: Checkout
         uses: actions/checkout@v1
