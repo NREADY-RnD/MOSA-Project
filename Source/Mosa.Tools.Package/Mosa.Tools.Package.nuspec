@@ -28,7 +28,6 @@
 		<file src="..\..\bin\Mosa.Platform.x86.dll" target="tools" />
 		<file src="..\..\bin\Mosa.Platform.x64.dll" target="tools" />
 		<file src="..\..\bin\Mosa.Tool.Explorer.exe" target="tools" />
-		<file src="..\..\bin\Mosa.Tool.Compiler.exe" target="tools" />
 		<file src="..\..\bin\Mosa.Tool.Debugger.exe" target="tools" />
 		<file src="..\..\bin\Mosa.Tool.Launcher.exe" target="tools" />
 		<file src="..\..\bin\Mosa.Utility.BootImage.dll" target="tools" />
@@ -45,5 +44,6 @@
 		<file src="..\..\bin\MetroFramework.Fonts.dll" target="tools" />
 		<file src="..\..\bin\WeifenLuo.WinFormsUI.Docking.dll" target="tools" />
 		<file src="..\..\bin\WeifenLuo.WinFormsUI.Docking.ThemeVS2015.dll" target="tools" />
+		<file src="..\..\bin\Mosa.Tool.Compiler.exe" target="tools" />
 	</files>
 </package>
