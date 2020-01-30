@@ -15,6 +15,8 @@ jobs:
           submodules: recursive
       - name: Setup MSBuild
         uses: warrenbuckley/Setup-MSBuild@v1
+      - name: Setup Nuget.exe
+        uses: warrenbuckley/Setup-Nuget@v1
       - name: Restore nuget     
         run: dotnet restore Mosa.sln
         working-directory: Source
@@ -22,16 +24,16 @@ jobs:
         run: msbuild Source/Mosa.sln
       - name: List EXEs
         run: dir bin\*.exe
-      - name: Pack - Mosa.Tools.Package
-        run: dotnet pack Source/Mosa.Tools.Package/Mosa.Tools.Package.csproj -o bin -p:NuspecProperties="version=2.0.0.0"
-      - name: Pack - Mosa.Korlib
+      - name: Package - Mosa.Tools.Package
+        run: nuget pack Source\Mosa.Packages\Mosa.Tools.Package.nuspec -OutputDirectory bin -Version 2.0.0.0
+      - name: Package - Mosa.Korlib
         run: dotnet pack Source/Mosa.Korlib/Mosa.Korlib.csproj -o bin -p:NuspecProperties="version=2.0.0.0"
-      - name: Pack - Mosa.Runtime
+      - name: Package - Mosa.Runtime
         run: dotnet pack Source/Mosa.Runtime/Mosa.Runtime.csproj -o bin -p:NuspecProperties="version=2.0.0.0"
-      - name: Pack - Mosa.Kernel.x86
-        run: dotnet pack Source/Mosa.Kernel.x86/Mosa.Kernel.x86.csproj -o bin -p:NuspecProperties="version=2.0.0.0"
-      - name: Pack - Mosa.Runtime.x86
+      - name: Package - Mosa.Runtime.x86
         run: dotnet pack Source/Mosa.Runtime.x86/Mosa.Runtime.x86.csproj -o bin -p:NuspecProperties="version=2.0.0.0"
+      - name: Package - Mosa.Kernel.x86
+        run: dotnet pack Source/Mosa.Kernel.x86/Mosa.Kernel.x86.csproj -o bin -p:NuspecProperties="version=2.0.0.0"
       - name: Create Installer
         run: ISCC.exe /DMyAppVersion=2.0.0.0 Source/Inno-Setup-Script/Mosa-Installer.iss
       - name: Unit Tests - All Performance Optimizations
