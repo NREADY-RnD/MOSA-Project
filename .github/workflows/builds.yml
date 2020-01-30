@@ -17,32 +17,15 @@ jobs:
         uses: warrenbuckley/Setup-MSBuild@v1
       - name: Setup Nuget.exe
         uses: warrenbuckley/Setup-Nuget@v1
+      - name: Set Build Version
+        run: echo $BUILD_VERSION
+        env:
+          BUILD_VERSION: 2.0.0.0
       - name: Restore nuget     
         run: dotnet restore Mosa.sln
         working-directory: Source
       - name: Build
         run: msbuild Source/Mosa.sln
-      - name: Create Installer
-        run: ISCC.exe /DMyAppVersion=2.0.0.0 Source/Inno-Setup-Script/Mosa-Installer.iss
-      - name: Create Package - Mosa.Tools.Package
-        run: nuget pack Source\Mosa.Packages\Mosa.Tools.Package.nuspec -OutputDirectory bin\nupkg -Version 2.0.0.0
-      - name: Create Package - Mosa.Korlib
-        run: nuget pack Source\Mosa.Packages\Mosa.Korlib.nuspec -OutputDirectory bin\nupkg -Version 2.0.0.0
-      - name: Create Package - Mosa.Runtime
-        run: nuget pack Source\Mosa.Packages\Mosa.Runtime.nuspec -OutputDirectory bin\nupkg -Version 2.0.0.0
-      - name: Create Package - Mosa.Runtime.x86
-        run: nuget pack Source\Mosa.Packages\Mosa.Platform.x86.nuspec -OutputDirectory bin\nupkg -Version 2.0.0.0
-      - name: Create Package - Mosa.Kernel.x86
-        run: nuget pack Source\Mosa.Packages\Mosa.Kernel.x86.nuspec -OutputDirectory bin\nupkg -Version 2.0.0.0
-      - name: Create Package - Mosa.Runtime.x64
-        run: nuget pack Source\Mosa.Packages\Mosa.Platform.x64.nuspec -OutputDirectory bin\nupkg -Version 2.0.0.0
-      - name: Create Package - Mosa.Kernel.x64
-        run: nuget pack Source\Mosa.Packages\Mosa.Kernel.x64.nuspec -OutputDirectory bin\nupkg -Version 2.0.0.0
-      - name: Publish Nuget Artifacts
-        uses: actions/upload-artifact@master
-        with:
-          name: nupkg
-          path: bin\nupkg
       - name: Unit Tests - All Performance Optimizations
         run: bin\Mosa.Utility.UnitTests.exe -oMax -s Emulator.Display=false
       - name: Unit Tests - No Optimizations
@@ -51,7 +34,27 @@ jobs:
         run: bin\Mosa.Utility.UnitTests.exe -oFast -s Emulator.Display=false
       - name: Unit Tests - Optimize for File Size
         run: bin\Mosa.Utility.UnitTests.exe -oFast -s Emulator.Display=false
-
+      - name: Create Installer
+        run: ISCC.exe /DMyAppVersion=2.0.0.0 Source/Inno-Setup-Script/Mosa-Installer.iss
+      - name: Create Package - Mosa.Tools.Package
+        run: nuget pack Source\Mosa.Packages\Mosa.Tools.Package.nuspec -OutputDirectory bin\nupkg -Version $BUILD_VERSION
+      - name: Create Package - Mosa.Korlib
+        run: nuget pack Source\Mosa.Packages\Mosa.Korlib.nuspec -OutputDirectory bin\nupkg -Version $BUILD_VERSION
+      - name: Create Package - Mosa.Runtime
+        run: nuget pack Source\Mosa.Packages\Mosa.Runtime.nuspec -OutputDirectory bin\nupkg -Version $BUILD_VERSION
+      - name: Create Package - Mosa.Runtime.x86
+        run: nuget pack Source\Mosa.Packages\Mosa.Platform.x86.nuspec -OutputDirectory bin\nupkg -Version $BUILD_VERSION
+      - name: Create Package - Mosa.Kernel.x86
+        run: nuget pack Source\Mosa.Packages\Mosa.Kernel.x86.nuspec -OutputDirectory bin\nupkg -Version $BUILD_VERSION
+      - name: Create Package - Mosa.Runtime.x64
+        run: nuget pack Source\Mosa.Packages\Mosa.Platform.x64.nuspec -OutputDirectory bin\nupkg -Version $BUILD_VERSION
+      - name: Create Package - Mosa.Kernel.x64
+        run: nuget pack Source\Mosa.Packages\Mosa.Kernel.x64.nuspec -OutputDirectory bin\nupkg -Version $BUILD_VERSION
+      - name: Publish Nuget Artifacts
+        uses: actions/upload-artifact@master
+        with:
+          name: Packages-nupkg
+          path: bin\nupkg
 
   build-unix:
     name: Linux Build
