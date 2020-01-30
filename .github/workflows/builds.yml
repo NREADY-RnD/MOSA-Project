@@ -51,7 +51,7 @@ jobs:
         run: dotnet pack Source/Mosa.Kernel.x86/Mosa.Kernel.x86.csproj -o bin -p:NuspecProperties="version=2.0.0.0"
       - name: Pack - Mosa.Runtime.x86
         run: dotnet pack Source/Mosa.Runtime.x86/Mosa.Runtime.x86.csproj -o bin -p:NuspecProperties="version=2.0.0.0"
-     - name: Create Installer
+      - name: Create Installer
         run: ISCC.exe /DMyAppVersion=2.0.0.0 Source/Inno-Setup-Script/Mosa-Installer.iss
       - name: Unit Tests - All Performance Optimizations
         run: bin\Mosa.Utility.UnitTests.exe -oMax -s Emulator.Display=false
