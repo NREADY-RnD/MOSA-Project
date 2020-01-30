@@ -11,6 +11,10 @@ jobs:
     env:
       BUILD_VERSION: 2.0.0.0
     steps:
+      - name: Set Build Version
+        run: echo ${{ env.BUILD_VERSION }}
+      - name: Set Build Version
+        run: echo $BUILD_VERSION
       - name: Checkout
         uses: actions/checkout@v1
         with:
@@ -19,8 +23,7 @@ jobs:
         uses: warrenbuckley/Setup-MSBuild@v1
       - name: Setup Nuget.exe
         uses: warrenbuckley/Setup-Nuget@v1
-      - name: Set Build Version
-        run: echo "${{ job.BUILD_VERSION }}"
+
       - name: Restore nuget     
         run: dotnet restore Mosa.sln
         working-directory: Source
