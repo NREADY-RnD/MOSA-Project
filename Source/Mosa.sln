@@ -19,6 +19,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Utilities", "Utilities", "{90065B0F-1BFE-40D8-AED5-11096B2535B0}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Runtimes", "Runtimes", "{3C5A2C4B-FD05-42B3-B6C6-C366DF978A62}"
+	ProjectSection(SolutionItems) = preProject
+		Mosa.Packages\Mosa.Platform.x86.nuspec = Mosa.Packages\Mosa.Platform.x86.nuspec
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Workspaces", "Workspaces", "{AC7C3CDA-E0E8-408C-BB32-DBCBB905E3E1}"
 EndProject
@@ -117,10 +120,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mosa.Tool.Bootstrap", "Mosa
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Packages", "Packages", "{52646152-3847-437E-9CCC-55DE500A5D6F}"
 	ProjectSection(SolutionItems) = preProject
+		Mosa.Packages\Mosa.Kernel.x64.nuspec = Mosa.Packages\Mosa.Kernel.x64.nuspec
 		Mosa.Packages\Mosa.Kernel.x86.nuspec = Mosa.Packages\Mosa.Kernel.x86.nuspec
 		Mosa.Packages\Mosa.Korlib.nuspec = Mosa.Packages\Mosa.Korlib.nuspec
+		Mosa.Packages\Mosa.Platform.x64.nuspec = Mosa.Packages\Mosa.Platform.x64.nuspec
+		Mosa.Packages\Mosa.Platform.x86.nuspec = Mosa.Packages\Mosa.Platform.x86.nuspec
 		Mosa.Packages\Mosa.Runtime.nuspec = Mosa.Packages\Mosa.Runtime.nuspec
-		Mosa.Packages\Mosa.Runtime.x86.nuspec = Mosa.Packages\Mosa.Runtime.x86.nuspec
 		Mosa.Packages\Mosa.Tools.Package.nuspec = Mosa.Packages\Mosa.Tools.Package.nuspec
 	EndProjectSection
 EndProject
