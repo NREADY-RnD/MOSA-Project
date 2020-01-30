@@ -50,7 +50,7 @@ jobs:
         uses: actions/upload-artifact@master
         with:
           name: nupkg
-          path: finalpackages
+          path: bin
 
   build-unix:
     name: Linux Build
