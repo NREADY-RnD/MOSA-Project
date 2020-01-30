@@ -110,9 +110,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mosa.Workspace.GDB.Debug", "Mosa.Workspace.GDB.Debug\Mosa.Workspace.GDB.Debug.csproj", "{1717C7EB-06ED-434B-BA3C-E4FF9644EEDF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{F0EFF742-92D5-4219-939A-8F6F8DAB24E5}"
-	ProjectSection(SolutionItems) = preProject
-		..\appveyor.yml = ..\appveyor.yml
-	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mosa.Tool.Debugger", "Mosa.Tool.Debugger\Mosa.Tool.Debugger.csproj", "{DFD831EA-79D8-49FC-8923-3AFFDA1283B9}"
 EndProject
@@ -151,6 +148,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mosa.Tools.Package", "Mosa.
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Setup", "Setup", "{624E8284-4F0A-4C3F-B5F2-271105E48ECF}"
 	ProjectSection(SolutionItems) = preProject
+		..\appveyor.yml = ..\appveyor.yml
+		..\.github\workflows\builds.yml = ..\.github\workflows\builds.yml
 		Inno-Setup-Script\Mosa-Installer.iss = Inno-Setup-Script\Mosa-Installer.iss
 	EndProjectSection
 EndProject

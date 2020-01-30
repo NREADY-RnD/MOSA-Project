@@ -39,15 +39,17 @@ jobs:
         working-directory: Source
       - name: Build
         run: msbuild Source/Mosa.sln
+      - name: List EXEs
+        run: dir bin\*.exe
       - name: Create Installer
         run: ISCC.exe /DMyAppVersion=2.0.0.0 Source/Inno-Setup-Script/Mosa-Installer.iss
       - name: Unit Tests - All Performance Optimizations
         run: bin\Mosa.Utility.UnitTests.exe -oMax -s Emulator.Display=false
       - name: Unit Tests - No Optimizations
         run: bin\Mosa.Utility.UnitTests.exe -oNone -s Emulator.Display=false
-      - name: Unit Tests - Optimized for Fast Compile Time
+      - name: Unit Tests - Optimize for Fast Compile Time
         run: bin\Mosa.Utility.UnitTests.exe -oFast -s Emulator.Display=false
-      - name: Unit Tests - Optimized for File Size
+      - name: Unit Tests - Optimize for File Size
         run: bin\Mosa.Utility.UnitTests.exe -oFast -s Emulator.Display=false
       - name: Pack - Mosa.Korlib
         run: dotnet pack Source/Mosa.Korlib/Mosa.Korlib.csproj -o bin -p:NuspecProperties="version=2.0.0.0"
