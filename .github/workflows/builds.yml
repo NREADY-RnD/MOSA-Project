@@ -73,5 +73,7 @@ jobs:
         run: dotnet restore Source/Mosa.Linux.sln
       - name: Build
         run: msbuild /verbosity:minimal Source/Mosa.Linux.sln
+      - name: Output List
+        run: ls bin
       - name: Unit Tests - All Performance Optimizations
         run: bin/Mosa.Utility.UnitTests.exe -oMax -s Emulator.Display=false
