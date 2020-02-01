@@ -21,7 +21,6 @@ jobs:
         uses: warrenbuckley/Setup-MSBuild@v1
       - name: Setup Nuget.exe
         uses: warrenbuckley/Setup-Nuget@v1
-
       - name: Restore nuget     
         run: dotnet restore Mosa.sln
         working-directory: Source
@@ -71,8 +70,8 @@ jobs:
       - name: Install New Packages
         run: sudo apt-get install -y git wget qemu qemu-system qemu-system-x86
       - name: Restore nuget Packages
-        run: dotnet restore Source/Mosa.sln
+        run: dotnet restore Source/Mosa.Linux.sln
       - name: Build
-        run: msbuild /verbosity:minimal Source/Mosa.sln
+        run: msbuild /verbosity:minimal Source/Mosa.Linux.sln
       - name: Unit Tests
         run: bin\Mosa.Utility.UnitTests.exe -settings tests\UnitTest.settings
