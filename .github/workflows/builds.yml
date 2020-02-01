@@ -72,10 +72,8 @@ jobs:
       - name: Restore nuget Packages
         run: dotnet restore Source/Mosa.Linux.sln
       - name: Build
-        run: msbuild Source/Mosa.Linux.sln
+        run: msbuild /verbosity:minimal Source/Mosa.Linux.sln
       - name: Output List
         run: ls bin/*.exe bin/*.dll
-      - name: Output List
-        run: ls *.exe *.dll
       - name: Unit Tests - All Performance Optimizations
-        run: ./bin/Mosa.Utility.UnitTests.exe -oMax -s Emulator.Display=false
+        run: dotnet.exe bin/Mosa.Utility.UnitTests.dll -oMax -s Emulator.Display=false
