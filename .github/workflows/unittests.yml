@@ -6,7 +6,7 @@ on:
 
 jobs:
   build-mswin:
-    name: Win - Unit Test
+    name: Win - Unit Tests
     runs-on: windows-latest
 
     strategy:
@@ -22,13 +22,29 @@ jobs:
       - name: Setup Nuget.exe
         uses: warrenbuckley/Setup-Nuget@v1
       - name: Set Build Version
-        run: echo $BUILD_VERSION
-        env:
-          BUILD_VERSION: 2.0.0.0
-      - name: Restore nuget     
+      - name: Restore nuget Packages
         run: dotnet restore Mosa.sln
         working-directory: Source
       - name: Build
         run: msbuild Source/Mosa.sln
       - name: Unit Tests - ${{ matrix.level }}
         run: bin\Mosa.Utility.UnitTests.exe ${{ matrix.level }} -s Emulator.Display=false
+
+  build-unix:
+    name: Linux - Unit Tests
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+        with:
+          submodules: recursive
+      - name: Update Package Respository
+        run: sudo apt-get -y -o Acquire::Check-Valid-Until=false update
+      - name: Install New Packages
+        run: sudo apt-get install -y git wget qemu qemu-system qemu-system-x86
+      - name: Restore nuget Packages
+        run: dotnet restore Source/Mosa.Linux.sln
+      - name: Build
+        run: msbuild /verbosity:minimal Source/Mosa.Linux.sln
+      - name: Unit Tests - ${{ matrix.level }}
+        run: dotnet bin/Mosa.Utility.UnitTests.dll ${{ matrix.level }} -s Emulator.Display=false
