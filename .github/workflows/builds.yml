@@ -72,7 +72,7 @@ jobs:
       - name: Restore nuget Packages
         run: dotnet restore Source/Mosa.Linux.sln
       - name: Build
-        run: msbuild /verbosity:minimal Source/Mosa.Linux.sln
+        run: msbuild Source/Mosa.Linux.sln
       - name: Output List
         run: ls bin/*.exe
       - name: Unit Tests - All Performance Optimizations
