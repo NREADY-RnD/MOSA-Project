@@ -76,4 +76,4 @@ jobs:
       - name: Output List
         run: ls bin/*.exe bin/*.dll
       - name: Unit Tests - All Performance Optimizations
-        run: dotnet.exe bin/Mosa.Utility.UnitTests.dll -oMax -s Emulator.Display=false
+        run: dotnet bin/Mosa.Utility.UnitTests.dll -oMax -s Emulator.Display=false
