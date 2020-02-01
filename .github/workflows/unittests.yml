@@ -12,6 +12,7 @@ jobs:
     strategy:
        matrix:
          levels: [-oMax, -oNone, -oFast, -oSpeed, -oSize, -o0, -o1, -o2, -o3, -o4, -o5, -o6, -o7, -o8, -o9]
+
     steps:
       - name: Checkout
         uses: actions/checkout@v1
@@ -33,6 +34,11 @@ jobs:
   build-unix:
     name: Linux - Unit Tests
     runs-on: ubuntu-18.04
+
+    strategy:
+       matrix:
+         levels: [-oMax, -oNone, -oFast, -oSpeed, -oSize, -o0, -o1, -o2, -o3, -o4, -o5, -o6, -o7, -o8, -o9]
+
     steps:
       - name: Checkout
         uses: actions/checkout@v1
