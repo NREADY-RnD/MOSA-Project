@@ -65,7 +65,6 @@ namespace Mosa.Tool.Debugger.Views
 			// 
 			// btnRestart
 			// 
-			this.btnRestart.Enabled = false;
 			this.btnRestart.Image = ((System.Drawing.Image)(resources.GetObject("btnRestart.Image")));
 			this.btnRestart.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
 			this.btnRestart.Location = new System.Drawing.Point(5, 5);
@@ -94,7 +93,7 @@ namespace Mosa.Tool.Debugger.Views
 			// 
 			this.tbSteps.Location = new System.Drawing.Point(496, 7);
 			this.tbSteps.Name = "tbSteps";
-			this.tbSteps.Size = new System.Drawing.Size(55, 36);
+			this.tbSteps.Size = new System.Drawing.Size(55, 20);
 			this.tbSteps.TabIndex = 20;
 			this.tbSteps.Text = "1000";
 			// 

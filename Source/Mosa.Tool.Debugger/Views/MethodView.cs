@@ -56,7 +56,7 @@ namespace Mosa.Tool.Debugger.Views
 
 			if (symbol != null)
 			{
-				if (methodSymbol != symbol)
+				if (methodSymbol != symbol || instructions.Count == 0)
 				{
 					Query(symbol);
 				}
@@ -64,6 +64,10 @@ namespace Mosa.Tool.Debugger.Views
 				{
 					SelectRow();
 				}
+			}
+			else
+			{
+				instructions.Clear();
 			}
 		}
 

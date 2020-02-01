@@ -27,7 +27,7 @@ jobs:
         working-directory: Source
       - name: Build
         run: msbuild Source/Mosa.sln
-      - name: Unit Tests - ${{ matrix.level }}
+      - name: Unit Tests
         run: bin\Mosa.Utility.UnitTests.exe ${{ matrix.level }} -s Emulator.Display=false
 
   build-unix:
@@ -51,5 +51,5 @@ jobs:
         run: dotnet restore Source/Mosa.Linux.sln
       - name: Build
         run: msbuild /verbosity:minimal Source/Mosa.Linux.sln
-      - name: Unit Tests - ${{ matrix.level }}
+      - name: Unit Tests
         run: dotnet bin/Mosa.Utility.UnitTests.dll ${{ matrix.level }} -s Emulator.Display=false
