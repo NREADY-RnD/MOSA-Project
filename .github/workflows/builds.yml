@@ -21,7 +21,7 @@ jobs:
         uses: warrenbuckley/Setup-MSBuild@v1
       - name: Setup Nuget.exe
         uses: warrenbuckley/Setup-Nuget@v1
-      - name: Restore nuget     
+      - name: Restore nuget Packages
         run: dotnet restore Mosa.sln
         working-directory: Source
       - name: Build
@@ -73,5 +73,5 @@ jobs:
         run: dotnet restore Source/Mosa.Linux.sln
       - name: Build
         run: msbuild /verbosity:minimal Source/Mosa.Linux.sln
-      - name: Unit Tests
-        run: bin\Mosa.Utility.UnitTests.exe -settings tests\UnitTest.settings
+      - name: Unit Tests - All Performance Optimizations
+        run: bin\Mosa.Utility.UnitTests.exe -oMax -s Emulator.Display=false
