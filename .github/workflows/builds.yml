@@ -74,8 +74,8 @@ jobs:
       - name: Build
         run: msbuild Source/Mosa.Linux.sln
       - name: Output List
-        run: ls bin/*.exe
+        run: ls bin/*.exe bin/*.dll
       - name: Output List
-        run: ls *.exe
+        run: ls *.exe *.dll
       - name: Unit Tests - All Performance Optimizations
         run: ./bin/Mosa.Utility.UnitTests.exe -oMax -s Emulator.Display=false
