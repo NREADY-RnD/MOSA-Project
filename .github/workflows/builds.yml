@@ -61,7 +61,7 @@ jobs:
         run: dotnet nuget push bin\nupkg\Mosa.Tools.Package.*.nupkg -k $NUGET_KEY -s https://api.nuget.org/v3/index.json
         env: 
           NUGET_KEY: ${{ secrets.NUGET_KEY }}
-        if: ${{ secrets.NUGET_KEY }} != ''
+        if: secrets.NUGET_KEY != ''
 
   build-unix:
     name: Linux Build
