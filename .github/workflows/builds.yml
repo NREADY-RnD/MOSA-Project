@@ -17,7 +17,7 @@ jobs:
       - name: View Build Version
         run: echo ${{ env.BUILD_VERSION }}.${{ steps.mosa-project-build-number.outputs.build-number }}
       - name: View Github Info
-        run: echo ${{ github.repository }} ${{ github.event }} ${{ github.event_name }} ${{ github.ref }} ${{ github.head_ref }} ${{ github.base_ref }}
+        run: echo ${{ github.repository }} ${{ github.event_name }} ${{ github.ref }} ${{ github.head_ref }} ${{ github.base_ref }}
       - name: Checkout
         uses: actions/checkout@v1
       - name: Setup MSBuild
