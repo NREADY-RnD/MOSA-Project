@@ -16,6 +16,8 @@ jobs:
         id: mosa-project-build-number
       - name: View Build Version
         run: echo ${{ env.BUILD_VERSION }}.${{ steps.mosa-project-build-number.outputs.build-number }}
+      - name: View Repository
+        run: echo ${{ github.repository }}
       - name: Checkout
         uses: actions/checkout@v1
       - name: Setup MSBuild
@@ -58,8 +60,8 @@ jobs:
       - name: Unit Tests - No Optimizations
         run: bin\Mosa.Utility.UnitTests.exe -oNone -s Emulator.Display=false
       - name: Publish Package - Mosa.Tools.Package
-        run: dotnet nuget push bin\nupkg\Mosa.Tools.Package.*.nupkg -k ${{ secrets.NUGET_KEY }} -s https://api.nuget.org/v3/index.json
-        if: secrets.NUGET_KEY != ''
+ #       run: dotnet nuget push bin\nupkg\Mosa.Tools.Package.*.nupkg -k ${{ secrets.NUGET_KEY }} -s https://api.nuget.org/v3/index.json
+ #       if: secrets.NUGET_KEY != ''
 
   build-unix:
     name: Linux Build
