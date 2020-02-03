@@ -59,9 +59,9 @@ jobs:
         run: bin\Mosa.Utility.UnitTests.exe -oMax -s Emulator.Display=false
       - name: Unit Tests - No Optimizations
         run: bin\Mosa.Utility.UnitTests.exe -oNone -s Emulator.Display=false
- #     - name: Publish Package - Mosa.Tools.Package
- #       run: dotnet nuget push bin\nupkg\Mosa.Tools.Package.*.nupkg -k ${{ secrets.NUGET_KEY }} -s https://api.nuget.org/v3/index.json
- #       if: secrets.NUGET_KEY != ''
+      - name: Publish Package - Mosa.Tools.Package
+        run: dotnet nuget push bin\nupkg\Mosa.Tools.Package.*.nupkg -k ${{ secrets.NUGET_KEY }} -s https://api.nuget.org/v3/index.json
+        if: github.repository == 'mosa/MOSA-Project'
 
   build-unix:
     name: Linux Build
